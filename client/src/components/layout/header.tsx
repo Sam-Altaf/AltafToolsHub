@@ -12,126 +12,67 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Menu, X, ChevronDown, FileText, Lock, Image, 
   FileImage, FilePlus, Scissors, Palette, FileArchive,
   Layers, Home, Info, Mail, Star, ArrowRight,
-  QrCode, Shield, Type
+  QrCode, Shield, Type, Book, FileCode, Zap
 } from "lucide-react";
+import { toolCategories, popularTools, Tool } from "@/lib/tools-data";
 
-const pdfTools = [
-  {
-    id: "compress-pdf",
-    title: "Compress PDF",
-    description: "Reduce file size",
-    icon: FileText,
-    href: "/compress-pdf",
-    available: true
-  },
-  {
-    id: "unlock-pdf",
-    title: "Unlock PDF", 
-    description: "Remove password",
-    icon: Lock,
-    href: "/unlock-pdf",
-    available: true
-  },
-  {
-    id: "jpg-to-pdf",
-    title: "JPG to PDF",
-    description: "Convert images",
-    icon: Image,
-    href: "/jpg-to-pdf",
-    available: true
-  }
-];
-
-const utilityTools = [
-  {
-    id: "qr-generator",
-    title: "QR Generator",
-    description: "Create QR codes",
-    icon: QrCode,
-    href: "/qr-generator",
-    available: true
-  },
-  {
-    id: "password-generator",
-    title: "Password Generator",
-    description: "Secure passwords",
-    icon: Shield,
-    href: "/password-generator",
-    available: true
-  },
-  {
-    id: "word-counter",
-    title: "Word Counter",
-    description: "Count text stats",
-    icon: Type,
-    href: "/word-counter",
-    available: true
-  }
-];
-
-const moreTools = [
-  {
-    id: "pdf-to-jpg",
-    title: "PDF to JPG",
-    description: "Extract images",
-    icon: FileImage,
-    href: "/pdf-to-jpg",
-    available: false
-  },
-  {
-    id: "merge-pdf",
-    title: "Merge PDF",
-    description: "Combine files",
-    icon: FilePlus,
-    href: "/merge-pdf",
-    available: false
-  },
-  {
-    id: "split-pdf",
-    title: "Split PDF",
-    description: "Divide pages",
-    icon: Scissors,
-    href: "/split-pdf",
-    available: false
-  },
-  {
-    id: "watermark-pdf",
-    title: "Watermark PDF",
-    description: "Add watermarks",
-    icon: Palette,
-    href: "/watermark-pdf",
-    available: false
-  },
-  {
-    id: "pdf-to-zip",
-    title: "PDF to ZIP",
-    description: "Create archives",
-    icon: FileArchive,
-    href: "/pdf-to-zip",
-    available: false
-  },
-  {
-    id: "organize-pdf",
-    title: "Organize PDF",
-    description: "Reorder pages",
-    icon: Layers,
-    href: "/organize-pdf",
-    available: false
-  }
-];
+// Helper component for navigation items
+const ToolNavItem = ({ tool }: { tool: Tool }) => {
+  const Icon = tool.icon;
+  return (
+    <NavigationMenuLink asChild>
+      <Link
+        href={tool.href}
+        className={cn(
+          "group flex items-start space-x-3 select-none rounded-md p-3 leading-none no-underline outline-none transition-colors",
+          "hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+          !tool.available && "opacity-60"
+        )}
+        data-testid={`nav-${tool.id}`}
+      >
+        <div className={cn(
+          "w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-all",
+          "bg-gradient-to-br", tool.color,
+          "group-hover:scale-110"
+        )}>
+          <Icon className="w-5 h-5 text-white" />
+        </div>
+        <div className="flex-1">
+          <div className="font-medium mb-1 flex items-center gap-2">
+            {tool.title}
+            {tool.new && (
+              <span className="text-xs px-1.5 py-0.5 rounded-full bg-green-500/10 text-green-600 dark:text-green-400">
+                New
+              </span>
+            )}
+            {!tool.available && (
+              <span className="text-xs px-1.5 py-0.5 rounded-full bg-muted-foreground/10 text-muted-foreground">
+                Soon
+              </span>
+            )}
+          </div>
+          <p className="text-xs text-muted-foreground">
+            {tool.description}
+          </p>
+        </div>
+      </Link>
+    </NavigationMenuLink>
+  );
+};
 
 export default function Header() {
   const [location] = useLocation();
@@ -186,181 +127,116 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-1">
-            <Link href="/">
-              <Button
-                variant={isActive("/") ? "secondary" : "ghost"}
-                className="font-medium"
-                data-testid="nav-home-desktop"
-              >
-                <Home className="w-4 h-4 mr-2" />
-                Home
-              </Button>
-            </Link>
+          <NavigationMenu className="hidden lg:flex">
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuLink asChild>
+                  <Link href="/" className={navigationMenuTriggerStyle()}>
+                    <Home className="w-4 h-4 mr-2" />
+                    Home
+                  </Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
 
-            {/* PDF Tools Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  className="font-medium"
-                  data-testid="nav-pdf-tools-desktop"
-                >
+              {/* PDF Management */}
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="font-medium">
                   <FileText className="w-4 h-4 mr-2" />
                   PDF Tools
-                  <ChevronDown className="w-4 h-4 ml-1" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent 
-                align="start" 
-                className="w-64 glass dark:glass-dark"
-              >
-                <DropdownMenuLabel>Available Tools</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {pdfTools.map((tool) => {
-                  const Icon = tool.icon;
-                  return (
-                    <Link key={tool.id} href={tool.href}>
-                      <DropdownMenuItem 
-                        className="cursor-pointer group"
-                        data-testid={`dropdown-${tool.id}`}
-                      >
-                        <div className="flex items-start space-x-3 w-full">
-                          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                            <Icon className="w-4 h-4 text-primary" />
-                          </div>
-                          <div className="flex-1">
-                            <div className="font-medium">{tool.title}</div>
-                            <div className="text-xs text-muted-foreground">
-                              {tool.description}
-                            </div>
-                          </div>
-                          <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        </div>
-                      </DropdownMenuItem>
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <div className="grid gap-2 p-4 w-[500px] lg:w-[600px] lg:grid-cols-2">
+                    {toolCategories.find(cat => cat.id === "pdf-management")?.tools.slice(0, 8).map((tool) => (
+                      <ToolNavItem key={tool.id} tool={tool} />
+                    ))}
+                  </div>
+                  <div className="p-4 pt-0">
+                    <Link href="/#pdf-tools">
+                      <Button variant="outline" className="w-full" size="sm">
+                        View All PDF Tools
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
                     </Link>
-                  );
-                })}
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
 
-            {/* Utility Tools Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  className="font-medium"
-                  data-testid="nav-utility-tools-desktop"
-                >
-                  <Layers className="w-4 h-4 mr-2" />
-                  Utility Tools
-                  <ChevronDown className="w-4 h-4 ml-1" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent 
-                align="start" 
-                className="w-64 glass dark:glass-dark"
-              >
-                <DropdownMenuLabel>Available Tools</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {utilityTools.map((tool) => {
-                  const Icon = tool.icon;
-                  return (
-                    <Link key={tool.id} href={tool.href}>
-                      <DropdownMenuItem 
-                        className="cursor-pointer group"
-                        data-testid={`dropdown-${tool.id}`}
-                      >
-                        <div className="flex items-start space-x-3 w-full">
-                          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                            <Icon className="w-4 h-4 text-primary" />
-                          </div>
-                          <div className="flex-1">
-                            <div className="font-medium">{tool.title}</div>
-                            <div className="text-xs text-muted-foreground">
-                              {tool.description}
-                            </div>
-                          </div>
-                          <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        </div>
-                      </DropdownMenuItem>
+              {/* Image Conversion */}
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="font-medium">
+                  <Image className="w-4 h-4 mr-2" />
+                  Image Tools
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <div className="grid gap-2 p-4 w-[500px] lg:w-[600px] lg:grid-cols-2">
+                    {toolCategories.find(cat => cat.id === "image-conversion")?.tools.slice(0, 8).map((tool) => (
+                      <ToolNavItem key={tool.id} tool={tool} />
+                    ))}
+                  </div>
+                  <div className="p-4 pt-0">
+                    <Link href="/#image-tools">
+                      <Button variant="outline" className="w-full" size="sm">
+                        View All Image Tools
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
                     </Link>
-                  );
-                })}
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
 
-            {/* More Tools Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  className="font-medium"
-                  data-testid="nav-more-tools-desktop"
-                >
-                  <Layers className="w-4 h-4 mr-2" />
-                  More Tools
-                  <ChevronDown className="w-4 h-4 ml-1" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent 
-                align="start" 
-                className="w-64 glass dark:glass-dark"
-              >
-                <DropdownMenuLabel className="flex items-center justify-between">
-                  Coming Soon
-                  <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
-                    New
-                  </span>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {moreTools.map((tool) => {
-                  const Icon = tool.icon;
-                  return (
-                    <DropdownMenuItem 
-                      key={tool.id}
-                      className="cursor-pointer group opacity-60"
-                      disabled
-                      data-testid={`dropdown-${tool.id}`}
-                    >
-                      <div className="flex items-start space-x-3 w-full">
-                        <div className="w-8 h-8 rounded-lg bg-muted flex items-center justify-center">
-                          <Icon className="w-4 h-4 text-muted-foreground" />
-                        </div>
-                        <div className="flex-1">
-                          <div className="font-medium">{tool.title}</div>
-                          <div className="text-xs text-muted-foreground">
-                            {tool.description}
-                          </div>
-                        </div>
-                        <Star className="w-3 h-3 text-primary" />
-                      </div>
-                    </DropdownMenuItem>
-                  );
-                })}
-              </DropdownMenuContent>
-            </DropdownMenu>
+              {/* Document Conversion */}
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="font-medium">
+                  <FileCode className="w-4 h-4 mr-2" />
+                  Convert
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <div className="grid gap-2 p-4 w-[500px] lg:w-[600px] lg:grid-cols-2">
+                    {toolCategories.find(cat => cat.id === "document-conversion")?.tools.slice(0, 8).map((tool) => (
+                      <ToolNavItem key={tool.id} tool={tool} />
+                    ))}
+                  </div>
+                  <div className="p-4 pt-0">
+                    <Link href="/#convert-tools">
+                      <Button variant="outline" className="w-full" size="sm">
+                        View All Converters
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    </Link>
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
 
-            {/* About Link */}
-            <Button 
-              variant="ghost" 
-              className="font-medium"
-              data-testid="nav-about-desktop"
-            >
-              <Info className="w-4 h-4 mr-2" />
-              About
-            </Button>
+              {/* Utilities */}
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="font-medium">
+                  <Zap className="w-4 h-4 mr-2" />
+                  Utilities
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <div className="grid gap-2 p-4 w-[500px] lg:w-[600px] lg:grid-cols-2">
+                    {toolCategories.find(cat => cat.id === "utilities")?.tools.map((tool) => (
+                      <ToolNavItem key={tool.id} tool={tool} />
+                    ))}
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
 
-            {/* Contact Link */}
-            <Button 
-              variant="ghost" 
-              className="font-medium"
-              data-testid="nav-contact-desktop"
-            >
-              <Mail className="w-4 h-4 mr-2" />
-              Contact
-            </Button>
-          </nav>
+              {/* About Link */}
+              <NavigationMenuItem>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild>
+                  <Button 
+                    variant="ghost" 
+                    className="font-medium"
+                    data-testid="nav-about-desktop"
+                  >
+                    <Info className="w-4 h-4 mr-2" />
+                    About
+                  </Button>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
 
           {/* Desktop Right Section */}
           <div className="hidden lg:flex items-center space-x-2">
@@ -450,134 +326,98 @@ export default function Header() {
                         </SheetClose>
                       </Link>
 
-                      {/* PDF Tools Section */}
-                      <div className="py-3">
-                        <h3 className="mb-2 px-3 text-sm font-semibold text-muted-foreground">
-                          PDF Tools
-                        </h3>
-                        <div className="space-y-1">
-                          {pdfTools.map((tool) => {
-                            const Icon = tool.icon;
-                            return (
-                              <Link key={tool.id} href={tool.href}>
+                      {/* Tool Categories for Mobile */}
+                      {toolCategories.map((category) => (
+                        <div key={category.id} className="py-3">
+                          <h3 className="mb-2 px-3 text-sm font-semibold text-muted-foreground flex items-center">
+                            <category.icon className="w-4 h-4 mr-2" />
+                            {category.name}
+                          </h3>
+                          <div className="space-y-1">
+                            {category.tools.slice(0, 5).map((tool) => {
+                              const Icon = tool.icon;
+                              return (
+                                <Link key={tool.id} href={tool.href}>
+                                  <SheetClose asChild>
+                                    <Button
+                                      variant={isActive(tool.href) ? "secondary" : "ghost"}
+                                      className={cn(
+                                        "w-full justify-start group",
+                                        !tool.available && "opacity-60"
+                                      )}
+                                      data-testid={`nav-${tool.id}-mobile`}
+                                    >
+                                      <Icon className="w-4 h-4 mr-3" />
+                                      <div className="flex-1 text-left">
+                                        <div className="flex items-center gap-2">
+                                          {tool.title}
+                                          {tool.new && (
+                                            <span className="text-xs px-1.5 py-0.5 rounded-full bg-green-500/10 text-green-600">
+                                              New
+                                            </span>
+                                          )}
+                                          {!tool.available && (
+                                            <span className="text-xs px-1.5 py-0.5 rounded-full bg-muted-foreground/10 text-muted-foreground">
+                                              Soon
+                                            </span>
+                                          )}
+                                        </div>
+                                        <div className="text-xs text-muted-foreground">
+                                          {tool.description}
+                                        </div>
+                                      </div>
+                                      <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    </Button>
+                                  </SheetClose>
+                                </Link>
+                              );
+                            })}
+                            {category.tools.length > 5 && (
+                              <Link href={`/#${category.id}`}>
                                 <SheetClose asChild>
                                   <Button
-                                    variant={isActive(tool.href) ? "secondary" : "ghost"}
-                                    className="w-full justify-start group"
-                                    data-testid={`nav-${tool.id}-mobile`}
+                                    variant="ghost"
+                                    className="w-full justify-start text-primary"
+                                    size="sm"
                                   >
-                                    <Icon className="w-4 h-4 mr-3" />
-                                    <div className="flex-1 text-left">
-                                      <div>{tool.title}</div>
-                                      <div className="text-xs text-muted-foreground">
-                                        {tool.description}
-                                      </div>
-                                    </div>
-                                    <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    View all {category.tools.length} tools
+                                    <ArrowRight className="w-4 h-4 ml-2" />
                                   </Button>
                                 </SheetClose>
                               </Link>
-                            );
-                          })}
+                            )}
+                          </div>
                         </div>
+                      ))}
+
+                      {/* About and Contact */}
+                      <div className="py-3 border-t">
+                        <Button
+                          variant="ghost"
+                          className="w-full justify-start"
+                          data-testid="nav-about-mobile"
+                        >
+                          <Info className="w-4 h-4 mr-3" />
+                          About
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          className="w-full justify-start"
+                          data-testid="nav-contact-mobile"
+                        >
+                          <Mail className="w-4 h-4 mr-3" />
+                          Contact
+                        </Button>
                       </div>
-
-                      {/* Utility Tools Section */}
-                      <div className="py-3">
-                        <h3 className="mb-2 px-3 text-sm font-semibold text-muted-foreground">
-                          Utility Tools
-                        </h3>
-                        <div className="space-y-1">
-                          {utilityTools.map((tool) => {
-                            const Icon = tool.icon;
-                            return (
-                              <Link key={tool.id} href={tool.href}>
-                                <SheetClose asChild>
-                                  <Button
-                                    variant={isActive(tool.href) ? "secondary" : "ghost"}
-                                    className="w-full justify-start group"
-                                    data-testid={`nav-${tool.id}-mobile`}
-                                  >
-                                    <Icon className="w-4 h-4 mr-3" />
-                                    <div className="flex-1 text-left">
-                                      <div>{tool.title}</div>
-                                      <div className="text-xs text-muted-foreground">
-                                        {tool.description}
-                                      </div>
-                                    </div>
-                                    <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                  </Button>
-                                </SheetClose>
-                              </Link>
-                            );
-                          })}
-                        </div>
-                      </div>
-
-                      {/* More Tools Section */}
-                      <div className="py-3">
-                        <h3 className="mb-2 px-3 text-sm font-semibold text-muted-foreground flex items-center justify-between">
-                          More Tools
-                          <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">
-                            Coming Soon
-                          </span>
-                        </h3>
-                        <div className="space-y-1 opacity-60">
-                          {moreTools.map((tool) => {
-                            const Icon = tool.icon;
-                            return (
-                              <Button
-                                key={tool.id}
-                                variant="ghost"
-                                className="w-full justify-start cursor-not-allowed"
-                                disabled
-                                data-testid={`nav-${tool.id}-mobile`}
-                              >
-                                <Icon className="w-4 h-4 mr-3" />
-                                <div className="flex-1 text-left">
-                                  <div>{tool.title}</div>
-                                  <div className="text-xs text-muted-foreground">
-                                    {tool.description}
-                                  </div>
-                                </div>
-                                <Star className="w-3 h-3 text-primary" />
-                              </Button>
-                            );
-                          })}
-                        </div>
-                      </div>
-
-                      {/* Divider */}
-                      <div className="my-4 h-px bg-border" />
-
-                      {/* About Link */}
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-start"
-                        data-testid="nav-about-mobile"
-                      >
-                        <Info className="w-4 h-4 mr-3" />
-                        About
-                      </Button>
-
-                      {/* Contact Link */}
-                      <Button
-                        variant="ghost"
-                        className="w-full justify-start"
-                        data-testid="nav-contact-mobile"
-                      >
-                        <Mail className="w-4 h-4 mr-3" />
-                        Contact
-                      </Button>
                     </div>
                   </nav>
-                  
-                  {/* Mobile CTA */}
-                  <div className="border-t p-6">
+
+                  {/* CTA Button */}
+                  <div className="p-6 border-t">
                     <Link href="/compress-pdf">
                       <SheetClose asChild>
                         <Button 
-                          className="w-full btn-gradient text-white font-medium"
+                          className="w-full btn-gradient text-white"
                           data-testid="button-try-now-mobile"
                         >
                           Try PDF Compressor
@@ -585,9 +425,6 @@ export default function Header() {
                         </Button>
                       </SheetClose>
                     </Link>
-                    <p className="text-xs text-center text-muted-foreground mt-3">
-                      100% Free • No Sign-up Required
-                    </p>
                   </div>
                 </div>
               </SheetContent>

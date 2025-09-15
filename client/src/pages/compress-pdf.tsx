@@ -2,9 +2,10 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Slider } from "@/components/ui/slider";
 import { 
   Check, AlertCircle, FileDown, Target, Info, TrendingDown, 
-  Gauge, ArrowLeft, FileText, Sparkles, Zap, Shield 
+  Gauge, ArrowLeft, FileText, Sparkles, Zap, Shield, Settings2 
 } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
@@ -44,6 +45,8 @@ interface CompressionParams {
 export default function CompressPDF() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [targetSize, setTargetSize] = useState<TargetSize>("500KB");
+  const [compressionLevel, setCompressionLevel] = useState(60); // Default 60% like BigPDF
+  const [useAdvancedMode, setUseAdvancedMode] = useState(false); // Toggle between slider and target size
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [progressMessage, setProgressMessage] = useState<string>("");
@@ -613,41 +616,154 @@ export default function CompressPDF() {
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <Target className="w-5 h-5 text-primary" />
-                Choose Target Size
-              </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
-                {targetSizeOptions.map((option) => (
-                  <button
-                    key={option.value}
-                    onClick={() => setTargetSize(option.value)}
-                    className={cn(
-                      "relative p-4 rounded-xl transition-all group overflow-hidden",
-                      targetSize === option.value 
-                        ? "ring-2 ring-primary" 
-                        : "hover:scale-105"
-                    )}
-                    data-testid={`button-target-${option.value}`}
-                  >
-                    <div className={cn(
-                      "absolute inset-0 opacity-10 bg-gradient-to-br",
-                      option.color,
-                      targetSize === option.value && "opacity-20"
-                    )}></div>
-                    <div className="relative">
-                      <div className="font-bold text-sm mb-1">{option.label}</div>
-                      <div className="text-xs text-muted-foreground">{option.description}</div>
-                    </div>
-                  </button>
-                ))}
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold flex items-center gap-2">
+                  {useAdvancedMode ? (
+                    <><Target className="w-5 h-5 text-primary" />Choose Target Size</>
+                  ) : (
+                    <><Gauge className="w-5 h-5 text-primary" />Compression Level</>
+                  )}
+                </h3>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setUseAdvancedMode(!useAdvancedMode)}
+                  className="text-xs"
+                  data-testid="button-toggle-mode"
+                >
+                  <Settings2 className="h-3 w-3 mr-1" />
+                  {useAdvancedMode ? "Use Slider" : "Advanced Mode"}
+                </Button>
               </div>
+              
+              {!useAdvancedMode ? (
+                // Compression Level Slider Mode
+                <div className="space-y-6">
+                  <div className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/20 dark:to-blue-950/20 rounded-xl p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold">Compression Level</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-3xl font-bold text-primary">{compressionLevel}%</span>
+                        <span className="text-sm text-muted-foreground">
+                          {compressionLevel <= 30 ? "High Compression" : 
+                           compressionLevel <= 60 ? "Balanced" : 
+                           "High Quality"}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <Slider
+                      value={[compressionLevel]}
+                      onValueChange={(value) => setCompressionLevel(value[0])}
+                      min={10}
+                      max={100}
+                      step={5}
+                      className="mb-4"
+                      data-testid="slider-compression-level"
+                    />
+                    
+                    <div className="flex justify-between text-xs text-muted-foreground">
+                      <div className="flex flex-col items-start">
+                        <span className="font-semibold">10%</span>
+                        <span>Max Compression</span>
+                        <span>Smallest Size</span>
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <span className="font-semibold">60%</span>
+                        <span>Recommended</span>
+                        <span>Best Balance</span>
+                      </div>
+                      <div className="flex flex-col items-end">
+                        <span className="font-semibold">100%</span>
+                        <span>Min Compression</span>
+                        <span>Best Quality</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <Card className="p-4 bg-gradient-to-br from-purple-50 to-transparent dark:from-purple-950/20">
+                      <div className="flex items-center gap-2 mb-2">
+                        <TrendingDown className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                        <span className="text-sm font-medium">Size Reduction</span>
+                      </div>
+                      <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
+                        ~{100 - compressionLevel}%
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">Estimated reduction</p>
+                    </Card>
+                    
+                    <Card className="p-4 bg-gradient-to-br from-blue-50 to-transparent dark:from-blue-950/20">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Sparkles className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                        <span className="text-sm font-medium">Quality</span>
+                      </div>
+                      <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                        {compressionLevel >= 80 ? "Excellent" :
+                         compressionLevel >= 60 ? "Good" :
+                         compressionLevel >= 40 ? "Fair" : "Basic"}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">Visual quality</p>
+                    </Card>
+                    
+                    <Card className="p-4 bg-gradient-to-br from-green-50 to-transparent dark:from-green-950/20">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Zap className="h-4 w-4 text-green-600 dark:text-green-400" />
+                        <span className="text-sm font-medium">Speed</span>
+                      </div>
+                      <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+                        {compressionLevel <= 30 ? "Fast" :
+                         compressionLevel <= 70 ? "Normal" : "Slower"}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">Processing time</p>
+                    </Card>
+                  </div>
+                </div>
+              ) : (
+                // Target Size Mode (Advanced)
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
+                  {targetSizeOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      onClick={() => setTargetSize(option.value)}
+                      className={cn(
+                        "relative p-4 rounded-xl transition-all group overflow-hidden",
+                        targetSize === option.value 
+                          ? "ring-2 ring-primary" 
+                          : "hover:scale-105"
+                      )}
+                      data-testid={`button-target-${option.value}`}
+                    >
+                      <div className={cn(
+                        "absolute inset-0 opacity-10 bg-gradient-to-br",
+                        option.color,
+                        targetSize === option.value && "opacity-20"
+                      )}></div>
+                      <div className="relative">
+                        <div className="font-bold text-sm mb-1">{option.label}</div>
+                        <div className="text-xs text-muted-foreground">{option.description}</div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
 
-              {targetSize !== 'max' && (
+              {useAdvancedMode && targetSize !== 'max' && (
                 <Alert className="mb-6 border-primary/20 bg-primary/5">
                   <Info className="h-4 w-4" />
                   <AlertDescription>
                     The compressor will intelligently adjust quality to reach {targetSizeOptions.find(o => o.value === targetSize)?.label} while preserving maximum readability.
+                  </AlertDescription>
+                </Alert>
+              )}
+              
+              {!useAdvancedMode && (
+                <Alert className="mb-6 border-primary/20 bg-primary/5">
+                  <Info className="h-4 w-4" />
+                  <AlertDescription>
+                    The compressor will use {compressionLevel}% quality level. Lower values create smaller files with reduced quality.
                   </AlertDescription>
                 </Alert>
               )}
@@ -659,7 +775,9 @@ export default function CompressPDF() {
                 data-testid="button-compress"
               >
                 <Zap className="w-5 h-5 mr-2" />
-                Compress to {targetSizeOptions.find(o => o.value === targetSize)?.label}
+                {useAdvancedMode 
+                  ? `Compress to ${targetSizeOptions.find(o => o.value === targetSize)?.label}`
+                  : `Compress PDF (${compressionLevel}%)`}
               </Button>
             </div>
           </Card>
