@@ -260,7 +260,7 @@ export default function Home() {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
               >
-                60+ Professional File Tools,{" "}
+                Professional File Tools,{" "}
               </motion.span>
               <motion.span 
                 className="gradient-text inline-block"
@@ -269,7 +269,7 @@ export default function Home() {
                 transition={{ duration: 0.6, delay: 0.5 }}
                 whileHover={{ scale: 1.05 }}
               >
-                Zero Upload Required
+                Zero Cloud Upload
               </motion.span>
             </motion.h1>
             
@@ -280,8 +280,8 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
             >
-              Complete suite of PDF, image, and document tools. All processing happens in your browser. 
-              Your files never leave your device. Free forever, no registration.
+              Process PDFs, images, and documents instantly in your browser. 
+              Your files stay on your device with enterprise-grade privacy. Free forever, no registration.
             </motion.p>
 
             {/* CTAs */}

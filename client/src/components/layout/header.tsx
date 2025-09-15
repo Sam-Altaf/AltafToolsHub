@@ -127,7 +127,7 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <NavigationMenu className="hidden lg:flex relative z-[90]">
+          <NavigationMenu className="hidden lg:flex relative z-[90]" delayDuration={0}>
             <NavigationMenuList>
               <NavigationMenuItem>
                 <NavigationMenuLink asChild>

@@ -278,13 +278,23 @@ export default function CompressPDF() {
         handleProgress(20, "Applying compression level...");
         const { compressPDFSimple } = await import('@/lib/pdf-compress');
         
-        // Convert compression level to quality and scale
+        // Convert compression level to quality and scale with better mapping
         // Higher compression level = better quality (less compression)
-        const jpegQuality = compressionLevel / 100; // 10% = 0.1 quality, 100% = 1.0 quality
+        let jpegQuality: number;
+        if (compressionLevel >= 90) {
+          jpegQuality = 0.92 + (compressionLevel - 90) * 0.008; // 90-100% -> 0.92-1.0
+        } else if (compressionLevel >= 70) {
+          jpegQuality = 0.85 + (compressionLevel - 70) * 0.0035; // 70-90% -> 0.85-0.92
+        } else if (compressionLevel >= 50) {
+          jpegQuality = 0.75 + (compressionLevel - 50) * 0.005; // 50-70% -> 0.75-0.85
+        } else if (compressionLevel >= 30) {
+          jpegQuality = 0.6 + (compressionLevel - 30) * 0.0075; // 30-50% -> 0.6-0.75
+        } else {
+          jpegQuality = 0.4 + compressionLevel * 0.0067; // 0-30% -> 0.4-0.6
+        }
         
-        // Adjust scale based on compression level
-        // Lower compression level (more compression) = lower scale
-        const scale = 0.5 + (compressionLevel / 100) * 0.5; // Range from 0.5 to 1.0
+        // Better scale mapping for resolution preservation
+        const scale = 0.7 + (compressionLevel / 100) * 0.3; // 0.7-1.0 range for better quality
         
         const params: CompressionParams = {
           jpegQuality: jpegQuality,

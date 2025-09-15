@@ -165,18 +165,28 @@
   background-clip: text;
 }
 
-/* Hero gradient with animation */
+/* Hero gradient with subtle animation */
 .hero-gradient {
-  background: linear-gradient(-45deg, #9333ea, #ec4899, #8b5cf6, #6366f1, #3b82f6, #14b8a6);
-  background-size: 400% 400%;
-  animation: gradient-shift 15s ease infinite;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   position: relative;
+  overflow: hidden;
 }
 
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+.hero-gradient::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(147, 51, 234, 0.1) 100%);
+  animation: subtleShift 20s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes subtleShift {
+  0%, 100% { opacity: 0; transform: translateX(0); }
+  50% { opacity: 1; transform: translateX(10px); }
 }
 
 /* Floating animation for decorative elements */
