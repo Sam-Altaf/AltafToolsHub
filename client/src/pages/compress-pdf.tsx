@@ -123,7 +123,7 @@ export default function CompressPDF() {
     return sizeMap[target];
   };
 
-  const targetSizeOptions: { value: TargetSize; label: string; description: string; color: string }[] = [
+  const allTargetSizeOptions: { value: TargetSize; label: string; description: string; color: string }[] = [
     { value: '10KB', label: '10 KB', description: 'Extreme compression', color: 'from-red-500 to-pink-500' },
     { value: '20KB', label: '20 KB', description: 'Very high compression', color: 'from-orange-500 to-red-500' },
     { value: '50KB', label: '50 KB', description: 'Email friendly', color: 'from-amber-500 to-orange-500' },
@@ -138,6 +138,15 @@ export default function CompressPDF() {
     { value: 'max', label: 'Maximum', description: 'Most compression', color: 'from-purple-500 to-indigo-500' }
   ];
 
+  // Filter options to show only sizes smaller than 90% of the original file
+  const targetSizeOptions = selectedFile 
+    ? allTargetSizeOptions.filter(option => {
+        if (option.value === 'max') return true; // Always show Maximum option
+        const targetBytes = getTargetSizeInBytes(option.value);
+        return targetBytes && targetBytes < selectedFile.size * 0.9;
+      })
+    : allTargetSizeOptions;
+
   const handleFileSelect = (file: File) => {
     if (file.type !== 'application/pdf') {
       setError('Please select a valid PDF file.');
@@ -149,23 +158,33 @@ export default function CompressPDF() {
 
     // Auto-select appropriate target size based on original file size
     const fileSize = file.size;
-    if (fileSize < 50 * 1024) {
-      setTargetSize('10KB');
-    } else if (fileSize < 100 * 1024) {
-      setTargetSize('50KB');
-    } else if (fileSize < 500 * 1024) {
-      setTargetSize('100KB');
-    } else if (fileSize < 1024 * 1024) {
-      setTargetSize('200KB');
-    } else if (fileSize < 2 * 1024 * 1024) {
-      setTargetSize('500KB');
-    } else if (fileSize < 5 * 1024 * 1024) {
-      setTargetSize('1MB');
-    } else if (fileSize < 10 * 1024 * 1024) {
-      setTargetSize('2MB');
-    } else {
-      setTargetSize('5MB');
+    
+    // Select a target size that's approximately 30-50% of original
+    const validOptions = allTargetSizeOptions.filter(option => {
+      if (option.value === 'max') return false;
+      const targetBytes = getTargetSizeInBytes(option.value);
+      return targetBytes && targetBytes < fileSize * 0.9;
+    });
+    
+    // Find the target closest to 40% of original size
+    const targetPercent = 0.4;
+    const idealSize = fileSize * targetPercent;
+    
+    let bestOption: TargetSize = 'max';
+    let bestDiff = Infinity;
+    
+    for (const option of validOptions) {
+      const targetBytes = getTargetSizeInBytes(option.value);
+      if (targetBytes) {
+        const diff = Math.abs(targetBytes - idealSize);
+        if (diff < bestDiff) {
+          bestDiff = diff;
+          bestOption = option.value;
+        }
+      }
     }
+    
+    setTargetSize(bestOption);
   };
 
   // Progress callback for compression
@@ -279,12 +298,31 @@ export default function CompressPDF() {
       
       let errorMessage = 'Failed to compress PDF. ';
       if (err instanceof Error) {
-        if (err.message.includes('Worker')) {
+        if (err.message.includes('Cannot achieve target size within 2% tolerance')) {
+          // Extract the actual achieved size from error message
+          const match = err.message.match(/Best achieved: (\d+) bytes/);
+          if (match) {
+            const achievedSize = parseInt(match[1]);
+            const targetBytes = getTargetSizeInBytes(targetSize);
+            if (targetBytes) {
+              const percentage = ((achievedSize / targetBytes) * 100).toFixed(1);
+              errorMessage = `Could not achieve target size of ${formatFileSize(targetBytes)} within 2% tolerance. Best achieved: ${formatFileSize(achievedSize)} (${percentage}% of target). Try selecting a larger target size.`;
+            } else {
+              errorMessage += err.message;
+            }
+          } else {
+            errorMessage += 'Could not achieve the selected target size within acceptable tolerance. Try selecting a larger target size.';
+          }
+        } else if (err.message.includes('Worker')) {
           errorMessage += 'PDF processing worker initialization failed. Please refresh the page and try again.';
         } else if (err.message.includes('Invalid PDF')) {
           errorMessage += 'The file appears to be corrupted or is not a valid PDF.';
         } else if (err.message.includes('canvas') || err.message.includes('Canvas')) {
           errorMessage += 'Browser rendering error. Please try a different browser or enable hardware acceleration.';
+        } else if (err.message.includes('memory') || err.message.includes('Memory')) {
+          errorMessage += 'File is too large for browser memory. Try a smaller PDF or use a different compression target.';
+        } else if (err.message.includes('detached') || err.message.includes('ArrayBuffer')) {
+          errorMessage += 'Processing error occurred. Please refresh the page and try again.';
         } else {
           errorMessage += err.message;
         }
