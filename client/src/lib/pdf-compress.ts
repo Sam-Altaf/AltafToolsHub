@@ -20,6 +20,7 @@ interface CachedPage {
   canvas: HTMLCanvasElement;
   width: number;
   height: number;
+  baseScale: number; // Track the scale used for base rendering
 }
 
 // Utility function to convert data URL to Uint8Array
@@ -69,8 +70,8 @@ async function renderPagesToCanvases(
   const numPages = pdf.numPages;
   const cachedPages: CachedPage[] = [];
 
-  // Enhance render scale for better quality (render at higher resolution)
-  const enhancedScale = scale * 1.5; // Render at 1.5x the target scale for better quality
+  // Fixed base scale for high-quality base rendering
+  const baseScale = 2.0; // Always render at 2x for high quality base
 
   for (let pageNum = 1; pageNum <= numPages; pageNum++) {
     if (onProgress) {
@@ -79,7 +80,7 @@ async function renderPagesToCanvases(
     }
 
     const page = await pdf.getPage(pageNum);
-    const viewport = page.getViewport({ scale: enhancedScale });
+    const viewport = page.getViewport({ scale: baseScale });
 
     // Create canvas
     const canvas = document.createElement('canvas');
@@ -101,35 +102,72 @@ async function renderPagesToCanvases(
       canvas,
       width: viewport.width,
       height: viewport.height,
+      baseScale: baseScale
     });
   }
 
   return cachedPages;
 }
 
-// Convert cached canvases to images with specific quality
-async function convertCanvasesToImages(
+// Resample cached canvases to a specific scale
+function resampleCanvases(
   cachedPages: CachedPage[],
+  targetScale: number
+): HTMLCanvasElement[] {
+  const resampledCanvases: HTMLCanvasElement[] = [];
+  
+  for (const cachedPage of cachedPages) {
+    // Calculate new dimensions based on target scale relative to base scale
+    const scaleFactor = targetScale / cachedPage.baseScale;
+    const newWidth = Math.round(cachedPage.width * scaleFactor);
+    const newHeight = Math.round(cachedPage.height * scaleFactor);
+    
+    // Create new canvas with target dimensions
+    const newCanvas = document.createElement('canvas');
+    const newContext = newCanvas.getContext('2d');
+    if (!newContext) throw new Error('Failed to get canvas context for resampling');
+    
+    newCanvas.width = newWidth;
+    newCanvas.height = newHeight;
+    
+    // Configure high-quality image smoothing
+    newContext.imageSmoothingEnabled = true;
+    newContext.imageSmoothingQuality = 'high';
+    
+    // Draw the cached canvas onto the new canvas with scaling
+    newContext.drawImage(
+      cachedPage.canvas,
+      0, 0, cachedPage.width, cachedPage.height,
+      0, 0, newWidth, newHeight
+    );
+    
+    resampledCanvases.push(newCanvas);
+  }
+  
+  return resampledCanvases;
+}
+
+// Convert canvases to images with specific quality
+async function convertCanvasesToImages(
+  canvases: HTMLCanvasElement[],
   quality: number,
   onProgress?: (progress: number, message: string) => void
 ): Promise<PageImage[]> {
   const pageImages: PageImage[] = [];
   
-  for (let i = 0; i < cachedPages.length; i++) {
+  for (let i = 0; i < canvases.length; i++) {
     if (onProgress) {
-      const progress = 30 + Math.round((i / cachedPages.length) * 20);
-      onProgress(progress, `Compressing page ${i + 1} of ${cachedPages.length}`);
+      const progress = 30 + Math.round((i / canvases.length) * 20);
+      onProgress(progress, `Compressing page ${i + 1} of ${canvases.length}`);
     }
     
     // Convert to JPEG with quality
-    const dataUrl = await canvasToJPEG(cachedPages[i].canvas, quality);
+    const dataUrl = await canvasToJPEG(canvases[i], quality);
     
-    // Adjust dimensions to account for enhanced render scale
-    // Since we rendered at 1.5x scale, we need to scale down dimensions
     pageImages.push({
       dataUrl,
-      width: cachedPages[i].width / 1.5, // Scale back down
-      height: cachedPages[i].height / 1.5, // Scale back down
+      width: canvases[i].width,
+      height: canvases[i].height,
     });
   }
   
@@ -210,9 +248,12 @@ export async function compressPDFSimple(
       );
     }
     
+    // Resample canvases to the target scale
+    const resampledCanvases = resampleCanvases(pagesToUse, params.scale);
+    
     // Convert canvases to images with specified quality
     const images = await convertCanvasesToImages(
-      pagesToUse,
+      resampledCanvases,
       params.jpegQuality,
       params.onProgress
     );
@@ -292,66 +333,155 @@ export async function compressToTargetSize(
   const originalSize = pdfBytes.byteLength;
   const compressionRatio = targetSize / originalSize;
   
-  // Adaptive quality ranges based on compression ratio
+  // New quality/scale ranges with higher quality for better results
   let minQuality: number;
   let maxQuality: number;
   let minScale: number;
   let maxScale: number;
   
-  if (compressionRatio > 0.5) {
-    // Target is > 50% of original (light compression)
-    minQuality = 0.85;
-    maxQuality = 0.98;
-    minScale = 0.9;
-    maxScale = 1.1; // Allow slight upscaling for quality
-  } else if (compressionRatio > 0.25) {
-    // Target is 25-50% of original (moderate compression)
-    minQuality = 0.7;
-    maxQuality = 0.92;
-    minScale = 0.8;
+  if (compressionRatio >= 0.5) {
+    // Light compression (target is ≥50% of original)
+    minQuality = 0.92;
+    maxQuality = 0.99;
+    minScale = 0.95;
     maxScale = 1.0;
-  } else if (compressionRatio > 0.1) {
-    // Target is 10-25% of original (significant compression)
+  } else if (compressionRatio >= 0.25) {
+    // Moderate compression (target is 25-50% of original)
+    minQuality = 0.75;
+    maxQuality = 0.97;
+    minScale = 0.85;
+    maxScale = 1.0;
+  } else if (compressionRatio >= 0.1) {
+    // Significant compression (target is 10-25% of original)
     minQuality = 0.6;
-    maxQuality = 0.85;
-    minScale = 0.7;
+    maxQuality = 0.9;
+    minScale = 0.75;
     maxScale = 0.95;
   } else {
-    // Target is < 10% of original (extreme compression)
-    minQuality = 0.5; // Never go below 50% quality
-    maxQuality = 0.8;
+    // Extreme compression (target is <10% of original)
+    minQuality = 0.4;
+    maxQuality = 0.75;
     minScale = 0.6;
     maxScale = 0.9;
   }
   
   let attempts = 0;
-  const maxAttempts = 15;
-  const tolerance = 0.08; // 8% tolerance for better quality
+  const maxAttempts = 22; // Increased attempts for better precision
+  const tolerance = 0.025; // Fixed 2.5% tolerance
   
-  let bestResult: { blob: Blob; quality: number; scale: number; size: number } | null = null;
-  let lastResult: Blob | null = null;
+  let bestUnder: { blob: Blob; quality: number; scale: number; size: number } | null = null;
+  let bestOver: { blob: Blob; quality: number; scale: number; size: number } | null = null;
   let cachedPages: CachedPage[] | undefined = undefined;
+  
+  // Two-phase search approach
+  // Phase 1: Test multiple scales to find the best one
+  const scalesToTest = [minScale, (minScale + maxScale) / 2, maxScale];
+  const scaleResults: { scale: number; bestQuality: number; bestSize: number; blob: Blob }[] = [];
+  
+  for (const testScale of scalesToTest) {
+    if (onProgress) {
+      const phaseProgress = Math.round(10 + (scalesToTest.indexOf(testScale) / scalesToTest.length) * 30);
+      onProgress(phaseProgress, `Testing scale ${testScale.toFixed(2)}...`);
+    }
+    
+    // Binary search for best quality at this scale
+    let scaleMinQ = minQuality;
+    let scaleMaxQ = maxQuality;
+    let scaleBestResult: { quality: number; size: number; blob: Blob } | null = null;
+    
+    for (let i = 0; i < 5; i++) { // 5 iterations per scale
+      attempts++;
+      const testQuality = (scaleMinQ + scaleMaxQ) / 2;
+      
+      const params: CompressionParams = {
+        jpegQuality: testQuality,
+        scale: testScale,
+        onProgress: (progress, message) => {
+          if (onProgress) {
+            const attemptProgress = Math.round(10 + (attempts / maxAttempts) * 70);
+            onProgress(attemptProgress, message);
+          }
+        }
+      };
+      
+      const result = await compressPDFSimple(pdfBytes, params, cachedPages);
+      const compressedBlob = result.blob;
+      
+      // Cache the rendered pages for reuse
+      if (!cachedPages && result.cachedPages) {
+        cachedPages = result.cachedPages;
+      }
+      
+      const currentSize = compressedBlob.size;
+      
+      // Track best result for this scale
+      if (!scaleBestResult || Math.abs(currentSize - targetSize) < Math.abs(scaleBestResult.size - targetSize)) {
+        scaleBestResult = { quality: testQuality, size: currentSize, blob: compressedBlob };
+      }
+      
+      // Update overall best results
+      if (currentSize <= targetSize) {
+        if (!bestUnder || currentSize > bestUnder.size) {
+          bestUnder = { blob: compressedBlob, quality: testQuality, scale: testScale, size: currentSize };
+        }
+        scaleMinQ = testQuality; // Can increase quality
+      } else {
+        if (!bestOver || currentSize < bestOver.size) {
+          bestOver = { blob: compressedBlob, quality: testQuality, scale: testScale, size: currentSize };
+        }
+        scaleMaxQ = testQuality; // Must decrease quality
+      }
+      
+      // Check if we've hit the target within tolerance
+      if (Math.abs(currentSize - targetSize) <= targetSize * tolerance) {
+        console.log(`Target achieved at scale ${testScale} in ${attempts} attempts. Target: ${targetSize}, Achieved: ${currentSize}`);
+        return { blob: compressedBlob, quality: testQuality, scale: testScale, attempts };
+      }
+    }
+    
+    if (scaleBestResult) {
+      scaleResults.push({
+        scale: testScale,
+        bestQuality: scaleBestResult.quality,
+        bestSize: scaleBestResult.size,
+        blob: scaleBestResult.blob
+      });
+    }
+  }
+  
+  // Phase 2: Fine-tune on the best scale
+  let bestScale = maxScale;
+  let bestScaleResult = scaleResults[0];
+  
+  for (const result of scaleResults) {
+    if (result.bestSize <= targetSize && (!bestScaleResult || result.bestSize > bestScaleResult.bestSize)) {
+      bestScaleResult = result;
+      bestScale = result.scale;
+    } else if (!bestScaleResult || Math.abs(result.bestSize - targetSize) < Math.abs(bestScaleResult.bestSize - targetSize)) {
+      bestScaleResult = result;
+      bestScale = result.scale;
+    }
+  }
+  
+  // Fine-tune on the best scale
+  let fineMinQ = Math.max(minQuality, bestScaleResult.bestQuality - 0.1);
+  let fineMaxQ = Math.min(maxQuality, bestScaleResult.bestQuality + 0.1);
   
   while (attempts < maxAttempts) {
     attempts++;
-    
-    // Calculate current parameters
-    const quality = (minQuality + maxQuality) / 2;
-    const scale = (minScale + maxScale) / 2;
+    const quality = (fineMinQ + fineMaxQ) / 2;
     
     if (onProgress) {
-      const overallProgress = Math.round(10 + (attempts / maxAttempts) * 80);
-      onProgress(overallProgress, `Optimizing compression... Attempt ${attempts}/${maxAttempts}`);
+      const overallProgress = Math.round(40 + (attempts / maxAttempts) * 50);
+      onProgress(overallProgress, `Fine-tuning compression... Attempt ${attempts}/${maxAttempts}`);
     }
     
-    // Compress with current parameters, reusing cached pages
     const params: CompressionParams = {
       jpegQuality: quality,
-      scale: scale,
+      scale: bestScale,
       onProgress: (progress, message) => {
         if (onProgress) {
-          // Scale progress for this attempt
-          const attemptProgress = Math.round(10 + ((attempts - 1) / maxAttempts) * 80 + (progress / 100) * (80 / maxAttempts));
+          const attemptProgress = Math.round(40 + ((attempts - 1) / maxAttempts) * 50);
           onProgress(attemptProgress, message);
         }
       }
@@ -359,72 +489,51 @@ export async function compressToTargetSize(
     
     const result = await compressPDFSimple(pdfBytes, params, cachedPages);
     const compressedBlob = result.blob;
-    
-    // Cache the rendered pages for reuse (only on first attempt)
-    if (!cachedPages && result.cachedPages) {
-      cachedPages = result.cachedPages;
-    }
-    
     const currentSize = compressedBlob.size;
     
-    // Update best result if this is closer to target
-    if (!bestResult || Math.abs(currentSize - targetSize) < Math.abs(bestResult.size - targetSize)) {
-      bestResult = { blob: compressedBlob, quality, scale, size: currentSize };
-    }
-    
-    // Check if we're close enough to target
-    // For larger files, prioritize quality over exact size match
-    const effectiveTolerance = compressionRatio > 0.5 ? 0.15 : tolerance; // 15% tolerance for light compression
-    if (Math.abs(currentSize - targetSize) <= targetSize * effectiveTolerance) {
-      console.log(`Target achieved in ${attempts} attempts. Target: ${targetSize}, Achieved: ${currentSize}`);
-      return { blob: compressedBlob, quality, scale, attempts };
-    }
-    
-    // Adjust parameters based on result
-    if (currentSize > targetSize) {
-      // File is too large, reduce quality/scale
-      // For light compression, be more conservative with quality reduction
-      const qualityStep = compressionRatio > 0.5 ? 0.02 : 0.05;
-      const scaleStep = compressionRatio > 0.5 ? 0.02 : 0.05;
-      
-      if (quality > minQuality + qualityStep) {
-        maxQuality = quality;
+    // Update best results
+    if (currentSize <= targetSize) {
+      if (!bestUnder || currentSize > bestUnder.size) {
+        bestUnder = { blob: compressedBlob, quality, scale: bestScale, size: currentSize };
       }
-      if (scale > minScale + scaleStep) {
-        maxScale = scale;
-      }
+      fineMinQ = quality;
     } else {
-      // File is too small, increase quality/scale
-      const qualityStep = compressionRatio > 0.5 ? 0.02 : 0.05;
-      const scaleStep = compressionRatio > 0.5 ? 0.02 : 0.05;
-      
-      if (quality < maxQuality - qualityStep) {
-        minQuality = quality;
+      if (!bestOver || currentSize < bestOver.size) {
+        bestOver = { blob: compressedBlob, quality, scale: bestScale, size: currentSize };
       }
-      if (scale < maxScale - scaleStep) {
-        minScale = scale;
-      }
+      fineMaxQ = quality;
     }
     
-    // Check if we've converged
-    if (maxQuality - minQuality < 0.02 && maxScale - minScale < 0.02) {
+    // Check if we've hit the target within tolerance
+    if (Math.abs(currentSize - targetSize) <= targetSize * tolerance) {
+      console.log(`Target achieved in ${attempts} attempts. Target: ${targetSize}, Achieved: ${currentSize}`);
+      return { blob: compressedBlob, quality, scale: bestScale, attempts };
+    }
+    
+    // Check if we've converged (very small quality range)
+    if (fineMaxQ - fineMinQ < 0.01) {
       console.log(`Converged after ${attempts} attempts`);
       break;
     }
-    
-    lastResult = compressedBlob;
   }
   
-  // Return best result found
-  if (bestResult) {
-    console.log(`Best result after ${attempts} attempts. Target: ${targetSize}, Achieved: ${bestResult.size}`);
-    return { blob: bestResult.blob, quality: bestResult.quality, scale: bestResult.scale, attempts };
+  // Return the best result (prefer largest under target, or smallest over if no under)
+  if (bestUnder) {
+    console.log(`Best under target after ${attempts} attempts. Target: ${targetSize}, Achieved: ${bestUnder.size}`);
+    return { blob: bestUnder.blob, quality: bestUnder.quality, scale: bestUnder.scale, attempts };
+  } else if (bestOver) {
+    console.log(`Could not achieve target, returning best over after ${attempts} attempts. Target: ${targetSize}, Achieved: ${bestOver.size}`);
+    return { blob: bestOver.blob, quality: bestOver.quality, scale: bestOver.scale, attempts };
   }
   
-  // Fallback to last result
-  if (lastResult) {
-    return { blob: lastResult, quality: (minQuality + maxQuality) / 2, scale: (minScale + maxScale) / 2, attempts };
-  }
+  // Fallback: if we somehow have no results, use moderate settings
+  const fallbackParams: CompressionParams = {
+    jpegQuality: 0.8,
+    scale: 0.9,
+    onProgress
+  };
   
-  throw new Error('Failed to compress PDF to target size');
+  const fallbackResult = await compressPDFSimple(pdfBytes, fallbackParams, cachedPages);
+  console.log(`Fallback compression used. Target: ${targetSize}, Achieved: ${fallbackResult.blob.size}`);
+  return { blob: fallbackResult.blob, quality: 0.8, scale: 0.9, attempts };
 }
