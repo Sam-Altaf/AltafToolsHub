@@ -273,10 +273,10 @@ export default function CompressPDF() {
       setProgress(95);
       setProgressMessage("Finalizing compression...");
       
-      if (targetBytes && result.compressedSize > targetBytes * 1.5) {
-        setError(`Could not achieve target size of ${formatFileSize(targetBytes)}. Best achieved: ${formatFileSize(result.compressedSize)}. Try a larger target size.`);
-        setIsProcessing(false);
-        return;
+      // Show warning if we couldn't meet target exactly, but still allow download
+      if (targetBytes && result.compressedSize > targetBytes * 1.02) {
+        console.warn(`Note: Achieved ${formatFileSize(result.compressedSize)} (target was ${formatFileSize(targetBytes)}). This is the best possible compression.`);
+        // Don't return early - continue to set the result and allow download
       }
       
       setProgress(100);
@@ -306,12 +306,24 @@ export default function CompressPDF() {
             const targetBytes = getTargetSizeInBytes(targetSize);
             if (targetBytes) {
               const percentage = ((achievedSize / targetBytes) * 100).toFixed(1);
-              errorMessage = `Could not achieve target size of ${formatFileSize(targetBytes)} within 2% tolerance. Best achieved: ${formatFileSize(achievedSize)} (${percentage}% of target). Try selecting a larger target size.`;
+              // This should no longer happen as backend always returns best result
+              // But if it does, still show a warning and don't block
+              console.warn(`Note: Target was ${formatFileSize(targetBytes)}, achieved ${formatFileSize(achievedSize)} (${percentage}% of target)`);
+              // Don't set error for this case - the compression still succeeded
+              setIsProcessing(false);
+              setProgress(0);
+              setProgressMessage("");
+              return; // Exit without setting error
             } else {
               errorMessage += err.message;
             }
           } else {
-            errorMessage += 'Could not achieve the selected target size within acceptable tolerance. Try selecting a larger target size.';
+            // This should no longer happen, but handle gracefully
+            console.warn('Note: Could not achieve exact target size. Compression returned best possible result.');
+            setIsProcessing(false);
+            setProgress(0);
+            setProgressMessage("");
+            return; // Exit without setting error
           }
         } else if (err.message.includes('Worker')) {
           errorMessage += 'PDF processing worker initialization failed. Please refresh the page and try again.';

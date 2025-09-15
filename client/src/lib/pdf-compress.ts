@@ -325,33 +325,33 @@ export async function compressToTargetSize(
   if (compressionRatio >= 0.7) {
     // Light compression (target is ≥70% of original)
     minQuality = 0.85;
-    maxQuality = 0.95;
-    minScale = 1.0;
+    maxQuality = 0.99;  // Increased from 0.95 to allow reaching targets
+    minScale = 0.95;
     maxScale = 1.0;
   } else if (compressionRatio >= 0.4) {
     // Moderate compression (target is 40-70% of original)
     minQuality = 0.75;
-    maxQuality = 0.90;
-    minScale = 0.95;
+    maxQuality = 0.98;  // CRITICAL: Increased from 0.90 to reach 5MB from 10MB files
+    minScale = 0.90;
     maxScale = 1.0;
   } else if (compressionRatio >= 0.2) {
     // Significant compression (target is 20-40% of original)
     minQuality = 0.65;
-    maxQuality = 0.85;
+    maxQuality = 0.95;  // Increased from 0.85 for better targeting
     minScale = 0.85;
-    maxScale = 0.95;
+    maxScale = 1.0;
   } else if (compressionRatio >= 0.1) {
     // Heavy compression (target is 10-20% of original)
     minQuality = 0.55;
-    maxQuality = 0.75;
+    maxQuality = 0.90;  // Increased from 0.75 for better range
     minScale = 0.75;
-    maxScale = 0.90;
+    maxScale = 0.95;
   } else {
     // Extreme compression (target is <10% of original)
     minQuality = 0.40;
-    maxQuality = 0.65;
+    maxQuality = 0.80;  // Increased from 0.65
     minScale = 0.60;
-    maxScale = 0.80;
+    maxScale = 0.90;
   }
   
   let attempts = 0;
@@ -515,7 +515,7 @@ export async function compressToTargetSize(
       console.log('Fine-tuning quality to get closer to target...');
       
       let fineQuality = bestUnderTarget.quality;
-      const maxFineQuality = Math.min(bestUnderTarget.quality + 0.15, maxQuality);
+      const maxFineQuality = Math.min(bestUnderTarget.quality + 0.25, 0.99);  // Allow up to 0.99 quality
       
       // Binary search for optimal quality at best scale
       let minQ = fineQuality;
@@ -576,7 +576,7 @@ export async function compressToTargetSize(
         
         for (let i = 0; i < 10 && attempts < maxAttempts; i++) {
           attempts++;
-          microQuality = Math.min(microQuality + microStep, maxQuality);
+          microQuality = Math.min(microQuality + microStep, 0.99);  // Allow up to 0.99
           
           const params: CompressionParams = {
             jpegQuality: microQuality,
@@ -618,15 +618,55 @@ export async function compressToTargetSize(
       }
     }
     
-    // Final check: if we're not within 2% tolerance, warn the user
-    if (bestUnderTarget.size < targetSize * 0.98) {
-      console.warn(`Could not achieve target within 2% tolerance. Best achieved: ${bestUnderTarget.size} bytes (${(bestUnderTarget.size/targetSize*100).toFixed(1)}% of target)`);
+    // If best result is still way below target, try higher qualities
+    if (bestUnderTarget.size < targetSize * 0.5 && attempts < maxAttempts + 10) {
+      console.log('Result too small, trying higher qualities to get closer to target...');
       
-      // Return error for frontend to handle
-      throw new Error(`Cannot achieve target size within 2% tolerance. Best achieved: ${bestUnderTarget.size} bytes (${(bestUnderTarget.size/targetSize*100).toFixed(1)}% of target), target was ${targetSize} bytes`);
+      // Try qualities up to 0.99
+      for (let q = Math.max(bestUnderTarget.quality, 0.9); q <= 0.99; q += 0.01) {
+        attempts++;
+        const params: CompressionParams = {
+          jpegQuality: q,
+          scale: bestUnderTarget.scale,
+          onProgress: (progress, message) => {
+            if (onProgress) {
+              onProgress(95, `Fine-tuning to reach target...`);
+            }
+          }
+        };
+        
+        const result = await compressPDFSimple(pdfBytesCopy, params);
+        const currentSize = result.blob.size;
+        
+        console.log(`High quality attempt: Quality ${q.toFixed(2)}, Size ${currentSize}`);
+        
+        if (currentSize <= targetSize) {
+          bestUnderTarget = {
+            blob: result.blob,
+            quality: q,
+            scale: bestUnderTarget.scale,
+            size: currentSize
+          };
+          
+          // If we're getting close, stop
+          if (currentSize >= targetSize * 0.95) {
+            console.log(`Reached close to target with high quality: ${currentSize} bytes`);
+            break;
+          }
+        } else {
+          break; // Exceeded target
+        }
+      }
     }
     
-    console.log(`Final result: ${bestUnderTarget.size} bytes, Quality: ${bestUnderTarget.quality.toFixed(3)}, Scale: ${bestUnderTarget.scale.toFixed(2)}`);
+    // Always return the best result we have, even if not perfect
+    console.log(`Final result: ${bestUnderTarget.size} bytes (${(bestUnderTarget.size/targetSize*100).toFixed(1)}% of target), Quality: ${bestUnderTarget.quality.toFixed(3)}, Scale: ${bestUnderTarget.scale.toFixed(2)}`);
+    
+    // Log a warning if we couldn't get close, but still return the result
+    if (bestUnderTarget.size < targetSize * 0.98) {
+      console.warn(`Note: Could not achieve exact target. Best achieved: ${bestUnderTarget.size} bytes (${(bestUnderTarget.size/targetSize*100).toFixed(1)}% of target)`);
+    }
+    
     return { 
       blob: bestUnderTarget.blob, 
       quality: bestUnderTarget.quality, 
@@ -637,7 +677,7 @@ export async function compressToTargetSize(
   
   // If no under-target result, return the best over-target result
   if (bestOverTarget) {
-    console.log(`Could not achieve target, returning closest over: ${bestOverTarget.size} bytes (${(bestOverTarget.size/targetSize*100).toFixed(1)}% of target)`);
+    console.warn(`Target size too ambitious. Returning smallest possible: ${bestOverTarget.size} bytes (${(bestOverTarget.size/targetSize*100).toFixed(1)}% of target)`);
     return { 
       blob: bestOverTarget.blob, 
       quality: bestOverTarget.quality, 
