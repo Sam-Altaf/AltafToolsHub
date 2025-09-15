@@ -1,0 +1,79 @@
+Part 1: Overall Project Goal & Persona
+
+You are an expert full-stack web developer specializing in modern, performant, and secure web applications. Your task is to build "AltafToolsHub," a fast, secure, and user-friendly website offering a suite of online file manipulation tools. The core value proposition is privacy and performance: all file processing must be done client-side in the user's browser using JavaScript and WebAssembly wherever possible. The website must be fully responsive and built with clean HTML, CSS, and vanilla JavaScript.
+
+Part 2: Site Architecture & Navigation
+
+Create a multi-page website with the following structure:
+
+An index.html (Homepage) that will serve as a grid-based dashboard of all available tools.
+
+Separate HTML files for each individual tool. For now, create the following files: compress-pdf.html, unlock-pdf.html, and jpg-to-pdf.html.
+
+Create a simple, consistent header that will be present on all pages. The header should contain the site logo on the left (use a placeholder for now) and a single navigation link, "All Tools," that points back to index.html.
+
+Part 3: Branding & Styling (CSS)
+
+Create a single style.css file and link it to all HTML pages. Implement the following visual identity:
+
+Colors:
+
+Primary color (for header background, footers, and major elements): Navy #141A46    
+
+Accent color (for all buttons, links, and interactive element highlights): Yellow-Green #BAFF39    
+
+Background color (for the body of all pages): Cream #F2F0EA    
+
+Text color: A dark grey, almost black, like #333333 for high readability.
+
+Button text color: The primary Navy color #141A46 to contrast with the accent background.
+
+Typography:
+
+Import the 'Inter' font from Google Fonts.
+
+Set 'Inter', sans-serif as the default font for the entire site.
+
+Establish a clean typographic scale for headings (h1, h2, h3) and paragraph text.
+
+Layout:
+
+Use modern CSS like Flexbox or Grid for all layouts to ensure responsiveness.
+
+Part 4: Tool Page Template
+
+For each tool page (e.g., compress-pdf.html), create a consistent layout. The layout should have a main content area centered on the page. Inside this area, create a primary "tool card" with a light background and a subtle box-shadow. This card must contain:
+
+An <h1> tag for the tool's name.
+
+A <p> tag for a brief, one-sentence description of the tool.
+
+A large file input area with a dashed border and text inside that says "Drag & drop your file here".
+
+Inside the file input area, include a prominent button styled with the accent color that says "Select File". This button should be linked to a hidden <input type="file"> element.
+
+Create a separate, initially hidden section for the results, which will contain a "Download" button.
+
+Part 5: Specific Tool Implementation (Example for compress-pdf.html)
+
+Now, let's focus on the compress-pdf.html page. Using JavaScript in a <script> tag at the bottom of the page, implement the following front-end logic:
+
+When a user drops a file or selects a file using the button, display the file's name and original size below the upload area.
+
+After the file is selected, reveal a new section with three radio buttons labeled "Low Compression," "Medium Compression," and "Strong Compression."
+
+Display a primary action button below the radio buttons that says "Compress PDF."
+
+When the "Compress PDF" button is clicked, implement a placeholder function called compressPDF(). For now, this function will simulate processing with a 2-second delay using setTimeout.
+
+After the simulated delay, hide the entire upload card and the compression options. In its place, show the results section containing a success message and a large "Download Compressed PDF" button.
+
+Part 6: SEO Content (Example for compress-pdf.html)
+
+Populate the compress-pdf.html page with the following SEO-optimized content:
+
+Page <title>: Compress PDF - Reduce PDF File Size Online for Free | AltafToolsHub    
+
+<h1> Tag: Free Online PDF Compressor    
+
+<p> Tag: Reduce the size of your PDF files securely in your browser. Your files are never uploaded to our servers, ensuring 100% privacy and instant results.
