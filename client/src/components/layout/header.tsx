@@ -127,7 +127,7 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <NavigationMenu className="hidden lg:flex">
+          <NavigationMenu className="hidden lg:flex relative z-[90]">
             <NavigationMenuList>
               <NavigationMenuItem>
                 <NavigationMenuLink asChild>
@@ -144,7 +144,7 @@ export default function Header() {
                   <FileText className="w-4 h-4 mr-2" />
                   PDF Tools
                 </NavigationMenuTrigger>
-                <NavigationMenuContent>
+                <NavigationMenuContent className="z-[100]">
                   <div className="grid gap-2 p-4 w-[500px] lg:w-[600px] lg:grid-cols-2">
                     {toolCategories.find(cat => cat.id === "pdf-management")?.tools.slice(0, 8).map((tool) => (
                       <ToolNavItem key={tool.id} tool={tool} />
@@ -167,7 +167,7 @@ export default function Header() {
                   <Image className="w-4 h-4 mr-2" />
                   Image Tools
                 </NavigationMenuTrigger>
-                <NavigationMenuContent>
+                <NavigationMenuContent className="z-[100]">
                   <div className="grid gap-2 p-4 w-[500px] lg:w-[600px] lg:grid-cols-2">
                     {toolCategories.find(cat => cat.id === "image-conversion")?.tools.slice(0, 8).map((tool) => (
                       <ToolNavItem key={tool.id} tool={tool} />
@@ -190,7 +190,7 @@ export default function Header() {
                   <FileCode className="w-4 h-4 mr-2" />
                   Convert
                 </NavigationMenuTrigger>
-                <NavigationMenuContent>
+                <NavigationMenuContent className="z-[100]">
                   <div className="grid gap-2 p-4 w-[500px] lg:w-[600px] lg:grid-cols-2">
                     {toolCategories.find(cat => cat.id === "document-conversion")?.tools.slice(0, 8).map((tool) => (
                       <ToolNavItem key={tool.id} tool={tool} />
@@ -213,7 +213,7 @@ export default function Header() {
                   <Zap className="w-4 h-4 mr-2" />
                   Utilities
                 </NavigationMenuTrigger>
-                <NavigationMenuContent>
+                <NavigationMenuContent className="z-[100]">
                   <div className="grid gap-2 p-4 w-[500px] lg:w-[600px] lg:grid-cols-2">
                     {toolCategories.find(cat => cat.id === "utilities")?.tools.map((tool) => (
                       <ToolNavItem key={tool.id} tool={tool} />

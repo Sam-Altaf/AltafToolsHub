@@ -267,11 +267,53 @@ export default function CompressPDF() {
       setProgressMessage("Reading PDF file...");
       
       const arrayBuffer = await selectedFile.arrayBuffer();
-      const targetBytes = getTargetSizeInBytes(targetSize);
       
       setProgress(15);
       
-      const result = await findOptimalCompression(arrayBuffer, targetBytes);
+      let result: CompressionResult;
+      let targetBytes: number | null = null;
+      
+      if (!useAdvancedMode) {
+        // Slider mode - use compression level directly
+        handleProgress(20, "Applying compression level...");
+        const { compressPDFSimple } = await import('@/lib/pdf-compress');
+        
+        // Convert compression level to quality and scale
+        // Higher compression level = better quality (less compression)
+        const jpegQuality = compressionLevel / 100; // 10% = 0.1 quality, 100% = 1.0 quality
+        
+        // Adjust scale based on compression level
+        // Lower compression level (more compression) = lower scale
+        const scale = 0.5 + (compressionLevel / 100) * 0.5; // Range from 0.5 to 1.0
+        
+        const params: CompressionParams = {
+          jpegQuality: jpegQuality,
+          scale: scale,
+          onProgress: handleProgress
+        };
+        
+        console.log(`Compressing with level ${compressionLevel}%: quality=${jpegQuality}, scale=${scale}`);
+        
+        const compressResult = await compressPDFSimple(arrayBuffer, params);
+        const compressedBlob = compressResult.blob;
+        
+        result = {
+          originalSize: selectedFile.size,
+          compressedSize: compressedBlob.size,
+          targetSize: null,
+          savings: Math.round(((selectedFile.size - compressedBlob.size) / selectedFile.size) * 100),
+          compressedBlob,
+          qualityUsed: jpegQuality,
+          resolutionScale: scale,
+          compressionMethod: `Compression Level: ${compressionLevel}%`,
+          accuracy: 100,
+          attempts: 1
+        };
+      } else {
+        // Advanced mode - use target size
+        targetBytes = getTargetSizeInBytes(targetSize);
+        result = await findOptimalCompression(arrayBuffer, targetBytes);
+      }
       
       setProgress(95);
       setProgressMessage("Finalizing compression...");

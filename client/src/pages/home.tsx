@@ -11,7 +11,7 @@ import {
   Clock, ChevronRight, Sparkles
 } from "lucide-react";
 import { useSEO, generateOrganizationSchema, generateWebApplicationSchema, generateFAQSchema, generateServiceSchema } from "@/hooks/use-seo";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { LogoIcon } from "@/components/logo";
 import { 
   toolCategories, 
@@ -222,7 +222,7 @@ export default function Home() {
   return (
     <div className="min-h-screen pattern-bg">
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden hero-gradient">
         <div className="container mx-auto px-4 py-16 lg:py-24">
           <motion.div 
             className="text-center max-w-4xl mx-auto"
@@ -232,66 +232,217 @@ export default function Home() {
           >
             {/* Badge */}
             <motion.div 
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-6"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-6 animate-pulse-glow"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2, type: "spring", stiffness: 200, damping: 10 }}
+              whileHover={{ scale: 1.05 }}
               data-testid="hero-badge"
             >
-              <Shield className="w-4 h-4" />
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+              >
+                <Shield className="w-4 h-4" />
+              </motion.div>
               <span className="text-sm font-medium">100% Privacy Guaranteed</span>
             </motion.div>
 
             {/* Heading */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
-              60+ Professional File Tools,{" "}
-              <span className="gradient-text">Zero Upload Required</span>
-            </h1>
+            <motion.h1 
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+            >
+              <motion.span
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+              >
+                60+ Professional File Tools,{" "}
+              </motion.span>
+              <motion.span 
+                className="gradient-text inline-block"
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+                whileHover={{ scale: 1.05 }}
+              >
+                Zero Upload Required
+              </motion.span>
+            </motion.h1>
             
             {/* Subheading */}
-            <p className="text-lg sm:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            <motion.p 
+              className="text-lg sm:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+            >
               Complete suite of PDF, image, and document tools. All processing happens in your browser. 
               Your files never leave your device. Free forever, no registration.
-            </p>
+            </motion.p>
 
             {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-              <Link href="/compress-pdf">
-                <Button size="lg" className="btn-gradient text-white px-8" data-testid="button-try-compressor">
-                  <Zap className="w-5 h-5 mr-2" />
-                  Try PDF Compressor
-                </Button>
-              </Link>
-              <Button 
-                size="lg" 
-                variant="outline"
-                onClick={() => {
-                  document.getElementById('tools-section')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                data-testid="button-browse-tools"
+            <motion.div 
+              className="flex flex-col sm:flex-row gap-4 justify-center mb-8"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.7 }}
+            >
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
-                <Search className="w-5 h-5 mr-2" />
-                Browse All Tools
-              </Button>
-            </div>
+                <Link href="/compress-pdf">
+                  <Button size="lg" className="btn-gradient text-white px-8" data-testid="button-try-compressor">
+                    <motion.div
+                      className="mr-2"
+                      animate={{ rotate: [0, 15, -15, 0] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                      <Zap className="w-5 h-5" />
+                    </motion.div>
+                    Try PDF Compressor
+                  </Button>
+                </Link>
+              </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                <Button 
+                  size="lg" 
+                  variant="outline"
+                  onClick={() => {
+                    document.getElementById('tools-section')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  data-testid="button-browse-tools"
+                >
+                  <Search className="w-5 h-5 mr-2" />
+                  Browse All Tools
+                </Button>
+              </motion.div>
+            </motion.div>
 
             {/* Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto">
-              {stats.map((stat) => (
-                <Card key={stat.label} className="p-4 text-center glass" data-testid={`stat-${stat.label.toLowerCase().replace(' ', '-')}`}>
-                  <stat.icon className="w-8 h-8 text-primary mx-auto mb-2" />
-                  <p className="text-2xl font-bold gradient-text">{stat.value}</p>
-                  <p className="text-sm font-medium">{stat.label}</p>
-                  <p className="text-xs text-muted-foreground">{stat.description}</p>
-                </Card>
+            <motion.div 
+              className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto"
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: {
+                    staggerChildren: 0.1,
+                    delayChildren: 0.8
+                  }
+                }
+              }}
+            >
+              {stats.map((stat, index) => (
+                <motion.div
+                  key={stat.label}
+                  variants={{
+                    hidden: { opacity: 0, y: 20, scale: 0.8 },
+                    visible: { 
+                      opacity: 1, 
+                      y: 0, 
+                      scale: 1,
+                      transition: {
+                        type: "spring",
+                        stiffness: 100,
+                        damping: 12
+                      }
+                    }
+                  }}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                >
+                  <Card className="p-4 text-center glass h-full" data-testid={`stat-${stat.label.toLowerCase().replace(' ', '-')}`}>
+                    <motion.div
+                      animate={{ rotate: [0, 5, -5, 0] }}
+                      transition={{ duration: 4, repeat: Infinity, delay: index * 0.2 }}
+                    >
+                      <stat.icon className="w-8 h-8 text-primary mx-auto mb-2" />
+                    </motion.div>
+                    <p className="text-2xl font-bold gradient-text">{stat.value}</p>
+                    <p className="text-sm font-medium">{stat.label}</p>
+                    <p className="text-xs text-muted-foreground">{stat.description}</p>
+                  </Card>
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
           </motion.div>
         </div>
 
         {/* Decorative Elements */}
         <div className="absolute top-20 left-10 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
         <div className="absolute top-40 right-10 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute bottom-20 left-1/3 w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob animation-delay-4000"></div>
+        
+        {/* Floating Icons */}
+        <motion.div 
+          className="absolute top-32 left-20 opacity-20"
+          animate={{ 
+            y: [0, -20, 0],
+            rotate: [0, 360]
+          }}
+          transition={{ 
+            duration: 10, 
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        >
+          <FileText className="w-12 h-12 text-primary" />
+        </motion.div>
+        
+        <motion.div 
+          className="absolute top-48 right-32 opacity-20"
+          animate={{ 
+            y: [0, 20, 0],
+            rotate: [0, -360]
+          }}
+          transition={{ 
+            duration: 12, 
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2
+          }}
+        >
+          <Image className="w-10 h-10 text-primary" />
+        </motion.div>
+        
+        <motion.div 
+          className="absolute bottom-32 right-20 opacity-20"
+          animate={{ 
+            y: [0, -15, 0],
+            x: [0, 10, 0]
+          }}
+          transition={{ 
+            duration: 8, 
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1
+          }}
+        >
+          <Shield className="w-14 h-14 text-primary" />
+        </motion.div>
+        
+        {/* Sparkle Effects */}
+        <div className="absolute top-1/4 left-1/4 animate-sparkle">
+          <Sparkles className="w-6 h-6 text-yellow-400 opacity-60" />
+        </div>
+        <div className="absolute top-3/4 right-1/3 animate-sparkle animation-delay-2000">
+          <Sparkles className="w-4 h-4 text-purple-400 opacity-60" />
+        </div>
+        <div className="absolute bottom-1/4 left-1/2 animate-sparkle animation-delay-4000">
+          <Sparkles className="w-5 h-5 text-blue-400 opacity-60" />
+        </div>
       </section>
 
       {/* Features Section */}
