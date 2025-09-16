@@ -24,7 +24,7 @@ interface CompressionParams {
   jpegQuality: number;
   scale: number;
   onProgress?: (progress: number, message: string) => void;
-  mode?: 'hd' | 'balanced' | 'fast' | 'custom';
+  mode?: 'highest' | 'balanced' | 'fast' | 'custom' | 'hd'; // 'hd' for compatibility
   preserveText?: boolean;
 }
 
@@ -174,7 +174,7 @@ async function convertPagesToImages(
   pages: RenderedPage[],
   quality: number,
   onProgress?: (progress: number, message: string) => void,
-  mode: 'hd' | 'balanced' | 'fast' | 'custom' = 'balanced'
+  mode: 'highest' | 'balanced' | 'fast' | 'custom' | 'hd' = 'balanced'
 ): Promise<PageImage[]> {
   const pageImages: PageImage[] = [];
   
@@ -185,11 +185,11 @@ async function convertPagesToImages(
     }
     
     // Always use JPEG for consistent compression behavior
-    // HD mode uses higher quality but still JPEG for predictable file sizes
+    // Highest quality mode uses maximum quality for text clarity
     let adjustedQuality = quality;
-    if (mode === 'hd') {
-      // HD mode: Boost quality slightly but stay in JPEG for compression control
-      adjustedQuality = Math.min(0.99, quality + 0.05);
+    if (mode === 'highest' || mode === 'hd') {
+      // Highest Quality: Maximum quality for best text preservation
+      adjustedQuality = Math.min(0.99, quality + 0.08); // Significant boost for text clarity
     }
     
     const dataUrl = await canvasToImage(pages[i].canvas, adjustedQuality, 'jpeg');
@@ -267,13 +267,13 @@ export async function compressPDFSimple(
   // Clear cache for each compression to avoid mixing PDFs
   clearRenderCache();
   
-  // HD mode adjustments for maximum quality preservation
+  // Highest quality mode adjustments for maximum text clarity
   let adjustedParams = { ...params };
-  if (mode === 'hd') {
-    // HD mode: Boost quality but allow flexibility for compression
-    adjustedParams.jpegQuality = Math.max(params.jpegQuality, 0.80); // Lower floor for better compression
-    adjustedParams.scale = Math.max(params.scale, 0.90); // Lower floor for tighter targets
-    console.log('HD Mode: Enhanced quality settings applied');
+  if (mode === 'highest' || mode === 'hd') {
+    // Highest Quality: Maximum quality for text readability
+    adjustedParams.jpegQuality = Math.max(params.jpegQuality, 0.92); // Very high floor for text
+    adjustedParams.scale = Math.max(params.scale, 0.96); // Preserve text resolution
+    console.log('Highest Quality Mode: Maximum quality settings for text clarity');
   } else if (mode === 'fast') {
     // Fast mode: Prioritize speed with reasonable quality
     adjustedParams.jpegQuality = Math.min(params.jpegQuality, 0.75);
@@ -348,24 +348,30 @@ export async function compressPDFSimple(
   }
 }
 
-// Advanced HD compression using optimal parameters
+// Advanced Highest Quality compression using optimal parameters
 export async function compressPDFAdvanced(
   pdfBytes: ArrayBuffer,
   params: CompressionParams
 ): Promise<Blob> {
-  // Default to HD mode for advanced compression
-  const hdParams = { ...params, mode: params.mode || 'hd' as const };
-  const result = await compressPDFSimple(pdfBytes, hdParams);
+  // Default to Highest mode for advanced compression
+  const highestParams = { ...params, mode: params.mode || 'highest' as const };
+  const result = await compressPDFSimple(pdfBytes, highestParams);
   return result.blob;
 }
 
-// HD Quality presets for easy use
+// Quality presets for easy use
 export const COMPRESSION_PRESETS = {
+  highest: {
+    jpegQuality: 0.95, // Maximum quality for best text clarity
+    scale: 0.98,       // Near-original resolution for sharp text
+    mode: 'highest' as const,
+    description: 'Highest Quality - Maximum text clarity and sharpness'
+  },
   hd: {
-    jpegQuality: 0.88, // Adjusted for better compression flexibility
-    scale: 0.95,       // Adjusted to allow reaching targets
-    mode: 'hd' as const,
-    description: 'HD Quality - Enhanced clarity with smart compression'
+    jpegQuality: 0.95, // Alias for highest quality for compatibility
+    scale: 0.98,
+    mode: 'highest' as const,
+    description: 'Highest Quality - Maximum text clarity and sharpness'
   },
   balanced: {
     jpegQuality: 0.80,
@@ -397,7 +403,7 @@ export async function compressToTargetSize(
   pdfBytes: ArrayBuffer,
   targetSize: number,
   onProgress?: (progress: number, message: string) => void,
-  mode: 'hd' | 'balanced' | 'fast' = 'balanced'
+  mode: 'highest' | 'balanced' | 'fast' | 'hd' = 'balanced'
 ): Promise<{ blob: Blob; quality: number; scale: number; attempts: number; mode: string }> {
   // Create a copy to avoid ArrayBuffer detachment issues
   const pdfBytesCopy = pdfBytes.slice(0);
@@ -415,33 +421,33 @@ export async function compressToTargetSize(
   let minScale: number;
   let maxScale: number;
   
-  if (mode === 'hd') {
-    // HD Mode: High quality but flexible enough for targets
+  if (mode === 'highest' || mode === 'hd') {
+    // Highest Quality Mode: Maximum quality for text readability
     if (compressionRatio >= 0.7) {
-      minQuality = 0.88; // Reduced from 0.92
+      minQuality = 0.94; // Very high quality floor
       maxQuality = 0.99;
-      minScale = 0.95;   // Reduced from 0.98
+      minScale = 0.97;   // Near-original resolution
       maxScale = 1.0;
     } else if (compressionRatio >= 0.4) {
-      minQuality = 0.80; // Reduced from 0.88
+      minQuality = 0.90; // High quality even for medium compression
       maxQuality = 0.98;
-      minScale = 0.90;   // Reduced from 0.95
+      minScale = 0.94;   // Preserve text details
       maxScale = 1.0;
     } else if (compressionRatio >= 0.2) {
-      minQuality = 0.70; // Reduced from 0.82
-      maxQuality = 0.96;
-      minScale = 0.85;   // Reduced from 0.92
+      minQuality = 0.85; // Still high quality for stronger compression
+      maxQuality = 0.97;
+      minScale = 0.90;   // Good text preservation
       maxScale = 1.0;
     } else if (compressionRatio >= 0.1) {
-      minQuality = 0.60; // Reduced from 0.75
-      maxQuality = 0.93;
-      minScale = 0.75;   // Reduced from 0.88
-      maxScale = 0.95;
+      minQuality = 0.78; // Decent quality for tight targets
+      maxQuality = 0.95;
+      minScale = 0.85;   // Acceptable text clarity
+      maxScale = 0.97;
     } else {
-      minQuality = 0.50; // Reduced from 0.65
-      maxQuality = 0.90;
-      minScale = 0.65;   // Reduced from 0.80
-      maxScale = 0.90;
+      minQuality = 0.70; // Minimum acceptable for text
+      maxQuality = 0.93;
+      minScale = 0.78;   // Still readable text
+      maxScale = 0.92;
     }
   } else if (mode === 'fast') {
     // Fast Mode: Prioritize speed with reasonable quality
