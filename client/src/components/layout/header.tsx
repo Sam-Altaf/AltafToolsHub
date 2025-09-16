@@ -50,7 +50,11 @@ export default function Header() {
           ? "bg-background/80 backdrop-blur-lg border-b shadow-sm" 
           : "bg-background border-b"
       )}
-      style={{ zIndex: 9999, position: 'sticky' }}
+      style={{ 
+        zIndex: 99999,  // Maximum z-index for header
+        position: 'sticky',
+        top: 0 
+      }}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: "spring", stiffness: 100, damping: 20 }}

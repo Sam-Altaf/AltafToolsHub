@@ -139,9 +139,15 @@ export function MultiDropdownNav() {
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
             className="absolute top-full left-0 right-0 mt-1"
-            style={{ zIndex: 9999 }}
+            style={{ 
+              zIndex: 99999, // Maximum z-index to ensure dropdown appears above everything
+              position: 'absolute'
+            }}
           >
-            <div className="flex gap-4 p-6 bg-background border rounded-xl shadow-xl" style={{ position: 'relative', zIndex: 9999 }}>
+            <div className="flex gap-4 p-6 bg-background border rounded-xl shadow-xl" style={{ 
+              position: 'relative', 
+              zIndex: 99999 // Maximum z-index for dropdown content
+            }}>
               {menuItems.map((menuItem) => {
                 const category = toolCategories.find(cat => cat.id === menuItem.categoryId);
                 const tools = menuItem.id === "utilities" 

@@ -198,7 +198,8 @@
   background: linear-gradient(180deg, #000000 0%, #001133 50%, #000511 100%);
   position: relative;
   overflow: hidden;
-  z-index: 0;
+  z-index: 1 !important; /* Very low to stay below navigation */
+  isolation: isolate; /* Create new stacking context to prevent interference */
 }
 
 /* Animated Tech Grid Pattern */
@@ -214,7 +215,7 @@
     linear-gradient(90deg, rgba(0, 136, 255, 0.03) 2px, transparent 2px);
   background-size: 100px 100px;
   animation: gridSlide 20s linear infinite;
-  z-index: 1;
+  z-index: 0 !important; /* Below hero content */
   pointer-events: none;
 }
 
@@ -232,7 +233,7 @@
     radial-gradient(circle at 40% 20%, rgba(0, 168, 255, 0.1), transparent 50%),
     radial-gradient(circle at 70% 40%, rgba(0, 128, 255, 0.08), transparent 50%);
   animation: techPulse 15s ease-in-out infinite;
-  z-index: 1;
+  z-index: 0 !important; /* Below hero content */
   pointer-events: none;
   filter: blur(40px);
 }
@@ -244,7 +245,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1;
+  z-index: 0 !important; /* Below hero content */
   opacity: 0.3;
   background-image: 
     repeating-linear-gradient(
@@ -306,7 +307,7 @@
 /* Hero Content with Enhanced Visibility */
 .hero-content {
   position: relative;
-  z-index: 3;
+  z-index: 2 !important; /* Above animations but below header */
   color: #ffffff;
 }
 
@@ -412,41 +413,50 @@
 
 /* Fixed Navigation z-index - Ensure dropdowns appear above everything */
 header {
-  z-index: 50 !important;
-  position: relative;
+  position: sticky !important;
+  top: 0;
+  z-index: 99999 !important; /* Highest possible to ensure dropdown visibility */
 }
 
 /* Force dropdown container to highest level */
 .multi-dropdown-container {
-  z-index: 9999 !important;
+  z-index: 99999 !important;
   position: relative;
 }
 
 /* Navigation z-index fixes to ensure dropdowns appear above all content */
 [data-radix-navigation-menu] {
-  z-index: 9999 !important;
+  z-index: 99999 !important;
 }
 
 [data-radix-popper-content] {
-  z-index: 9999 !important;
+  z-index: 99999 !important;
 }
 
 /* Ensure navigation viewport and content have proper z-index */
 [data-radix-navigation-menu-viewport] {
-  z-index: 9999 !important;
+  z-index: 99999 !important;
 }
 
 [data-radix-navigation-menu-content] {
-  z-index: 9999 !important;
+  z-index: 99999 !important;
 }
 
 /* Ensure dropdowns are always on top */
 .navigation-menu {
-  z-index: 9999 !important;
+  z-index: 99999 !important;
 }
 
 .navigation-menu-content {
-  z-index: 9999 !important;
+  z-index: 99999 !important;
+}
+
+/* Global dropdown fix - ensure all dropdown containers are on top */
+.dropdown-menu,
+.dropdown-content,
+[role="menu"],
+[data-state="open"] {
+  z-index: 99999 !important;
 }
 
 /* Sparkle animation */
