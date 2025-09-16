@@ -41,7 +41,7 @@ interface CompressionParams {
   jpegQuality: number;
   scale: number;
   onProgress?: (progress: number, message: string) => void;
-  mode?: 'hd' | 'balanced' | 'fast' | 'custom';
+  mode?: 'highest' | 'hd' | 'balanced' | 'fast' | 'custom';
 }
 
 export default function CompressPDF() {
