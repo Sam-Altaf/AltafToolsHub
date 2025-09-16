@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -82,13 +82,34 @@ const menuItems = [
 ];
 
 export function MultiDropdownNav() {
-  const [isHovered, setIsHovered] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Handle click outside to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
+  };
 
   return (
     <div 
+      ref={containerRef}
       className="relative multi-dropdown-container"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
       {/* Menu Triggers */}
       <div className="flex items-center space-x-1">
@@ -99,6 +120,8 @@ export function MultiDropdownNav() {
               key={item.id}
               variant="ghost"
               className="font-medium hover:bg-accent hover:text-accent-foreground"
+              onClick={handleToggle}
+              data-testid={`nav-button-${item.id}`}
             >
               <Icon className="w-4 h-4 mr-2" />
               {item.label}
@@ -109,7 +132,7 @@ export function MultiDropdownNav() {
 
       {/* All Dropdowns Container */}
       <AnimatePresence>
-        {isHovered && (
+        {isOpen && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
