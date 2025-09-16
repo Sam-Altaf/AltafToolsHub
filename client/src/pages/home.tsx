@@ -228,6 +228,9 @@ export default function Home() {
     <div className="min-h-screen pattern-bg">
       {/* Hero Section */}
       <section className="relative overflow-hidden hero-gradient">
+        {/* Tech Circuit Animation Layer */}
+        <div className="hero-circuit" />
+        
         <div className="hero-content container mx-auto px-4 py-16 lg:py-24">
           <motion.div 
             className="text-center max-w-4xl mx-auto text-white"
@@ -302,7 +305,7 @@ export default function Home() {
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
                 <Link href="/compress-pdf">
-                  <Button size="lg" className="btn-gradient text-white px-8" data-testid="button-try-compressor">
+                  <Button size="lg" className="hero-btn-primary text-white px-8" data-testid="button-try-compressor">
                     <motion.div
                       className="mr-2"
                       animate={{ rotate: [0, 15, -15, 0] }}
@@ -321,7 +324,7 @@ export default function Home() {
               >
                 <Button 
                   size="lg" 
-                  variant="outline"
+                  className="hero-btn-secondary"
                   onClick={() => {
                     document.getElementById('tools-section')?.scrollIntoView({ behavior: 'smooth' });
                   }}

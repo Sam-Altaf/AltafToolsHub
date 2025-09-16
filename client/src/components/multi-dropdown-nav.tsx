@@ -86,7 +86,7 @@ export function MultiDropdownNav() {
 
   return (
     <div 
-      className="relative"
+      className="relative multi-dropdown-container"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -115,9 +115,10 @@ export function MultiDropdownNav() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="absolute top-full left-0 right-0 mt-1 z-[9999]"
+            className="absolute top-full left-0 right-0 mt-1"
+            style={{ zIndex: 9999 }}
           >
-            <div className="flex gap-4 p-6 bg-background border rounded-xl shadow-xl">
+            <div className="flex gap-4 p-6 bg-background border rounded-xl shadow-xl" style={{ position: 'relative', zIndex: 9999 }}>
               {menuItems.map((menuItem) => {
                 const category = toolCategories.find(cat => cat.id === menuItem.categoryId);
                 const tools = menuItem.id === "utilities" 

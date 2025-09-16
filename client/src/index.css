@@ -192,15 +192,16 @@
   background-clip: text;
 }
 
-/* Hero gradient with elegant animation and dark overlay */
+/* Dark Techy Hero Gradient with Professional Animation */
 .hero-gradient {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #000000;
+  background: linear-gradient(180deg, #000000 0%, #001133 50%, #000511 100%);
   position: relative;
   overflow: hidden;
-  z-index: 1;
+  z-index: 0;
 }
 
-/* Dark overlay for text readability */
+/* Animated Tech Grid Pattern */
 .hero-gradient::before {
   content: '';
   position: absolute;
@@ -208,12 +209,16 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.35);
-  z-index: 2;
+  background-image: 
+    linear-gradient(rgba(0, 136, 255, 0.03) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(0, 136, 255, 0.03) 2px, transparent 2px);
+  background-size: 100px 100px;
+  animation: gridSlide 20s linear infinite;
+  z-index: 1;
   pointer-events: none;
 }
 
-/* Animated background shapes */
+/* Glowing Blue Energy Orbs */
 .hero-gradient::after {
   content: '';
   position: absolute;
@@ -222,34 +227,154 @@
   right: -50%;
   bottom: -50%;
   background: 
-    radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.4), transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(255, 119, 198, 0.3), transparent 50%),
-    radial-gradient(circle at 40% 20%, rgba(255, 219, 198, 0.3), transparent 50%),
-    radial-gradient(circle at 70% 40%, rgba(120, 119, 198, 0.2), transparent 50%);
-  animation: morphing 25s ease-in-out infinite;
+    radial-gradient(circle at 20% 50%, rgba(0, 136, 255, 0.15), transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(0, 102, 204, 0.1), transparent 50%),
+    radial-gradient(circle at 40% 20%, rgba(0, 168, 255, 0.1), transparent 50%),
+    radial-gradient(circle at 70% 40%, rgba(0, 128, 255, 0.08), transparent 50%);
+  animation: techPulse 15s ease-in-out infinite;
   z-index: 1;
+  pointer-events: none;
+  filter: blur(40px);
+}
+
+/* Tech Circuit Lines Animation */
+.hero-circuit {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  opacity: 0.3;
+  background-image: 
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 200px,
+      rgba(0, 136, 255, 0.1) 200px,
+      rgba(0, 136, 255, 0.1) 201px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 200px,
+      rgba(0, 136, 255, 0.1) 200px,
+      rgba(0, 136, 255, 0.1) 201px
+    );
+  animation: circuitFlow 10s linear infinite;
   pointer-events: none;
 }
 
-@keyframes morphing {
+@keyframes gridSlide {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(100px, 100px); }
+}
+
+@keyframes techPulse {
   0%, 100% { 
-    transform: rotate(0deg) scale(1) translate(0, 0);
-    filter: blur(40px);
+    transform: scale(1) rotate(0deg);
+    filter: blur(40px) brightness(1);
   }
-  33% { 
-    transform: rotate(60deg) scale(1.1) translate(-10%, 10%);
-    filter: blur(50px);
+  25% {
+    transform: scale(1.1) rotate(90deg);
+    filter: blur(45px) brightness(1.2);
   }
-  66% { 
-    transform: rotate(-60deg) scale(0.9) translate(10%, -10%);
-    filter: blur(45px);
+  50% { 
+    transform: scale(1.05) rotate(180deg);
+    filter: blur(35px) brightness(1.1);
+  }
+  75% {
+    transform: scale(0.95) rotate(270deg);
+    filter: blur(50px) brightness(0.9);
   }
 }
 
-/* Ensure content is above overlay */
+@keyframes circuitFlow {
+  0% { 
+    transform: translateX(0);
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% { 
+    transform: translateX(20px);
+    opacity: 0.3;
+  }
+}
+
+/* Hero Content with Enhanced Visibility */
 .hero-content {
   position: relative;
   z-index: 3;
+  color: #ffffff;
+}
+
+/* Enhanced Text with Blue Glow */
+.hero-content h1 {
+  text-shadow: 
+    0 0 20px rgba(0, 168, 255, 0.5),
+    0 0 40px rgba(0, 168, 255, 0.3),
+    0 0 60px rgba(0, 168, 255, 0.1);
+}
+
+.hero-content h2 {
+  text-shadow: 0 0 15px rgba(0, 168, 255, 0.3);
+}
+
+.hero-content p {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Blue Gradient Buttons for Hero */
+.hero-btn-primary {
+  background: linear-gradient(135deg, #0066cc 0%, #00a8ff 100%);
+  box-shadow: 
+    0 4px 20px rgba(0, 168, 255, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.hero-btn-primary:hover {
+  background: linear-gradient(135deg, #0052a3 0%, #0095e8 100%);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 
+    0 6px 30px rgba(0, 168, 255, 0.6),
+    0 12px 48px rgba(0, 102, 204, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.hero-btn-primary:hover::before {
+  left: 100%;
+}
+
+/* Secondary Button with Blue Theme */
+.hero-btn-secondary {
+  background: rgba(0, 136, 255, 0.1);
+  border: 2px solid rgba(0, 168, 255, 0.5);
+  color: #00a8ff;
+  transition: all 0.3s ease;
+}
+
+.hero-btn-secondary:hover {
+  background: rgba(0, 136, 255, 0.2);
+  border-color: #00a8ff;
+  box-shadow: 0 4px 20px rgba(0, 168, 255, 0.3);
+  transform: translateY(-2px);
 }
 
 /* Floating animation for decorative elements */
@@ -283,6 +408,18 @@
 
 .animation-delay-4000 {
   animation-delay: 4s;
+}
+
+/* Fixed Navigation z-index - Ensure dropdowns appear above everything */
+header {
+  z-index: 50 !important;
+  position: relative;
+}
+
+/* Force dropdown container to highest level */
+.multi-dropdown-container {
+  z-index: 9999 !important;
+  position: relative;
 }
 
 /* Navigation z-index fixes to ensure dropdowns appear above all content */

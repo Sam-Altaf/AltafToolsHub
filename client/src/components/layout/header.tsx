@@ -45,11 +45,12 @@ export default function Header() {
   return (
     <motion.header 
       className={cn(
-        "sticky top-0 z-[9999] w-full max-w-full overflow-x-hidden transition-all duration-300",
+        "sticky top-0 w-full max-w-full overflow-x-hidden transition-all duration-300",
         isScrolled 
           ? "bg-background/80 backdrop-blur-lg border-b shadow-sm" 
           : "bg-background border-b"
       )}
+      style={{ zIndex: 9999, position: 'sticky' }}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: "spring", stiffness: 100, damping: 20 }}
