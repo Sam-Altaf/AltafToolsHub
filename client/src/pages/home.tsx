@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "wouter";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -23,11 +23,6 @@ import {
   Tool 
 } from "@/lib/tools-data";
 import { cn } from "@/lib/utils";
-import { RecentToolsSection } from "@/components/recent-tools-section";
-import { useRecentTools } from "@/hooks/use-recent-tools";
-import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
-import { FileDropZone } from "@/components/file-drop-zone";
-import { QuickActionsBar } from "@/components/quick-actions-bar";
 
 const features = [
   {
@@ -84,16 +79,9 @@ const testimonials = [
 // Tool Card Component
 const ToolCard = ({ tool }: { tool: Tool }) => {
   const Icon = tool.icon;
-  const { addRecentTool } = useRecentTools();
-  
-  const handleClick = () => {
-    if (tool.available) {
-      addRecentTool(tool.id);
-    }
-  };
   
   return (
-    <Link href={tool.available ? tool.href : "#"} onClick={handleClick}>
+    <Link href={tool.available ? tool.href : "#"}>
       <motion.div
         whileHover={tool.available ? { scale: 1.02 } : {}}
         whileTap={tool.available ? { scale: 0.98 } : {}}
@@ -179,9 +167,6 @@ const itemVariants = {
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  
-  // Enable keyboard shortcuts
-  useKeyboardShortcuts();
 
   // Filter tools based on search and category
   const filteredTools = allTools.filter(tool => {
@@ -240,8 +225,7 @@ export default function Home() {
   });
 
   return (
-    <FileDropZone className="min-h-screen pattern-bg">
-      <QuickActionsBar />
+    <div className="min-h-screen pattern-bg">
       {/* Hero Section */}
       <section className="relative overflow-hidden hero-gradient">
         {/* Tech Circuit Animation Layer */}
@@ -504,9 +488,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Recent Tools Section */}
-      <RecentToolsSection />
-
       {/* Tools Section */}
       <section id="tools-section" className="py-16">
         <div className="container mx-auto px-4">
@@ -524,11 +505,11 @@ export default function Home() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
                 <Input
                   type="text"
-                  placeholder="Search tools... (Press / or Ctrl+K)"
+                  placeholder="Search tools..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10 pr-4 py-2 w-full"
-                  data-testid="input-search"
+                  data-testid="input-search-tools"
                 />
               </div>
             </div>
@@ -754,6 +735,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-    </FileDropZone>
+    </div>
   );
 }
