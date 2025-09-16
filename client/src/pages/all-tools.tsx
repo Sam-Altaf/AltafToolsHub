@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { allTools, toolCategories } from "@/lib/tools-data";
 import { Link } from "wouter";
@@ -168,6 +168,15 @@ export default function AllToolsPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState<'name' | 'category' | 'status'>('category');
   const [statusFilter, setStatusFilter] = useState<'all' | 'available' | 'soon'>('all');
+  
+  // Check URL params on mount for category selection
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const categoryParam = params.get('category');
+    if (categoryParam && toolCategories.some(cat => cat.id === categoryParam)) {
+      setSelectedCategory(categoryParam);
+    }
+  }, []);
   
   // Filter and sort tools
   const filteredTools = useMemo(() => {

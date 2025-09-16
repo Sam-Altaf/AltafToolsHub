@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useSEO, generateHowToSchema, generateSoftwareApplicationSchema } from "@/hooks/use-seo";
 import { 
@@ -126,31 +127,19 @@ export default function ExtractText() {
     setError(null);
 
     try {
-      const worker = await Tesseract.createWorker({
-        logger: (m) => {
-          // Update progress based on Tesseract logs
-          if (m.status === 'recognizing text') {
-            const progressPercent = Math.round(m.progress * 100);
-            setProgress(progressPercent);
-            setProgressStatus(`Extracting text... ${progressPercent}%`);
-          } else if (m.status === 'loading language traineddata') {
-            setProgressStatus(`Loading ${language} language model...`);
-            setProgress(20);
-          } else if (m.status === 'initializing tesseract') {
-            setProgressStatus('Initializing OCR engine...');
-            setProgress(10);
-          } else if (m.status === 'initialized tesseract') {
-            setProgressStatus('OCR engine ready...');
-            setProgress(30);
-          }
-        }
-      });
-
-      await worker.loadLanguage(language);
-      await worker.initialize(language);
+      // Modern Tesseract.js API - language loading happens in createWorker
+      setProgressStatus(`Initializing OCR for ${language}...`);
+      setProgress(20);
       
-      setProgressStatus('Processing image...');
+      const worker = await Tesseract.createWorker(language);
+      
+      setProgressStatus('Extracting text from image...');
+      setProgress(50);
+      
       const { data } = await worker.recognize(imagePreview);
+      
+      setProgress(90);
+      setProgressStatus('Finalizing...');
       
       await worker.terminate();
 
@@ -288,7 +277,9 @@ export default function ExtractText() {
           </p>
         </div>
 
-        <PrivacyNotice />
+        <PrivacyNotice 
+          message="All image processing happens locally in your browser. Your images never leave your device."
+        />
 
         {/* Main Content */}
         <div className="grid lg:grid-cols-2 gap-6 mb-8">
@@ -354,12 +345,12 @@ export default function ExtractText() {
                       <SelectTrigger id="language" data-testid="select-language">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="max-h-[300px]">
                         {SUPPORTED_LANGUAGES.map(lang => (
                           <SelectItem key={lang.value} value={lang.value}>
-                            <span className="flex items-center gap-2">
-                              <Globe className="w-4 h-4" />
-                              {lang.label} ({lang.native})
+                            <span className="flex items-center gap-2 overflow-hidden">
+                              <Globe className="w-4 h-4 flex-shrink-0" />
+                              <span>{lang.label} • {lang.native}</span>
                             </span>
                           </SelectItem>
                         ))}
@@ -413,7 +404,7 @@ export default function ExtractText() {
           </div>
 
           {/* Output Section */}
-          <div>
+          <div className="lg:sticky lg:top-4">
             {extractedResult ? (
               <Card className="p-6">
                 <div className="flex items-center justify-between mb-4">
@@ -443,14 +434,14 @@ export default function ExtractText() {
                 {/* Statistics */}
                 <div className="grid grid-cols-3 gap-3 mb-4">
                   <div className="text-center p-3 rounded-lg bg-muted">
-                    <div className="text-2xl font-bold" data-testid="stat-words">
-                      {extractedResult.wordCount}
+                    <div className="text-xl sm:text-2xl font-bold truncate" data-testid="stat-words">
+                      {extractedResult.wordCount.toLocaleString()}
                     </div>
                     <div className="text-xs text-muted-foreground">Words</div>
                   </div>
                   
                   <div className="text-center p-3 rounded-lg bg-muted">
-                    <div className={cn("text-2xl font-bold", getConfidenceColor(extractedResult.confidence))}
+                    <div className={cn("text-xl sm:text-2xl font-bold", getConfidenceColor(extractedResult.confidence))}
                          data-testid="stat-confidence">
                       {extractedResult.confidence}%
                     </div>
@@ -458,20 +449,25 @@ export default function ExtractText() {
                   </div>
                   
                   <div className="text-center p-3 rounded-lg bg-muted">
-                    <div className="text-2xl font-bold" data-testid="stat-chars">
-                      {extractedResult.text.length}
+                    <div className="text-xl sm:text-2xl font-bold truncate" data-testid="stat-chars">
+                      {extractedResult.text.length.toLocaleString()}
                     </div>
                     <div className="text-xs text-muted-foreground">Characters</div>
                   </div>
                 </div>
 
                 {/* Extracted Text */}
-                <Textarea
-                  value={extractedResult.text}
-                  readOnly
-                  className="min-h-[400px] resize-none font-mono text-sm"
-                  data-testid="textarea-extracted"
-                />
+                <div className="relative">
+                  <Textarea
+                    value={extractedResult.text}
+                    readOnly
+                    className="min-h-[400px] max-h-[500px] resize-y font-mono text-sm overflow-auto"
+                    data-testid="textarea-extracted"
+                  />
+                  <div className="absolute bottom-2 right-2 bg-background/90 backdrop-blur px-2 py-1 rounded text-xs text-muted-foreground">
+                    {extractedResult.text.split('\n').length} lines
+                  </div>
+                </div>
 
                 <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
                   <Check className="w-4 h-4 text-green-500" />
@@ -479,13 +475,22 @@ export default function ExtractText() {
                 </div>
               </Card>
             ) : (
-              <Card className="p-6 h-full min-h-[500px] flex items-center justify-center">
+              <Card className="p-6 h-full min-h-[500px] flex items-center justify-center border-dashed">
                 <div className="text-center text-muted-foreground">
-                  <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                  <div className="relative">
+                    <FileText className="w-16 h-16 mx-auto mb-4 opacity-20" />
+                    <ScanLine className="w-8 h-8 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-primary opacity-60 animate-pulse" />
+                  </div>
                   <p className="text-lg font-medium mb-2">No text extracted yet</p>
-                  <p className="text-sm">
+                  <p className="text-sm mb-4">
                     Upload an image and click "Extract Text" to begin
                   </p>
+                  <div className="flex flex-wrap gap-2 justify-center text-xs">
+                    <Badge variant="secondary">JPG</Badge>
+                    <Badge variant="secondary">PNG</Badge>
+                    <Badge variant="secondary">WebP</Badge>
+                    <Badge variant="secondary">BMP</Badge>
+                  </div>
                 </div>
               </Card>
             )}

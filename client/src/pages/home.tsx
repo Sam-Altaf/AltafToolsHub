@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -206,10 +206,10 @@ const itemVariants = {
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
+  const [, navigate] = useLocation();
   
   // Show limited tools per category initially
-  const INITIAL_TOOLS_COUNT = 4;
+  const INITIAL_TOOLS_COUNT = 3; // Show only 3, then redirect to All Tools page
 
   // Filter tools based on search and category
   const filteredTools = allTools.filter(tool => {
@@ -730,8 +730,7 @@ export default function Home() {
                 // Show all tools grouped by category with see more/less functionality
                 <div className="space-y-12">
                   {toolCategories.map((category) => {
-                    const isExpanded = expandedCategories[category.id] || false;
-                    const toolsToShow = isExpanded ? category.tools : category.tools.slice(0, INITIAL_TOOLS_COUNT);
+                    const toolsToShow = category.tools.slice(0, INITIAL_TOOLS_COUNT);
                     const hasMoreTools = category.tools.length > INITIAL_TOOLS_COUNT;
                     
                     return (
@@ -757,7 +756,7 @@ export default function Home() {
                           ))}
                         </motion.div>
                         
-                        {/* See More / See Less Button */}
+                        {/* See All Button - Redirects to All Tools page */}
                         {hasMoreTools && (
                           <motion.div 
                             className="flex justify-center mt-8"
@@ -768,34 +767,19 @@ export default function Home() {
                             <Button
                               variant="outline"
                               size="lg"
-                              onClick={() => setExpandedCategories(prev => ({
-                                ...prev,
-                                [category.id]: !isExpanded
-                              }))}
+                              onClick={() => {
+                                navigate(`/all-tools?category=${category.id}`);
+                              }}
                               className="group px-8 py-3 text-base font-medium hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+                              data-testid={`button-see-all-${category.id}`}
                             >
-                              {isExpanded ? (
-                                <>
-                                  <motion.div
-                                    initial={{ rotate: 0 }}
-                                    animate={{ rotate: 180 }}
-                                    className="mr-2"
-                                  >
-                                    <ChevronRight className="w-5 h-5" />
-                                  </motion.div>
-                                  Show Less ({category.tools.length - INITIAL_TOOLS_COUNT} hidden)
-                                </>
-                              ) : (
-                                <>
-                                  <motion.div
-                                    whileHover={{ x: 3 }}
-                                    className="mr-2"
-                                  >
-                                    <ChevronRight className="w-5 h-5" />
-                                  </motion.div>
-                                  See More ({category.tools.length - INITIAL_TOOLS_COUNT} more tools)
-                                </>
-                              )}
+                              <motion.div
+                                whileHover={{ x: 3 }}
+                                className="mr-2"
+                              >
+                                <ChevronRight className="w-5 h-5" />
+                              </motion.div>
+                              See All {category.name} ({category.tools.length} tools)
                             </Button>
                           </motion.div>
                         )}
