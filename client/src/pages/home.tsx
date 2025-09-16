@@ -76,62 +76,100 @@ const testimonials = [
   }
 ];
 
-// Tool Card Component
+// Enhanced Tool Card Component with premium animations
 const ToolCard = ({ tool }: { tool: Tool }) => {
   const Icon = tool.icon;
   
   return (
     <Link href={tool.available ? tool.href : "#"}>
       <motion.div
-        whileHover={tool.available ? { scale: 1.02 } : {}}
+        whileHover={tool.available ? { scale: 1.03, y: -5 } : {}}
         whileTap={tool.available ? { scale: 0.98 } : {}}
         className="h-full"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ 
+          duration: 0.5, 
+          ease: [0.4, 0, 0.2, 1],
+          hover: { duration: 0.3 }
+        }}
       >
         <Card className={cn(
-          "tool-card relative h-full p-7 transition-all duration-300 cursor-pointer group min-h-[320px]",
-          !tool.available && "opacity-75 cursor-not-allowed"
+          "tool-card relative h-full p-7 transition-all duration-500 cursor-pointer group min-h-[320px]",
+          "hover:shadow-2xl",
+          !tool.available && "opacity-70 cursor-not-allowed hover:opacity-70"
         )} data-testid={`tool-card-${tool.id}`}>
           {/* New/Popular/Coming Soon Badge */}
           {(tool.new || tool.popular || !tool.available) && (
             <div className="absolute top-3 right-3">
               {tool.new && (
-                <Badge className="bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20">
-                  <Sparkles className="w-3 h-3 mr-1" />
-                  New
-                </Badge>
+                <motion.div
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
+                >
+                  <Badge className="bg-gradient-to-r from-green-500/20 to-green-400/10 text-green-600 dark:text-green-400 border-green-500/30 font-semibold shadow-lg">
+                    <Sparkles className="w-3 h-3 mr-1 animate-pulse" />
+                    New
+                  </Badge>
+                </motion.div>
               )}
               {tool.popular && (
-                <Badge className="bg-primary/10 text-primary border-primary/20">
-                  <Star className="w-3 h-3 mr-1" />
-                  Popular
-                </Badge>
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
+                >
+                  <Badge className="bg-gradient-to-r from-primary/20 to-blue-500/10 text-primary border-primary/30 font-semibold shadow-lg">
+                    <Star className="w-3 h-3 mr-1 animate-pulse-glow" />
+                    Popular
+                  </Badge>
+                </motion.div>
               )}
               {!tool.available && (
-                <Badge variant="secondary">
-                  <Clock className="w-3 h-3 mr-1" />
-                  Soon
-                </Badge>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                >
+                  <Badge variant="secondary" className="bg-gradient-to-r from-gray-500/20 to-gray-400/10 border-gray-500/30 font-medium">
+                    <Clock className="w-3 h-3 mr-1 animate-pulse" />
+                    Coming Soon
+                  </Badge>
+                </motion.div>
               )}
             </div>
           )}
           
-          {/* Icon */}
-          <div className={cn(
-            "w-16 h-16 rounded-2xl flex items-center justify-center mb-5 transition-all shadow-lg",
-            "bg-gradient-to-br", tool.color,
-            tool.available && "group-hover:scale-110 group-hover:shadow-xl"
-          )}>
-            <Icon className="w-8 h-8 text-white" />
-          </div>
+          {/* Enhanced Icon with glow effect */}
+          <motion.div 
+            className={cn(
+              "w-16 h-16 rounded-2xl flex items-center justify-center mb-5 transition-all shadow-lg",
+              "bg-gradient-to-br", tool.color,
+              tool.available && "group-hover:scale-110 group-hover:shadow-xl group-hover:rotate-3"
+            )}
+            whileHover={tool.available ? { rotate: [0, -5, 5, 0] } : {}}
+            transition={{ duration: 0.5 }}
+          >
+            <Icon className="w-8 h-8 text-white drop-shadow-lg" />
+          </motion.div>
           
           {/* Content */}
           <h3 className="font-semibold text-xl mb-3 flex items-center gap-2">
             {tool.title}
             {tool.available && (
-              <ChevronRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <motion.div
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 0, x: -10 }}
+                whileHover={{ opacity: 1, x: 0 }}
+                className="inline-block"
+              >
+                <ChevronRight className="w-5 h-5 text-primary" />
+              </motion.div>
             )}
           </h3>
-          <p className="text-base text-muted-foreground leading-relaxed">
+          <p className="text-base text-muted-foreground leading-relaxed group-hover:text-foreground/80 transition-colors duration-300">
             {tool.description}
           </p>
         </Card>
@@ -240,11 +278,11 @@ export default function Home() {
           >
             {/* Badge */}
             <motion.div 
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm text-white mb-6 animate-pulse-glow"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.2, type: "spring", stiffness: 200, damping: 10 }}
-              whileHover={{ scale: 1.05 }}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-white/25 via-white/20 to-white/15 backdrop-blur-md text-white mb-8 shadow-xl border border-white/10"
+              initial={{ scale: 0, opacity: 0, y: -20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, type: "spring", stiffness: 200, damping: 15 }}
+              whileHover={{ scale: 1.08, boxShadow: "0 0 30px rgba(255,255,255,0.3)" }}
               data-testid="hero-badge"
             >
               <motion.div
@@ -256,12 +294,20 @@ export default function Home() {
               <span className="text-sm font-medium">100% Privacy Guaranteed</span>
             </motion.div>
 
-            {/* Heading */}
+            {/* Enhanced Heading with better contrast */}
             <motion.h1 
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-white"
+              className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-6 text-white leading-tight"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+              style={{
+                textShadow: `
+                  0 0 30px rgba(0, 168, 255, 0.6),
+                  0 0 60px rgba(0, 168, 255, 0.4),
+                  0 0 90px rgba(0, 168, 255, 0.2),
+                  0 2px 4px rgba(0, 0, 0, 0.8)
+                `
+              }}
             >
               <motion.span
                 initial={{ opacity: 0, x: -50 }}
@@ -281,12 +327,15 @@ export default function Home() {
               </motion.span>
             </motion.h1>
             
-            {/* Subheading */}
+            {/* Enhanced Subheading with better readability */}
             <motion.p 
-              className="text-lg sm:text-xl text-white/90 mb-8 max-w-2xl mx-auto"
+              className="text-lg sm:text-xl lg:text-2xl text-white/95 mb-10 max-w-3xl mx-auto leading-relaxed font-light"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
+              style={{
+                textShadow: "0 2px 8px rgba(0, 0, 0, 0.7), 0 1px 2px rgba(0, 0, 0, 0.9)"
+              }}
             >
               Process PDFs, images, and documents instantly in your browser. 
               Your files stay on your device with enterprise-grade privacy. Free forever, no registration.
@@ -300,12 +349,14 @@ export default function Home() {
               transition={{ duration: 0.8, delay: 0.7 }}
             >
               <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.08, y: -2 }}
+                whileTap={{ scale: 0.98 }}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
               >
                 <Link href="/compress-pdf">
-                  <Button size="lg" className="hero-btn-primary text-white px-8" data-testid="button-try-compressor">
+                  <Button size="lg" className="hero-btn-primary text-white px-10 py-6 text-lg font-semibold shadow-2xl" data-testid="button-try-compressor">
                     <motion.div
                       className="mr-2"
                       animate={{ rotate: [0, 15, -15, 0] }}
@@ -318,13 +369,15 @@ export default function Home() {
                 </Link>
               </motion.div>
               <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.08, y: -2 }}
+                whileTap={{ scale: 0.98 }}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
               >
                 <Button 
                   size="lg" 
-                  className="hero-btn-secondary"
+                  className="hero-btn-secondary px-10 py-6 text-lg font-semibold"
                   onClick={() => {
                     document.getElementById('tools-section')?.scrollIntoView({ behavior: 'smooth' });
                   }}
