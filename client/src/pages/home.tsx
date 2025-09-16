@@ -88,8 +88,7 @@ const ToolCard = ({ tool }: { tool: Tool }) => {
         className="h-full"
       >
         <Card className={cn(
-          "relative h-full p-6 transition-all duration-300 cursor-pointer group",
-          "hover:shadow-lg hover:border-primary/20",
+          "tool-card relative h-full p-7 transition-all duration-300 cursor-pointer group min-h-[320px]",
           !tool.available && "opacity-75 cursor-not-allowed"
         )} data-testid={`tool-card-${tool.id}`}>
           {/* New/Popular/Coming Soon Badge */}
@@ -118,21 +117,21 @@ const ToolCard = ({ tool }: { tool: Tool }) => {
           
           {/* Icon */}
           <div className={cn(
-            "w-14 h-14 rounded-xl flex items-center justify-center mb-4 transition-all",
+            "w-16 h-16 rounded-2xl flex items-center justify-center mb-5 transition-all shadow-lg",
             "bg-gradient-to-br", tool.color,
-            tool.available && "group-hover:scale-110"
+            tool.available && "group-hover:scale-110 group-hover:shadow-xl"
           )}>
-            <Icon className="w-7 h-7 text-white" />
+            <Icon className="w-8 h-8 text-white" />
           </div>
           
           {/* Content */}
-          <h3 className="font-semibold text-lg mb-2 flex items-center gap-2">
+          <h3 className="font-semibold text-xl mb-3 flex items-center gap-2">
             {tool.title}
             {tool.available && (
-              <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <ChevronRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity" />
             )}
           </h3>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-base text-muted-foreground leading-relaxed">
             {tool.description}
           </p>
         </Card>
@@ -171,8 +170,14 @@ export default function Home() {
 
   // Filter tools based on search and category
   const filteredTools = allTools.filter(tool => {
-    const matchesSearch = tool.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                          tool.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const searchLower = searchQuery.toLowerCase().trim();
+    if (searchLower === '') {
+      return selectedCategory === "all" || tool.category === selectedCategory;
+    }
+    const matchesSearch = tool.title.toLowerCase().includes(searchLower) ||
+                          tool.description.toLowerCase().includes(searchLower) ||
+                          tool.category.toLowerCase().includes(searchLower) ||
+                          tool.id.toLowerCase().includes(searchLower);
     const matchesCategory = selectedCategory === "all" || tool.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
@@ -223,16 +228,16 @@ export default function Home() {
     <div className="min-h-screen pattern-bg">
       {/* Hero Section */}
       <section className="relative overflow-hidden hero-gradient">
-        <div className="container mx-auto px-4 py-16 lg:py-24">
+        <div className="hero-content container mx-auto px-4 py-16 lg:py-24">
           <motion.div 
-            className="text-center max-w-4xl mx-auto"
+            className="text-center max-w-4xl mx-auto text-white"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
             {/* Badge */}
             <motion.div 
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-6 animate-pulse-glow"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm text-white mb-6 animate-pulse-glow"
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.2, type: "spring", stiffness: 200, damping: 10 }}
@@ -250,7 +255,7 @@ export default function Home() {
 
             {/* Heading */}
             <motion.h1 
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6"
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-white"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
@@ -263,7 +268,7 @@ export default function Home() {
                 Professional File Tools,{" "}
               </motion.span>
               <motion.span 
-                className="gradient-text inline-block"
+                className="text-yellow-300 inline-block"
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 }}
@@ -275,7 +280,7 @@ export default function Home() {
             
             {/* Subheading */}
             <motion.p 
-              className="text-lg sm:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto"
+              className="text-lg sm:text-xl text-white/90 mb-8 max-w-2xl mx-auto"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
@@ -527,8 +532,8 @@ export default function Home() {
             </TabsList>
 
             <TabsContent value={selectedCategory} className="mt-0">
-              {selectedCategory === "all" ? (
-                // Show all tools grouped by category
+              {selectedCategory === "all" && searchQuery === '' ? (
+                // Show all tools grouped by category when no search
                 <div className="space-y-12">
                   {toolCategories.map((category) => (
                     <div key={category.id} id={category.id}>
@@ -540,7 +545,7 @@ export default function Home() {
                         </Badge>
                       </div>
                       <motion.div 
-                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6"
                         variants={containerVariants}
                         initial="hidden"
                         whileInView="visible"
@@ -556,9 +561,9 @@ export default function Home() {
                   ))}
                 </div>
               ) : (
-                // Show filtered tools
+                // Show filtered tools when searching or filtering
                 <motion.div 
-                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6"
                   variants={containerVariants}
                   initial="hidden"
                   animate="visible"

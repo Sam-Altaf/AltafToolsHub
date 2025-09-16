@@ -11,68 +11,13 @@ import {
   SheetTrigger,
   SheetClose,
 } from "@/components/ui/sheet";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  Menu, X, ChevronDown, FileText, Lock, Image, 
-  FileImage, FilePlus, Scissors, Palette, FileArchive,
-  Layers, Home, Info, Mail, Star, ArrowRight,
-  QrCode, Shield, Type, Book, FileCode, Zap
+  Menu, X, Home, Info, Mail, ArrowRight
 } from "lucide-react";
 import { toolCategories, popularTools, Tool } from "@/lib/tools-data";
-
-// Helper component for navigation items
-const ToolNavItem = ({ tool }: { tool: Tool }) => {
-  const Icon = tool.icon;
-  return (
-    <NavigationMenuLink asChild>
-      <Link
-        href={tool.href}
-        className={cn(
-          "group flex items-start space-x-3 select-none rounded-md p-3 leading-none no-underline outline-none transition-colors",
-          "hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-          !tool.available && "opacity-60"
-        )}
-        data-testid={`nav-${tool.id}`}
-      >
-        <div className={cn(
-          "w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-all",
-          "bg-gradient-to-br", tool.color,
-          "group-hover:scale-110"
-        )}>
-          <Icon className="w-5 h-5 text-white" />
-        </div>
-        <div className="flex-1">
-          <div className="font-medium mb-1 flex items-center gap-2">
-            {tool.title}
-            {tool.new && (
-              <span className="text-xs px-1.5 py-0.5 rounded-full bg-green-500/10 text-green-600 dark:text-green-400">
-                New
-              </span>
-            )}
-            {!tool.available && (
-              <span className="text-xs px-1.5 py-0.5 rounded-full bg-muted-foreground/10 text-muted-foreground">
-                Soon
-              </span>
-            )}
-          </div>
-          <p className="text-xs text-muted-foreground">
-            {tool.description}
-          </p>
-        </div>
-      </Link>
-    </NavigationMenuLink>
-  );
-};
+import { MultiDropdownNav } from "@/components/multi-dropdown-nav";
 
 export default function Header() {
   const [location] = useLocation();
@@ -127,116 +72,28 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <NavigationMenu className="hidden lg:flex relative z-[9999]" delayDuration={0}>
-            <NavigationMenuList>
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <Link href="/" className={navigationMenuTriggerStyle()}>
-                    <Home className="w-4 h-4 mr-2" />
-                    Home
-                  </Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-
-              {/* PDF Management */}
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="font-medium">
-                  <FileText className="w-4 h-4 mr-2" />
-                  PDF Tools
-                </NavigationMenuTrigger>
-                <NavigationMenuContent className="z-[9999]">
-                  <div className="grid gap-2 p-4 w-[500px] lg:w-[600px] lg:grid-cols-2">
-                    {toolCategories.find(cat => cat.id === "pdf-management")?.tools.slice(0, 8).map((tool) => (
-                      <ToolNavItem key={tool.id} tool={tool} />
-                    ))}
-                  </div>
-                  <div className="p-4 pt-0">
-                    <Link href="/#pdf-tools">
-                      <Button variant="outline" className="w-full" size="sm">
-                        View All PDF Tools
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
-                    </Link>
-                  </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-
-              {/* Image Conversion */}
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="font-medium">
-                  <Image className="w-4 h-4 mr-2" />
-                  Image Tools
-                </NavigationMenuTrigger>
-                <NavigationMenuContent className="z-[9999]">
-                  <div className="grid gap-2 p-4 w-[500px] lg:w-[600px] lg:grid-cols-2">
-                    {toolCategories.find(cat => cat.id === "image-conversion")?.tools.slice(0, 8).map((tool) => (
-                      <ToolNavItem key={tool.id} tool={tool} />
-                    ))}
-                  </div>
-                  <div className="p-4 pt-0">
-                    <Link href="/#image-tools">
-                      <Button variant="outline" className="w-full" size="sm">
-                        View All Image Tools
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
-                    </Link>
-                  </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-
-              {/* Document Conversion */}
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="font-medium">
-                  <FileCode className="w-4 h-4 mr-2" />
-                  Convert
-                </NavigationMenuTrigger>
-                <NavigationMenuContent className="z-[9999]">
-                  <div className="grid gap-2 p-4 w-[500px] lg:w-[600px] lg:grid-cols-2">
-                    {toolCategories.find(cat => cat.id === "document-conversion")?.tools.slice(0, 8).map((tool) => (
-                      <ToolNavItem key={tool.id} tool={tool} />
-                    ))}
-                  </div>
-                  <div className="p-4 pt-0">
-                    <Link href="/#convert-tools">
-                      <Button variant="outline" className="w-full" size="sm">
-                        View All Converters
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
-                    </Link>
-                  </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-
-              {/* Utilities */}
-              <NavigationMenuItem>
-                <NavigationMenuTrigger className="font-medium">
-                  <Zap className="w-4 h-4 mr-2" />
-                  Utilities
-                </NavigationMenuTrigger>
-                <NavigationMenuContent className="z-[9999]">
-                  <div className="grid gap-2 p-4 w-[500px] lg:w-[600px] lg:grid-cols-2">
-                    {toolCategories.find(cat => cat.id === "utilities")?.tools.map((tool) => (
-                      <ToolNavItem key={tool.id} tool={tool} />
-                    ))}
-                  </div>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-
-              {/* About Link */}
-              <NavigationMenuItem>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild>
-                  <Button 
-                    variant="ghost" 
-                    className="font-medium"
-                    data-testid="nav-about-desktop"
-                  >
-                    <Info className="w-4 h-4 mr-2" />
-                    About
-                  </Button>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
+          <div className="hidden lg:flex items-center space-x-2">
+            <Link href="/">
+              <Button 
+                variant="ghost" 
+                className="font-medium"
+              >
+                <Home className="w-4 h-4 mr-2" />
+                Home
+              </Button>
+            </Link>
+            
+            <MultiDropdownNav />
+            
+            <Button 
+              variant="ghost" 
+              className="font-medium"
+              data-testid="nav-about-desktop"
+            >
+              <Info className="w-4 h-4 mr-2" />
+              About
+            </Button>
+          </div>
 
           {/* Desktop Right Section */}
           <div className="hidden lg:flex items-center space-x-2">
