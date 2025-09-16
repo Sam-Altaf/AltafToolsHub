@@ -11,6 +11,8 @@ interface CompressionParams {
   jpegQuality: number;
   scale: number;
   onProgress?: (progress: number, message: string) => void;
+  mode?: 'hd' | 'balanced' | 'fast' | 'custom';
+  preserveText?: boolean;
 }
 
 interface PageImage {
@@ -36,14 +38,22 @@ function dataURLtoUint8Array(dataURL: string): Uint8Array {
   return bytes;
 }
 
-// Convert canvas to JPEG with specific quality using blob for better performance
-function canvasToJPEG(canvas: HTMLCanvasElement, quality: number): Promise<string> {
+// Convert canvas to image with HD quality settings
+function canvasToImage(canvas: HTMLCanvasElement, quality: number, format: 'jpeg' | 'png' = 'jpeg'): Promise<string> {
   return new Promise((resolve, reject) => {
+    // For HD quality, use PNG for text-heavy content to preserve clarity
+    const imageFormat = format === 'png' ? 'image/png' : 'image/jpeg';
+    const imageQuality = format === 'png' ? undefined : quality;
+    
     canvas.toBlob(
       (blob) => {
         if (!blob) {
           // Fallback to toDataURL if blob fails
-          resolve(canvas.toDataURL('image/jpeg', quality));
+          if (format === 'png') {
+            resolve(canvas.toDataURL('image/png'));
+          } else {
+            resolve(canvas.toDataURL('image/jpeg', quality));
+          }
           return;
         }
         const reader = new FileReader();
@@ -51,8 +61,8 @@ function canvasToJPEG(canvas: HTMLCanvasElement, quality: number): Promise<strin
         reader.onerror = reject;
         reader.readAsDataURL(blob);
       },
-      'image/jpeg',
-      quality
+      imageFormat,
+      imageQuality
     );
   });
 }
@@ -113,9 +123,13 @@ async function renderPDFPages(
     canvas.width = viewport.width;
     canvas.height = viewport.height;
 
-    // Configure high-quality rendering
+    // Configure HD quality rendering with maximum quality settings
     context.imageSmoothingEnabled = true;
     context.imageSmoothingQuality = 'high';
+    
+    // Set high-quality rendering hints for better text clarity
+    context.textRendering = 'optimizeLegibility';
+    context.filter = 'none'; // No filtering for crisp text
 
     // Render page to canvas
     const renderContext = {
@@ -135,21 +149,33 @@ async function renderPDFPages(
   return renderedPages;
 }
 
-// Convert rendered pages to JPEG images with specified quality
+// Convert rendered pages to images with HD quality preservation
 async function convertPagesToImages(
   pages: RenderedPage[],
   quality: number,
-  onProgress?: (progress: number, message: string) => void
+  onProgress?: (progress: number, message: string) => void,
+  mode: 'hd' | 'balanced' | 'fast' | 'custom' = 'balanced'
 ): Promise<PageImage[]> {
   const pageImages: PageImage[] = [];
   
   for (let i = 0; i < pages.length; i++) {
     if (onProgress) {
       const progress = 20 + Math.round((i / pages.length) * 30);
-      onProgress(progress, `Compressing page ${i + 1} of ${pages.length}`);
+      onProgress(progress, `Compressing page ${i + 1} of ${pages.length} (${mode.toUpperCase()} mode)`);
     }
     
-    const dataUrl = await canvasToJPEG(pages[i].canvas, quality);
+    // For HD mode, use higher quality settings and consider PNG for text-heavy content
+    let dataUrl: string;
+    if (mode === 'hd' && quality >= 0.85) {
+      // HD mode: Use PNG for maximum quality preservation
+      dataUrl = await canvasToImage(pages[i].canvas, 1.0, 'png');
+    } else if (mode === 'hd') {
+      // HD mode with compression: Use very high quality JPEG
+      dataUrl = await canvasToImage(pages[i].canvas, Math.max(quality, 0.9), 'jpeg');
+    } else {
+      // Standard modes: Use JPEG with specified quality
+      dataUrl = await canvasToImage(pages[i].canvas, quality, 'jpeg');
+    }
     
     pageImages.push({
       dataUrl,
@@ -214,32 +240,48 @@ async function createPDFFromImages(
   return pdfBytes;
 }
 
-// Simple compression with specific parameters
+// HD Quality compression with advanced parameters
 export async function compressPDFSimple(
   pdfBytes: ArrayBuffer,
   params: CompressionParams
 ): Promise<{ blob: Blob }> {
-  console.log('Starting PDF compression with params:', params);
+  const mode = params.mode || 'balanced';
+  
+  // HD mode adjustments for maximum quality preservation
+  let adjustedParams = { ...params };
+  if (mode === 'hd') {
+    // HD mode: Prioritize quality over compression
+    adjustedParams.jpegQuality = Math.max(params.jpegQuality, 0.85);
+    adjustedParams.scale = Math.max(params.scale, 0.95);
+    console.log('HD Mode: Enhanced quality settings applied');
+  } else if (mode === 'fast') {
+    // Fast mode: Prioritize speed with reasonable quality
+    adjustedParams.jpegQuality = Math.min(params.jpegQuality, 0.75);
+    adjustedParams.scale = Math.min(params.scale, 0.85);
+  }
+  
+  console.log(`Starting PDF compression in ${mode.toUpperCase()} mode:`, adjustedParams);
   
   try {
     // Get or render pages at specified scale (uses cache if available)
     const renderedPages = await getOrRenderPages(
       pdfBytes,
-      params.scale,
-      params.onProgress
+      adjustedParams.scale,
+      adjustedParams.onProgress
     );
     
-    // Convert to images with specified quality
+    // Convert to images with mode-specific quality settings
     const images = await convertPagesToImages(
       renderedPages,
-      params.jpegQuality,
-      params.onProgress
+      adjustedParams.jpegQuality,
+      adjustedParams.onProgress,
+      mode
     );
     
     // Create new PDF from images
-    const compressedBytes = await createPDFFromImages(images, params.onProgress);
+    const compressedBytes = await createPDFFromImages(images, adjustedParams.onProgress);
     
-    console.log('Compression complete. Original size:', pdfBytes.byteLength, 'Compressed size:', compressedBytes.length);
+    console.log(`Compression complete (${mode} mode). Original: ${pdfBytes.byteLength}, Compressed: ${compressedBytes.length}`);
     
     return { 
       blob: new Blob([compressedBytes], { type: 'application/pdf' })
@@ -286,26 +328,57 @@ export async function compressPDFSimple(
   }
 }
 
-// Advanced compression using optimal parameters
+// Advanced HD compression using optimal parameters
 export async function compressPDFAdvanced(
   pdfBytes: ArrayBuffer,
   params: CompressionParams
 ): Promise<Blob> {
-  const result = await compressPDFSimple(pdfBytes, params);
+  // Default to HD mode for advanced compression
+  const hdParams = { ...params, mode: params.mode || 'hd' as const };
+  const result = await compressPDFSimple(pdfBytes, hdParams);
   return result.blob;
 }
+
+// HD Quality presets for easy use
+export const COMPRESSION_PRESETS = {
+  hd: {
+    jpegQuality: 0.92,
+    scale: 0.98,
+    mode: 'hd' as const,
+    description: 'HD Quality - Maximum clarity preservation'
+  },
+  balanced: {
+    jpegQuality: 0.80,
+    scale: 0.90,
+    mode: 'balanced' as const,
+    description: 'Balanced - Good quality with compression'
+  },
+  fast: {
+    jpegQuality: 0.70,
+    scale: 0.85,
+    mode: 'fast' as const,
+    description: 'Fast - Quick compression with acceptable quality'
+  },
+  extreme: {
+    jpegQuality: 0.50,
+    scale: 0.70,
+    mode: 'fast' as const,
+    description: 'Extreme - Maximum compression'
+  }
+};
 
 // Clear cache before starting new compression
 function clearRenderCache() {
   scaleCache.clear();
 }
 
-// Compress PDF to achieve target size with optimal quality
+// HD Quality compression to achieve target size with optimal quality
 export async function compressToTargetSize(
   pdfBytes: ArrayBuffer,
   targetSize: number,
-  onProgress?: (progress: number, message: string) => void
-): Promise<{ blob: Blob; quality: number; scale: number; attempts: number }> {
+  onProgress?: (progress: number, message: string) => void,
+  mode: 'hd' | 'balanced' | 'fast' = 'balanced'
+): Promise<{ blob: Blob; quality: number; scale: number; attempts: number; mode: string }> {
   // Create a copy to avoid ArrayBuffer detachment issues
   const pdfBytesCopy = pdfBytes.slice(0);
   // Clear previous render cache
@@ -314,44 +387,83 @@ export async function compressToTargetSize(
   const originalSize = pdfBytes.byteLength;
   const compressionRatio = targetSize / originalSize;
   
-  console.log(`Starting compression: Original ${originalSize} bytes, Target ${targetSize} bytes, Ratio ${(compressionRatio * 100).toFixed(1)}%`);
+  console.log(`Starting ${mode.toUpperCase()} compression: Original ${originalSize} bytes, Target ${targetSize} bytes, Ratio ${(compressionRatio * 100).toFixed(1)}%`);
   
-  // Professional-grade quality ranges based on compression ratio
+  // HD Quality ranges with mode-specific adjustments
   let minQuality: number;
   let maxQuality: number;
   let minScale: number;
   let maxScale: number;
   
-  if (compressionRatio >= 0.7) {
-    // Light compression (target is ≥70% of original)
-    minQuality = 0.85;
-    maxQuality = 0.99;  // Increased from 0.95 to allow reaching targets
-    minScale = 0.95;
-    maxScale = 1.0;
-  } else if (compressionRatio >= 0.4) {
-    // Moderate compression (target is 40-70% of original)
-    minQuality = 0.75;
-    maxQuality = 0.98;  // CRITICAL: Increased from 0.90 to reach 5MB from 10MB files
-    minScale = 0.90;
-    maxScale = 1.0;
-  } else if (compressionRatio >= 0.2) {
-    // Significant compression (target is 20-40% of original)
-    minQuality = 0.65;
-    maxQuality = 0.95;  // Increased from 0.85 for better targeting
-    minScale = 0.85;
-    maxScale = 1.0;
-  } else if (compressionRatio >= 0.1) {
-    // Heavy compression (target is 10-20% of original)
-    minQuality = 0.55;
-    maxQuality = 0.90;  // Increased from 0.75 for better range
-    minScale = 0.75;
-    maxScale = 0.95;
+  if (mode === 'hd') {
+    // HD Mode: Prioritize quality preservation
+    if (compressionRatio >= 0.7) {
+      minQuality = 0.92;
+      maxQuality = 0.99;
+      minScale = 0.98;
+      maxScale = 1.0;
+    } else if (compressionRatio >= 0.4) {
+      minQuality = 0.88;
+      maxQuality = 0.98;
+      minScale = 0.95;
+      maxScale = 1.0;
+    } else if (compressionRatio >= 0.2) {
+      minQuality = 0.82;
+      maxQuality = 0.96;
+      minScale = 0.92;
+      maxScale = 1.0;
+    } else if (compressionRatio >= 0.1) {
+      minQuality = 0.75;
+      maxQuality = 0.93;
+      minScale = 0.88;
+      maxScale = 0.98;
+    } else {
+      minQuality = 0.65;
+      maxQuality = 0.90;
+      minScale = 0.80;
+      maxScale = 0.95;
+    }
+  } else if (mode === 'fast') {
+    // Fast Mode: Prioritize speed with reasonable quality
+    if (compressionRatio >= 0.5) {
+      minQuality = 0.70;
+      maxQuality = 0.85;
+      minScale = 0.85;
+      maxScale = 0.95;
+    } else {
+      minQuality = 0.50;
+      maxQuality = 0.75;
+      minScale = 0.70;
+      maxScale = 0.90;
+    }
   } else {
-    // Extreme compression (target is <10% of original)
-    minQuality = 0.40;
-    maxQuality = 0.80;  // Increased from 0.65
-    minScale = 0.60;
-    maxScale = 0.90;
+    // Balanced Mode: Original settings
+    if (compressionRatio >= 0.7) {
+      minQuality = 0.85;
+      maxQuality = 0.99;
+      minScale = 0.95;
+      maxScale = 1.0;
+    } else if (compressionRatio >= 0.4) {
+      minQuality = 0.75;
+      maxQuality = 0.98;
+      minScale = 0.90;
+      maxScale = 1.0;
+    } else if (compressionRatio >= 0.2) {
+      minQuality = 0.65;
+      maxQuality = 0.95;
+      minScale = 0.85;
+      maxScale = 1.0;
+    } else if (compressionRatio >= 0.1) {
+      minQuality = 0.55;
+      maxQuality = 0.90;
+      minScale = 0.75;
+      maxScale = 0.95;
+    } else {
+      minQuality = 0.40;
+      maxQuality = 0.80;
+      minScale = 0.60;
+      maxScale = 0.90;
+    }
   }
   
   let attempts = 0;
@@ -386,6 +498,7 @@ export async function compressToTargetSize(
       const params: CompressionParams = {
         jpegQuality: testQuality,
         scale: testScale,
+        mode: mode,
         onProgress: (progress, message) => {
           if (onProgress && progress < 80) {
             const attemptProgress = Math.round((attempts - 1) / maxAttempts * 80);
@@ -443,7 +556,8 @@ export async function compressToTargetSize(
           blob: result.blob, 
           quality: testQuality, 
           scale: testScale, 
-          attempts 
+          attempts,
+          mode 
         };
       }
     }
@@ -498,7 +612,8 @@ export async function compressToTargetSize(
             blob: result.blob, 
             quality: testQuality, 
             scale: adjacentScale, 
-            attempts 
+            attempts,
+            mode 
           };
         }
       }
@@ -559,7 +674,8 @@ export async function compressToTargetSize(
               blob: result.blob,
               quality: fineQuality,
               scale: bestUnderTarget.scale,
-              attempts
+              attempts,
+              mode
             };
           }
         } else {
@@ -608,7 +724,8 @@ export async function compressToTargetSize(
                 blob: result.blob,
                 quality: microQuality,
                 scale: bestUnderTarget.scale,
-                attempts
+                attempts,
+                mode
               };
             }
           } else {
@@ -671,7 +788,8 @@ export async function compressToTargetSize(
       blob: bestUnderTarget.blob, 
       quality: bestUnderTarget.quality, 
       scale: bestUnderTarget.scale, 
-      attempts 
+      attempts,
+      mode 
     };
   }
   
@@ -682,7 +800,8 @@ export async function compressToTargetSize(
       blob: bestOverTarget.blob, 
       quality: bestOverTarget.quality, 
       scale: bestOverTarget.scale, 
-      attempts 
+      attempts,
+      mode 
     };
   }
   
@@ -699,6 +818,7 @@ export async function compressToTargetSize(
     blob: fallbackResult.blob, 
     quality: fallbackParams.jpegQuality, 
     scale: fallbackParams.scale, 
-    attempts: attempts + 1 
+    attempts: attempts + 1,
+    mode 
   };
 }

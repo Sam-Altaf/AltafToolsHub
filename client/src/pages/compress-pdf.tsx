@@ -34,12 +34,14 @@ interface CompressionResult {
   compressionMethod: string;
   accuracy: number;
   attempts: number;
+  mode?: string;
 }
 
 interface CompressionParams {
   jpegQuality: number;
   scale: number;
   onProgress?: (progress: number, message: string) => void;
+  mode?: 'hd' | 'balanced' | 'fast' | 'custom';
 }
 
 export default function CompressPDF() {
@@ -47,6 +49,7 @@ export default function CompressPDF() {
   const [targetSize, setTargetSize] = useState<TargetSize>("500KB");
   const [compressionLevel, setCompressionLevel] = useState(60); // Default 60% like BigPDF
   const [useAdvancedMode, setUseAdvancedMode] = useState(false); // Toggle between slider and target size
+  const [compressionMode, setCompressionMode] = useState<'hd' | 'balanced' | 'fast'>('hd'); // Default to HD mode
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [progressMessage, setProgressMessage] = useState<string>("");
@@ -196,7 +199,7 @@ export default function CompressPDF() {
     setProgressMessage(message);
   };
 
-  // Compress PDF to target size
+  // Compress PDF to target size with quality mode
   const findOptimalCompression = async (
     arrayBuffer: ArrayBuffer,
     targetBytes: number | null
@@ -204,14 +207,19 @@ export default function CompressPDF() {
     const originalSize = selectedFile!.size;
     
     if (!targetBytes) {
-      // Maximum compression - use reasonable settings to preserve readability
-      handleProgress(5, "Applying maximum compression...");
-      const { compressPDFSimple } = await import('@/lib/pdf-compress');
+      // Maximum compression with HD mode support
+      handleProgress(5, `Applying maximum compression (${compressionMode.toUpperCase()} mode)...`);
+      const { compressPDFSimple, COMPRESSION_PRESETS } = await import('@/lib/pdf-compress');
       
-      // For maximum compression, still maintain minimum quality for readability
+      // Use HD preset for maximum quality even in max compression
+      const preset = compressionMode === 'hd' ? COMPRESSION_PRESETS.hd : 
+                     compressionMode === 'fast' ? COMPRESSION_PRESETS.fast :
+                     COMPRESSION_PRESETS.balanced;
+      
       const params: CompressionParams = {
-        jpegQuality: 0.4, // Never go below 40% for maximum compression
-        scale: 0.65, // Maintain at least 65% scale for readability
+        jpegQuality: preset.jpegQuality,
+        scale: preset.scale,
+        mode: compressionMode,
         onProgress: handleProgress
       };
       
@@ -232,10 +240,10 @@ export default function CompressPDF() {
       };
     }
     
-    // Use binary search to find optimal compression for target size
+    // Use HD compression with target size
     const { compressToTargetSize } = await import('@/lib/pdf-compress');
     
-    const result = await compressToTargetSize(arrayBuffer, targetBytes, handleProgress);
+    const result = await compressToTargetSize(arrayBuffer, targetBytes, handleProgress, compressionMode);
     
     const compressedSize = result.blob.size;
     const diff = Math.abs(compressedSize - targetBytes);
@@ -249,9 +257,10 @@ export default function CompressPDF() {
       compressedBlob: result.blob,
       qualityUsed: result.quality,
       resolutionScale: result.scale,
-      compressionMethod: `Smart compression (${result.attempts} iterations)`,
+      compressionMethod: `${compressionMode.toUpperCase()} compression (${result.attempts} iterations)`,
       accuracy: Math.max(0, Math.min(100, accuracy)),
-      attempts: result.attempts
+      attempts: result.attempts,
+      mode: result.mode
     };
   };
 
@@ -274,35 +283,46 @@ export default function CompressPDF() {
       let targetBytes: number | null = null;
       
       if (!useAdvancedMode) {
-        // Slider mode - use compression level directly
-        handleProgress(20, "Applying compression level...");
-        const { compressPDFSimple } = await import('@/lib/pdf-compress');
+        // Slider mode - use compression level with HD mode support
+        handleProgress(20, `Applying compression level (${compressionMode.toUpperCase()} mode)...`);
+        const { compressPDFSimple, COMPRESSION_PRESETS } = await import('@/lib/pdf-compress');
         
-        // Convert compression level to quality and scale with better mapping
-        // Higher compression level = better quality (less compression)
+        // HD mode adjustments for quality preservation
         let jpegQuality: number;
-        if (compressionLevel >= 90) {
-          jpegQuality = 0.92 + (compressionLevel - 90) * 0.008; // 90-100% -> 0.92-1.0
-        } else if (compressionLevel >= 70) {
-          jpegQuality = 0.85 + (compressionLevel - 70) * 0.0035; // 70-90% -> 0.85-0.92
-        } else if (compressionLevel >= 50) {
-          jpegQuality = 0.75 + (compressionLevel - 50) * 0.005; // 50-70% -> 0.75-0.85
-        } else if (compressionLevel >= 30) {
-          jpegQuality = 0.6 + (compressionLevel - 30) * 0.0075; // 30-50% -> 0.6-0.75
-        } else {
-          jpegQuality = 0.4 + compressionLevel * 0.0067; // 0-30% -> 0.4-0.6
-        }
+        let scale: number;
         
-        // Better scale mapping for resolution preservation
-        const scale = 0.7 + (compressionLevel / 100) * 0.3; // 0.7-1.0 range for better quality
+        if (compressionMode === 'hd') {
+          // HD mode: Higher base quality
+          jpegQuality = 0.85 + (compressionLevel / 100) * 0.14; // 0.85-0.99 range
+          scale = 0.95 + (compressionLevel / 100) * 0.05; // 0.95-1.0 range
+        } else if (compressionMode === 'fast') {
+          // Fast mode: Lower quality for speed
+          jpegQuality = 0.5 + (compressionLevel / 100) * 0.35; // 0.5-0.85 range
+          scale = 0.7 + (compressionLevel / 100) * 0.2; // 0.7-0.9 range
+        } else {
+          // Balanced mode: Original settings
+          if (compressionLevel >= 90) {
+            jpegQuality = 0.92 + (compressionLevel - 90) * 0.008;
+          } else if (compressionLevel >= 70) {
+            jpegQuality = 0.85 + (compressionLevel - 70) * 0.0035;
+          } else if (compressionLevel >= 50) {
+            jpegQuality = 0.75 + (compressionLevel - 50) * 0.005;
+          } else if (compressionLevel >= 30) {
+            jpegQuality = 0.6 + (compressionLevel - 30) * 0.0075;
+          } else {
+            jpegQuality = 0.4 + compressionLevel * 0.0067;
+          }
+          scale = 0.7 + (compressionLevel / 100) * 0.3;
+        }
         
         const params: CompressionParams = {
           jpegQuality: jpegQuality,
           scale: scale,
+          mode: compressionMode,
           onProgress: handleProgress
         };
         
-        console.log(`Compressing with level ${compressionLevel}%: quality=${jpegQuality}, scale=${scale}`);
+        console.log(`Compressing with level ${compressionLevel}% in ${compressionMode} mode: quality=${jpegQuality}, scale=${scale}`);
         
         const compressResult = await compressPDFSimple(arrayBuffer, params);
         const compressedBlob = compressResult.blob;
@@ -668,6 +688,61 @@ export default function CompressPDF() {
             </div>
 
             <div>
+              {/* HD Quality Mode Selection */}
+              <div className="mb-6">
+                <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-primary" />
+                  Compression Quality
+                </h3>
+                <div className="grid grid-cols-3 gap-3">
+                  <Button
+                    type="button"
+                    variant={compressionMode === 'hd' ? "default" : "outline"}
+                    onClick={() => setCompressionMode('hd')}
+                    className={cn(
+                      "flex flex-col items-center gap-1 h-auto py-3 relative overflow-hidden",
+                      compressionMode === 'hd' && "bg-gradient-to-br from-purple-600 to-blue-600 text-white border-0"
+                    )}
+                    data-testid="button-quality-hd"
+                  >
+                    <Shield className="w-5 h-5" />
+                    <span className="font-semibold">HD Quality</span>
+                    <span className="text-xs opacity-90">Maximum clarity</span>
+                    {compressionMode === 'hd' && (
+                      <div className="absolute -top-1 -right-1 bg-yellow-400 text-black text-xs px-1 rounded rotate-12">NEW</div>
+                    )}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={compressionMode === 'balanced' ? "default" : "outline"}
+                    onClick={() => setCompressionMode('balanced')}
+                    className={cn(
+                      "flex flex-col items-center gap-1 h-auto py-3",
+                      compressionMode === 'balanced' && "bg-gradient-to-br from-green-600 to-teal-600 text-white border-0"
+                    )}
+                    data-testid="button-quality-balanced"
+                  >
+                    <Settings2 className="w-5 h-5" />
+                    <span className="font-semibold">Balanced</span>
+                    <span className="text-xs opacity-90">Good quality</span>
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={compressionMode === 'fast' ? "default" : "outline"}
+                    onClick={() => setCompressionMode('fast')}
+                    className={cn(
+                      "flex flex-col items-center gap-1 h-auto py-3",
+                      compressionMode === 'fast' && "bg-gradient-to-br from-orange-600 to-red-600 text-white border-0"
+                    )}
+                    data-testid="button-quality-fast"
+                  >
+                    <Zap className="w-5 h-5" />
+                    <span className="font-semibold">Fast</span>
+                    <span className="text-xs opacity-90">Quick & small</span>
+                  </Button>
+                </div>
+              </div>
+
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold flex items-center gap-2">
                   {useAdvancedMode ? (
@@ -806,7 +881,7 @@ export default function CompressPDF() {
                 <Alert className="mb-6 border-primary/20 bg-primary/5">
                   <Info className="h-4 w-4" />
                   <AlertDescription>
-                    The compressor will intelligently adjust quality to reach {targetSizeOptions.find(o => o.value === targetSize)?.label} while preserving maximum readability.
+                    Using <strong>{compressionMode.toUpperCase()}</strong> mode: The compressor will intelligently adjust quality to reach {targetSizeOptions.find(o => o.value === targetSize)?.label} while {compressionMode === 'hd' ? 'preserving HD clarity and text sharpness' : compressionMode === 'fast' ? 'prioritizing speed' : 'balancing quality and size'}.
                   </AlertDescription>
                 </Alert>
               )}
@@ -815,7 +890,7 @@ export default function CompressPDF() {
                 <Alert className="mb-6 border-primary/20 bg-primary/5">
                   <Info className="h-4 w-4" />
                   <AlertDescription>
-                    The compressor will use {compressionLevel}% quality level. Lower values create smaller files with reduced quality.
+                    Using <strong>{compressionMode.toUpperCase()}</strong> mode with {compressionLevel}% quality level. {compressionMode === 'hd' ? 'HD mode ensures maximum clarity even at lower compression levels.' : compressionMode === 'fast' ? 'Fast mode optimizes for quick processing.' : 'Balanced mode provides good quality with reasonable file sizes.'}
                   </AlertDescription>
                 </Alert>
               )}
