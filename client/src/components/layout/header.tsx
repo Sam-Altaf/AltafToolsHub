@@ -51,9 +51,10 @@ export default function Header() {
           : "bg-background border-b"
       )}
       style={{ 
-        zIndex: 99999,  // Maximum z-index for header
+        zIndex: 10000,  // High z-index for header but not maximum (dropdown needs to be above)
         position: 'sticky',
-        top: 0 
+        top: 0,
+        isolation: 'isolate' // Create new stacking context
       }}
       initial={{ y: -100 }}
       animate={{ y: 0 }}

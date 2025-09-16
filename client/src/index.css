@@ -415,40 +415,54 @@
 header {
   position: sticky !important;
   top: 0;
-  z-index: 99999 !important; /* Highest possible to ensure dropdown visibility */
+  z-index: 10000 !important; /* High z-index for header but not maximum (dropdown needs to be above) */
+  isolation: isolate !important; /* Create new stacking context */
 }
 
 /* Force dropdown container to highest level */
 .multi-dropdown-container {
-  z-index: 99999 !important;
-  position: relative;
+  position: relative !important;
+  isolation: isolate !important; /* Create new stacking context */
+}
+
+/* Dropdown Menu Z-Index Fix - Maximum possible values */
+.dropdown-menu-container {
+  z-index: 2147483647 !important; /* Maximum possible z-index value */
+  position: absolute !important;
+  isolation: isolate !important;
+}
+
+.dropdown-menu-content {
+  z-index: 2147483647 !important; /* Maximum possible z-index for content */
+  position: relative !important;
+  background: var(--background) !important; /* Ensure proper background */
 }
 
 /* Navigation z-index fixes to ensure dropdowns appear above all content */
 [data-radix-navigation-menu] {
-  z-index: 99999 !important;
+  z-index: 2147483647 !important;
 }
 
 [data-radix-popper-content] {
-  z-index: 99999 !important;
+  z-index: 2147483647 !important;
 }
 
 /* Ensure navigation viewport and content have proper z-index */
 [data-radix-navigation-menu-viewport] {
-  z-index: 99999 !important;
+  z-index: 2147483647 !important;
 }
 
 [data-radix-navigation-menu-content] {
-  z-index: 99999 !important;
+  z-index: 2147483647 !important;
 }
 
 /* Ensure dropdowns are always on top */
 .navigation-menu {
-  z-index: 99999 !important;
+  z-index: 2147483647 !important;
 }
 
 .navigation-menu-content {
-  z-index: 99999 !important;
+  z-index: 2147483647 !important;
 }
 
 /* Global dropdown fix - ensure all dropdown containers are on top */
@@ -456,7 +470,7 @@ header {
 .dropdown-content,
 [role="menu"],
 [data-state="open"] {
-  z-index: 99999 !important;
+  z-index: 2147483647 !important;
 }
 
 /* Sparkle animation */
