@@ -19,6 +19,8 @@ export interface Tool {
   category: string;
   popular?: boolean;
   new?: boolean;
+  features?: string[];
+  extendedDescription?: string;
 }
 
 export interface ToolCategory {
@@ -41,7 +43,9 @@ export const allTools: Tool[] = [
     color: "from-purple-500 to-blue-500",
     available: true,
     category: "pdf-management",
-    popular: true
+    popular: true,
+    features: ["Smart compression", "Target size options", "Quality control", "Batch processing"],
+    extendedDescription: "Advanced PDF compression with target sizes from 10KB to 5MB. Perfect for email attachments, web uploads, and storage optimization. Maintains text clarity and image quality."
   },
   {
     id: "merge-pdf",
@@ -154,7 +158,9 @@ export const allTools: Tool[] = [
     color: "from-cyan-500 to-teal-500",
     available: true,
     category: "image-conversion",
-    popular: true
+    popular: true,
+    features: ["Multiple images", "Reorder pages", "Auto orientation", "Quality settings"],
+    extendedDescription: "Convert single or multiple JPG images into professional PDF documents. Perfect for creating photo albums, portfolios, or digitizing scanned documents with preserved image quality."
   },
   {
     id: "images-to-pdf",
@@ -434,7 +440,9 @@ export const allTools: Tool[] = [
     color: "from-blue-500 to-cyan-500",
     available: true,
     category: "security",
-    popular: true
+    popular: true,
+    features: ["Password removal", "Batch unlock", "Secure processing", "Instant unlock"],
+    extendedDescription: "Safely remove password protection from your own PDF files. All processing happens locally in your browser for maximum security and privacy. Perfect for forgotten passwords."
   },
   {
     id: "protect-pdf",
@@ -477,7 +485,9 @@ export const allTools: Tool[] = [
     color: "from-indigo-500 to-purple-600",
     available: true,
     category: "utilities",
-    popular: true
+    popular: true,
+    features: ["Custom colors", "Logo embedding", "Bulk generation", "Various formats"],
+    extendedDescription: "Create professional QR codes instantly for URLs, WiFi, contact info, and more. Customize colors and sizes, download in multiple formats. Perfect for marketing materials and business cards."
   },
   {
     id: "password-generator",
@@ -488,7 +498,9 @@ export const allTools: Tool[] = [
     color: "from-emerald-500 to-teal-600",
     available: true,
     category: "utilities",
-    popular: true
+    popular: true,
+    features: ["Custom length", "Special characters", "Pronounceable", "Strength meter"],
+    extendedDescription: "Generate ultra-secure passwords with customizable complexity. Include symbols, numbers, and mixed case. Features password strength analysis and easy copy-to-clipboard functionality."
   },
   {
     id: "word-counter",
@@ -498,7 +510,9 @@ export const allTools: Tool[] = [
     href: "/word-counter",
     color: "from-blue-500 to-purple-600",
     available: true,
-    category: "utilities"
+    category: "utilities",
+    features: ["Real-time counting", "Reading time", "Paragraph count", "SEO analysis"],
+    extendedDescription: "Advanced text analysis tool with real-time word and character counting. Calculate reading time, analyze readability scores, and optimize content for SEO. Perfect for writers and content creators."
   },
   {
     id: "text-enhancer",
@@ -509,7 +523,9 @@ export const allTools: Tool[] = [
     color: "from-purple-500 to-pink-500",
     available: true,
     category: "utilities",
-    new: true
+    new: true,
+    features: ["Grammar check", "Style suggestions", "Tone adjustment", "Clarity improvement"],
+    extendedDescription: "Transform your writing with AI-powered suggestions. Fix grammar, enhance clarity, adjust tone, and improve readability. Perfect for emails, essays, and professional documents."
   },
   {
     id: "extract-text",
@@ -520,7 +536,9 @@ export const allTools: Tool[] = [
     color: "from-cyan-500 to-blue-500",
     available: true,
     category: "utilities",
-    new: true
+    new: true,
+    features: ["Multiple languages", "Batch processing", "Handwriting recognition", "Export formats"],
+    extendedDescription: "Extract text from images, scanned documents, and photos using advanced OCR technology. Supports 100+ languages and handwritten text. Export to Word, PDF, or plain text formats."
   },
   {
     id: "file-calculator",
@@ -530,7 +548,9 @@ export const allTools: Tool[] = [
     href: "/file-calculator",
     color: "from-emerald-500 to-green-500",
     available: true,
-    category: "utilities"
+    category: "utilities",
+    features: ["Download time", "Bandwidth usage", "Storage converter", "Speed calculator"],
+    extendedDescription: "Calculate download times based on file size and internet speed. Convert between storage units (KB, MB, GB, TB). Estimate bandwidth requirements for streaming and uploads."
   },
   {
     id: "pdf-to-zip",
