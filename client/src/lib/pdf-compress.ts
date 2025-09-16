@@ -7,6 +7,19 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 // Cache for rendered pages at different scales to avoid re-rendering
 const scaleCache = new Map<string, RenderedPage[]>();
 
+// Generate a unique identifier for a PDF
+function generatePDFIdentifier(pdfBytes: ArrayBuffer): string {
+  // Create a simple hash based on size and first few bytes
+  const view = new Uint8Array(pdfBytes);
+  const sampleSize = Math.min(1000, view.length);
+  let hash = pdfBytes.byteLength;
+  for (let i = 0; i < sampleSize; i += 100) {
+    hash = ((hash << 5) - hash) + view[i];
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return `${pdfBytes.byteLength}_${Math.abs(hash)}`;
+}
+
 interface CompressionParams {
   jpegQuality: number;
   scale: number;
@@ -73,8 +86,9 @@ async function getOrRenderPages(
   scale: number,
   onProgress?: (progress: number, message: string) => void
 ): Promise<RenderedPage[]> {
-  // Use scale as cache key with 3 decimal precision
-  const cacheKey = scale.toFixed(3);
+  // Create unique cache key including PDF identifier and scale
+  const pdfId = generatePDFIdentifier(pdfBytes);
+  const cacheKey = `${pdfId}_${scale.toFixed(3)}`;
   
   // Check cache first
   if (scaleCache.has(cacheKey)) {
@@ -84,10 +98,16 @@ async function getOrRenderPages(
     return scaleCache.get(cacheKey)!;
   }
   
+  // Clean up old cache entries if cache gets too large (keep last 10 entries)
+  if (scaleCache.size > 10) {
+    const firstKey = scaleCache.keys().next().value;
+    if (firstKey) scaleCache.delete(firstKey);
+  }
+  
   // Render pages if not cached
   const renderedPages = await renderPDFPages(pdfBytes, scale, onProgress);
   
-  // Store in cache
+  // Store in cache with unique key
   scaleCache.set(cacheKey, renderedPages);
   
   return renderedPages;
@@ -164,18 +184,15 @@ async function convertPagesToImages(
       onProgress(progress, `Compressing page ${i + 1} of ${pages.length} (${mode.toUpperCase()} mode)`);
     }
     
-    // For HD mode, use higher quality settings and consider PNG for text-heavy content
-    let dataUrl: string;
-    if (mode === 'hd' && quality >= 0.85) {
-      // HD mode: Use PNG for maximum quality preservation
-      dataUrl = await canvasToImage(pages[i].canvas, 1.0, 'png');
-    } else if (mode === 'hd') {
-      // HD mode with compression: Use very high quality JPEG
-      dataUrl = await canvasToImage(pages[i].canvas, Math.max(quality, 0.9), 'jpeg');
-    } else {
-      // Standard modes: Use JPEG with specified quality
-      dataUrl = await canvasToImage(pages[i].canvas, quality, 'jpeg');
+    // Always use JPEG for consistent compression behavior
+    // HD mode uses higher quality but still JPEG for predictable file sizes
+    let adjustedQuality = quality;
+    if (mode === 'hd') {
+      // HD mode: Boost quality slightly but stay in JPEG for compression control
+      adjustedQuality = Math.min(0.99, quality + 0.05);
     }
+    
+    const dataUrl = await canvasToImage(pages[i].canvas, adjustedQuality, 'jpeg');
     
     pageImages.push({
       dataUrl,
@@ -247,12 +264,15 @@ export async function compressPDFSimple(
 ): Promise<{ blob: Blob }> {
   const mode = params.mode || 'balanced';
   
+  // Clear cache for each compression to avoid mixing PDFs
+  clearRenderCache();
+  
   // HD mode adjustments for maximum quality preservation
   let adjustedParams = { ...params };
   if (mode === 'hd') {
-    // HD mode: Prioritize quality over compression
-    adjustedParams.jpegQuality = Math.max(params.jpegQuality, 0.85);
-    adjustedParams.scale = Math.max(params.scale, 0.95);
+    // HD mode: Boost quality but allow flexibility for compression
+    adjustedParams.jpegQuality = Math.max(params.jpegQuality, 0.80); // Lower floor for better compression
+    adjustedParams.scale = Math.max(params.scale, 0.90); // Lower floor for tighter targets
     console.log('HD Mode: Enhanced quality settings applied');
   } else if (mode === 'fast') {
     // Fast mode: Prioritize speed with reasonable quality
@@ -342,10 +362,10 @@ export async function compressPDFAdvanced(
 // HD Quality presets for easy use
 export const COMPRESSION_PRESETS = {
   hd: {
-    jpegQuality: 0.92,
-    scale: 0.98,
+    jpegQuality: 0.88, // Adjusted for better compression flexibility
+    scale: 0.95,       // Adjusted to allow reaching targets
     mode: 'hd' as const,
-    description: 'HD Quality - Maximum clarity preservation'
+    description: 'HD Quality - Enhanced clarity with smart compression'
   },
   balanced: {
     jpegQuality: 0.80,
@@ -396,32 +416,32 @@ export async function compressToTargetSize(
   let maxScale: number;
   
   if (mode === 'hd') {
-    // HD Mode: Prioritize quality preservation
+    // HD Mode: High quality but flexible enough for targets
     if (compressionRatio >= 0.7) {
-      minQuality = 0.92;
+      minQuality = 0.88; // Reduced from 0.92
       maxQuality = 0.99;
-      minScale = 0.98;
+      minScale = 0.95;   // Reduced from 0.98
       maxScale = 1.0;
     } else if (compressionRatio >= 0.4) {
-      minQuality = 0.88;
+      minQuality = 0.80; // Reduced from 0.88
       maxQuality = 0.98;
-      minScale = 0.95;
+      minScale = 0.90;   // Reduced from 0.95
       maxScale = 1.0;
     } else if (compressionRatio >= 0.2) {
-      minQuality = 0.82;
+      minQuality = 0.70; // Reduced from 0.82
       maxQuality = 0.96;
-      minScale = 0.92;
+      minScale = 0.85;   // Reduced from 0.92
       maxScale = 1.0;
     } else if (compressionRatio >= 0.1) {
-      minQuality = 0.75;
+      minQuality = 0.60; // Reduced from 0.75
       maxQuality = 0.93;
-      minScale = 0.88;
-      maxScale = 0.98;
-    } else {
-      minQuality = 0.65;
-      maxQuality = 0.90;
-      minScale = 0.80;
+      minScale = 0.75;   // Reduced from 0.88
       maxScale = 0.95;
+    } else {
+      minQuality = 0.50; // Reduced from 0.65
+      maxQuality = 0.90;
+      minScale = 0.65;   // Reduced from 0.80
+      maxScale = 0.90;
     }
   } else if (mode === 'fast') {
     // Fast Mode: Prioritize speed with reasonable quality
