@@ -719,7 +719,7 @@ export function checkGrammar(text: string): string[] {
     issues.push('Add punctuation at the end');
   }
   
-  return [...new Set(issues)]; // Remove duplicates
+  return Array.from(new Set(issues)); // Remove duplicates
 }
 
 // Simple spell check using browser's built-in capabilities

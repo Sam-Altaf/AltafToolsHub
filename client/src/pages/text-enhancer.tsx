@@ -287,7 +287,9 @@ Remember: clear writing leads to clear thinking. Take the time to refine your wo
           </p>
         </div>
 
-        <PrivacyNotice />
+        <PrivacyNotice 
+          message="All text processing happens locally in your browser. Your text never leaves your device."
+        />
 
         {/* Main Content */}
         <div className="grid lg:grid-cols-2 gap-6 mb-8">

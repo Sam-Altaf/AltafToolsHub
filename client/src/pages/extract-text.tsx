@@ -141,7 +141,7 @@ export default function ExtractText() {
       
       // Configure for better accuracy and text extraction
       await worker.setParameters({
-        tessedit_pageseg_mode: '1', // Automatic page segmentation with OSD
+        tessedit_pageseg_mode: Tesseract.PSM.AUTO_OSD, // Automatic page segmentation with OSD
         preserve_interword_spaces: '1', // Preserve spaces between words
         tessedit_create_hocr: '0', // Don't create HOCR output (faster)
         tessedit_create_tsv: '0', // Don't create TSV output (faster)
