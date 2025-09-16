@@ -679,8 +679,87 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Available Tools Section */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <Badge className="mb-4 bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-600 dark:text-green-400 border-green-500/30">
+              <Check className="w-3 h-3 mr-1" />
+              Ready to Use Now
+            </Badge>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+              <span className="gradient-text">Available Tools</span>
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
+              These tools are ready to use right now. All processing happens in your browser for complete privacy.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto mb-8">
+            {allTools.filter(tool => tool.available).slice(0, 6).map((tool, index) => {
+              const Icon = tool.icon;
+              return (
+                <motion.div
+                  key={tool.id}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: index * 0.05 }}
+                  viewport={{ once: true }}
+                >
+                  <Link href={tool.href}>
+                    <Card className="p-6 h-full hover:shadow-xl transition-all group cursor-pointer" data-testid={`available-tool-${tool.id}`}>
+                      <div className="flex items-start justify-between mb-4">
+                        <div className={cn(
+                          "w-12 h-12 rounded-lg flex items-center justify-center",
+                          "bg-gradient-to-br",
+                          tool.color
+                        )}>
+                          <Icon className="w-6 h-6 text-white" />
+                        </div>
+                        {tool.popular && (
+                          <Badge variant="secondary" className="text-xs">
+                            <Star className="w-3 h-3 mr-1" />
+                            Popular
+                          </Badge>
+                        )}
+                      </div>
+                      <h3 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
+                        {tool.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        {tool.description}
+                      </p>
+                      {tool.features && (
+                        <div className="text-xs text-muted-foreground/70">
+                          {tool.features.slice(0, 2).map((feature, idx) => (
+                            <span key={idx} className="inline-flex items-center gap-1 mr-3">
+                              <Check className="w-3 h-3 text-green-500" />
+                              {feature}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </Card>
+                  </Link>
+                </motion.div>
+              );
+            })}
+          </div>
+          
+          {/* See More Button */}
+          <div className="text-center">
+            <Link href="/all-tools?category=available">
+              <Button size="lg" className="btn-gradient text-white" data-testid="button-see-more-available">
+                View All {allTools.filter(tool => tool.available).length} Available Tools
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Tools Section */}
-      <section id="tools-section" className="py-16">
+      <section id="tools-section" className="py-16 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">

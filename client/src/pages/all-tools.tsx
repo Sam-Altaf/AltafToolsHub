@@ -173,7 +173,10 @@ export default function AllToolsPage() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const categoryParam = params.get('category');
-    if (categoryParam && toolCategories.some(cat => cat.id === categoryParam)) {
+    if (categoryParam === 'available') {
+      setSelectedCategory('available');
+      setStatusFilter('available');
+    } else if (categoryParam && toolCategories.some(cat => cat.id === categoryParam)) {
       setSelectedCategory(categoryParam);
     }
   }, []);
@@ -191,7 +194,9 @@ export default function AllToolsPage() {
     }
     
     // Filter by category
-    if (selectedCategory !== "all") {
+    if (selectedCategory === "available") {
+      tools = tools.filter(tool => tool.available === true);
+    } else if (selectedCategory !== "all") {
       tools = tools.filter(tool => tool.category === selectedCategory);
     }
     
@@ -295,6 +300,9 @@ export default function AllToolsPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Categories</SelectItem>
+                  <SelectItem value="available" className="font-semibold text-green-600 dark:text-green-400">
+                    ✅ Available Tools ({allTools.filter(t => t.available).length})
+                  </SelectItem>
                   {toolCategories.map((category) => (
                     <SelectItem key={category.id} value={category.id}>
                       {category.name} ({category.tools.length})

@@ -503,31 +503,6 @@ export const allTools: Tool[] = [
     extendedDescription: "Generate ultra-secure passwords with customizable complexity. Include symbols, numbers, and mixed case. Features password strength analysis and easy copy-to-clipboard functionality."
   },
   {
-    id: "word-counter",
-    title: "Word Counter",
-    description: "Count words, characters, and reading time",
-    icon: Type,
-    href: "/word-counter",
-    color: "from-blue-500 to-purple-600",
-    available: true,
-    category: "utilities",
-    features: ["Real-time counting", "Reading time", "Paragraph count", "SEO analysis"],
-    extendedDescription: "Advanced text analysis tool with real-time word and character counting. Calculate reading time, analyze readability scores, and optimize content for SEO. Perfect for writers and content creators."
-  },
-  {
-    id: "text-enhancer",
-    title: "Text Enhancer",
-    description: "AI-powered text improvement and analysis",
-    icon: PenTool,
-    href: "/text-enhancer",
-    color: "from-purple-500 to-pink-500",
-    available: true,
-    category: "utilities",
-    new: true,
-    features: ["Grammar check", "Style suggestions", "Tone adjustment", "Clarity improvement"],
-    extendedDescription: "Transform your writing with AI-powered suggestions. Fix grammar, enhance clarity, adjust tone, and improve readability. Perfect for emails, essays, and professional documents."
-  },
-  {
     id: "extract-text",
     title: "Extract Text (OCR)",
     description: "Extract text from images using OCR",
@@ -539,18 +514,6 @@ export const allTools: Tool[] = [
     new: true,
     features: ["Multiple languages", "Batch processing", "Handwriting recognition", "Export formats"],
     extendedDescription: "Extract text from images, scanned documents, and photos using advanced OCR technology. Supports 100+ languages and handwritten text. Export to Word, PDF, or plain text formats."
-  },
-  {
-    id: "file-calculator",
-    title: "File Calculator",
-    description: "Calculate file sizes and download times",
-    icon: Calculator,
-    href: "/file-calculator",
-    color: "from-emerald-500 to-green-500",
-    available: true,
-    category: "utilities",
-    features: ["Download time", "Bandwidth usage", "Storage converter", "Speed calculator"],
-    extendedDescription: "Calculate download times based on file size and internet speed. Convert between storage units (KB, MB, GB, TB). Estimate bandwidth requirements for streaming and uploads."
   },
   {
     id: "pdf-to-zip",
