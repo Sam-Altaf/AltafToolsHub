@@ -10,12 +10,10 @@ Allow: /unlock-pdf
 Allow: /jpg-to-pdf
 Allow: /qr-generator
 Allow: /password-generator
-Allow: /word-counter
-Allow: /text-enhancer
 Allow: /extract-text
-Allow: /file-calculator
-Allow: /privacy-policy
-Allow: /terms-conditions
+Allow: /all-tools
+Allow: /privacy
+Allow: /terms
 Disallow: /api/
 Disallow: /admin/
 Disallow: /temp/
@@ -25,7 +23,6 @@ Crawl-delay: 0
 
 # Sitemap location
 Sitemap: https://www.altaftoolshub.com/sitemap.xml
-Sitemap: https://www.altaftoolshub.com/sitemap-images.xml
 
 # Google
 User-agent: Googlebot

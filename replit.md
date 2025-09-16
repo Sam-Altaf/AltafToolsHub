@@ -2,12 +2,14 @@
 
 ## Overview
 
-AltafToolsHub is a comprehensive web application offering privacy-first file processing and utility tools. All file processing happens 100% client-side, ensuring complete privacy as files never leave the user's browser. The platform features PDF tools (compression with intelligent target sizes, password unlocking, JPG to PDF conversion) and utility tools (QR code generator, password generator, word counter). Built with React 18 and Express, it provides a modern, responsive interface with dark/light mode support, professional animations, and SEO optimization for 2025.
+AltafToolsHub is a comprehensive web application offering privacy-first file processing and utility tools. All file processing happens 100% client-side, ensuring complete privacy as files never leave the user's browser. The platform features PDF tools (compression with intelligent target sizes, password unlocking, JPG to PDF conversion) and utility tools (QR code generator, password generator, OCR text extraction). Built with React 18 and Express, it provides a modern, responsive interface with dark/light mode support, professional animations, and SEO optimization for 2025. The platform currently offers 6 fully functional tools with 50+ more planned.
 
-## Recent Updates (December 2024)
+## Recent Updates (September 2025)
 
 ### Major Features Added
-- **All Tools Page (September 2025)**: Created comprehensive All Tools section displaying all 60+ tools with filters for categories, availability status (Available/Coming Soon), search, and view modes (grid/list). Added to main navigation for easy discovery.
+- **Removed Low-Competition Tools (September 2025)**: Removed File Calculator, Text Enhancer, and Word Counter due to low search volume and heavy competition. Focus shifted to high-value PDF and utility tools with better SEO potential.
+- **All Tools Page with Available Filter (September 2025)**: Created comprehensive All Tools section with filters for categories including new "Available Tools" filter, availability status (Available/Coming Soon), search, and view modes (grid/list). Added to main navigation for easy discovery.
+- **Available Tools Section on Homepage (September 2025)**: Added dedicated "Available Tools" section on homepage showing 6 ready-to-use tools with "View All Available Tools" button linking to filtered All Tools page for better user journey.
 - **Enhanced Tool Descriptions (September 2025)**: Added extended descriptions and feature lists to all available tools for better UI/UX and SEO optimization. Tool cards now display rich content including features and category information.
 - **Highest Quality PDF Compression (September 2025)**: Enhanced PDF compressor with "Highest Quality" mode featuring maximum text clarity using 0.92-0.99 JPEG quality and 0.96-1.0 scale for superior text readability
 - **PDF Compressor Complete Fix (January 2025)**: Rebuilt with PDF.js canvas-based compression, real progress bar, exact target size achievement through binary search, and local worker for true offline/privacy

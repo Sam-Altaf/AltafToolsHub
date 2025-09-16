@@ -82,27 +82,8 @@
     </image:image>
   </url>
   
-  <url>
-    <loc>https://www.altaftoolshub.com/word-counter</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-    <mobile:mobile/>
-    <image:image>
-      <image:loc>https://www.altaftoolshub.com/og-word-counter.png</image:loc>
-      <image:title>Word Counter Tool</image:title>
-      <image:caption>Count words and characters online</image:caption>
-    </image:image>
-  </url>
   
   <!-- Text and Image Tools -->
-  <url>
-    <loc>https://www.altaftoolshub.com/text-enhancer</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <mobile:mobile/>
-  </url>
   
   <url>
     <loc>https://www.altaftoolshub.com/extract-text</loc>
@@ -112,17 +93,24 @@
     <mobile:mobile/>
   </url>
   
+  
+  <!-- All Tools Page -->
   <url>
-    <loc>https://www.altaftoolshub.com/file-calculator</loc>
+    <loc>https://www.altaftoolshub.com/all-tools</loc>
     <lastmod>2025-01-17T12:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.95</priority>
     <mobile:mobile/>
+    <image:image>
+      <image:loc>https://www.altaftoolshub.com/og-all-tools.png</image:loc>
+      <image:title>All Tools - AltafToolsHub</image:title>
+      <image:caption>Browse all 60+ privacy-first file tools</image:caption>
+    </image:image>
   </url>
   
   <!-- Legal Pages -->
   <url>
-    <loc>https://www.altaftoolshub.com/privacy-policy</loc>
+    <loc>https://www.altaftoolshub.com/privacy</loc>
     <lastmod>2025-01-17T12:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -130,35 +118,11 @@
   </url>
   
   <url>
-    <loc>https://www.altaftoolshub.com/terms-conditions</loc>
+    <loc>https://www.altaftoolshub.com/terms</loc>
     <lastmod>2025-01-17T12:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <mobile:mobile/>
   </url>
   
-  <!-- Tool Category Pages (Future) -->
-  <url>
-    <loc>https://www.altaftoolshub.com/pdf-tools</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-    <mobile:mobile/>
-  </url>
-  
-  <url>
-    <loc>https://www.altaftoolshub.com/text-tools</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <mobile:mobile/>
-  </url>
-  
-  <url>
-    <loc>https://www.altaftoolshub.com/image-tools</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <mobile:mobile/>
-  </url>
 </urlset>
