@@ -167,6 +167,7 @@ export default function AllToolsPage() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState<'name' | 'category' | 'status'>('category');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'available' | 'soon'>('all');
   
   // Filter and sort tools
   const filteredTools = useMemo(() => {
@@ -183,6 +184,13 @@ export default function AllToolsPage() {
     // Filter by category
     if (selectedCategory !== "all") {
       tools = tools.filter(tool => tool.category === selectedCategory);
+    }
+    
+    // Filter by status
+    if (statusFilter !== 'all') {
+      tools = tools.filter(tool => 
+        statusFilter === 'available' ? tool.available : !tool.available
+      );
     }
     
     // Sort tools
@@ -203,7 +211,7 @@ export default function AllToolsPage() {
     }
     
     return tools;
-  }, [searchQuery, selectedCategory, sortBy]);
+  }, [searchQuery, selectedCategory, sortBy, statusFilter]);
   
   // Group tools by category for display
   const groupedTools = useMemo(() => {
@@ -283,6 +291,18 @@ export default function AllToolsPage() {
                       {category.name} ({category.tools.length})
                     </SelectItem>
                   ))}
+                </SelectContent>
+              </Select>
+              
+              {/* Status Filter */}
+              <Select value={statusFilter} onValueChange={(value: 'all' | 'available' | 'soon') => setStatusFilter(value)}>
+                <SelectTrigger className="w-[180px]" data-testid="select-status-filter">
+                  <SelectValue placeholder="Filter by status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all" data-testid="filter-all">All Tools</SelectItem>
+                  <SelectItem value="available" data-testid="filter-available">Available</SelectItem>
+                  <SelectItem value="soon" data-testid="filter-soon">Coming Soon</SelectItem>
                 </SelectContent>
               </Select>
               
