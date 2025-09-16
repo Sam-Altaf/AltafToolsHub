@@ -15,10 +15,10 @@ export function Logo({
   animated = false 
 }: LogoProps) {
   const sizes = {
-    sm: { icon: 32, text: 20, width: 140 },
-    md: { icon: 40, text: 24, width: 180 },
-    lg: { icon: 48, text: 28, width: 220 },
-    xl: { icon: 64, text: 36, width: 280 }
+    sm: { icon: 32, text: 20, width: 180 },
+    md: { icon: 40, text: 24, width: 220 },
+    lg: { icon: 48, text: 28, width: 260 },
+    xl: { icon: 64, text: 36, width: 320 }
   };
 
   const currentSize = sizes[size];
