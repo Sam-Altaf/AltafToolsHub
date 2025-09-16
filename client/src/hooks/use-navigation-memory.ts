@@ -11,12 +11,49 @@ interface PageState {
 const pageStates = new Map<string, PageState>();
 const MAX_HISTORY = 50; // Maximum number of pages to remember
 
+// Persist current page to localStorage
+const CURRENT_PAGE_KEY = 'altaftoolshub_current_page';
+const SCROLL_POSITIONS_KEY = 'altaftoolshub_scroll_positions';
+
+// Load saved scroll positions from localStorage on startup
+if (typeof window !== 'undefined') {
+  const savedPositions = localStorage.getItem(SCROLL_POSITIONS_KEY);
+  if (savedPositions) {
+    try {
+      const positions = JSON.parse(savedPositions);
+      Object.entries(positions).forEach(([path, state]: [string, any]) => {
+        pageStates.set(path, state);
+      });
+    } catch (e) {
+      console.error('Failed to load scroll positions:', e);
+    }
+  }
+}
+
 export function useNavigationMemory() {
-  const [location] = useLocation();
+  const [location, navigate] = useLocation();
   const previousLocationRef = useRef<string>('');
   const restoringScrollRef = useRef(false);
+  const hasRestoredRef = useRef(false);
+
+  // On initial load, check if we should restore to a different page
+  useEffect(() => {
+    if (!hasRestoredRef.current) {
+      hasRestoredRef.current = true;
+      const savedPage = localStorage.getItem(CURRENT_PAGE_KEY);
+      if (savedPage && savedPage !== location && savedPage !== '/') {
+        // Navigate to the saved page
+        navigate(savedPage);
+      }
+    }
+  }, []);
 
   useEffect(() => {
+    // Save current page to localStorage
+    if (location) {
+      localStorage.setItem(CURRENT_PAGE_KEY, location);
+    }
+
     // Save scroll position when leaving a page
     const handleBeforeUnload = () => {
       if (previousLocationRef.current) {
@@ -26,6 +63,13 @@ export function useNavigationMemory() {
           timestamp: Date.now()
         });
       }
+      
+      // Save all scroll positions to localStorage
+      const positions: Record<string, PageState> = {};
+      pageStates.forEach((value, key) => {
+        positions[key] = value;
+      });
+      localStorage.setItem(SCROLL_POSITIONS_KEY, JSON.stringify(positions));
     };
 
     // Save scroll position periodically
@@ -36,6 +80,13 @@ export function useNavigationMemory() {
           scrollY: window.scrollY,
           timestamp: Date.now()
         });
+        
+        // Also save to localStorage periodically
+        const positions: Record<string, PageState> = {};
+        pageStates.forEach((value, key) => {
+          positions[key] = value;
+        });
+        localStorage.setItem(SCROLL_POSITIONS_KEY, JSON.stringify(positions));
       }
     };
 

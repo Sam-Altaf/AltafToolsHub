@@ -250,6 +250,9 @@ function generateSuggestions(analysis: any): string[] {
 export function enhanceText(text: string, tone: ToneOptions): string {
   let enhanced = text;
   
+  // First, fix common grammar and spelling errors
+  enhanced = fixGrammarAndSpelling(enhanced);
+  
   // Apply tone adjustments
   if (tone.formal) {
     enhanced = makeFormal(enhanced);
@@ -269,7 +272,175 @@ export function enhanceText(text: string, tone: ToneOptions): string {
     enhanced = makeFriendly(enhanced);
   }
   
+  // Final cleanup
+  enhanced = cleanupText(enhanced);
+  
   return enhanced;
+}
+
+function fixGrammarAndSpelling(text: string): string {
+  let fixed = text;
+  
+  // Fix common misspellings
+  const commonMisspellings: { [key: string]: string } = {
+    'recieve': 'receive',
+    'beleive': 'believe',
+    'occured': 'occurred',
+    'seperate': 'separate',
+    'untill': 'until',
+    'wich': 'which',
+    'alot': 'a lot',
+    'definately': 'definitely',
+    'occassion': 'occasion',
+    'concious': 'conscious',
+    'experiance': 'experience',
+    'enviroment': 'environment',
+    'goverment': 'government',
+    'necesary': 'necessary',
+    'begining': 'beginning',
+    'accomodate': 'accommodate',
+    'acheive': 'achieve',
+    'adress': 'address',
+    'calender': 'calendar',
+    'collegue': 'colleague',
+    'comming': 'coming',
+    'commitee': 'committee',
+    'completly': 'completely',
+    'concider': 'consider',
+    'dissapear': 'disappear',
+    'finaly': 'finally',
+    'foward': 'forward',
+    'futher': 'further',
+    'happend': 'happened',
+    'harrass': 'harass',
+    'independant': 'independent',
+    'knowlege': 'knowledge',
+    'lenght': 'length',
+    'maintainance': 'maintenance',
+    'mispell': 'misspell',
+    'noticable': 'noticeable',
+    'paralel': 'parallel',
+    'perfer': 'prefer',
+    'publically': 'publicly',
+    'realy': 'really',
+    'refered': 'referred',
+    'rember': 'remember',
+    'resistent': 'resistant',
+    'sence': 'sense',
+    'succesful': 'successful',
+    'suprise': 'surprise',
+    'tommorrow': 'tomorrow',
+    'tounge': 'tongue',
+    'truely': 'truly',
+    'unforseen': 'unforeseen',
+    'unfortunatly': 'unfortunately',
+    'usefull': 'useful',
+    'wierd': 'weird',
+    'todays': "today's",
+    'grammer': 'grammar',
+    'isnt': "isn't",
+    'youll': "you'll",
+    'differance': 'difference',
+    'percieve': 'perceive',
+    'weather': 'whether', // when used in context of choice
+    'effects': 'affects', // when used as a verb
+  };
+  
+  // Apply spelling corrections
+  Object.entries(commonMisspellings).forEach(([wrong, correct]) => {
+    const regex = new RegExp(`\\b${wrong}\\b`, 'gi');
+    fixed = fixed.replace(regex, (match) => {
+      // Preserve capitalization
+      if (match[0] === match[0].toUpperCase()) {
+        return correct.charAt(0).toUpperCase() + correct.slice(1);
+      }
+      return correct;
+    });
+  });
+  
+  // Fix common grammar issues
+  const grammarFixes = [
+    // your/you're
+    { wrong: /\byour\s+(a|an|are|is)\b/gi, right: "you're $1" },
+    // its/it's
+    { wrong: /\bits\s+(a|an|is|was|been|not)\b/gi, right: "it's $1" },
+    // their/there/they're
+    { wrong: /\btheir\s+(is|are|was|were)\b/gi, right: "there $1" },
+    { wrong: /\btheir\s+(going|coming|leaving)\b/gi, right: "they're $1" },
+    // should/could/would of -> have
+    { wrong: /\b(should|could|would|must)\s+of\b/gi, right: '$1 have' },
+    // loose/lose
+    { wrong: /\bloose\s+(weight|money|keys|focus)\b/gi, right: 'lose $1' },
+    // then/than for comparisons
+    { wrong: /\b(better|worse|more|less|greater|faster|slower|higher|lower)\s+then\b/gi, right: '$1 than' },
+    // accept/except
+    { wrong: /\baccept\s+for\b/gi, right: 'except for' },
+    // affect/effect in common contexts
+    { wrong: /\beffect\s+(the|a|an|my|your|his|her|our|their)\s+(change|outcome|result)\b/gi, right: 'affect $1 $2' },
+    { wrong: /\baffects?\s+(of)\b/gi, right: 'effects $1' },
+    // to/too
+    { wrong: /\bto\s+(much|many|often|soon|late|early|far)\b/gi, right: 'too $1' },
+    // Remove double spaces
+    { wrong: /\s{2,}/g, right: ' ' },
+    // Fix missing apostrophes in common contractions
+    { wrong: /\bdont\b/gi, right: "don't" },
+    { wrong: /\bcant\b/gi, right: "can't" },
+    { wrong: /\bwont\b/gi, right: "won't" },
+    { wrong: /\bwouldnt\b/gi, right: "wouldn't" },
+    { wrong: /\bcouldnt\b/gi, right: "couldn't" },
+    { wrong: /\bshouldnt\b/gi, right: "shouldn't" },
+    { wrong: /\bdidnt\b/gi, right: "didn't" },
+    { wrong: /\bdoesnt\b/gi, right: "doesn't" },
+    { wrong: /\bhasnt\b/gi, right: "hasn't" },
+    { wrong: /\bhavent\b/gi, right: "haven't" },
+    { wrong: /\bhadnt\b/gi, right: "hadn't" },
+    { wrong: /\bwerent\b/gi, right: "weren't" },
+    { wrong: /\bwasnt\b/gi, right: "wasn't" },
+    { wrong: /\barent\b/gi, right: "aren't" },
+    { wrong: /\bisnt\b/gi, right: "isn't" },
+  ];
+  
+  grammarFixes.forEach(({ wrong, right }) => {
+    fixed = fixed.replace(wrong, right);
+  });
+  
+  return fixed;
+}
+
+function cleanupText(text: string): string {
+  let cleaned = text;
+  
+  // Fix sentence capitalization
+  cleaned = cleaned.replace(/(^|\. |\! |\? )([a-z])/g, (match, p1, p2) => {
+    return p1 + p2.toUpperCase();
+  });
+  
+  // Remove repeated words
+  cleaned = cleaned.replace(/\b(\w+)\s+\1\b/gi, '$1');
+  
+  // Fix multiple punctuation (except ellipsis)
+  cleaned = cleaned.replace(/([.!?])\1+/g, '$1');
+  cleaned = cleaned.replace(/\.{3,}/g, '...');
+  
+  // Remove extra spaces before punctuation
+  cleaned = cleaned.replace(/\s+([.!?,;:])/g, '$1');
+  
+  // Add space after punctuation if missing
+  cleaned = cleaned.replace(/([.!?,;:])([A-Za-z])/g, '$1 $2');
+  
+  // Fix spacing around quotes
+  cleaned = cleaned.replace(/\s+"/g, ' "');
+  cleaned = cleaned.replace(/"\s+/g, '" ');
+  
+  // Remove trailing whitespace
+  cleaned = cleaned.replace(/\s+$/gm, '');
+  
+  // Ensure ending punctuation
+  if (cleaned.trim() && !/[.!?]$/.test(cleaned.trim())) {
+    cleaned = cleaned.trim() + '.';
+  }
+  
+  return cleaned;
 }
 
 function makeFormal(text: string): string {

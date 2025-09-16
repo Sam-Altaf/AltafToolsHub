@@ -139,18 +139,24 @@ export default function ExtractText() {
         }
       });
       
-      // Configure for better accuracy
+      // Configure for better accuracy and text extraction
       await worker.setParameters({
-        tessedit_pageseg_mode: '3', // Fully automatic page segmentation
+        tessedit_pageseg_mode: '1', // Automatic page segmentation with OSD
         preserve_interword_spaces: '1', // Preserve spaces between words
         tessedit_create_hocr: '0', // Don't create HOCR output (faster)
         tessedit_create_tsv: '0', // Don't create TSV output (faster)
+        tessedit_char_whitelist: '', // Allow all characters
+        user_defined_dpi: '300', // Higher DPI for better recognition
       });
       
       setProgressStatus('Extracting text from image...');
       setProgress(50);
       
-      const { data } = await worker.recognize(imagePreview);
+      // Process image with enhanced settings
+      const { data } = await worker.recognize(imagePreview, {
+        rotateAuto: true,
+        rotateRadians: 0,
+      });
       
       setProgress(90);
       setProgressStatus('Finalizing...');
