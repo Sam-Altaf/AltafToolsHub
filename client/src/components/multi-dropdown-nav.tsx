@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -42,7 +42,7 @@ const ToolNavItem = ({ tool }: { tool: Tool }) => {
             </span>
           )}
         </div>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-xs text-muted-foreground line-clamp-2">
           {tool.description}
         </p>
       </div>
@@ -82,71 +82,131 @@ const menuItems = [
 ];
 
 export function MultiDropdownNav() {
-  const [isHovered, setIsHovered] = useState(false);
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const [isDropdownHovered, setIsDropdownHovered] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Clear timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handleMenuItemMouseEnter = (itemId: string) => {
+    // Clear any existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    setHoveredItem(itemId);
+  };
+
+  const handleMenuItemMouseLeave = () => {
+    // Add a small delay before closing to allow moving to dropdown
+    timeoutRef.current = setTimeout(() => {
+      if (!isDropdownHovered) {
+        setHoveredItem(null);
+      }
+    }, 150);
+  };
+
+  const handleDropdownMouseEnter = () => {
+    setIsDropdownHovered(true);
+    // Clear timeout to prevent dropdown from closing
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+  };
+
+  const handleDropdownMouseLeave = () => {
+    setIsDropdownHovered(false);
+    // Close dropdown after a delay
+    timeoutRef.current = setTimeout(() => {
+      setHoveredItem(null);
+    }, 150);
+  };
 
   return (
-    <div 
-      className="relative multi-dropdown-container"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+    <div className="relative flex items-center">
       {/* Menu Triggers */}
       <div className="flex items-center space-x-1">
         {menuItems.map((item) => {
           const Icon = item.icon;
           return (
-            <Button
+            <div
               key={item.id}
-              variant="ghost"
-              className="font-medium hover:bg-accent hover:text-accent-foreground"
+              className="relative"
+              onMouseEnter={() => handleMenuItemMouseEnter(item.id)}
+              onMouseLeave={handleMenuItemMouseLeave}
             >
-              <Icon className="w-4 h-4 mr-2" />
-              {item.label}
-            </Button>
+              <Button
+                variant="ghost"
+                className={cn(
+                  "font-medium hover:bg-accent hover:text-accent-foreground transition-colors",
+                  hoveredItem === item.id && "bg-accent text-accent-foreground"
+                )}
+                data-testid={`nav-${item.id}`}
+              >
+                <Icon className="w-4 h-4 mr-2" />
+                {item.label}
+              </Button>
+            </div>
           );
         })}
       </div>
 
-      {/* All Dropdowns Container */}
+      {/* Individual Dropdown for each menu item */}
       <AnimatePresence>
-        {isHovered && (
+        {hoveredItem && (
           <motion.div
+            key={hoveredItem}
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="absolute top-full left-0 right-0 mt-1"
-            style={{ zIndex: 9999 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className="absolute top-full left-0 mt-2 z-50"
+            onMouseEnter={handleDropdownMouseEnter}
+            onMouseLeave={handleDropdownMouseLeave}
           >
-            <div className="flex gap-4 p-6 bg-background border rounded-xl shadow-xl" style={{ position: 'relative', zIndex: 9999 }}>
-              {menuItems.map((menuItem) => {
-                const category = toolCategories.find(cat => cat.id === menuItem.categoryId);
-                const tools = menuItem.id === "utilities" 
-                  ? category?.tools 
-                  : category?.tools.slice(0, 8);
-                
-                return (
-                  <div key={menuItem.id} className="flex-1 min-w-[280px]">
-                    <h3 className="font-semibold mb-4 text-sm text-muted-foreground flex items-center">
-                      <menuItem.icon className="w-4 h-4 mr-2" />
-                      {menuItem.label}
-                    </h3>
-                    <div className="space-y-1 max-h-[400px] overflow-y-auto">
-                      {tools?.map((tool) => (
-                        <ToolNavItem key={tool.id} tool={tool} />
-                      ))}
+            <div className="bg-background/95 backdrop-blur-md border border-border/50 rounded-xl shadow-2xl p-6 min-w-[350px] max-w-[800px]">
+              {menuItems
+                .filter(item => item.id === hoveredItem)
+                .map((menuItem) => {
+                  const category = toolCategories.find(cat => cat.id === menuItem.categoryId);
+                  const tools = menuItem.id === "utilities" 
+                    ? category?.tools 
+                    : category?.tools.slice(0, 8);
+                  
+                  return (
+                    <div key={menuItem.id}>
+                      <h3 className="font-semibold mb-4 text-sm text-muted-foreground uppercase tracking-wider flex items-center">
+                        <menuItem.icon className="w-4 h-4 mr-2" />
+                        {menuItem.label} ({category?.tools.length || 0} tools)
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-[400px] overflow-y-auto">
+                        {tools?.map((tool) => (
+                          <ToolNavItem key={tool.id} tool={tool} />
+                        ))}
+                      </div>
+                      {menuItem.id !== "utilities" && category && category.tools.length > 8 && (
+                        <Link href={menuItem.href}>
+                          <Button 
+                            variant="outline" 
+                            className="w-full mt-4 hover:scale-[1.02] transition-transform" 
+                            size="sm"
+                          >
+                            View All {category.tools.length} {menuItem.label}
+                            <ArrowRight className="w-4 h-4 ml-2" />
+                          </Button>
+                        </Link>
+                      )}
                     </div>
-                    {menuItem.id !== "utilities" && category && category.tools.length > 8 && (
-                      <Link href={menuItem.href}>
-                        <Button variant="outline" className="w-full mt-4" size="sm">
-                          View All {menuItem.label}
-                          <ArrowRight className="w-4 h-4 ml-2" />
-                        </Button>
-                      </Link>
-                    )}
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
           </motion.div>
         )}

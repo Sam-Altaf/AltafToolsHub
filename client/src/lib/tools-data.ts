@@ -482,7 +482,7 @@ export const allTools: Tool[] = [
   {
     id: "password-generator",
     title: "Password Generator",
-    description: "Create strong, secure passwords",
+    description: "Generate unbreakable passwords with customizable complexity. Choose length, include symbols, numbers, and special characters. Create memorable passphrases or ultra-secure random passwords.",
     icon: Shield,
     href: "/password-generator",
     color: "from-emerald-500 to-teal-600",
@@ -493,7 +493,7 @@ export const allTools: Tool[] = [
   {
     id: "word-counter",
     title: "Word Counter",
-    description: "Count words, characters, and reading time",
+    description: "Analyze text with detailed statistics including word count, character count, reading time, and keyword density. Essential for writers, students, and SEO professionals optimizing content.",
     icon: Type,
     href: "/word-counter",
     color: "from-blue-500 to-purple-600",
@@ -503,7 +503,7 @@ export const allTools: Tool[] = [
   {
     id: "text-enhancer",
     title: "Text Enhancer",
-    description: "AI-powered text improvement and analysis",
+    description: "Transform your writing with AI-powered suggestions for clarity, tone, and impact. Fix grammar, improve readability, and optimize content for your target audience. Perfect for emails, essays, and professional documents.",
     icon: PenTool,
     href: "/text-enhancer",
     color: "from-purple-500 to-pink-500",
@@ -514,7 +514,7 @@ export const allTools: Tool[] = [
   {
     id: "extract-text",
     title: "Extract Text (OCR)",
-    description: "Extract text from images using OCR",
+    description: "Convert images to editable text with advanced OCR technology. Extract text from screenshots, scanned documents, photos, and PDFs. Supports multiple languages and maintains formatting accuracy.",
     icon: ScanLine,
     href: "/extract-text",
     color: "from-cyan-500 to-blue-500",
@@ -525,7 +525,7 @@ export const allTools: Tool[] = [
   {
     id: "file-calculator",
     title: "File Calculator",
-    description: "Calculate file sizes and download times",
+    description: "Estimate file sizes, storage requirements, and download times across different connection speeds. Calculate bandwidth usage, compression ratios, and optimize file delivery for your audience.",
     icon: Calculator,
     href: "/file-calculator",
     color: "from-emerald-500 to-green-500",

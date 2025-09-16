@@ -15,10 +15,10 @@ export function Logo({
   animated = false 
 }: LogoProps) {
   const sizes = {
-    sm: { icon: 32, text: 20, width: 140 },
-    md: { icon: 40, text: 24, width: 180 },
-    lg: { icon: 48, text: 28, width: 220 },
-    xl: { icon: 64, text: 36, width: 280 }
+    sm: { icon: 32, text: 18, width: 220 },
+    md: { icon: 40, text: 22, width: 260 },
+    lg: { icon: 48, text: 26, width: 320 },
+    xl: { icon: 64, text: 34, width: 380 }
   };
 
   const currentSize = sizes[size];
@@ -214,17 +214,19 @@ export function Logo({
 
       {/* Text (if variant is "full") */}
       {variant === "full" && (
-        <g transform={`translate(${iconSize + 12}, ${iconSize * 0.5})`}>
+        <g transform={`translate(${iconSize + 16}, ${iconSize * 0.5})`}>
           <text
             x="0"
             y="0"
             fill="currentColor"
             fontSize={currentSize.text}
             fontWeight="700"
-            fontFamily="system-ui, -apple-system, sans-serif"
-            alignmentBaseline="middle"
+            fontFamily="Inter, system-ui, -apple-system, sans-serif"
+            dominantBaseline="central"
+            style={{ letterSpacing: '-0.01em' }}
           >
-            <tspan fill="currentColor">AltafToolsHub</tspan>
+            <tspan fill="currentColor">AltafTools</tspan>
+            <tspan fill="url(#logoGradient2)">Hub</tspan>
           </text>
         </g>
       )}
