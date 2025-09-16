@@ -8,7 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   FileText, Lock, Image, Shield, Zap, Check, ArrowRight, 
   Search, Star, Users, Globe, Download, TrendingUp,
-  Clock, ChevronRight, Sparkles
+  Clock, ChevronRight, Sparkles, QrCode, Calculator,
+  BookOpen, FileCode, Type, PenTool, Book
 } from "lucide-react";
 import { useSEO, generateOrganizationSchema, generateWebApplicationSchema, generateFAQSchema, generateServiceSchema } from "@/hooks/use-seo";
 import { motion, AnimatePresence } from "framer-motion";
@@ -205,6 +206,10 @@ const itemVariants = {
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
+  
+  // Show limited tools per category initially
+  const INITIAL_TOOLS_COUNT = 4;
 
   // Filter tools based on search and category
   const filteredTools = allTools.filter(tool => {
@@ -446,7 +451,7 @@ export default function Home() {
         <div className="absolute top-40 right-10 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
         <div className="absolute bottom-20 left-1/3 w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob animation-delay-4000"></div>
         
-        {/* Floating Icons */}
+        {/* Enhanced Floating Icons - More Tool-Related Symbols */}
         <motion.div 
           className="absolute top-32 left-20 opacity-20"
           animate={{ 
@@ -458,8 +463,9 @@ export default function Home() {
             repeat: Infinity,
             ease: "easeInOut"
           }}
+          aria-hidden="true"
         >
-          <FileText className="w-12 h-12 text-primary" />
+          <FileText className="w-12 h-12 text-blue-400" />
         </motion.div>
         
         <motion.div 
@@ -474,8 +480,9 @@ export default function Home() {
             ease: "easeInOut",
             delay: 2
           }}
+          aria-hidden="true"
         >
-          <Image className="w-10 h-10 text-primary" />
+          <Image className="w-10 h-10 text-cyan-400" />
         </motion.div>
         
         <motion.div 
@@ -490,11 +497,133 @@ export default function Home() {
             ease: "easeInOut",
             delay: 1
           }}
+          aria-hidden="true"
         >
-          <Shield className="w-14 h-14 text-primary" />
+          <Shield className="w-14 h-14 text-green-400" />
         </motion.div>
         
-        {/* Sparkle Effects */}
+        {/* Additional Tool-Related Floating Icons */}
+        <motion.div 
+          className="absolute top-60 left-1/3 opacity-20"
+          animate={{ 
+            y: [0, -25, 0],
+            rotate: [0, 180, 360]
+          }}
+          transition={{ 
+            duration: 15, 
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 3
+          }}
+          aria-hidden="true"
+        >
+          <QrCode className="w-8 h-8 text-purple-400" />
+        </motion.div>
+        
+        <motion.div 
+          className="absolute bottom-48 left-16 opacity-20"
+          animate={{ 
+            y: [0, 18, 0],
+            x: [0, -12, 0],
+            rotate: [0, -90, 0]
+          }}
+          transition={{ 
+            duration: 11, 
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 4
+          }}
+          aria-hidden="true"
+        >
+          <Calculator className="w-9 h-9 text-emerald-400" />
+        </motion.div>
+        
+        <motion.div 
+          className="absolute top-72 right-16 opacity-20"
+          animate={{ 
+            y: [0, -22, 0],
+            scale: [1, 1.1, 1]
+          }}
+          transition={{ 
+            duration: 9, 
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1.5
+          }}
+          aria-hidden="true"
+        >
+          <Lock className="w-11 h-11 text-red-400" />
+        </motion.div>
+        
+        <motion.div 
+          className="absolute bottom-60 right-1/3 opacity-20"
+          animate={{ 
+            y: [0, 16, 0],
+            rotate: [0, 45, 0]
+          }}
+          transition={{ 
+            duration: 13, 
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 2.5
+          }}
+          aria-hidden="true"
+        >
+          <BookOpen className="w-10 h-10 text-amber-400" />
+        </motion.div>
+        
+        <motion.div 
+          className="absolute top-80 left-1/4 opacity-20"
+          animate={{ 
+            y: [0, -14, 0],
+            x: [0, 8, 0]
+          }}
+          transition={{ 
+            duration: 14, 
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 3.5
+          }}
+          aria-hidden="true"
+        >
+          <FileCode className="w-9 h-9 text-indigo-400" />
+        </motion.div>
+        
+        <motion.div 
+          className="absolute bottom-80 left-1/2 opacity-20"
+          animate={{ 
+            y: [0, 20, 0],
+            rotate: [0, -45, 0]
+          }}
+          transition={{ 
+            duration: 16, 
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 4.5
+          }}
+          aria-hidden="true"
+        >
+          <Type className="w-8 h-8 text-pink-400" />
+        </motion.div>
+        
+        <motion.div 
+          className="absolute top-96 right-1/4 opacity-20"
+          animate={{ 
+            y: [0, -18, 0],
+            scale: [1, 0.9, 1]
+          }}
+          transition={{ 
+            duration: 10, 
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 5
+          }}
+          aria-hidden="true"
+        >
+          <PenTool className="w-9 h-9 text-teal-400" />
+        </motion.div>
+        
+        {/* Enhanced Sparkle Effects */}
         <div className="absolute top-1/4 left-1/4 animate-sparkle">
           <Sparkles className="w-6 h-6 text-yellow-400 opacity-60" />
         </div>
@@ -503,6 +632,15 @@ export default function Home() {
         </div>
         <div className="absolute bottom-1/4 left-1/2 animate-sparkle animation-delay-4000">
           <Sparkles className="w-5 h-5 text-blue-400 opacity-60" />
+        </div>
+        <div className="absolute top-1/3 right-1/6 animate-sparkle animation-delay-1000">
+          <Sparkles className="w-5 h-5 text-green-400 opacity-50" />
+        </div>
+        <div className="absolute bottom-1/3 left-1/6 animate-sparkle animation-delay-3000">
+          <Sparkles className="w-4 h-4 text-cyan-400 opacity-55" />
+        </div>
+        <div className="absolute top-2/3 left-2/3 animate-sparkle animation-delay-5000">
+          <Sparkles className="w-6 h-6 text-pink-400 opacity-45" />
         </div>
       </section>
 
@@ -589,32 +727,81 @@ export default function Home() {
 
             <TabsContent value={selectedCategory} className="mt-0">
               {selectedCategory === "all" && searchQuery === '' ? (
-                // Show all tools grouped by category when no search
+                // Show all tools grouped by category with see more/less functionality
                 <div className="space-y-12">
-                  {toolCategories.map((category) => (
-                    <div key={category.id} id={category.id}>
-                      <div className="flex items-center gap-3 mb-6">
-                        <category.icon className="w-6 h-6 text-primary" />
-                        <h3 className="text-2xl font-bold">{category.name}</h3>
-                        <Badge variant="secondary" className="ml-auto">
-                          {category.tools.length} tools
-                        </Badge>
-                      </div>
-                      <motion.div 
-                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6"
-                        variants={containerVariants}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true }}
-                      >
-                        {category.tools.map((tool) => (
-                          <motion.div key={tool.id} variants={itemVariants}>
-                            <ToolCard tool={tool} />
+                  {toolCategories.map((category) => {
+                    const isExpanded = expandedCategories[category.id] || false;
+                    const toolsToShow = isExpanded ? category.tools : category.tools.slice(0, INITIAL_TOOLS_COUNT);
+                    const hasMoreTools = category.tools.length > INITIAL_TOOLS_COUNT;
+                    
+                    return (
+                      <div key={category.id} id={category.id}>
+                        <div className="flex items-center gap-3 mb-6">
+                          <category.icon className="w-6 h-6 text-primary" />
+                          <h3 className="text-2xl font-bold">{category.name}</h3>
+                          <Badge variant="secondary" className="ml-auto">
+                            {category.tools.length} tools
+                          </Badge>
+                        </div>
+                        <motion.div 
+                          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6"
+                          variants={containerVariants}
+                          initial="hidden"
+                          whileInView="visible"
+                          viewport={{ once: true }}
+                        >
+                          {toolsToShow.map((tool) => (
+                            <motion.div key={tool.id} variants={itemVariants}>
+                              <ToolCard tool={tool} />
+                            </motion.div>
+                          ))}
+                        </motion.div>
+                        
+                        {/* See More / See Less Button */}
+                        {hasMoreTools && (
+                          <motion.div 
+                            className="flex justify-center mt-8"
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                          >
+                            <Button
+                              variant="outline"
+                              size="lg"
+                              onClick={() => setExpandedCategories(prev => ({
+                                ...prev,
+                                [category.id]: !isExpanded
+                              }))}
+                              className="group px-8 py-3 text-base font-medium hover:bg-primary hover:text-primary-foreground transition-all duration-300"
+                            >
+                              {isExpanded ? (
+                                <>
+                                  <motion.div
+                                    initial={{ rotate: 0 }}
+                                    animate={{ rotate: 180 }}
+                                    className="mr-2"
+                                  >
+                                    <ChevronRight className="w-5 h-5" />
+                                  </motion.div>
+                                  Show Less ({category.tools.length - INITIAL_TOOLS_COUNT} hidden)
+                                </>
+                              ) : (
+                                <>
+                                  <motion.div
+                                    whileHover={{ x: 3 }}
+                                    className="mr-2"
+                                  >
+                                    <ChevronRight className="w-5 h-5" />
+                                  </motion.div>
+                                  See More ({category.tools.length - INITIAL_TOOLS_COUNT} more tools)
+                                </>
+                              )}
+                            </Button>
                           </motion.div>
-                        ))}
-                      </motion.div>
-                    </div>
-                  ))}
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               ) : (
                 // Show filtered tools when searching or filtering

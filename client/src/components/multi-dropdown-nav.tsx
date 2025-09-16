@@ -15,28 +15,29 @@ const ToolNavItem = ({ tool }: { tool: Tool }) => {
     <Link
       href={tool.href}
       className={cn(
-        "group relative flex items-start space-x-3 select-none rounded-xl p-3 leading-none no-underline outline-none transition-all duration-300",
-        "hover:bg-gradient-to-r hover:from-primary/10 hover:to-transparent",
-        "hover:shadow-lg hover:translate-y-[-3px] hover:scale-[1.02]",
+        "group relative flex flex-col items-center text-center select-none rounded-xl p-3 leading-none no-underline outline-none transition-all duration-200",
+        "hover:bg-gradient-to-b hover:from-primary/8 hover:to-primary/3",
+        "hover:shadow-lg hover:translate-y-[-2px] hover:scale-[1.03]",
         "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-background",
+        "border border-transparent hover:border-primary/20",
         !tool.available && "opacity-60 hover:translate-y-0 hover:scale-100"
       )}
       data-testid={`nav-${tool.id}`}
     >
       <div className={cn(
-        "w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-500",
+        "w-12 h-12 rounded-xl flex items-center justify-center mb-3 transition-all duration-300",
         "bg-gradient-to-br", tool.color,
-        "group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-lg",
-        "shadow-sm"
+        "group-hover:scale-110 group-hover:shadow-xl",
+        "shadow-md"
       )}>
-        <Icon className="w-5 h-5 text-white" />
+        <Icon className="w-6 h-6 text-white" />
       </div>
-      <div className="flex-1">
-        <div className="font-medium mb-1 flex items-center gap-2">
-          {tool.title}
+      <div className="flex-1 min-h-0">
+        <div className="font-medium mb-1 flex items-center justify-center gap-1 flex-wrap">
+          <span className="text-sm">{tool.title}</span>
           {tool.new && (
-            <span className="inline-flex items-center text-xs px-2 py-0.5 rounded-full bg-gradient-to-r from-green-500/20 to-green-400/10 text-green-600 dark:text-green-400 font-semibold animate-pulse-glow">
-              <Sparkles className="w-3 h-3 mr-0.5" />
+            <span className="inline-flex items-center text-xs px-1.5 py-0.5 rounded-full bg-gradient-to-r from-green-500/20 to-green-400/10 text-green-600 dark:text-green-400 font-semibold">
+              <Sparkles className="w-2.5 h-2.5 mr-0.5" />
               New
             </span>
           )}
@@ -46,7 +47,7 @@ const ToolNavItem = ({ tool }: { tool: Tool }) => {
             </span>
           )}
         </div>
-        <p className="text-xs text-muted-foreground line-clamp-2">
+        <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed">
           {tool.description}
         </p>
       </div>
@@ -136,10 +137,10 @@ export function MultiDropdownNav() {
     const containerRect = containerRef.current.getBoundingClientRect();
     const viewportWidth = window.innerWidth;
     
-    // Calculate ideal dropdown width
-    const idealWidth = 500;
-    const minWidth = 400;
-    const maxWidth = Math.min(600, viewportWidth - 40);
+    // Calculate ideal dropdown width for horizontal layout - mobile friendly
+    const idealWidth = Math.min(600, viewportWidth - 40);
+    const minWidth = Math.min(320, viewportWidth - 20); // Mobile-friendly minimum
+    const maxWidth = Math.min(800, viewportWidth - 40);
     
     // Calculate left position relative to container
     let left = buttonRect.left - containerRect.left;
@@ -147,16 +148,22 @@ export function MultiDropdownNav() {
     // Adjust width based on available space
     let width = idealWidth;
     
-    // Check if dropdown would overflow viewport
-    if (buttonRect.left + idealWidth > viewportWidth - 20) {
-      // Adjust position to prevent overflow
-      const availableSpace = viewportWidth - buttonRect.left - 20;
-      width = Math.max(minWidth, Math.min(availableSpace, maxWidth));
-      
-      // If still not enough space, align to right edge
-      if (width < minWidth) {
-        width = minWidth;
-        left = Math.max(0, viewportWidth - minWidth - 20 - containerRect.left);
+    // Mobile-first approach: if viewport is small, use full width
+    if (viewportWidth < 640) {
+      width = Math.min(viewportWidth - 20, maxWidth);
+      left = Math.max(10 - containerRect.left, 0); // Align to left with small margin
+    } else {
+      // Desktop: Check if dropdown would overflow viewport
+      if (buttonRect.left + idealWidth > viewportWidth - 20) {
+        // Adjust position to prevent overflow
+        const availableSpace = viewportWidth - buttonRect.left - 20;
+        width = Math.max(minWidth, Math.min(availableSpace, maxWidth));
+        
+        // If still not enough space, align to right edge
+        if (width < minWidth) {
+          width = minWidth;
+          left = Math.max(0, viewportWidth - minWidth - 20 - containerRect.left);
+        }
       }
     }
     
@@ -196,27 +203,27 @@ export function MultiDropdownNav() {
       <AnimatePresence>
         {openMenu && (
           <>
-            {/* Backdrop */}
+            {/* Clean Backdrop without blur */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="fixed inset-0 bg-black/10 backdrop-blur-sm"
+              transition={{ duration: 0.15 }}
+              className="fixed inset-0 bg-black/5"
               style={{ zIndex: 2147483646 }}
               onClick={() => setOpenMenu(null)}
             />
             
-            {/* Dropdown Container */}
+            {/* Enhanced Dropdown Container */}
             <motion.div
-              initial={{ opacity: 0, y: -10, scale: 0.95 }}
+              initial={{ opacity: 0, y: -5, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -10, scale: 0.95 }}
+              exit={{ opacity: 0, y: -5, scale: 0.98 }}
               transition={{ 
-                duration: 0.3,
+                duration: 0.2,
                 type: "spring",
-                stiffness: 300,
-                damping: 30
+                stiffness: 400,
+                damping: 25
               }}
               className="dropdown-menu-container absolute top-full mt-2"
               style={{ 
@@ -231,8 +238,8 @@ export function MultiDropdownNav() {
               const tools = category?.tools; // Get ALL tools, no slicing
               const Icon = menuItem.icon;
               
-              // Calculate grid columns based on number of tools
-              const gridCols = tools && tools.length > 6 ? "grid-cols-2" : "grid-cols-1";
+              // Calculate grid columns for horizontal layout
+              const gridCols = tools && tools.length > 8 ? "grid-cols-4" : tools && tools.length > 4 ? "grid-cols-3" : "grid-cols-2";
               
               return (
                 <div key={menuItem.id} className="dropdown-menu-content bg-background/95 backdrop-blur-xl border border-primary/10 rounded-2xl shadow-2xl overflow-hidden">
@@ -261,27 +268,28 @@ export function MultiDropdownNav() {
                     </div>
                   </div>
                   
-                  {/* Tools Grid with Glass Effect */}
+                  {/* Tools Grid with Enhanced Horizontal Layout */}
                   <div className="p-5 bg-gradient-to-b from-transparent to-muted/5">
                     {tools && tools.length > 0 ? (
                       <div className={cn(
-                        "grid gap-3 max-h-[520px] overflow-y-auto pr-3 custom-scrollbar",
+                        "grid gap-3 max-h-[400px] overflow-y-auto pr-3 custom-scrollbar",
                         "scrollbar-thin scrollbar-thumb-primary/30 scrollbar-track-transparent",
                         gridCols
                       )}>
                         {tools.map((tool, index) => (
                           <motion.div
                             key={tool.id}
-                            initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             transition={{ 
-                              delay: index * 0.03,
-                              duration: 0.3,
+                              delay: index * 0.02,
+                              duration: 0.25,
                               type: "spring",
-                              stiffness: 300,
-                              damping: 25
+                              stiffness: 350,
+                              damping: 20
                             }}
-                            whileInView={{ opacity: 1 }}
+                            whileHover={{ y: -2 }}
+                            className="h-full"
                           >
                             <ToolNavItem tool={tool} />
                           </motion.div>
