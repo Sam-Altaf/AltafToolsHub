@@ -138,15 +138,18 @@ export function MultiDropdownNav() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="dropdown-menu-container absolute top-full left-0 right-0 mt-1"
+            className="dropdown-menu-container absolute top-full left-1/2 mt-1"
             style={{ 
-              zIndex: 2147483647, // Maximum possible z-index value (32-bit integer max)
-              position: 'absolute'
+              zIndex: 2147483647,
+              position: 'absolute',
+              transform: 'translateX(-50%)',
+              width: 'max-content',
+              maxWidth: 'min(90vw, 1200px)'
             }}
           >
             <div className="dropdown-menu-content flex gap-4 p-6 bg-background border rounded-xl shadow-xl" style={{ 
               position: 'relative', 
-              zIndex: 2147483647 // Maximum possible z-index value for dropdown content
+              zIndex: 2147483647
             }}>
               {menuItems.map((menuItem) => {
                 const category = toolCategories.find(cat => cat.id === menuItem.categoryId);
