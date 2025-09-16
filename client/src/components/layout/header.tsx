@@ -89,6 +89,17 @@ export default function Header() {
               </Button>
             </Link>
             
+            <Link href="/all-tools">
+              <Button 
+                variant="ghost" 
+                className="font-medium"
+                data-testid="nav-all-tools-desktop"
+              >
+                <Menu className="w-4 h-4 mr-2" />
+                All Tools
+              </Button>
+            </Link>
+            
             <MultiDropdownNav />
             
             <Button 
@@ -185,6 +196,20 @@ export default function Header() {
                           >
                             <Home className="w-4 h-4 mr-3" />
                             Home
+                          </Button>
+                        </SheetClose>
+                      </Link>
+                      
+                      {/* All Tools Link */}
+                      <Link href="/all-tools">
+                        <SheetClose asChild>
+                          <Button
+                            variant={isActive("/all-tools") ? "secondary" : "ghost"}
+                            className="w-full justify-start"
+                            data-testid="nav-all-tools-mobile"
+                          >
+                            <Menu className="w-4 h-4 mr-3" />
+                            All Tools
                           </Button>
                         </SheetClose>
                       </Link>

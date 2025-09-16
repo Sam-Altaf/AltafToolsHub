@@ -19,10 +19,8 @@ import {
   ChevronDown
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import HowItWorksSection from "@/components/HowItWorksSection";
-import FAQSection from "@/components/FAQSection";
-import ToolHighlights from "@/components/ToolHighlights";
-import HeroBackground from "@/components/HeroBackground";
+import { HowItWorksSection } from "@/components/seo/tool-features";
+import { ToolFAQ } from "@/components/seo/tool-faq";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Select,
@@ -229,7 +227,8 @@ export default function AllToolsPage() {
   
   return (
     <div className="min-h-screen relative">
-      <HeroBackground />
+      {/* Hero background gradient */}
+      <div className="absolute inset-0 hero-gradient -z-10" />
       
       {/* Hero Section */}
       <section className="relative pt-20 pb-16">
@@ -400,8 +399,7 @@ export default function AllToolsPage() {
         </div>
       </section>
       
-      {/* Tool Highlights */}
-      <ToolHighlights />
+      {/* Tool Highlights section can be added later */}
       
       {/* How It Works */}
       <HowItWorksSection
@@ -429,7 +427,9 @@ export default function AllToolsPage() {
       />
       
       {/* FAQ Section */}
-      <FAQSection
+      <ToolFAQ
+        toolName="All Tools"
+        toolPath="/all-tools"
         faqs={[
           {
             question: "Are all tools free to use?",

@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/contexts/theme-context";
 import ScrollToTop from "@/components/scroll-to-top";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
+import AllTools from "@/pages/all-tools";
 import CompressPDF from "@/pages/compress-pdf";
 import UnlockPDF from "@/pages/unlock-pdf";
 import JpgToPDF from "@/pages/jpg-to-pdf";
@@ -30,6 +31,7 @@ function Router() {
       <div className="flex-1">
         <Switch>
           <Route path="/" component={Home} />
+          <Route path="/all-tools" component={AllTools} />
           <Route path="/compress-pdf" component={CompressPDF} />
           <Route path="/unlock-pdf" component={UnlockPDF} />
           <Route path="/jpg-to-pdf" component={JpgToPDF} />
