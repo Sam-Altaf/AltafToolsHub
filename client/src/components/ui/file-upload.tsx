@@ -167,11 +167,11 @@ export default function FileUpload({
   };
 
   return (
-    <Card className={cn("overflow-hidden", className)}>
-      <div className="p-8">
+    <Card className={cn("overflow-hidden flex flex-col", className)}>
+      <div className="p-6 flex-1 flex flex-col">
         <div
           className={cn(
-            "drag-area relative p-12 text-center transition-all duration-300 cursor-pointer",
+            "drag-area relative flex-1 flex flex-col items-center justify-center p-8 text-center transition-all duration-300 cursor-pointer min-h-[250px]",
             isDragOver && "dragover",
             isValidating && "pointer-events-none opacity-70"
           )}
@@ -193,9 +193,14 @@ export default function FileUpload({
           <p className="text-muted-foreground mb-6">{description}</p>
           
           <Button 
-            className="btn-gradient"
+            className="btn-gradient text-white relative z-10 px-6 py-2.5"
             disabled={isValidating}
             data-testid="button-select-file"
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              document.getElementById('file-input')?.click();
+            }}
           >
             {isValidating ? (
               <>
@@ -221,7 +226,7 @@ export default function FileUpload({
             data-testid="input-file"
           />
           
-          <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-muted-foreground">
+          <div className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-sm text-muted-foreground">
             <span>or drag and drop</span>
             <span className="hidden sm:inline">•</span>
             <span>Max size: {Math.round(maxSize / 1024 / 1024)}MB</span>

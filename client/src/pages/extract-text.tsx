@@ -127,11 +127,25 @@ export default function ExtractText() {
     setError(null);
 
     try {
-      // Modern Tesseract.js API - language loading happens in createWorker
+      // Modern Tesseract.js API with enhanced accuracy settings
       setProgressStatus(`Initializing OCR for ${language}...`);
       setProgress(20);
       
-      const worker = await Tesseract.createWorker(language);
+      const worker = await Tesseract.createWorker(language, 1, {
+        logger: (m) => {
+          if (m.status === 'recognizing text' && typeof m.progress === 'number') {
+            setProgress(20 + Math.floor(m.progress * 70));
+          }
+        }
+      });
+      
+      // Configure for better accuracy
+      await worker.setParameters({
+        tessedit_pageseg_mode: '3', // Fully automatic page segmentation
+        preserve_interword_spaces: '1', // Preserve spaces between words
+        tessedit_create_hocr: '0', // Don't create HOCR output (faster)
+        tessedit_create_tsv: '0', // Don't create TSV output (faster)
+      });
       
       setProgressStatus('Extracting text from image...');
       setProgress(50);
@@ -281,21 +295,21 @@ export default function ExtractText() {
           message="All image processing happens locally in your browser. Your images never leave your device."
         />
 
-        {/* Main Content */}
-        <div className="grid lg:grid-cols-2 gap-6 mb-8">
+        {/* Main Content with equal heights */}
+        <div className="grid lg:grid-cols-2 gap-6 mb-8 items-start">
           {/* Input Section */}
           <div className="space-y-6">
-            {/* File Upload */}
+            {/* File Upload Card */}
             {!selectedFile ? (
               <FileUpload
                 onFileSelect={handleFileSelect}
                 accept="image/*"
                 title="Upload your image"
                 description="Drag & drop or click to select an image with text"
-                className="h-[300px]"
+                className="min-h-[400px] lg:h-[450px]"
               />
             ) : (
-              <Card className="p-6">
+              <Card className="p-6 h-full">
                 <div className="flex items-center justify-between mb-4">
                   <Label className="text-lg font-semibold">Selected Image</Label>
                   <Button
@@ -313,7 +327,7 @@ export default function ExtractText() {
                     <img 
                       src={imagePreview} 
                       alt="Selected image"
-                      className="w-full h-[300px] object-contain"
+                      className="w-full h-[350px] lg:h-[400px] object-contain"
                     />
                     <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
                       {(selectedFile.size / 1024).toFixed(1)} KB
@@ -474,8 +488,25 @@ export default function ExtractText() {
                   <span>Text extracted successfully from image</span>
                 </div>
               </Card>
+            ) : selectedFile ? (
+              <Card className="p-6 h-full min-h-[400px] lg:min-h-[500px] flex items-center justify-center border-dashed">
+                <div className="text-center text-muted-foreground">
+                  <div className="relative">
+                    <FileText className="w-16 h-16 mx-auto mb-4 opacity-20" />
+                    <ScanLine className="w-8 h-8 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-primary opacity-60 animate-pulse" />
+                  </div>
+                  <p className="text-lg font-medium mb-2">Ready to Extract</p>
+                  <p className="text-sm mb-4">
+                    Click the "Extract Text" button to process your image
+                  </p>
+                  <div className="flex flex-wrap gap-2 justify-center text-xs">
+                    <Badge variant="secondary">Image loaded</Badge>
+                    <Badge variant="secondary">{language.toUpperCase()}</Badge>
+                  </div>
+                </div>
+              </Card>
             ) : (
-              <Card className="p-6 h-full min-h-[500px] flex items-center justify-center border-dashed">
+              <Card className="p-6 h-full min-h-[400px] lg:min-h-[450px] flex items-center justify-center border-dashed">
                 <div className="text-center text-muted-foreground">
                   <div className="relative">
                     <FileText className="w-16 h-16 mx-auto mb-4 opacity-20" />
@@ -483,7 +514,7 @@ export default function ExtractText() {
                   </div>
                   <p className="text-lg font-medium mb-2">No text extracted yet</p>
                   <p className="text-sm mb-4">
-                    Upload an image and click "Extract Text" to begin
+                    Upload an image to begin text extraction
                   </p>
                   <div className="flex flex-wrap gap-2 justify-center text-xs">
                     <Badge variant="secondary">JPG</Badge>

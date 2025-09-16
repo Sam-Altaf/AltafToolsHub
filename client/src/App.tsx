@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/contexts/theme-context";
 import ScrollToTop from "@/components/scroll-to-top";
+import { useNavigationMemory } from "@/hooks/use-navigation-memory";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import AllTools from "@/pages/all-tools";
@@ -24,6 +25,9 @@ import Footer from "@/components/layout/footer";
 import CookieConsent from "@/components/cookie-consent";
 
 function Router() {
+  // Enable navigation memory to remember scroll positions
+  useNavigationMemory();
+  
   return (
     <div className="min-h-screen flex flex-col">
       <ScrollToTop />
