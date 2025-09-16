@@ -344,6 +344,7 @@ function fixGrammarAndSpelling(text: string): string {
     'percieve': 'perceive',
     'weather': 'whether', // when used in context of choice
     'effects': 'affects', // when used as a verb
+    'importent': 'important'
   };
   
   // Apply spelling corrections
@@ -360,6 +361,9 @@ function fixGrammarAndSpelling(text: string): string {
   
   // Fix common grammar issues
   const grammarFixes = [
+    // Fix articles a/an before vowels
+    { wrong: /\ba\s+([aeiouAEIOU]\w*)/g, right: 'an $1' },
+    { wrong: /\ban\s+([bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]\w*)/g, right: 'a $1' },
     // your/you're
     { wrong: /\byour\s+(a|an|are|is)\b/gi, right: "you're $1" },
     // its/it's

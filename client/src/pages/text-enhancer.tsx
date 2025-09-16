@@ -133,7 +133,13 @@ export default function TextEnhancer() {
     }
   };
 
-  const handleEnhance = () => {
+  const handleEnhance = (e?: React.MouseEvent) => {
+    // Prevent any default behavior
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
     if (!inputText.trim()) {
       toast({
         title: "No Text",
@@ -158,7 +164,7 @@ export default function TextEnhancer() {
     try {
       const enhanced = enhanceText(inputText, toneOptions);
       setEnhancedText(enhanced);
-      setActiveTab("enhanced");
+      setActiveTab("enhance");
       
       toast({
         title: "Text Enhanced",
@@ -464,7 +470,8 @@ Remember: clear writing leads to clear thinking. Take the time to refine your wo
                 </Button>
                 
                 <Button
-                  onClick={handleEnhance}
+                  type="button"
+                  onClick={(e) => handleEnhance(e)}
                   disabled={!inputText.trim() || isProcessing || !Object.values(toneOptions).some(v => v)}
                   className="flex-1 btn-gradient text-white"
                   data-testid="button-enhance"
