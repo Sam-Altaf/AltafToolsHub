@@ -169,7 +169,7 @@ export default function AllToolsPage() {
   const [sortBy, setSortBy] = useState<'name' | 'category' | 'status'>('category');
   const [statusFilter, setStatusFilter] = useState<'all' | 'available' | 'soon'>('all');
   
-  // Check URL params on mount for category selection
+  // Check URL params on mount for category selection and scroll
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const categoryParam = params.get('category');
@@ -178,6 +178,13 @@ export default function AllToolsPage() {
       setStatusFilter('available');
     } else if (categoryParam && toolCategories.some(cat => cat.id === categoryParam)) {
       setSelectedCategory(categoryParam);
+      // Scroll to the category section after a short delay to ensure DOM is ready
+      setTimeout(() => {
+        const categoryElement = document.getElementById(`category-${categoryParam}`);
+        if (categoryElement) {
+          categoryElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
     }
   }, []);
   
@@ -379,7 +386,7 @@ export default function AllToolsPage() {
                   if (categoryTools.length === 0) return null;
                   
                   return (
-                    <div key={category.id} className="space-y-6">
+                    <div key={category.id} id={`category-${category.id}`} className="space-y-6 scroll-mt-20">
                       <div className="flex items-center gap-3">
                         <category.icon className="w-6 h-6 text-primary" />
                         <h2 className="text-2xl font-bold">{category.name}</h2>

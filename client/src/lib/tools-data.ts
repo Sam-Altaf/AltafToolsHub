@@ -54,7 +54,7 @@ export const allTools: Tool[] = [
     icon: FilePlus,
     href: "/merge-pdf",
     color: "from-green-500 to-emerald-500",
-    available: false,
+    available: true,
     category: "pdf-management",
     features: ["Drag & drop reorder", "Preview before merge", "Unlimited files", "Preserve bookmarks"],
     extendedDescription: "Seamlessly merge multiple PDF files into a single document. Perfect for combining reports, contracts, or chapters into one comprehensive file while preserving formatting and quality."
@@ -66,7 +66,7 @@ export const allTools: Tool[] = [
     icon: Scissors,
     href: "/split-pdf",
     color: "from-emerald-500 to-cyan-500",
-    available: false,
+    available: true,
     category: "pdf-management",
     features: ["Custom page ranges", "Split by size", "Extract single pages", "Batch splitting"],
     extendedDescription: "Split large PDF files into smaller, manageable documents. Extract specific pages or divide by custom ranges for easier sharing and organization."
@@ -78,7 +78,7 @@ export const allTools: Tool[] = [
     icon: Crop,
     href: "/crop-pdf",
     color: "from-cyan-500 to-blue-500",
-    available: false,
+    available: true,
     category: "pdf-management",
     features: ["Visual crop tool", "Auto-detect margins", "Batch cropping", "Custom dimensions"],
     extendedDescription: "Precisely crop PDF pages to remove unnecessary margins, headers, or footers. Ideal for presentations, scanned documents, and optimizing page layouts."
@@ -90,7 +90,7 @@ export const allTools: Tool[] = [
     icon: Layers,
     href: "/organize-pdf",
     color: "from-amber-500 to-orange-500",
-    available: false,
+    available: true,
     category: "pdf-management",
     features: ["Drag to reorder", "Rotate pages", "Delete unwanted pages", "Thumbnail preview"],
     extendedDescription: "Complete PDF page management tool. Reorder pages by dragging, rotate to correct orientation, and remove unwanted content to create the perfect document."
@@ -102,7 +102,7 @@ export const allTools: Tool[] = [
     icon: RotateCw,
     href: "/rotate-pdf",
     color: "from-orange-500 to-red-500",
-    available: false,
+    available: true,
     category: "pdf-management",
     features: ["90° rotation", "Rotate all or selected", "Auto-detect orientation", "Batch rotation"],
     extendedDescription: "Quickly fix incorrectly oriented pages in your PDFs. Rotate individual pages or entire documents to ensure proper reading direction."
@@ -114,7 +114,7 @@ export const allTools: Tool[] = [
     icon: FileX,
     href: "/remove-pages",
     color: "from-red-500 to-pink-500",
-    available: false,
+    available: true,
     category: "pdf-management",
     features: ["Select multiple pages", "Preview before delete", "Range selection", "Keep original"],
     extendedDescription: "Quickly remove unwanted or blank pages from PDFs. Perfect for cleaning up scanned documents or removing confidential pages before sharing."
@@ -126,7 +126,7 @@ export const allTools: Tool[] = [
     icon: FileSearch,
     href: "/extract-pages",
     color: "from-pink-500 to-purple-500",
-    available: false,
+    available: true,
     category: "pdf-management",
     features: ["Extract single or multiple", "Custom page ranges", "Create new PDF", "Preserve formatting"],
     extendedDescription: "Extract important pages from large PDFs to create focused documents. Ideal for sharing specific sections without sending entire files."
@@ -138,7 +138,7 @@ export const allTools: Tool[] = [
     icon: FileImage,
     href: "/extract-images",
     color: "from-indigo-500 to-blue-500",
-    available: false,
+    available: true,
     category: "pdf-management",
     features: ["Extract all images", "Original quality", "Multiple formats", "Batch extraction"],
     extendedDescription: "Extract embedded images from PDFs while maintaining original quality. Perfect for recovering photos, graphics, and illustrations from documents."
@@ -150,7 +150,7 @@ export const allTools: Tool[] = [
     icon: Hash,
     href: "/add-page-number",
     color: "from-blue-500 to-cyan-500",
-    available: false,
+    available: true,
     category: "pdf-management",
     features: ["Custom position", "Font styles", "Start from any number", "Skip pages option"],
     extendedDescription: "Add professional page numbers to your PDFs with full customization options. Choose position, style, and format for reports and documents."
@@ -162,7 +162,7 @@ export const allTools: Tool[] = [
     icon: Droplets,
     href: "/watermark-pdf",
     color: "from-teal-500 to-green-500",
-    available: false,
+    available: true,
     category: "pdf-management",
     features: ["Text & image watermarks", "Transparency control", "Position options", "Batch watermarking"],
     extendedDescription: "Add professional watermarks to protect your intellectual property. Apply custom text or logos with adjustable opacity and positioning."
