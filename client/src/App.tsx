@@ -19,6 +19,7 @@ import MergePDF from "@/pages/merge-pdf";
 import SplitPDF from "@/pages/split-pdf";
 import RotatePDF from "@/pages/rotate-pdf";
 import OrganizePDF from "@/pages/organize-pdf";
+import RemovePages from "@/pages/remove-pages";
 import PrivacyPolicy from "@/pages/privacy-policy";
 import TermsConditions from "@/pages/terms-conditions";
 import Header from "@/components/layout/header";
@@ -45,6 +46,7 @@ function Router() {
           <Route path="/split-pdf" component={SplitPDF} />
           <Route path="/rotate-pdf" component={RotatePDF} />
           <Route path="/organize-pdf" component={OrganizePDF} />
+          <Route path="/remove-pages" component={RemovePages} />
           <Route path="/privacy" component={PrivacyPolicy} />
           <Route path="/terms" component={TermsConditions} />
           <Route component={NotFound} />
