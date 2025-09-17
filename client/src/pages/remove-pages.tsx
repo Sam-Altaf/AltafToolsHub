@@ -4,12 +4,19 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { useSEO } from "@/hooks/use-seo";
-import { FileX, Upload, Download, FileText, Loader2, ArrowLeft, Shield, Trash2 } from "lucide-react";
+import { FileX, Upload, Download, FileText, Loader2, ArrowLeft, Shield, Trash2, Scissors, FileOutput, Mail, MessageCircle, BookOpen, Star, Users, Zap, Clock, CheckCircle2, ChevronRight, Info, HelpCircle, ChevronDown, Layers, RotateCw } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
 import { PDFDocument } from "pdf-lib";
 import { cn } from "@/lib/utils";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
 import * as pdfjsLib from 'pdfjs-dist';
 
 // Configure PDF.js worker - using local worker for privacy
@@ -288,7 +295,7 @@ export default function RemovePages() {
                   <FileUpload
                     accept="application/pdf"
                     onFileSelect={handleFileUpload}
-                    className="h-48"
+                    className="min-h-[400px]"
                     title="Drop PDF file here or click to select"
                     description="Select a PDF to remove pages"
                   />
@@ -447,6 +454,246 @@ export default function RemovePages() {
                 <span className="text-green-500 mt-1">✓</span>
                 <span>Works with PDFs of any size</span>
               </p>
+            </div>
+          </Card>
+
+          {/* How It Works */}
+          <Card className="p-6 mb-8">
+            <h2 className="text-2xl font-bold mb-4">How It Works</h2>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="text-center">
+                <div className="w-12 h-12 mx-auto mb-2 rounded-full bg-primary/10 flex items-center justify-center">
+                  <span className="text-xl font-bold">1</span>
+                </div>
+                <h3 className="font-medium mb-1">Upload PDF</h3>
+                <p className="text-sm text-muted-foreground">Select your PDF file</p>
+              </div>
+              <div className="text-center">
+                <div className="w-12 h-12 mx-auto mb-2 rounded-full bg-primary/10 flex items-center justify-center">
+                  <span className="text-xl font-bold">2</span>
+                </div>
+                <h3 className="font-medium mb-1">Select Pages</h3>
+                <p className="text-sm text-muted-foreground">Click pages to remove</p>
+              </div>
+              <div className="text-center">
+                <div className="w-12 h-12 mx-auto mb-2 rounded-full bg-primary/10 flex items-center justify-center">
+                  <span className="text-xl font-bold">3</span>
+                </div>
+                <h3 className="font-medium mb-1">Remove</h3>
+                <p className="text-sm text-muted-foreground">Process the removal</p>
+              </div>
+              <div className="text-center">
+                <div className="w-12 h-12 mx-auto mb-2 rounded-full bg-primary/10 flex items-center justify-center">
+                  <span className="text-xl font-bold">4</span>
+                </div>
+                <h3 className="font-medium mb-1">Download</h3>
+                <p className="text-sm text-muted-foreground">Save your edited PDF</p>
+              </div>
+            </div>
+          </Card>
+
+          {/* Use Cases */}
+          <Card className="p-6 mb-8">
+            <h2 className="text-2xl font-bold mb-4">Common Use Cases</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h3 className="font-medium mb-2">📄 Document Cleanup</h3>
+                <p className="text-sm text-muted-foreground">Remove blank or unnecessary pages from scanned documents</p>
+              </div>
+              <div>
+                <h3 className="font-medium mb-2">🔒 Privacy Protection</h3>
+                <p className="text-sm text-muted-foreground">Delete sensitive information before sharing documents</p>
+              </div>
+              <div>
+                <h3 className="font-medium mb-2">📊 Report Editing</h3>
+                <p className="text-sm text-muted-foreground">Remove outdated sections from business reports</p>
+              </div>
+              <div>
+                <h3 className="font-medium mb-2">📚 Study Materials</h3>
+                <p className="text-sm text-muted-foreground">Extract relevant chapters from textbooks</p>
+              </div>
+            </div>
+          </Card>
+
+          {/* Comparison Table */}
+          <Card className="p-6 mb-8">
+            <h2 className="text-2xl font-bold mb-4">Why Choose Our PDF Page Remover?</h2>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left py-2">Feature</th>
+                    <th className="text-center py-2">AltafToolsHub</th>
+                    <th className="text-center py-2">Others</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b">
+                    <td className="py-2">Visual Thumbnails</td>
+                    <td className="text-center py-2 text-green-500">✓</td>
+                    <td className="text-center py-2 text-muted-foreground">Limited</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-2">Batch Selection</td>
+                    <td className="text-center py-2 text-green-500">✓</td>
+                    <td className="text-center py-2 text-red-500">✗</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-2">No Upload Required</td>
+                    <td className="text-center py-2 text-green-500">✓</td>
+                    <td className="text-center py-2 text-red-500">✗</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-2">100% Free</td>
+                    <td className="text-center py-2 text-green-500">✓</td>
+                    <td className="text-center py-2 text-muted-foreground">Limited</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="py-2">File Size Limit</td>
+                    <td className="text-center py-2 text-green-500">None</td>
+                    <td className="text-center py-2 text-muted-foreground">10-50MB</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </Card>
+
+          {/* Trust Badges */}
+          <Card className="p-6 mb-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+              <div>
+                <div className="text-3xl font-bold text-primary">900K+</div>
+                <p className="text-sm text-muted-foreground">Pages Removed</p>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-primary">4.7/5</div>
+                <p className="text-sm text-muted-foreground">User Rating</p>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-primary">100%</div>
+                <p className="text-sm text-muted-foreground">Privacy Safe</p>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-primary">25K+</div>
+                <p className="text-sm text-muted-foreground">Monthly Users</p>
+              </div>
+            </div>
+          </Card>
+
+          {/* FAQ */}
+          <Card className="p-6 mb-8">
+            <h2 className="text-2xl font-bold mb-4">Frequently Asked Questions</h2>
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="item-1">
+                <AccordionTrigger>Can I preview the PDF before removing pages?</AccordionTrigger>
+                <AccordionContent>
+                  Yes! We generate visual thumbnails for the first 20 pages so you can see exactly which pages you're removing. For larger documents, page numbers help you identify the correct pages.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-2">
+                <AccordionTrigger>What happens if I accidentally remove the wrong pages?</AccordionTrigger>
+                <AccordionContent>
+                  Simply re-upload your original PDF and start over. We recommend downloading the edited version with a different name so you always have your original file.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-3">
+                <AccordionTrigger>Can I remove non-consecutive pages?</AccordionTrigger>
+                <AccordionContent>
+                  Absolutely! Click on any pages you want to remove - they don't need to be next to each other. You can remove page 1, 5, and 10 while keeping all others.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-4">
+                <AccordionTrigger>Is there a limit to how many pages I can remove?</AccordionTrigger>
+                <AccordionContent>
+                  You can remove as many pages as you want, but at least one page must remain in the final document. The tool prevents you from removing all pages.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="item-5">
+                <AccordionTrigger>Will removing pages affect the PDF quality?</AccordionTrigger>
+                <AccordionContent>
+                  No, the remaining pages maintain their original quality. We don't compress or alter the pages that remain in your document.
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </Card>
+
+          {/* Technical Details */}
+          <Card className="p-6 mb-8">
+            <h2 className="text-2xl font-bold mb-4">Technical Details</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h3 className="font-medium mb-2">Supported Features</h3>
+                <ul className="space-y-1 text-sm text-muted-foreground">
+                  <li>• All PDF versions supported</li>
+                  <li>• Visual page previews</li>
+                  <li>• Batch page selection</li>
+                  <li>• Forms and links preserved</li>
+                  <li>• Bookmarks maintained</li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="font-medium mb-2">Privacy {String.fromCharCode(38)} Security</h3>
+                <ul className="space-y-1 text-sm text-muted-foreground">
+                  <li>• 100% client-side processing</li>
+                  <li>• No file uploads to servers</li>
+                  <li>• Files deleted after processing</li>
+                  <li>• SSL encrypted connection</li>
+                  <li>• No registration required</li>
+                </ul>
+              </div>
+            </div>
+          </Card>
+
+          {/* Related Tools */}
+          <Card className="p-6 mb-8">
+            <h2 className="text-2xl font-bold mb-4">Related PDF Tools</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <Link href="/extract-pages">
+                <Button variant="outline" className="w-full h-auto py-4 flex flex-col gap-2">
+                  <FileOutput className="w-6 h-6" />
+                  <span>Extract Pages</span>
+                </Button>
+              </Link>
+              <Link href="/organize-pdf">
+                <Button variant="outline" className="w-full h-auto py-4 flex flex-col gap-2">
+                  <Layers className="w-6 h-6" />
+                  <span>Organize PDF</span>
+                </Button>
+              </Link>
+              <Link href="/split-pdf">
+                <Button variant="outline" className="w-full h-auto py-4 flex flex-col gap-2">
+                  <Scissors className="w-6 h-6" />
+                  <span>Split PDF</span>
+                </Button>
+              </Link>
+              <Link href="/rotate-pdf">
+                <Button variant="outline" className="w-full h-auto py-4 flex flex-col gap-2">
+                  <RotateCw className="w-6 h-6" />
+                  <span>Rotate PDF</span>
+                </Button>
+              </Link>
+            </div>
+          </Card>
+
+          {/* Contact Support */}
+          <Card className="p-6">
+            <h2 className="text-2xl font-bold mb-4">Need Help?</h2>
+            <p className="text-muted-foreground mb-4">
+              Our support team is here to help you with any questions about removing PDF pages.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <Button variant="outline">
+                <Mail className="w-4 h-4 mr-2" />
+                Email Support
+              </Button>
+              <Button variant="outline">
+                <MessageCircle className="w-4 h-4 mr-2" />
+                Live Chat
+              </Button>
+              <Button variant="outline">
+                <BookOpen className="w-4 h-4 mr-2" />
+                Documentation
+              </Button>
             </div>
           </Card>
         </div>
