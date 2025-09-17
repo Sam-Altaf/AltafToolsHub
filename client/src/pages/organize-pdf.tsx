@@ -87,8 +87,9 @@ export default function OrganizePDF() {
         
         await page.render({
           canvasContext: context,
-          viewport: viewport
-        }).promise;
+          viewport: viewport,
+          intent: 'display'
+        } as any).promise;
         
         pageDatas.push({
           id: `page-${i}-${Date.now()}`,
@@ -385,13 +386,9 @@ export default function OrganizePDF() {
                     accept="application/pdf"
                     onFileSelect={handleFileUpload}
                     className="h-48"
-                  >
-                    <div className="text-center">
-                      <Layers className="w-12 h-12 mx-auto mb-4 text-primary" />
-                      <p className="text-lg font-medium mb-2">Drop PDF file here or click to select</p>
-                      <p className="text-sm text-muted-foreground">Select a PDF to organize pages</p>
-                    </div>
-                  </FileUpload>
+                    title="Drop PDF file here or click to select"
+                    description="Select a PDF to organize pages"
+                  />
                 ) : (
                   <>
                     {progress > 0 && progress < 100 && !isProcessing && (

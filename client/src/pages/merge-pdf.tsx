@@ -257,15 +257,11 @@ export default function MergePDF() {
                   <FileUpload
                     accept="application/pdf"
                     multiple
-                    onFileSelect={handleFileUpload}
+                    onFilesSelect={handleFileUpload}
                     className="h-64"
-                  >
-                    <div className="text-center">
-                      <FilePlus className="w-12 h-12 mx-auto mb-4 text-primary" />
-                      <p className="text-lg font-medium mb-2">Drop PDF files here or click to select</p>
-                      <p className="text-sm text-muted-foreground">Support multiple PDF files</p>
-                    </div>
-                  </FileUpload>
+                    title="Drop PDF files here or click to select"
+                    description="Support multiple PDF files"
+                  />
                 ) : (
                   <>
                     <div className="space-y-3 mb-6">
@@ -326,14 +322,11 @@ export default function MergePDF() {
                     <FileUpload
                       accept="application/pdf"
                       multiple
-                      onFileSelect={handleFileUpload}
+                      onFilesSelect={handleFileUpload}
                       className="h-32 mb-6"
-                    >
-                      <div className="text-center">
-                        <Upload className="w-8 h-8 mx-auto mb-2 text-primary" />
-                        <p className="text-sm font-medium">Add more PDF files</p>
-                      </div>
-                    </FileUpload>
+                      title="Add more PDF files"
+                      description="Drag and drop or click to add more PDFs"
+                    />
 
                     {isProcessing && (
                       <div className="mb-6">

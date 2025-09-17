@@ -282,13 +282,9 @@ export default function SplitPDF() {
                     accept="application/pdf"
                     onFileSelect={handleFileUpload}
                     className="h-48"
-                  >
-                    <div className="text-center">
-                      <Scissors className="w-12 h-12 mx-auto mb-4 text-primary" />
-                      <p className="text-lg font-medium mb-2">Drop PDF file here or click to select</p>
-                      <p className="text-sm text-muted-foreground">Select a PDF to split</p>
-                    </div>
-                  </FileUpload>
+                    title="Drop PDF file here or click to select"
+                    description="Select a PDF to split"
+                  />
                 ) : (
                   <>
                     <div className="mb-6">
