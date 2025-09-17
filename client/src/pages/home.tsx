@@ -274,7 +274,7 @@ export default function Home() {
         {/* Tech Circuit Animation Layer */}
         <div className="hero-circuit" />
         
-        <div className="hero-content container mx-auto px-4 py-12 lg:py-20">
+        <div className="hero-content container mx-auto px-4 py-8 lg:py-14">
           <motion.div 
             className="text-center max-w-4xl mx-auto text-white"
             initial={{ opacity: 0, y: -20 }}
