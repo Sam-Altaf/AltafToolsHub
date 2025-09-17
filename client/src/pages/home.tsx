@@ -283,7 +283,7 @@ export default function Home() {
           >
             {/* Badge */}
             <motion.div 
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-white/25 via-white/20 to-white/15 backdrop-blur-md text-white mb-8 shadow-xl border border-white/10"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-purple-600/20 via-blue-600/15 to-purple-600/10 dark:from-white/25 dark:via-white/20 dark:to-white/15 backdrop-blur-md text-purple-700 dark:text-white mb-8 shadow-xl border border-purple-400/30 dark:border-white/10"
               initial={{ scale: 0, opacity: 0, y: -20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               transition={{ delay: 0.2, type: "spring", stiffness: 200, damping: 15 }}
@@ -301,17 +301,12 @@ export default function Home() {
 
             {/* Enhanced Heading with better contrast */}
             <motion.h1 
-              className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-6 text-white leading-tight"
+              className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-6 text-gray-900 dark:text-white leading-tight"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
               style={{
-                textShadow: `
-                  0 0 30px rgba(0, 168, 255, 0.6),
-                  0 0 60px rgba(0, 168, 255, 0.4),
-                  0 0 90px rgba(0, 168, 255, 0.2),
-                  0 2px 4px rgba(0, 0, 0, 0.8)
-                `
+                textShadow: `var(--hero-heading-shadow)`
               }}
             >
               <motion.span
@@ -322,7 +317,7 @@ export default function Home() {
                 Professional File Tools,{" "}
               </motion.span>
               <motion.span 
-                className="text-yellow-300 inline-block"
+                className="text-purple-600 dark:text-yellow-300 inline-block"
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 }}
@@ -334,12 +329,12 @@ export default function Home() {
             
             {/* Enhanced Subheading with better readability */}
             <motion.p 
-              className="text-lg sm:text-xl lg:text-2xl text-white/95 mb-10 max-w-3xl mx-auto leading-relaxed font-light"
+              className="text-lg sm:text-xl lg:text-2xl text-gray-700 dark:text-white/95 mb-10 max-w-3xl mx-auto leading-relaxed font-light"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
               style={{
-                textShadow: "0 2px 8px rgba(0, 0, 0, 0.7), 0 1px 2px rgba(0, 0, 0, 0.9)"
+                textShadow: `var(--hero-subheading-shadow)`
               }}
             >
               Process PDFs, images, and documents instantly in your browser. 
