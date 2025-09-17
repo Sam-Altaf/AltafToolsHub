@@ -170,9 +170,19 @@ const ToolCard = ({ tool }: { tool: Tool }) => {
               </motion.div>
             )}
           </h3>
-          <p className="text-base text-muted-foreground leading-relaxed group-hover:text-foreground/80 transition-colors duration-300">
-            {tool.description}
+          <p className="text-base text-muted-foreground leading-relaxed group-hover:text-foreground/80 transition-colors duration-300 mb-3">
+            {tool.extendedDescription || tool.description}
           </p>
+          {tool.features && (
+            <div className="space-y-1 text-sm text-muted-foreground/70">
+              {tool.features.slice(0, 2).map((feature, idx) => (
+                <div key={idx} className="flex items-center gap-1">
+                  <Check className="w-3 h-3 text-green-500 flex-shrink-0" />
+                  <span>{feature}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </Card>
       </motion.div>
     </Link>

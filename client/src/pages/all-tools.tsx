@@ -93,8 +93,8 @@ const ToolCard = ({ tool, view }: { tool: any; view: 'grid' | 'list' }) => {
             <h3 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
               {tool.title}
             </h3>
-            <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
-              {tool.description}
+            <p className="text-sm text-muted-foreground line-clamp-3 mb-3">
+              {tool.extendedDescription || tool.description}
             </p>
             
             {/* Extended Description for SEO and better UX */}
@@ -140,8 +140,8 @@ const ToolCard = ({ tool, view }: { tool: any; view: 'grid' | 'list' }) => {
               <h3 className="font-semibold text-base mb-1 group-hover:text-primary transition-colors">
                 {tool.title}
               </h3>
-              <p className="text-sm text-muted-foreground truncate">
-                {tool.description}
+              <p className="text-sm text-muted-foreground line-clamp-2">
+                {tool.extendedDescription || tool.description}
               </p>
             </div>
             

@@ -50,102 +50,122 @@ export const allTools: Tool[] = [
   {
     id: "merge-pdf",
     title: "Merge PDF",
-    description: "Combine multiple PDF files into one document",
+    description: "Combine multiple PDF files into one seamless document",
     icon: FilePlus,
     href: "/merge-pdf",
     color: "from-green-500 to-emerald-500",
     available: false,
-    category: "pdf-management"
+    category: "pdf-management",
+    features: ["Drag & drop reorder", "Preview before merge", "Unlimited files", "Preserve bookmarks"],
+    extendedDescription: "Seamlessly merge multiple PDF files into a single document. Perfect for combining reports, contracts, or chapters into one comprehensive file while preserving formatting and quality."
   },
   {
     id: "split-pdf",
     title: "Split PDF",
-    description: "Split PDF files by pages or custom ranges",
+    description: "Divide PDF files into separate documents by page ranges",
     icon: Scissors,
     href: "/split-pdf",
     color: "from-emerald-500 to-cyan-500",
     available: false,
-    category: "pdf-management"
+    category: "pdf-management",
+    features: ["Custom page ranges", "Split by size", "Extract single pages", "Batch splitting"],
+    extendedDescription: "Split large PDF files into smaller, manageable documents. Extract specific pages or divide by custom ranges for easier sharing and organization."
   },
   {
     id: "crop-pdf",
     title: "Crop PDF",
-    description: "Crop PDF pages to remove unwanted areas",
+    description: "Remove unwanted margins and whitespace from PDF pages",
     icon: Crop,
     href: "/crop-pdf",
     color: "from-cyan-500 to-blue-500",
     available: false,
-    category: "pdf-management"
+    category: "pdf-management",
+    features: ["Visual crop tool", "Auto-detect margins", "Batch cropping", "Custom dimensions"],
+    extendedDescription: "Precisely crop PDF pages to remove unnecessary margins, headers, or footers. Ideal for presentations, scanned documents, and optimizing page layouts."
   },
   {
     id: "organize-pdf",
     title: "Organize PDF",
-    description: "Reorder, rotate, and delete pages",
+    description: "Rearrange, rotate, and manage PDF pages with ease",
     icon: Layers,
     href: "/organize-pdf",
     color: "from-amber-500 to-orange-500",
     available: false,
-    category: "pdf-management"
+    category: "pdf-management",
+    features: ["Drag to reorder", "Rotate pages", "Delete unwanted pages", "Thumbnail preview"],
+    extendedDescription: "Complete PDF page management tool. Reorder pages by dragging, rotate to correct orientation, and remove unwanted content to create the perfect document."
   },
   {
     id: "rotate-pdf",
     title: "Rotate PDF",
-    description: "Rotate PDF pages to correct orientation",
+    description: "Fix page orientation issues in your PDF documents",
     icon: RotateCw,
     href: "/rotate-pdf",
     color: "from-orange-500 to-red-500",
     available: false,
-    category: "pdf-management"
+    category: "pdf-management",
+    features: ["90° rotation", "Rotate all or selected", "Auto-detect orientation", "Batch rotation"],
+    extendedDescription: "Quickly fix incorrectly oriented pages in your PDFs. Rotate individual pages or entire documents to ensure proper reading direction."
   },
   {
     id: "remove-pages",
     title: "Remove Pages",
-    description: "Delete specific pages from PDF files",
+    description: "Delete unwanted pages from your PDF documents",
     icon: FileX,
     href: "/remove-pages",
     color: "from-red-500 to-pink-500",
     available: false,
-    category: "pdf-management"
+    category: "pdf-management",
+    features: ["Select multiple pages", "Preview before delete", "Range selection", "Keep original"],
+    extendedDescription: "Quickly remove unwanted or blank pages from PDFs. Perfect for cleaning up scanned documents or removing confidential pages before sharing."
   },
   {
     id: "extract-pages",
     title: "Extract Pages",
-    description: "Extract specific pages from PDF files",
+    description: "Save specific pages as separate PDF files",
     icon: FileSearch,
     href: "/extract-pages",
     color: "from-pink-500 to-purple-500",
     available: false,
-    category: "pdf-management"
+    category: "pdf-management",
+    features: ["Extract single or multiple", "Custom page ranges", "Create new PDF", "Preserve formatting"],
+    extendedDescription: "Extract important pages from large PDFs to create focused documents. Ideal for sharing specific sections without sending entire files."
   },
   {
     id: "extract-images",
     title: "Extract Images",
-    description: "Extract all images from PDF documents",
+    description: "Save all images from PDFs as separate image files",
     icon: FileImage,
     href: "/extract-images",
     color: "from-indigo-500 to-blue-500",
     available: false,
-    category: "pdf-management"
+    category: "pdf-management",
+    features: ["Extract all images", "Original quality", "Multiple formats", "Batch extraction"],
+    extendedDescription: "Extract embedded images from PDFs while maintaining original quality. Perfect for recovering photos, graphics, and illustrations from documents."
   },
   {
     id: "add-page-number",
     title: "Add Page Numbers",
-    description: "Add page numbers to PDF documents",
+    description: "Insert customizable page numbers to PDF documents",
     icon: Hash,
     href: "/add-page-number",
     color: "from-blue-500 to-cyan-500",
     available: false,
-    category: "pdf-management"
+    category: "pdf-management",
+    features: ["Custom position", "Font styles", "Start from any number", "Skip pages option"],
+    extendedDescription: "Add professional page numbers to your PDFs with full customization options. Choose position, style, and format for reports and documents."
   },
   {
     id: "watermark-pdf",
     title: "Watermark PDF",
-    description: "Add text or image watermarks to protect PDFs",
+    description: "Protect documents with custom text or image watermarks",
     icon: Droplets,
     href: "/watermark-pdf",
     color: "from-teal-500 to-green-500",
     available: false,
-    category: "pdf-management"
+    category: "pdf-management",
+    features: ["Text & image watermarks", "Transparency control", "Position options", "Batch watermarking"],
+    extendedDescription: "Add professional watermarks to protect your intellectual property. Apply custom text or logos with adjustable opacity and positioning."
   },
 
   // Image Conversion Tools
@@ -165,43 +185,51 @@ export const allTools: Tool[] = [
   {
     id: "images-to-pdf",
     title: "Images to PDF",
-    description: "Convert multiple image formats to PDF",
+    description: "Convert PNG, GIF, BMP, TIFF images to PDF documents",
     icon: FileImage,
     href: "/images-to-pdf",
     color: "from-green-500 to-emerald-500",
     available: false,
-    category: "image-conversion"
+    category: "image-conversion",
+    features: ["Multiple formats", "Batch conversion", "Page arrangement", "Size optimization"],
+    extendedDescription: "Convert various image formats into PDF documents with smart page arrangement. Support for PNG, GIF, BMP, TIFF, and more. Perfect for creating multi-page documents from mixed image formats."
   },
   {
     id: "pdf-to-images",
     title: "PDF to Images",
-    description: "Convert PDF pages to various image formats",
+    description: "Export PDF pages as PNG, JPG, or other image formats",
     icon: FileImage,
     href: "/pdf-to-images",
     color: "from-emerald-500 to-cyan-500",
     available: false,
-    category: "image-conversion"
+    category: "image-conversion",
+    features: ["Multiple formats", "Quality settings", "Page selection", "Batch export"],
+    extendedDescription: "Convert PDF pages into high-quality images. Choose from PNG, JPG, WEBP formats with customizable resolution. Ideal for presentations, thumbnails, or web graphics."
   },
   {
     id: "pdf-to-jpg",
     title: "PDF to JPG",
-    description: "Extract JPG images from PDF pages",
+    description: "Convert PDF pages to high-quality JPG images",
     icon: Image,
     href: "/pdf-to-jpg",
     color: "from-teal-500 to-green-500",
     available: false,
     category: "image-conversion",
-    popular: true
+    popular: true,
+    features: ["High resolution", "Compression control", "Page range selection", "Bulk export"],
+    extendedDescription: "Transform PDF pages into JPG images with adjustable quality. Perfect for creating image galleries, social media posts, or web-ready graphics from PDFs."
   },
   {
     id: "heic-to-pdf",
     title: "HEIC/HEIF to PDF",
-    description: "Convert iPhone photos to PDF format",
+    description: "Convert iPhone/iPad photos to universally compatible PDFs",
     icon: Image,
     href: "/heic-to-pdf",
     color: "from-purple-500 to-pink-500",
     available: false,
-    category: "image-conversion"
+    category: "image-conversion",
+    features: ["iOS photo support", "Quality preservation", "Batch conversion", "Metadata retention"],
+    extendedDescription: "Convert Apple's HEIC/HEIF photo format to PDFs for easy sharing and compatibility. Maintains photo quality and metadata while ensuring universal accessibility."
   },
   {
     id: "tiff-to-pdf",
@@ -447,22 +475,26 @@ export const allTools: Tool[] = [
   {
     id: "protect-pdf",
     title: "Protect PDF",
-    description: "Add password protection to PDF files",
+    description: "Secure PDFs with password encryption and permissions",
     icon: Shield,
     href: "/protect-pdf",
     color: "from-red-500 to-pink-500",
     available: false,
-    category: "security"
+    category: "security",
+    features: ["256-bit encryption", "Permission settings", "Owner password", "Print restrictions"],
+    extendedDescription: "Add military-grade password protection to your sensitive PDFs. Set permissions for printing, copying, and editing. Perfect for confidential documents and secure sharing."
   },
   {
     id: "sign-pdf",
     title: "Sign PDF",
-    description: "Add digital signatures to PDF documents",
+    description: "Add legally binding digital signatures to documents",
     icon: PenTool,
     href: "/sign-pdf",
     color: "from-indigo-500 to-purple-500",
     available: false,
-    category: "security"
+    category: "security",
+    features: ["Draw signature", "Type signature", "Upload signature", "Date & time stamps"],
+    extendedDescription: "Create and apply digital signatures to PDFs for contracts and agreements. Draw, type, or upload your signature with automatic timestamp verification."
   },
   {
     id: "redact-pdf",
@@ -518,12 +550,14 @@ export const allTools: Tool[] = [
   {
     id: "pdf-to-zip",
     title: "PDF to ZIP",
-    description: "Compress multiple PDFs into ZIP archive",
+    description: "Bundle multiple PDFs into a compressed ZIP archive",
     icon: FileArchive,
     href: "/pdf-to-zip",
     color: "from-indigo-500 to-purple-500",
     available: false,
-    category: "utilities"
+    category: "utilities",
+    features: ["Batch compression", "Folder structure", "Size reduction", "Password protection"],
+    extendedDescription: "Combine multiple PDF files into a single compressed ZIP archive for easy sharing and storage. Reduces overall file size while maintaining organization."
   },
   {
     id: "base64-encoder",
