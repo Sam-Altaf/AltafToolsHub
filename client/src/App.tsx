@@ -20,6 +20,11 @@ import SplitPDF from "@/pages/split-pdf";
 import RotatePDF from "@/pages/rotate-pdf";
 import OrganizePDF from "@/pages/organize-pdf";
 import RemovePages from "@/pages/remove-pages";
+import CropPDF from "@/pages/crop-pdf";
+import ExtractPages from "@/pages/extract-pages";
+import ExtractImages from "@/pages/extract-images";
+import AddPageNumber from "@/pages/add-page-number";
+import WatermarkPDF from "@/pages/watermark-pdf";
 import PrivacyPolicy from "@/pages/privacy-policy";
 import TermsConditions from "@/pages/terms-conditions";
 import Header from "@/components/layout/header";
@@ -47,6 +52,11 @@ function Router() {
           <Route path="/rotate-pdf" component={RotatePDF} />
           <Route path="/organize-pdf" component={OrganizePDF} />
           <Route path="/remove-pages" component={RemovePages} />
+          <Route path="/crop-pdf" component={CropPDF} />
+          <Route path="/extract-pages" component={ExtractPages} />
+          <Route path="/extract-images" component={ExtractImages} />
+          <Route path="/add-page-number" component={AddPageNumber} />
+          <Route path="/watermark-pdf" component={WatermarkPDF} />
           <Route path="/privacy" component={PrivacyPolicy} />
           <Route path="/terms" component={TermsConditions} />
           <Route component={NotFound} />
