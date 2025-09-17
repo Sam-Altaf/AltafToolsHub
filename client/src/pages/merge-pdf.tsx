@@ -397,69 +397,86 @@ export default function MergePDF() {
             )}
           </Card>
 
-          <WhyUseSection
-            toolName="PDF Merger"
-            benefits={[
-              "Combine multiple PDFs without quality loss",
-              "Drag and drop to reorder pages",
-              "No file size limitations",
-              "Works offline after page loads"
-            ]}
-          />
+          {/* Features Section */}
+          <Card className="p-6 mb-8">
+            <h2 className="text-2xl font-bold mb-4">Why Use Our PDF Merger?</h2>
+            <div className="space-y-2">
+              <p className="flex items-start gap-2">
+                <span className="text-green-500 mt-1">✓</span>
+                <span>Combine multiple PDFs without quality loss</span>
+              </p>
+              <p className="flex items-start gap-2">
+                <span className="text-green-500 mt-1">✓</span>
+                <span>Drag and drop to reorder pages</span>
+              </p>
+              <p className="flex items-start gap-2">
+                <span className="text-green-500 mt-1">✓</span>
+                <span>No file size limitations</span>
+              </p>
+              <p className="flex items-start gap-2">
+                <span className="text-green-500 mt-1">✓</span>
+                <span>Works offline after page loads</span>
+              </p>
+            </div>
+          </Card>
 
-          <HowItWorksSection
-            toolName="PDF Merger"
-            steps={[
-              {
-                number: 1,
-                title: "Upload PDFs",
-                description: "Select or drag multiple PDF files to merge",
-                icon: Upload
-              },
-              {
-                number: 2,
-                title: "Arrange Order",
-                description: "Drag files to arrange them in desired order",
-                icon: GripVertical
-              },
-              {
-                number: 3,
-                title: "Merge Files",
-                description: "Click merge to combine all PDFs into one",
-                icon: FilePlus
-              },
-              {
-                number: 4,
-                title: "Download Result",
-                description: "Save your merged PDF document",
-                icon: Download
-              }
-            ]}
-          />
+          {/* How It Works */}
+          <Card className="p-6 mb-8">
+            <h2 className="text-2xl font-bold mb-4">How It Works</h2>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div className="text-center">
+                <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Upload className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="font-medium mb-1">1. Upload PDFs</h3>
+                <p className="text-sm text-muted-foreground">Select or drag multiple PDF files</p>
+              </div>
+              <div className="text-center">
+                <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-primary/10 flex items-center justify-center">
+                  <GripVertical className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="font-medium mb-1">2. Arrange Order</h3>
+                <p className="text-sm text-muted-foreground">Drag to reorder files</p>
+              </div>
+              <div className="text-center">
+                <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-primary/10 flex items-center justify-center">
+                  <FilePlus className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="font-medium mb-1">3. Merge Files</h3>
+                <p className="text-sm text-muted-foreground">Click to combine PDFs</p>
+              </div>
+              <div className="text-center">
+                <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Download className="w-6 h-6 text-primary" />
+                </div>
+                <h3 className="font-medium mb-1">4. Download</h3>
+                <p className="text-sm text-muted-foreground">Save merged PDF</p>
+              </div>
+            </div>
+          </Card>
 
-          <ToolFAQ
-            toolName="PDF Merger"
-            toolPath="/merge-pdf"
-            faqs={[
-              {
-                question: "How many PDFs can I merge at once?",
-                answer: "You can merge unlimited PDF files at once. The only limitation is your device's processing power and available memory."
-              },
-              {
-                question: "Will merging affect the quality of my PDFs?",
-                answer: "No, merging preserves the original quality of all PDFs. All pages, images, and text remain exactly as they were."
-              },
-              {
-                question: "Can I rearrange pages after merging?",
-                answer: "You can rearrange the order of PDF files before merging. For page-level reorganization, use our Organize PDF tool."
-              },
-              {
-                question: "What's the maximum file size for merging?",
-                answer: "There's no fixed limit. The tool can handle large files, limited only by your browser's memory capacity."
-              },
-              ...toolFAQs
-            ]}
-          />
+          {/* FAQ */}
+          <Card className="p-6">
+            <h2 className="text-2xl font-bold mb-4">Frequently Asked Questions</h2>
+            <div className="space-y-4">
+              <div>
+                <h3 className="font-medium mb-2">How many PDFs can I merge at once?</h3>
+                <p className="text-sm text-muted-foreground">You can merge unlimited PDF files at once. The only limitation is your device's processing power and available memory.</p>
+              </div>
+              <div>
+                <h3 className="font-medium mb-2">Will merging affect the quality of my PDFs?</h3>
+                <p className="text-sm text-muted-foreground">No, merging preserves the original quality of all PDFs. All pages, images, and text remain exactly as they were.</p>
+              </div>
+              <div>
+                <h3 className="font-medium mb-2">Can I rearrange pages after merging?</h3>
+                <p className="text-sm text-muted-foreground">You can rearrange the order of PDF files before merging. For page-level reorganization, use our Organize PDF tool.</p>
+              </div>
+              <div>
+                <h3 className="font-medium mb-2">What's the maximum file size for merging?</h3>
+                <p className="text-sm text-muted-foreground">There's no fixed limit. The tool can handle large files, limited only by your browser's memory capacity.</p>
+              </div>
+            </div>
+          </Card>
         </div>
       </div>
     </div>
