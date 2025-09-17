@@ -16,6 +16,7 @@ import QRGenerator from "@/pages/qr-generator";
 import PasswordGenerator from "@/pages/password-generator";
 import ExtractText from "@/pages/extract-text";
 import MergePDF from "@/pages/merge-pdf";
+import SplitPDF from "@/pages/split-pdf";
 import PrivacyPolicy from "@/pages/privacy-policy";
 import TermsConditions from "@/pages/terms-conditions";
 import Header from "@/components/layout/header";
@@ -39,6 +40,7 @@ function Router() {
           <Route path="/password-generator" component={PasswordGenerator} />
           <Route path="/extract-text" component={ExtractText} />
           <Route path="/merge-pdf" component={MergePDF} />
+          <Route path="/split-pdf" component={SplitPDF} />
           <Route path="/privacy" component={PrivacyPolicy} />
           <Route path="/terms" component={TermsConditions} />
           <Route component={NotFound} />
