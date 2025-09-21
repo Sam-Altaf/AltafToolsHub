@@ -819,7 +819,20 @@ export default function CompressPDF() {
                     </div>
                   </div>
                   
-                  {/* Stats section - will be reordered on mobile */}
+                  {/* Compress button for slider mode - BEFORE stats cards */}
+                  <div className="mt-6">
+                    <Button 
+                      onClick={compressPDF}
+                      className="w-full btn-gradient text-white font-semibold"
+                      size="lg"
+                      data-testid="button-compress-slider"
+                    >
+                      <Zap className="w-5 h-5 mr-2" />
+                      Compress PDF ({compressionLevel}%)
+                    </Button>
+                  </div>
+                  
+                  {/* Stats section - after the compress button */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <Card className="p-4 bg-gradient-to-br from-purple-50 to-transparent dark:from-purple-950/20">
                       <div className="flex items-center gap-2 mb-2">
@@ -856,19 +869,6 @@ export default function CompressPDF() {
                       </p>
                       <p className="text-xs text-muted-foreground mt-1">Processing time</p>
                     </Card>
-                  </div>
-                  
-                  {/* Compress button for slider mode - mobile first */}
-                  <div className="mt-6 order-first sm:order-none">
-                    <Button 
-                      onClick={compressPDF}
-                      className="w-full btn-gradient text-white font-semibold"
-                      size="lg"
-                      data-testid="button-compress-slider"
-                    >
-                      <Zap className="w-5 h-5 mr-2" />
-                      Compress PDF ({compressionLevel}%)
-                    </Button>
                   </div>
                 </div>
               ) : (

@@ -290,7 +290,7 @@ export default function ExtractImages() {
                             <img
                               src={image.url}
                               alt={`Extracted image ${index + 1}`}
-                              className="w-full h-32 object-cover rounded-t-lg"
+                              className="w-full aspect-square object-cover rounded-t-lg"
                             />
                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all flex items-center justify-center">
                               <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
