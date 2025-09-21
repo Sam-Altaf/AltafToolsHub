@@ -156,9 +156,28 @@ const ToolCard = ({ tool, view }: { tool: any; view: 'grid' | 'list' }) => {
   );
   
   return tool.available ? (
-    <Link href={tool.href}>{cardContent}</Link>
+    <Link 
+      href={tool.href}
+      className="block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg"
+    >
+      {cardContent}
+    </Link>
   ) : (
-    cardContent
+    <div
+      className="h-full focus-within:outline-none focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 rounded-lg"
+      role="button"
+      tabIndex={0}
+      aria-disabled="true"
+      aria-label={`${tool.title} - Coming soon`}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+        }
+      }}
+      onClick={(e) => e.preventDefault()}
+    >
+      {cardContent}
+    </div>
   );
 };
 

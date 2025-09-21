@@ -81,110 +81,149 @@ const testimonials = [
 const ToolCard = ({ tool }: { tool: Tool }) => {
   const Icon = tool.icon;
   
-  return (
-    <Link href={tool.available ? tool.href : "#"}>
-      <motion.div
-        whileHover={tool.available ? { scale: 1.03, y: -5 } : {}}
-        whileTap={tool.available ? { scale: 0.98 } : {}}
-        className="h-full"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ 
-          duration: 0.5, 
-          ease: [0.4, 0, 0.2, 1],
-          hover: { duration: 0.3 }
-        }}
-      >
-        <Card className={cn(
-          "tool-card relative h-full p-7 transition-all duration-500 cursor-pointer group min-h-[320px]",
-          "hover:shadow-2xl",
-          !tool.available && "opacity-70 cursor-not-allowed hover:opacity-70"
-        )} data-testid={`tool-card-${tool.id}`}>
-          {/* New/Popular/Coming Soon Badge */}
-          {(tool.new || tool.popular || !tool.available) && (
-            <div className="absolute top-3 right-3">
-              {tool.new && (
-                <motion.div
-                  initial={{ scale: 0, rotate: -180 }}
-                  animate={{ scale: 1, rotate: 0 }}
-                  transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
-                >
-                  <Badge className="bg-gradient-to-r from-green-500/20 to-green-400/10 text-green-600 dark:text-green-400 border-green-500/30 font-semibold shadow-lg">
-                    <Sparkles className="w-3 h-3 mr-1 animate-pulse" />
-                    New
-                  </Badge>
-                </motion.div>
-              )}
-              {tool.popular && (
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
-                >
-                  <Badge className="bg-gradient-to-r from-primary/20 to-blue-500/10 text-primary border-primary/30 font-semibold shadow-lg">
-                    <Star className="w-3 h-3 mr-1 animate-pulse-glow" />
-                    Popular
-                  </Badge>
-                </motion.div>
-              )}
-              {!tool.available && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.4 }}
-                >
-                  <Badge variant="secondary" className="bg-gradient-to-r from-gray-500/20 to-gray-400/10 border-gray-500/30 font-medium">
-                    <Clock className="w-3 h-3 mr-1 animate-pulse" />
-                    Coming Soon
-                  </Badge>
-                </motion.div>
-              )}
-            </div>
-          )}
-          
-          {/* Enhanced Icon with glow effect */}
-          <motion.div 
-            className={cn(
-              "w-16 h-16 rounded-2xl flex items-center justify-center mb-5 transition-all shadow-lg",
-              "bg-gradient-to-br", tool.color,
-              tool.available && "group-hover:scale-110 group-hover:shadow-xl group-hover:rotate-3"
-            )}
-            whileHover={tool.available ? { rotate: [0, -5, 5, 0] } : {}}
-            transition={{ duration: 0.5 }}
-          >
-            <Icon className="w-8 h-8 text-white drop-shadow-lg" />
-          </motion.div>
-          
-          {/* Content */}
-          <h3 className="font-semibold text-xl mb-3 flex items-center gap-2">
-            {tool.title}
-            {tool.available && (
+  const cardContent = (
+    <motion.div
+      whileHover={tool.available ? { scale: 1.03, y: -5 } : {}}
+      whileTap={tool.available ? { scale: 0.98 } : {}}
+      className="h-full"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ 
+        duration: 0.5, 
+        ease: [0.4, 0, 0.2, 1],
+        hover: { duration: 0.3 }
+      }}
+    >
+      <Card className={cn(
+        "tool-card relative h-full p-7 transition-all duration-500 group min-h-[320px]",
+        tool.available 
+          ? "cursor-pointer hover:shadow-2xl focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2" 
+          : "cursor-not-allowed opacity-70",
+        "border border-transparent hover:border-primary/20"
+      )} data-testid={`tool-card-${tool.id}`}>
+        {/* New/Popular/Coming Soon Badge */}
+        {(tool.new || tool.popular || !tool.available) && (
+          <div className="absolute top-3 right-3">
+            {tool.new && (
               <motion.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 0, x: -10 }}
-                whileHover={{ opacity: 1, x: 0 }}
-                className="inline-block"
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
               >
-                <ChevronRight className="w-5 h-5 text-primary" />
+                <Badge className="bg-gradient-to-r from-green-500/20 to-green-400/10 text-green-600 dark:text-green-400 border-green-500/30 font-semibold shadow-lg">
+                  <Sparkles className="w-3 h-3 mr-1 animate-pulse" />
+                  New
+                </Badge>
               </motion.div>
             )}
-          </h3>
-          <p className="text-base text-muted-foreground leading-relaxed group-hover:text-foreground/80 transition-colors duration-300 mb-3">
-            {tool.extendedDescription || tool.description}
-          </p>
-          {tool.features && (
-            <div className="space-y-1 text-sm text-muted-foreground/70">
-              {tool.features.slice(0, 2).map((feature, idx) => (
-                <div key={idx} className="flex items-center gap-1">
-                  <Check className="w-3 h-3 text-green-500 flex-shrink-0" />
-                  <span>{feature}</span>
-                </div>
-              ))}
-            </div>
+            {tool.popular && (
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
+              >
+                <Badge className="bg-gradient-to-r from-primary/20 to-blue-500/10 text-primary border-primary/30 font-semibold shadow-lg">
+                  <Star className="w-3 h-3 mr-1 animate-pulse-glow" />
+                  Popular
+                </Badge>
+              </motion.div>
+            )}
+            {!tool.available && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+              >
+                <Badge variant="secondary" className="bg-gradient-to-r from-gray-500/20 to-gray-400/10 border-gray-500/30 font-medium">
+                  <Clock className="w-3 h-3 mr-1 animate-pulse" />
+                  Coming Soon
+                </Badge>
+              </motion.div>
+            )}
+          </div>
+        )}
+        
+        {/* Enhanced Icon with glow effect */}
+        <motion.div 
+          className={cn(
+            "w-16 h-16 rounded-2xl flex items-center justify-center mb-5 transition-all shadow-lg",
+            "bg-gradient-to-br", tool.color,
+            tool.available && "group-hover:scale-110 group-hover:shadow-xl group-hover:rotate-3"
           )}
-        </Card>
-      </motion.div>
+          whileHover={tool.available ? { rotate: [0, -5, 5, 0] } : {}}
+          transition={{ duration: 0.5 }}
+        >
+          <Icon className="w-8 h-8 text-white drop-shadow-lg" />
+        </motion.div>
+        
+        {/* Content */}
+        <h3 className="font-semibold text-xl mb-3 flex items-center gap-2">
+          {tool.title}
+          {tool.available && (
+            <motion.div
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 0, x: -10 }}
+              whileHover={{ opacity: 1, x: 0 }}
+              className="inline-block"
+            >
+              <ChevronRight className="w-5 h-5 text-primary" />
+            </motion.div>
+          )}
+        </h3>
+        <p className="text-base text-muted-foreground leading-relaxed group-hover:text-foreground/80 transition-colors duration-300 mb-3">
+          {tool.extendedDescription || tool.description}
+        </p>
+        {tool.features && (
+          <div className="space-y-1 text-sm text-muted-foreground/70">
+            {tool.features.slice(0, 2).map((feature, idx) => (
+              <div key={idx} className="flex items-center gap-1">
+                <Check className="w-3 h-3 text-green-500 flex-shrink-0" />
+                <span>{feature}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        
+        {!tool.available && (
+          <div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="text-center p-4">
+              <Clock className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
+              <p className="text-sm font-medium text-muted-foreground">Coming Soon</p>
+              <p className="text-xs text-muted-foreground mt-1">This tool is being developed</p>
+            </div>
+          </div>
+        )}
+      </Card>
+    </motion.div>
+  );
+
+  if (!tool.available) {
+    return (
+      <div
+        className="h-full focus-within:outline-none focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 rounded-lg"
+        role="button"
+        tabIndex={0}
+        aria-disabled="true"
+        aria-label={`${tool.title} - Coming soon`}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+          }
+        }}
+        onClick={(e) => e.preventDefault()}
+      >
+        {cardContent}
+      </div>
+    );
+  }
+
+  return (
+    <Link 
+      href={tool.href}
+      className="block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg"
+    >
+      {cardContent}
     </Link>
   );
 };

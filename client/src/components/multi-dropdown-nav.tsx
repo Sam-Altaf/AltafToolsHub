@@ -11,19 +11,9 @@ import { toolCategories, Tool } from "@/lib/tools-data";
 // Helper component for navigation items
 const ToolNavItem = ({ tool }: { tool: Tool }) => {
   const Icon = tool.icon;
-  return (
-    <Link
-      href={tool.href}
-      className={cn(
-        "group relative flex flex-col items-center text-center select-none rounded-xl p-3 leading-none no-underline outline-none transition-all duration-200",
-        "hover:bg-gradient-to-b hover:from-primary/8 hover:to-primary/3",
-        "hover:shadow-lg hover:translate-y-[-2px] hover:scale-[1.03]",
-        "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-background",
-        "border border-transparent hover:border-primary/20",
-        !tool.available && "opacity-60 hover:translate-y-0 hover:scale-100"
-      )}
-      data-testid={`nav-${tool.id}`}
-    >
+  
+  const content = (
+    <div className="group relative flex flex-col items-center text-center select-none rounded-xl p-3 leading-none no-underline outline-none transition-all duration-200">
       <div className={cn(
         "w-12 h-12 rounded-xl flex items-center justify-center mb-3 transition-all duration-300",
         "bg-gradient-to-br", tool.color,
@@ -51,6 +41,39 @@ const ToolNavItem = ({ tool }: { tool: Tool }) => {
           {tool.description}
         </p>
       </div>
+    </div>
+  );
+
+  if (!tool.available) {
+    return (
+      <button
+        className={cn(
+          "w-full cursor-not-allowed opacity-60",
+          "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none rounded-xl"
+        )}
+        disabled
+        aria-disabled="true"
+        data-testid={`nav-${tool.id}-disabled`}
+        onClick={(e) => e.preventDefault()}
+      >
+        {content}
+      </button>
+    );
+  }
+
+  return (
+    <Link
+      href={tool.href}
+      className={cn(
+        "block w-full rounded-xl transition-all duration-200",
+        "hover:bg-gradient-to-b hover:from-primary/8 hover:to-primary/3",
+        "hover:shadow-lg hover:translate-y-[-2px] hover:scale-[1.03]",
+        "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none",
+        "border border-transparent hover:border-primary/20"
+      )}
+      data-testid={`nav-${tool.id}`}
+    >
+      {content}
     </Link>
   );
 };
