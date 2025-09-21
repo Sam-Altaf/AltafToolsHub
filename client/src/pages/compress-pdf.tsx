@@ -469,7 +469,7 @@ export default function CompressPDF() {
                 Back to Tools
               </Button>
             </Link>
-            <h1 className="text-3xl sm:text-4xl font-bold mb-4 gradient-text">Smart PDF Compressor</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-foreground">Smart PDF Compressor</h1>
             <p className="text-lg text-muted-foreground">Your PDF has been compressed successfully!</p>
           </div>
 
@@ -576,7 +576,7 @@ export default function CompressPDF() {
       <div className="min-h-screen pattern-bg">
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           <div className="text-center mb-8">
-            <h1 className="text-3xl sm:text-4xl font-bold mb-4 gradient-text">Smart PDF Compressor</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-foreground">Smart PDF Compressor</h1>
             <p className="text-lg text-muted-foreground">Intelligently optimizing your PDF...</p>
           </div>
 
@@ -627,7 +627,7 @@ export default function CompressPDF() {
             <span className="text-sm font-medium">AI-Powered Compression</span>
           </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-            Smart PDF <span className="gradient-text">Compressor</span>
+            Smart PDF Compressor
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Compress PDFs to specific target sizes while preserving maximum quality. 

@@ -183,7 +183,7 @@ export default function FAQPage() {
               Help Center
             </Badge>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-              Frequently Asked <span className="gradient-text">Questions</span>
+              Frequently Asked Questions
             </h1>
             <p className="text-lg text-muted-foreground">
               Everything you need to know about AltafToolsHub's privacy-first file tools

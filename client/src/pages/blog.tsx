@@ -185,7 +185,7 @@ export default function BlogPage() {
               Blog & Tutorials
             </Badge>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-              Learn & Master <span className="gradient-text">File Processing</span>
+              Learn & Master File Processing
             </h1>
             <p className="text-lg text-muted-foreground">
               Expert tips, tutorials, and best practices for working with documents and files

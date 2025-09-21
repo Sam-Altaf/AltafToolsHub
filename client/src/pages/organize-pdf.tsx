@@ -378,7 +378,7 @@ export default function OrganizePDF() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold mb-4">
-              Organize <span className="gradient-text">PDF Pages</span>
+              Organize PDF Pages
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Rearrange, rotate, delete, and duplicate PDF pages with drag-and-drop ease.

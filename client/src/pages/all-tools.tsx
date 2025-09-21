@@ -286,7 +286,7 @@ export default function AllToolsPage() {
             </Badge>
             
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
-              <span className="gradient-text">All Tools</span> at Your Fingertips
+              All Tools at Your Fingertips
             </h1>
             
             <p className="text-xl text-muted-foreground mb-8 leading-relaxed">

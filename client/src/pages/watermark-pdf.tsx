@@ -357,7 +357,7 @@ export default function WatermarkPDF() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold mb-4">
-              Add <span className="gradient-text">Watermark to PDF</span>
+              Add Watermark to PDF
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Protect your PDFs with custom text or image watermarks. 

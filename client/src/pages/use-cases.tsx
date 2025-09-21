@@ -315,7 +315,7 @@ const UseCases = () => {
               <TrendingUp className="w-3 h-3 mr-1" />
               Real-World Applications
             </Badge>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-foreground">
               Use Cases for Every Need
             </h1>
             <p className="text-xl text-muted-foreground mb-8">

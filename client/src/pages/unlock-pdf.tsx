@@ -269,7 +269,7 @@ export default function UnlockPDF() {
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Tools
             </Button>
-            <h1 className="text-3xl sm:text-4xl font-bold mb-4 gradient-text">PDF Unlocker</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-foreground">PDF Unlocker</h1>
             <p className="text-lg text-muted-foreground">Your PDF has been unlocked successfully!</p>
           </div>
 
@@ -346,7 +346,7 @@ export default function UnlockPDF() {
       <div className="min-h-screen pattern-bg">
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           <div className="text-center mb-8">
-            <h1 className="text-3xl sm:text-4xl font-bold mb-4 gradient-text">PDF Unlocker</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-foreground">PDF Unlocker</h1>
             <p className="text-lg text-muted-foreground">Removing password protection...</p>
           </div>
 
@@ -391,7 +391,7 @@ export default function UnlockPDF() {
             <span className="text-sm font-medium">100% Secure Processing</span>
           </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-            PDF <span className="gradient-text">Unlocker</span>
+            PDF Unlocker
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Remove password protection from PDF files securely in your browser. 

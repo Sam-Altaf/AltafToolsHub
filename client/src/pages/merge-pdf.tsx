@@ -243,7 +243,7 @@ export default function MergePDF() {
               </Badge>
             </div>
             <h1 className="text-5xl font-bold mb-4">
-              Merge <span className="gradient-text">PDF Files</span> Online
+              Merge PDF Files Online
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-6">
               Combine multiple PDF files into a single document in seconds. 

@@ -330,7 +330,7 @@ export default function ExtractPages() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold mb-4">
-              Extract <span className="gradient-text">PDF Pages</span>
+              Extract PDF Pages
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Select and extract specific pages from your PDF documents. 

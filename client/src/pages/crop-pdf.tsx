@@ -279,7 +279,7 @@ export default function CropPDF() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold mb-4">
-              Crop <span className="gradient-text">PDF Pages</span>
+              Crop PDF Pages
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Remove unwanted margins, headers, and footers from your PDF documents. 

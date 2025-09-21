@@ -326,7 +326,7 @@ export default function RotatePDF() {
               <span>Trusted by 500,000+ users worldwide</span>
             </div>
             <h1 className="text-5xl font-bold mb-4">
-              Rotate <span className="gradient-text">PDF Pages</span> Online
+              Rotate PDF Pages Online
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Fix page orientation issues instantly. Rotate individual pages or all pages at once 
