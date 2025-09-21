@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Logo } from "@/components/logo";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
@@ -13,9 +14,12 @@ import {
   Linkedin,
   Github,
   ChevronRight,
+  ChevronDown,
   Heart
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { cn } from "@/lib/utils";
 
 const productLinks = [
   { name: "PDF Compressor", href: "/compress-pdf", icon: FileText },
@@ -48,6 +52,17 @@ const socialLinks = [
 ];
 
 export default function Footer() {
+  const [openSections, setOpenSections] = useState<string[]>([]);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   return (
     <footer className="bg-muted/50 dark:bg-gray-900 border-t border-border transition-colors duration-300">
       <div className="container-section py-12 lg:py-16">
@@ -60,7 +75,7 @@ export default function Footer() {
         >
           <div className="flex items-center justify-center gap-2 mb-4">
             <Shield className="w-6 h-6 text-primary" />
-            <h3 className="text-xl font-semibold">Your Privacy is Our Priority</h3>
+            <h3 className="text-xl font-semibold text-foreground dark:text-foreground">Your Privacy is Our Priority</h3>
           </div>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             All file processing happens directly in your browser. No uploads, no data storage, no tracking.
@@ -84,13 +99,29 @@ export default function Footer() {
 
         {/* Main Footer Content - 4 Column Desktop, Stacked Mobile */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-          {/* Product Column */}
-          <div>
-            <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
-              <FileText className="w-5 h-5 text-primary" />
-              Popular Tools
-            </h4>
-            <ul className="space-y-3">
+          {/* Product Column - Collapsible on Mobile */}
+          <Collapsible
+            open={!isMobile || openSections.includes('tools')}
+            onOpenChange={() => setOpenSections(prev => 
+              prev.includes('tools') 
+                ? prev.filter(s => s !== 'tools')
+                : [...prev, 'tools']
+            )}
+            className="group"
+          >
+            <div className="flex sm:block items-center justify-between mb-4">
+              <h4 className="font-semibold text-lg flex items-center gap-2 text-foreground dark:text-foreground">
+                <FileText className="w-5 h-5 text-primary" />
+                Popular Tools
+              </h4>
+              <CollapsibleTrigger className="sm:hidden p-3 min-h-[44px] min-w-[44px] flex items-center justify-center -mr-3" aria-label="Toggle tools section">
+                <ChevronDown className={cn(
+                  "w-5 h-5 transition-transform",
+                  openSections.includes('tools') && "rotate-180"
+                )} />
+              </CollapsibleTrigger>
+            </div>
+            <CollapsibleContent className="space-y-3 sm:!block">
               {productLinks.map((link) => {
                 const Icon = link.icon;
                 return (
@@ -107,13 +138,29 @@ export default function Footer() {
                   </li>
                 );
               })}
-            </ul>
-          </div>
+            </CollapsibleContent>
+          </Collapsible>
 
-          {/* Resources Column */}
-          <div>
-            <h4 className="font-semibold text-lg mb-4">Resources</h4>
-            <ul className="space-y-3">
+          {/* Resources Column - Collapsible on Mobile */}
+          <Collapsible
+            open={!isMobile || openSections.includes('resources')}
+            onOpenChange={() => setOpenSections(prev => 
+              prev.includes('resources') 
+                ? prev.filter(s => s !== 'resources')
+                : [...prev, 'resources']
+            )}
+            className="group"
+          >
+            <div className="flex sm:block items-center justify-between mb-4">
+              <h4 className="font-semibold text-lg text-foreground dark:text-foreground">Resources</h4>
+              <CollapsibleTrigger className="sm:hidden p-3 min-h-[44px] min-w-[44px] flex items-center justify-center -mr-3" aria-label="Toggle resources section">
+                <ChevronDown className={cn(
+                  "w-5 h-5 transition-transform",
+                  openSections.includes('resources') && "rotate-180"
+                )} />
+              </CollapsibleTrigger>
+            </div>
+            <CollapsibleContent className="space-y-3 sm:!block">
               {resourceLinks.map((link) => (
                 <li key={link.href}>
                   <Link 
@@ -126,13 +173,29 @@ export default function Footer() {
                   </Link>
                 </li>
               ))}
-            </ul>
-          </div>
+            </CollapsibleContent>
+          </Collapsible>
 
-          {/* Legal Column */}
-          <div>
-            <h4 className="font-semibold text-lg mb-4">Legal</h4>
-            <ul className="space-y-3">
+          {/* Legal Column - Collapsible on Mobile */}
+          <Collapsible
+            open={!isMobile || openSections.includes('legal')}
+            onOpenChange={() => setOpenSections(prev => 
+              prev.includes('legal') 
+                ? prev.filter(s => s !== 'legal')
+                : [...prev, 'legal']
+            )}
+            className="group"
+          >
+            <div className="flex sm:block items-center justify-between mb-4">
+              <h4 className="font-semibold text-lg text-foreground dark:text-foreground">Legal</h4>
+              <CollapsibleTrigger className="sm:hidden p-3 min-h-[44px] min-w-[44px] flex items-center justify-center -mr-3" aria-label="Toggle legal section">
+                <ChevronDown className={cn(
+                  "w-5 h-5 transition-transform",
+                  openSections.includes('legal') && "rotate-180"
+                )} />
+              </CollapsibleTrigger>
+            </div>
+            <CollapsibleContent className="space-y-3 sm:!block">
               {legalLinks.map((link) => (
                 <li key={link.href}>
                   <Link 
@@ -145,12 +208,12 @@ export default function Footer() {
                   </Link>
                 </li>
               ))}
-            </ul>
-          </div>
+            </CollapsibleContent>
+          </Collapsible>
 
           {/* Contact Column */}
           <div>
-            <h4 className="font-semibold text-lg mb-4">Contact</h4>
+            <h4 className="font-semibold text-lg mb-4 text-foreground dark:text-foreground">Contact</h4>
             <div className="space-y-4">
               <a 
                 href="mailto:support@altaftoolshub.com"
@@ -162,7 +225,7 @@ export default function Footer() {
               </a>
               
               <div className="pt-2">
-                <p className="text-sm font-medium mb-3">Follow Us</p>
+                <p className="text-sm font-medium mb-3 text-foreground dark:text-foreground">Follow Us</p>
                 <div className="flex gap-3">
                   {socialLinks.map((social) => {
                     const Icon = social.icon;
@@ -172,7 +235,7 @@ export default function Footer() {
                         href={social.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-10 h-10 rounded-lg bg-muted hover:bg-primary/10 hover:text-primary transition-all flex items-center justify-center group"
+                        className="w-11 h-11 sm:w-10 sm:h-10 rounded-lg bg-muted dark:bg-gray-800 hover:bg-primary/10 dark:hover:bg-primary/20 hover:text-primary transition-all flex items-center justify-center group min-w-[44px] min-h-[44px]"
                         aria-label={social.ariaLabel}
                         data-testid={`footer-social-${social.name.toLowerCase()}`}
                       >

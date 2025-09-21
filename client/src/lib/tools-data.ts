@@ -517,7 +517,7 @@ export const allTools: Tool[] = [
     color: "from-indigo-500 to-purple-600",
     available: true,
     category: "utilities",
-    popular: true,
+    new: true,
     features: ["Custom colors", "Logo embedding", "Bulk generation", "Various formats"],
     extendedDescription: "Create professional QR codes instantly for URLs, WiFi, contact info, and more. Customize colors and sizes, download in multiple formats. Perfect for marketing materials and business cards."
   },
@@ -530,7 +530,7 @@ export const allTools: Tool[] = [
     color: "from-emerald-500 to-teal-600",
     available: true,
     category: "utilities",
-    popular: true,
+    new: true,
     features: ["Custom length", "Special characters", "Pronounceable", "Strength meter"],
     extendedDescription: "Generate ultra-secure passwords with customizable complexity. Include symbols, numbers, and mixed case. Features password strength analysis and easy copy-to-clipboard functionality."
   },

@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 export function ContactSupportSection() {
   return (
-    <section className="py-12 bg-muted/30 overflow-hidden" data-testid="contact-support-section">
+    <section className="py-12 bg-muted/30 dark:bg-gray-900/30 overflow-hidden" data-testid="contact-support-section">
       <div className="container-section">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -15,10 +15,10 @@ export function ContactSupportSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <Card className="p-8 sm:p-10 lg:p-12 bg-gradient-to-br from-primary/5 via-background to-primary/10 border-primary/20">
+          <Card className="p-8 sm:p-10 lg:p-12 bg-gradient-to-br from-primary/5 via-background to-primary/10 dark:from-primary/10 dark:via-gray-900 dark:to-primary/5 border-primary/20 dark:border-primary/30">
             <div className="text-center max-w-3xl mx-auto">
               <motion.h2 
-                className="text-2xl sm:text-3xl font-bold mb-4"
+                className="text-2xl sm:text-3xl font-bold mb-4 text-foreground dark:text-foreground"
                 initial={{ opacity: 0, y: -10 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -48,6 +48,7 @@ export function ContactSupportSection() {
                 <a
                   href="mailto:support@altaftoolshub.com"
                   className="group"
+                  aria-label="Contact support via email at support@altaftoolshub.com"
                   data-testid="link-email-support"
                 >
                   <Button
@@ -87,6 +88,7 @@ export function ContactSupportSection() {
                 <a
                   href="mailto:support@altaftoolshub.com?subject=Issue%20Report"
                   className="group"
+                  aria-label="Report an issue via email to support"
                   data-testid="link-report-issue"
                 >
                   <Button

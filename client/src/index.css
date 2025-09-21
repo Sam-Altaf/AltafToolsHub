@@ -1441,3 +1441,123 @@ button, a, input, textarea, select {
 .loading {
   animation: loading 1.5s ease-in-out infinite;
 }
+
+/* Phase 7: Additional Enhancements - Smooth Animations & Micro-interactions */
+
+/* Enhanced card hover effects for tool cards */
+.tool-card {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.3s ease;
+}
+
+.tool-card:hover {
+  transform: translateY(-4px) scale(1.01);
+}
+
+/* Smooth button animations */
+button, .btn {
+  transition: transform 0.2s ease, 
+              box-shadow 0.2s ease,
+              background-color 0.2s ease,
+              color 0.2s ease;
+}
+
+button:hover:not(:disabled), .btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+button:active:not(:disabled), .btn:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Mobile touch feedback */
+@media (max-width: 640px) {
+  .tool-card:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+  
+  button:active:not(:disabled), .btn:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+  
+  /* Ensure minimum touch target size */
+  button, .btn, a.btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Larger social icons for mobile */
+  .social-icon {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* Subtle animation for CTAs */
+@keyframes gentlePulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+.animate-gentle-pulse {
+  animation: gentlePulse 3s ease-in-out infinite;
+}
+
+/* Enhanced focus states for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+  transition: outline-offset 0.2s ease;
+}
+
+*:focus-visible:hover {
+  outline-offset: 5px;
+}
+
+/* Smooth transitions for dark mode toggle */
+.dark-mode-toggle {
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.dark-mode-toggle:hover {
+  transform: rotate(15deg) scale(1.1);
+}
+
+/* Testimonial cards mobile optimization */
+@media (max-width: 640px) {
+  .testimonial-card {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Ensure no horizontal scroll on mobile */
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+  
+  .container-section {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* High contrast mode support for accessibility */
+@media (prefers-contrast: high) {
+  .btn-gradient,
+  .gradient-text {
+    filter: contrast(1.2);
+  }
+  
+  .glass, .glass-dark {
+    border-width: 2px;
+  }
+}

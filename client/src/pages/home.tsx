@@ -715,11 +715,11 @@ export default function Home() {
       <ComparisonTable />
 
       {/* Features Section */}
-      <section className="py-16 bg-muted/30 overflow-hidden">
+      <section className="py-16 bg-muted/30 dark:bg-gray-900/50 overflow-hidden">
         <div className="container-section">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Why Choose AltafToolsHub?</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+            <h2 className="text-3xl font-bold mb-4 text-foreground dark:text-foreground">Why Choose AltafToolsHub?</h2>
+            <p className="text-muted-foreground dark:text-muted-foreground max-w-2xl mx-auto">
               Professional-grade tools with enterprise-level security, completely free
             </p>
           </div>
@@ -733,15 +733,15 @@ export default function Home() {
                 transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="p-6 h-full glass hover:shadow-lg transition-shadow rounded-lg">
+                <Card className="p-6 h-full glass dark:glass-dark hover:shadow-lg transition-shadow rounded-lg bg-card dark:bg-card text-card-foreground dark:text-card-foreground">
                   <div className={cn(
                     "w-12 h-12 rounded-xl flex items-center justify-center mb-4",
                     "bg-gradient-to-br", feature.gradient
                   )}>
                     <feature.icon className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                  <p className="text-muted-foreground">{feature.description}</p>
+                  <h3 className="text-xl font-semibold mb-2 text-foreground dark:text-foreground">{feature.title}</h3>
+                  <p className="text-muted-foreground dark:text-muted-foreground">{feature.description}</p>
                 </Card>
               </motion.div>
             ))}

@@ -95,9 +95,9 @@ export function ComparisonTable() {
             <Card className="overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-muted/50 sticky top-0">
+                  <thead className="bg-muted/50 dark:bg-gray-800/50 sticky top-0">
                     <tr>
-                      <th className="px-6 py-4 text-left font-semibold">Feature</th>
+                      <th className="px-6 py-4 text-left font-semibold text-foreground dark:text-foreground">Feature</th>
                       <th className="px-6 py-4 text-center font-semibold">
                         <span className="text-primary">AltafToolsHub</span>
                       </th>
@@ -113,8 +113,8 @@ export function ComparisonTable() {
                         <motion.tr
                           key={item.feature}
                           className={cn(
-                            "border-t transition-colors hover:bg-muted/30",
-                            item.highlight && "bg-primary/5"
+                            "border-t transition-colors hover:bg-muted/30 dark:hover:bg-gray-800/30",
+                            item.highlight && "bg-primary/5 dark:bg-primary/10"
                           )}
                           initial={{ opacity: 0, x: -20 }}
                           whileInView={{ opacity: 1, x: 0 }}
@@ -125,7 +125,7 @@ export function ComparisonTable() {
                           <td className="px-6 py-4">
                             <div className="flex items-center gap-3">
                               <Icon className="w-5 h-5 text-primary" />
-                              <span className="font-medium">{item.feature}</span>
+                              <span className="font-medium text-foreground dark:text-foreground">{item.feature}</span>
                             </div>
                           </td>
                           <td className="px-6 py-4 text-center">
@@ -173,21 +173,31 @@ export function ComparisonTable() {
                 >
                   <Card 
                     className={cn(
-                      "p-6",
-                      item.highlight && "border-primary/50 bg-primary/5"
+                      "p-4 sm:p-6 bg-card dark:bg-card transition-all duration-300 hover:shadow-lg",
+                      item.highlight && "border-2 border-primary/50 bg-primary/5 dark:bg-primary/10 shadow-md"
                     )}
                     data-testid={`comparison-card-${item.feature.toLowerCase().replace(/\s/g, '-')}`}
                   >
                     <div className="flex items-center gap-3 mb-4">
-                      <Icon className="w-6 h-6 text-primary" />
-                      <h3 className="font-semibold text-lg">{item.feature}</h3>
+                      <div className="p-2 rounded-lg bg-primary/10 dark:bg-primary/20">
+                        <Icon className="w-6 h-6 text-primary" />
+                      </div>
+                      <h3 className="font-semibold text-base sm:text-lg text-foreground dark:text-foreground">{item.feature}</h3>
+                      {item.highlight && (
+                        <Badge className="ml-auto bg-gradient-to-r from-primary/20 to-blue-500/20 text-primary border-primary/30 text-xs">
+                          Key
+                        </Badge>
+                      )}
                     </div>
                     
                     <div className="space-y-3">
                       {/* AltafToolsHub */}
-                      <div className="flex items-center justify-between p-3 bg-primary/10 rounded-lg">
-                        <span className="font-medium text-sm">AltafToolsHub</span>
-                        <span className="text-sm font-semibold text-green-600 dark:text-green-400">
+                      <div className="flex items-center justify-between p-3 bg-gradient-to-r from-primary/10 to-blue-500/10 dark:from-primary/20 dark:to-blue-500/20 rounded-lg border border-primary/20">
+                        <span className="font-medium text-sm flex items-center gap-2">
+                          <Check className="w-3 h-3 text-primary" />
+                          AltafToolsHub
+                        </span>
+                        <span className="text-sm font-bold text-green-600 dark:text-green-400">
                           {typeof item.altafToolsHub === 'boolean' ? (
                             item.altafToolsHub ? <CheckMark /> : <XMark />
                           ) : (
@@ -197,13 +207,16 @@ export function ComparisonTable() {
                       </div>
                       
                       {/* Competitors */}
-                      <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                        <span className="font-medium text-sm text-muted-foreground">Other Tools</span>
+                      <div className="flex items-center justify-between p-3 bg-muted/50 dark:bg-gray-800/50 rounded-lg border border-muted">
+                        <span className="font-medium text-sm text-muted-foreground flex items-center gap-2">
+                          <X className="w-3 h-3 opacity-50" />
+                          Other Tools
+                        </span>
                         <span className="text-sm text-muted-foreground">
                           {typeof item.competitors === 'boolean' ? (
                             item.competitors ? <CheckMark /> : <XMark />
                           ) : (
-                            item.competitors
+                            <span className="opacity-75">{item.competitors}</span>
                           )}
                         </span>
                       </div>
