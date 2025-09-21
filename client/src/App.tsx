@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/contexts/theme-context";
 import { ReducedMotionProvider } from "@/components/reduced-motion-provider";
 import ScrollToTop from "@/components/scroll-to-top";
+import ScrollToTopButton from "@/components/scroll-to-top-button";
 import NotFound from "@/pages/not-found";
 import NavigationMemory from "@/components/navigation-memory";
 import Home from "@/pages/home";
@@ -88,6 +89,7 @@ function App() {
           <TooltipProvider>
             <Toaster />
             <CookieConsent />
+            <ScrollToTopButton />
             <Router />
           </TooltipProvider>
         </ReducedMotionProvider>

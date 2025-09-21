@@ -120,6 +120,9 @@ export default function ExtractText() {
   }, []);
 
   const extractText = async () => {
+    // Scroll to top to show processing area
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     if (!selectedFile || !imagePreview) return;
 
     setIsProcessing(true);

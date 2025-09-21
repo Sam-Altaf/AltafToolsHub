@@ -140,6 +140,9 @@ export default function MergePDF() {
   };
 
   const mergePDFs = async () => {
+    // Scroll to top to show processing area
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     if (pdfFiles.length < 2) {
       toast({
         title: "Not enough files",

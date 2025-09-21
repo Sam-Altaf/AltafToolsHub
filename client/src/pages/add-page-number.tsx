@@ -205,6 +205,9 @@ export default function AddPageNumber() {
   };
 
   const addPageNumbers = async () => {
+    // Scroll to top to show processing area
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     if (!pdfDoc || !pdfFile) {
       toast({
         title: "No file loaded",

@@ -130,6 +130,9 @@ export default function UnlockPDF() {
   };
 
   const unlockPDF = async () => {
+    // Scroll to top to show processing area
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     if (!selectedFile || !password.trim()) {
       setError('Please select a file and enter the password.');
       return;

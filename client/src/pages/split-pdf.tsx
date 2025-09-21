@@ -148,6 +148,9 @@ export default function SplitPDF() {
   };
 
   const splitPDF = async () => {
+    // Scroll to top to show processing area
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     if (!pdfDoc) {
       toast({
         title: "No File",

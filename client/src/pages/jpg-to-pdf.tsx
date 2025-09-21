@@ -146,6 +146,9 @@ export default function JpgToPDF() {
   };
 
   const convertToPDF = async () => {
+    // Scroll to top to show processing area
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     if (selectedFiles.length === 0) {
       setError('Please select at least one image file.');
       return;

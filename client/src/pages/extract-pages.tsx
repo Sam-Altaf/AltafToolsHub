@@ -222,6 +222,9 @@ export default function ExtractPages() {
   };
 
   const extractPages = async () => {
+    // Scroll to top to show processing area
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     if (!pdfDoc || selectedPages.size === 0) {
       toast({
         title: "No pages selected",

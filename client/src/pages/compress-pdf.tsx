@@ -267,6 +267,9 @@ export default function CompressPDF() {
   };
 
   const compressPDF = async () => {
+    // Scroll to top to show processing area
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     if (!selectedFile) return;
     
     setIsProcessing(true);

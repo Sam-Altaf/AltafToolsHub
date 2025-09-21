@@ -202,6 +202,9 @@ export default function WatermarkPDF() {
   };
 
   const addWatermark = async () => {
+    // Scroll to top to show processing area
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     if (!pdfDoc || !pdfFile) {
       toast({
         title: "No file loaded",
