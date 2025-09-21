@@ -24,6 +24,7 @@ import {
   Tool 
 } from "@/lib/tools-data";
 import { cn } from "@/lib/utils";
+import { useReducedMotion, getMotionProps } from "@/hooks/use-reduced-motion";
 
 const features = [
   {
@@ -80,20 +81,27 @@ const testimonials = [
 // Enhanced Tool Card Component with premium animations
 const ToolCard = ({ tool }: { tool: Tool }) => {
   const Icon = tool.icon;
+  const reducedMotion = useReducedMotion();
   
   const cardContent = (
     <motion.div
-      whileHover={tool.available ? { scale: 1.03, y: -5 } : {}}
-      whileTap={tool.available ? { scale: 0.98 } : {}}
       className="h-full"
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ 
-        duration: 0.5, 
-        ease: [0.4, 0, 0.2, 1],
-        hover: { duration: 0.3 }
-      }}
+      {...getMotionProps(reducedMotion, {
+        whileHover: tool.available ? { scale: 1.03, y: -5 } : {},
+        whileTap: tool.available ? { scale: 0.98 } : {},
+        initial: { opacity: 0, y: 30 },
+        whileInView: { opacity: 1, y: 0 },
+        viewport: { once: true, amount: 0.2 },
+        transition: { 
+          duration: 0.5, 
+          ease: [0.4, 0, 0.2, 1],
+          hover: { duration: 0.3 }
+        }
+      }, {
+        initial: { opacity: 1 },
+        animate: { opacity: 1 },
+        transition: { duration: 0 }
+      })}
     >
       <Card className={cn(
         "tool-card relative h-full p-7 transition-all duration-500 group min-h-[320px]",
@@ -201,17 +209,9 @@ const ToolCard = ({ tool }: { tool: Tool }) => {
   if (!tool.available) {
     return (
       <div
-        className="h-full focus-within:outline-none focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 rounded-lg"
-        role="button"
-        tabIndex={0}
-        aria-disabled="true"
+        className="h-full rounded-lg"
         aria-label={`${tool.title} - Coming soon`}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-          }
-        }}
-        onClick={(e) => e.preventDefault()}
+        aria-disabled="true"
       >
         {cardContent}
       </div>

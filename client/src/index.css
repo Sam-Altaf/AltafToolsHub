@@ -92,6 +92,38 @@
     scroll-padding-top: 5rem; /* Account for sticky header */
   }
 
+  /* Respect reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+    
+    /* Disable specific animations that could cause motion sickness */
+    .hero-gradient::before,
+    .hero-gradient::after,
+    .hero-circuit {
+      animation: none !important;
+    }
+    
+    /* Still allow focus and hover states but without transitions */
+    button:focus-visible,
+    a:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 2px solid hsl(var(--ring));
+      outline-offset: 2px;
+      transition: none;
+    }
+  }
+
   body {
     @apply font-sans antialiased bg-background text-foreground;
     min-height: 100vh;

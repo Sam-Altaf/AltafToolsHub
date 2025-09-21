@@ -164,17 +164,9 @@ const ToolCard = ({ tool, view }: { tool: any; view: 'grid' | 'list' }) => {
     </Link>
   ) : (
     <div
-      className="h-full focus-within:outline-none focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 rounded-lg"
-      role="button"
-      tabIndex={0}
-      aria-disabled="true"
+      className="h-full rounded-lg"
       aria-label={`${tool.title} - Coming soon`}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-        }
-      }}
-      onClick={(e) => e.preventDefault()}
+      aria-disabled="true"
     >
       {cardContent}
     </div>

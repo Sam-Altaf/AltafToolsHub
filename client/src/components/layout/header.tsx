@@ -18,11 +18,13 @@ import {
 } from "lucide-react";
 import { toolCategories, popularTools, Tool } from "@/lib/tools-data";
 import { MultiDropdownNav } from "@/components/multi-dropdown-nav";
+import { useReducedMotion, getMotionProps } from "@/hooks/use-reduced-motion";
 
 export default function Header() {
   const [location] = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const reducedMotion = useReducedMotion();
   
   useEffect(() => {
     const handleScroll = () => {
@@ -56,9 +58,11 @@ export default function Header() {
         top: 0,
         isolation: 'isolate' // Create new stacking context
       }}
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ type: "spring", stiffness: 100, damping: 20 }}
+      {...getMotionProps(reducedMotion, {
+        initial: { y: -100 },
+        animate: { y: 0 },
+        transition: { type: "spring", stiffness: 100, damping: 20 }
+      })}
     >
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
@@ -70,9 +74,11 @@ export default function Header() {
             aria-label="Home - AltafToolsHub"
           >
             <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              {...getMotionProps(reducedMotion, {
+                whileHover: { scale: 1.05 },
+                whileTap: { scale: 0.95 },
+                transition: { type: "spring", stiffness: 400, damping: 17 }
+              })}
             >
               <Logo size="sm" variant="full" className="text-primary" />
             </motion.div>
@@ -117,7 +123,12 @@ export default function Header() {
 
           {/* Desktop Right Section */}
           <div className="hidden lg:flex items-center space-x-2">
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <motion.div 
+              {...getMotionProps(reducedMotion, {
+                whileHover: { scale: 1.05 },
+                whileTap: { scale: 0.95 }
+              })}
+            >
               <Button 
                 className="btn-gradient text-white font-medium focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2"
                 data-testid="button-try-now-desktop"
@@ -149,10 +160,12 @@ export default function Header() {
                     {mobileMenuOpen ? (
                       <motion.div
                         key="close"
-                        initial={{ rotate: -90, opacity: 0 }}
-                        animate={{ rotate: 0, opacity: 1 }}
-                        exit={{ rotate: 90, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
+                        {...getMotionProps(reducedMotion, {
+                          initial: { rotate: -90, opacity: 0 },
+                          animate: { rotate: 0, opacity: 1 },
+                          exit: { rotate: 90, opacity: 0 },
+                          transition: { duration: 0.2 }
+                        })}
                         className="absolute inset-0 flex items-center justify-center"
                       >
                         <X className="h-5 w-5" />
@@ -160,10 +173,12 @@ export default function Header() {
                     ) : (
                       <motion.div
                         key="menu"
-                        initial={{ rotate: 90, opacity: 0 }}
-                        animate={{ rotate: 0, opacity: 1 }}
-                        exit={{ rotate: -90, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
+                        {...getMotionProps(reducedMotion, {
+                          initial: { rotate: 90, opacity: 0 },
+                          animate: { rotate: 0, opacity: 1 },
+                          exit: { rotate: -90, opacity: 0 },
+                          transition: { duration: 0.2 }
+                        })}
                         className="absolute inset-0 flex items-center justify-center"
                       >
                         <Menu className="h-5 w-5" />
@@ -231,7 +246,7 @@ export default function Header() {
                             {category.tools.slice(0, 5).map((tool) => {
                               const Icon = tool.icon;
                               return (
-                                <SheetClose asChild>
+                                <SheetClose key={tool.id} asChild>
                                   <Button
                                     variant={isActive(tool.href) ? "secondary" : "ghost"}
                                     className={cn(
