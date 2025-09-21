@@ -239,7 +239,7 @@ export default function ExtractImages() {
               <FileUpload
                 accept="application/pdf"
                 onFileSelect={handleFileUpload}
-                className="h-48"
+                className="min-h-[400px]"
                 title="Drop PDF file here or click to select"
                 description="Select a PDF to extract images from"
               />
