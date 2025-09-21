@@ -34,8 +34,8 @@ const resourceLinks = [
   { name: "FAQ", href: "/faq" },
   { name: "Blog", href: "/blog" },
   { name: "Documentation", href: "/documentation" },
-  { name: "How It Works", href: "/#features-section" },
-  { name: "Use Cases", href: "/#use-cases" }
+  { name: "How It Works", href: "/how-it-works" },
+  { name: "Use Cases", href: "/use-cases" }
 ];
 
 const legalLinks = [

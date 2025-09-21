@@ -43,7 +43,7 @@ export default function QRGenerator() {
     name: "QR Code Generator - AltafToolsHub",
     description: "Free QR code generator with custom colors and sizes. Create QR codes for URLs, text, WiFi, and more. 100% browser-based.",
     applicationCategory: "BusinessApplication",
-    url: "https://www.altaftoolshub.com/qr-generator",
+    url: "https://www.altaftoolshub.app/qr-generator",
     aggregateRating: { ratingValue: 4.9, ratingCount: 2156, bestRating: 5 },
     featureList: [
       "Generate QR codes for any text or URL",
@@ -63,7 +63,7 @@ export default function QRGenerator() {
     description: "Free online QR code generator. Create custom QR codes from text, URLs, emails, phone numbers. Customize colors and sizes. 100% client-side for privacy.",
     path: "/qr-generator",
     keywords: "qr code generator, create qr code, free qr generator, online qr code, custom qr code, qr code maker, generate qr code, qr code creator, qr code 2025, ai qr generator",
-    ogImage: "https://www.altaftoolshub.com/og-qr-generator.png",
+    ogImage: "https://www.altaftoolshub.app/og-qr-generator.png",
     structuredData: [howToSchema, softwareSchema],
     additionalMetaTags: [
       { name: "application-name", content: "QR Code Generator - AltafToolsHub" },

@@ -276,7 +276,7 @@ export default function Documentation() {
     description: "Comprehensive documentation and user guides for all PDF tools and utilities. Learn how to compress, merge, split, convert, and edit PDFs with step-by-step instructions.",
     path: "/documentation",
     keywords: "pdf tools documentation, user guide, how to use pdf tools, pdf help, tool instructions, pdf tutorial",
-    ogImage: "https://www.altaftoolshub.com/og-documentation.png",
+    ogImage: "https://www.altaftoolshub.app/og-documentation.png",
     additionalMetaTags: [
       { name: "robots", content: "index, follow" },
       { property: "article:section", content: "Documentation" }

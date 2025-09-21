@@ -65,7 +65,7 @@ export default function PasswordGenerator() {
     name: "Password Generator - AltafToolsHub",
     description: "Cryptographically secure password generator with strength meter. Create strong passwords with custom settings. 100% browser-based.",
     applicationCategory: "SecurityApplication",
-    url: "https://www.altaftoolshub.com/password-generator",
+    url: "https://www.altaftoolshub.app/password-generator",
     aggregateRating: { ratingValue: 4.9, ratingCount: 3421, bestRating: 5 },
     featureList: [
       "Cryptographically secure random generation",
@@ -85,7 +85,7 @@ export default function PasswordGenerator() {
     description: "Free secure password generator. Create strong, random passwords with custom length and character types. Includes strength meter. 100% client-side processing.",
     path: "/password-generator",
     keywords: "password generator, secure password, strong password, random password generator, password creator, password maker, online password generator, free password tool, password generator 2025, ai password security",
-    ogImage: "https://www.altaftoolshub.com/og-password-generator.png",
+    ogImage: "https://www.altaftoolshub.app/og-password-generator.png",
     structuredData: [howToSchema, softwareSchema],
     additionalMetaTags: [
       { name: "application-name", content: "Password Generator - AltafToolsHub" },

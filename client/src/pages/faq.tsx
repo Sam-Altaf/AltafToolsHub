@@ -135,7 +135,7 @@ const faqCategories: FAQCategory[] = [
       },
       {
         question: "Can I suggest new tools or features?",
-        answer: "Absolutely! We love hearing from our users. Send your suggestions to support@altaftoolshub.com. We review all suggestions and prioritize tools that would benefit the most users."
+        answer: "Absolutely! We love hearing from our users. Send your suggestions to support@altaftoolshub.app. We review all suggestions and prioritize tools that would benefit the most users."
       },
       {
         question: "Why choose AltafToolsHub over other online tools?",
@@ -143,7 +143,7 @@ const faqCategories: FAQCategory[] = [
       },
       {
         question: "How can I report a bug or issue?",
-        answer: "If you encounter any issues, please email us at support@altaftoolshub.com with details about the problem, the tool you were using, and your browser information. We typically respond within 24 hours."
+        answer: "If you encounter any issues, please email us at support@altaftoolshub.app with details about the problem, the tool you were using, and your browser information. We typically respond within 24 hours."
       }
     ]
   }

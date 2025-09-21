@@ -54,7 +54,7 @@ export default function RotatePDF() {
     "@type": "WebApplication",
     "name": "PDF Rotator - AltafToolsHub",
     "description": "Free online PDF rotator to fix page orientation issues",
-    "url": "https://www.altaftoolshub.com/rotate-pdf",
+    "url": "https://www.altaftoolshub.app/rotate-pdf",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Any",
     "offers": {
@@ -74,7 +74,7 @@ export default function RotatePDF() {
     description: "Free online PDF rotator to fix page orientation issues. Rotate individual pages or all pages at once. 100% client-side processing for complete privacy.",
     path: "/rotate-pdf",
     keywords: "rotate pdf, pdf rotator, fix pdf orientation, rotate pdf pages, flip pdf pages, pdf rotation tool",
-    ogImage: "https://www.altaftoolshub.com/og-rotate-pdf.png",
+    ogImage: "https://www.altaftoolshub.app/og-rotate-pdf.png",
     structuredData: [structuredData],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Rotator - AltafToolsHub" },

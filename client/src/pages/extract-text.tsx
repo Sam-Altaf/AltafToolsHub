@@ -75,7 +75,7 @@ export default function ExtractText() {
     name: "Image Text Extractor - AltafToolsHub",
     description: "Free OCR tool to extract text from images. Supports 15+ languages. 100% browser-based processing for complete privacy.",
     applicationCategory: "UtilitiesApplication",
-    url: "https://www.altaftoolshub.com/extract-text",
+    url: "https://www.altaftoolshub.app/extract-text",
     aggregateRating: { ratingValue: 4.8, ratingCount: 892, bestRating: 5 },
     featureList: [
       "Extract text from JPG, PNG, WebP, BMP images",
@@ -93,7 +93,7 @@ export default function ExtractText() {
     path: "/extract-text",
     keywords: "ocr, extract text from image, image to text, optical character recognition, text extraction, ocr online, free ocr tool, tesseract ocr, image text reader",
     structuredData: [howToSchema, softwareSchema],
-    ogImage: "https://www.altaftoolshub.com/og-extract-text.png"
+    ogImage: "https://www.altaftoolshub.app/og-extract-text.png"
   });
 
   const handleFileSelect = useCallback((file: File) => {

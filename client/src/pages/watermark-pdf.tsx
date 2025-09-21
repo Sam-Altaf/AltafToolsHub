@@ -45,7 +45,7 @@ export default function WatermarkPDF() {
     "@type": "WebApplication",
     "name": "Watermark PDF - AltafToolsHub",
     "description": "Free online tool to add text or image watermarks to PDF documents",
-    "url": "https://www.altaftoolshub.com/watermark-pdf",
+    "url": "https://www.altaftoolshub.app/watermark-pdf",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Any",
     "offers": {
@@ -65,7 +65,7 @@ export default function WatermarkPDF() {
     description: "Free online PDF watermarking tool. Add custom text or image watermarks with adjustable opacity, position, and rotation. 100% client-side processing.",
     path: "/watermark-pdf",
     keywords: "watermark pdf, add watermark to pdf, pdf watermark tool, text watermark, image watermark, pdf protection",
-    ogImage: "https://www.altaftoolshub.com/og-watermark-pdf.png",
+    ogImage: "https://www.altaftoolshub.app/og-watermark-pdf.png",
     structuredData: [structuredData],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Watermark Tool - AltafToolsHub" },

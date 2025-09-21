@@ -321,7 +321,7 @@ export default function Home() {
     description: "Complete suite of 60+ privacy-first online tools. PDF compression, image conversion, document processing & more. 100% browser-based processing - your files never leave your device. Free forever, no registration.",
     path: "/",
     keywords: "pdf tools, online file converter, privacy first tools, pdf compressor, image to pdf, document converter, browser based tools, no upload file tools, free pdf editor, secure file processing",
-    ogImage: "https://www.altaftoolshub.com/og-image.png",
+    ogImage: "https://www.altaftoolshub.app/og-image.png",
     structuredData,
     additionalMetaTags: [
       { name: "application-name", content: "AltafToolsHub" },

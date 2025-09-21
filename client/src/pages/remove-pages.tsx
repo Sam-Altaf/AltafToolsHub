@@ -51,7 +51,7 @@ export default function RemovePages() {
     "@type": "WebApplication",
     "name": "Remove PDF Pages - AltafToolsHub",
     "description": "Free online tool to remove unwanted pages from PDF documents",
-    "url": "https://www.altaftoolshub.com/remove-pages",
+    "url": "https://www.altaftoolshub.app/remove-pages",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Any",
     "offers": {
@@ -71,7 +71,7 @@ export default function RemovePages() {
     description: "Free online tool to remove unwanted pages from PDF documents. Select and delete specific pages while preserving quality. 100% client-side processing.",
     path: "/remove-pages",
     keywords: "remove pdf pages, delete pdf pages, pdf page remover, pdf page deletion, remove pages from pdf",
-    ogImage: "https://www.altaftoolshub.com/og-remove-pages.png",
+    ogImage: "https://www.altaftoolshub.app/og-remove-pages.png",
     structuredData: [structuredData],
     additionalMetaTags: [
       { name: "application-name", content: "Remove PDF Pages - AltafToolsHub" },

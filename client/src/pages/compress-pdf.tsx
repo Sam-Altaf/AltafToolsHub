@@ -74,7 +74,7 @@ export default function CompressPDF() {
     name: "PDF Compressor - AltafToolsHub",
     description: "Free online PDF compression tool with privacy-first approach. Reduce PDF size to specific targets from 10KB to 5MB.",
     applicationCategory: "UtilitiesApplication",
-    url: "https://www.altaftoolshub.com/compress-pdf",
+    url: "https://www.altaftoolshub.app/compress-pdf",
     aggregateRating: { ratingValue: 4.9, ratingCount: 1523, bestRating: 5 },
     featureList: [
       "Compress to specific file sizes (10KB-5MB)",
@@ -93,7 +93,7 @@ export default function CompressPDF() {
     description: "Free online PDF compressor to reduce file size to specific targets (10KB to 5MB). Smart compression preserves quality. 100% client-side processing ensures complete privacy.",
     path: "/compress-pdf",
     keywords: "compress pdf, reduce pdf size, pdf compressor online, compress pdf to 100kb, compress pdf to 50kb, pdf size reducer, online pdf compression, free pdf compressor, compress pdf 2025, ai pdf compression",
-    ogImage: "https://www.altaftoolshub.com/og-compress-pdf.png",
+    ogImage: "https://www.altaftoolshub.app/og-compress-pdf.png",
     structuredData: [howToSchema, softwareSchema],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Compressor - AltafToolsHub" },

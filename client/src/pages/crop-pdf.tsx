@@ -58,7 +58,7 @@ export default function CropPDF() {
     "@type": "WebApplication",
     "name": "PDF Cropper - AltafToolsHub",
     "description": "Free online PDF cropper to remove margins and whitespace",
-    "url": "https://www.altaftoolshub.com/crop-pdf",
+    "url": "https://www.altaftoolshub.app/crop-pdf",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Any",
     "offers": {
@@ -78,7 +78,7 @@ export default function CropPDF() {
     description: "Free online PDF cropper to remove unwanted margins, headers, footers, and whitespace. Visual preview with adjustable crop areas. 100% client-side processing.",
     path: "/crop-pdf",
     keywords: "crop pdf, pdf cropper, remove pdf margins, trim pdf, pdf crop tool, remove whitespace pdf",
-    ogImage: "https://www.altaftoolshub.com/og-crop-pdf.png",
+    ogImage: "https://www.altaftoolshub.app/og-crop-pdf.png",
     structuredData: [structuredData],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Cropper - AltafToolsHub" },

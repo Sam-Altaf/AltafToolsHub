@@ -36,7 +36,7 @@ export default function MergePDF() {
     "@type": "WebApplication",
     "name": "PDF Merger - AltafToolsHub",
     "description": "Free online PDF merger to combine multiple PDFs into one document",
-    "url": "https://www.altaftoolshub.com/merge-pdf",
+    "url": "https://www.altaftoolshub.app/merge-pdf",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Any",
     "offers": {
@@ -56,7 +56,7 @@ export default function MergePDF() {
     description: "Free online PDF merger to combine multiple PDF files into one document. Drag and drop to reorder pages. 100% client-side processing for complete privacy. No file size limits, no registration required.",
     path: "/merge-pdf",
     keywords: "merge pdf, combine pdf, pdf merger, join pdf files, combine pdf files, merge pdf online, free pdf merger, pdf combiner",
-    ogImage: "https://www.altaftoolshub.com/og-merge-pdf.png",
+    ogImage: "https://www.altaftoolshub.app/og-merge-pdf.png",
     structuredData: [structuredData],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Merger - AltafToolsHub" },

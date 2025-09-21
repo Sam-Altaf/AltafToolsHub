@@ -36,7 +36,7 @@ export default function ExtractImages() {
     "@type": "WebApplication",
     "name": "Extract Images from PDF - AltafToolsHub",
     "description": "Free online tool to extract all images from PDF documents",
-    "url": "https://www.altaftoolshub.com/extract-images",
+    "url": "https://www.altaftoolshub.app/extract-images",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Any",
     "offers": {
@@ -56,7 +56,7 @@ export default function ExtractImages() {
     description: "Free online PDF image extractor to save all images from PDF documents. Extract JPG, PNG images with original quality. 100% client-side processing.",
     path: "/extract-images",
     keywords: "extract pdf images, pdf image extractor, save pdf images, extract jpg from pdf, pdf to images",
-    ogImage: "https://www.altaftoolshub.com/og-extract-images.png",
+    ogImage: "https://www.altaftoolshub.app/og-extract-images.png",
     structuredData: [structuredData],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Image Extractor - AltafToolsHub" },

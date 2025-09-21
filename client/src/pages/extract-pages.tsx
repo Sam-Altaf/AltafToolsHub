@@ -56,7 +56,7 @@ export default function ExtractPages() {
     "@type": "WebApplication",
     "name": "Extract PDF Pages - AltafToolsHub",
     "description": "Free online tool to extract specific pages from PDF documents",
-    "url": "https://www.altaftoolshub.com/extract-pages",
+    "url": "https://www.altaftoolshub.app/extract-pages",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Any",
     "offers": {
@@ -76,7 +76,7 @@ export default function ExtractPages() {
     description: "Free online PDF page extractor to save specific pages from PDF documents. Visual selection, range input, and instant extraction. 100% client-side processing.",
     path: "/extract-pages",
     keywords: "extract pdf pages, pdf page extractor, save pdf pages, select pdf pages, pdf extraction tool",
-    ogImage: "https://www.altaftoolshub.com/og-extract-pages.png",
+    ogImage: "https://www.altaftoolshub.app/og-extract-pages.png",
     structuredData: [structuredData],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Page Extractor - AltafToolsHub" },

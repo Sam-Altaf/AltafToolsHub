@@ -16,6 +16,8 @@ import JpgToPDF from "@/pages/jpg-to-pdf";
 import QRGenerator from "@/pages/qr-generator";
 import PasswordGenerator from "@/pages/password-generator";
 import ExtractText from "@/pages/extract-text";
+import HowItWorks from "@/pages/how-it-works";
+import UseCases from "@/pages/use-cases";
 import MergePDF from "@/pages/merge-pdf";
 import SplitPDF from "@/pages/split-pdf";
 import RotatePDF from "@/pages/rotate-pdf";
@@ -68,6 +70,8 @@ function Router() {
           <Route path="/faq" component={FAQ} />
           <Route path="/blog" component={Blog} />
           <Route path="/documentation" component={Documentation} />
+          <Route path="/how-it-works" component={HowItWorks} />
+          <Route path="/use-cases" component={UseCases} />
           <Route component={NotFound} />
         </Switch>
       </div>

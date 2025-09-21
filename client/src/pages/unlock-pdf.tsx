@@ -51,7 +51,7 @@ export default function UnlockPDF() {
     name: "PDF Unlocker - AltafToolsHub",
     description: "Secure PDF password remover. Unlock password-protected PDFs directly in your browser with complete privacy.",
     applicationCategory: "SecurityApplication",
-    url: "https://www.altaftoolshub.com/unlock-pdf",
+    url: "https://www.altaftoolshub.app/unlock-pdf",
     aggregateRating: { ratingValue: 4.8, ratingCount: 987, bestRating: 5 },
     featureList: [
       "Remove PDF password protection",
@@ -70,7 +70,7 @@ export default function UnlockPDF() {
     description: "Free online PDF unlocker to remove password protection from PDFs. 100% secure client-side processing. Your files and passwords never leave your browser.",
     path: "/unlock-pdf",
     keywords: "unlock pdf, remove pdf password, pdf unlocker, pdf password remover, decrypt pdf, unlock protected pdf, free pdf unlocker, online pdf unlock, pdf security remover 2025",
-    ogImage: "https://www.altaftoolshub.com/og-unlock-pdf.png",
+    ogImage: "https://www.altaftoolshub.app/og-unlock-pdf.png",
     structuredData: [howToSchema, softwareSchema],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Unlocker - AltafToolsHub" },

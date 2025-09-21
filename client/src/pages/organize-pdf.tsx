@@ -56,7 +56,7 @@ export default function OrganizePDF() {
     "@type": "WebApplication",
     "name": "PDF Organizer - AltafToolsHub",
     "description": "Free online PDF organizer to rearrange, rotate, and manage PDF pages",
-    "url": "https://www.altaftoolshub.com/organize-pdf",
+    "url": "https://www.altaftoolshub.app/organize-pdf",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Any",
     "offers": {
@@ -76,7 +76,7 @@ export default function OrganizePDF() {
     description: "Free online PDF organizer to rearrange, rotate, delete, and duplicate pages. Complete page management with drag-and-drop. 100% client-side processing.",
     path: "/organize-pdf",
     keywords: "organize pdf, rearrange pdf pages, pdf page manager, reorder pdf, pdf organizer, manage pdf pages",
-    ogImage: "https://www.altaftoolshub.com/og-organize-pdf.png",
+    ogImage: "https://www.altaftoolshub.app/og-organize-pdf.png",
     structuredData: [structuredData],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Organizer - AltafToolsHub" },

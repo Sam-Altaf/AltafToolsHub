@@ -43,7 +43,7 @@ export default function AddPageNumber() {
     "@type": "WebApplication",
     "name": "Add Page Numbers to PDF - AltafToolsHub",
     "description": "Free online tool to add page numbers to PDF documents",
-    "url": "https://www.altaftoolshub.com/add-page-number",
+    "url": "https://www.altaftoolshub.app/add-page-number",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Any",
     "offers": {
@@ -63,7 +63,7 @@ export default function AddPageNumber() {
     description: "Free online tool to add page numbers to PDF documents. Choose position, format, font size, and custom text. 100% client-side processing.",
     path: "/add-page-number",
     keywords: "add page numbers pdf, pdf page numbering, number pdf pages, pdf page counter, page numbers tool",
-    ogImage: "https://www.altaftoolshub.com/og-add-page-number.png",
+    ogImage: "https://www.altaftoolshub.app/og-add-page-number.png",
     structuredData: [structuredData],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Page Number Tool - AltafToolsHub" },

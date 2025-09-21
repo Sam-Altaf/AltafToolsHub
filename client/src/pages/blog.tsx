@@ -13,7 +13,9 @@ import {
   Zap,
   Users,
   ChevronRight,
-  Tag
+  Tag,
+  Sparkles,
+  Bell
 } from "lucide-react";
 import { Link } from "wouter";
 import { useSEO } from "@/hooks/use-seo";
@@ -147,6 +149,28 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen">
+      {/* Coming Soon Banner */}
+      <motion.section 
+        className="bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 border-b border-primary/30"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="container-section py-6">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-primary animate-pulse" />
+              <span className="text-lg font-semibold text-primary">Blog Coming Soon!</span>
+              <Sparkles className="w-5 h-5 text-primary animate-pulse" />
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Bell className="w-4 h-4" />
+              <span>Get notified when we launch our blog with expert tutorials and guides</span>
+            </div>
+          </div>
+        </div>
+      </motion.section>
+
       {/* Hero Section */}
       <section className="py-12 lg:py-16 bg-gradient-to-b from-primary/5 via-background to-background">
         <div className="container-section">
@@ -166,6 +190,14 @@ export default function BlogPage() {
             <p className="text-lg text-muted-foreground">
               Expert tips, tutorials, and best practices for working with documents and files
             </p>
+            <Card className="mt-8 p-6 bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900">
+              <div className="flex items-center justify-center gap-3">
+                <Sparkles className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+                <p className="text-amber-900 dark:text-amber-200 font-medium">
+                  We're working on amazing content! Check back soon for in-depth tutorials and guides.
+                </p>
+              </div>
+            </Card>
           </motion.div>
         </div>
       </section>

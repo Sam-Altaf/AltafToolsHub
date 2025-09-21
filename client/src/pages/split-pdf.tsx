@@ -53,7 +53,7 @@ export default function SplitPDF() {
     "@type": "WebApplication",
     "name": "PDF Splitter - AltafToolsHub",
     "description": "Free online PDF splitter to divide PDF files into separate documents with precision",
-    "url": "https://www.altaftoolshub.com/split-pdf",
+    "url": "https://www.altaftoolshub.app/split-pdf",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Any",
     "offers": {
@@ -73,7 +73,7 @@ export default function SplitPDF() {
     description: "Free online PDF splitter to divide PDF files by page ranges, extract single pages, or split into fixed sizes. 100% client-side processing for complete privacy. No file size limits.",
     path: "/split-pdf",
     keywords: "split pdf, divide pdf, pdf splitter, extract pdf pages, split pdf online, pdf page separator, pdf divider, extract pages from pdf",
-    ogImage: "https://www.altaftoolshub.com/og-split-pdf.png",
+    ogImage: "https://www.altaftoolshub.app/og-split-pdf.png",
     structuredData: [structuredData],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Splitter - AltafToolsHub" },

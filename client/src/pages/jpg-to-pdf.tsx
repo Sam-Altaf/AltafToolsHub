@@ -57,7 +57,7 @@ export default function JpgToPDF() {
     name: "JPG to PDF Converter - AltafToolsHub",
     description: "Free image to PDF converter supporting JPG, PNG, WebP. Multiple layouts and custom settings. 100% browser-based.",
     applicationCategory: "MultimediaApplication",
-    url: "https://www.altaftoolshub.com/jpg-to-pdf",
+    url: "https://www.altaftoolshub.app/jpg-to-pdf",
     aggregateRating: { ratingValue: 4.7, ratingCount: 1234, bestRating: 5 },
     featureList: [
       "Convert multiple images to PDF",
@@ -77,7 +77,7 @@ export default function JpgToPDF() {
     description: "Free online JPG to PDF converter. Convert multiple JPG, PNG, WebP images to PDF with custom layouts. 100% client-side processing for complete privacy.",
     path: "/jpg-to-pdf",
     keywords: "jpg to pdf, convert jpg to pdf, image to pdf, png to pdf, photo to pdf, jpeg to pdf converter, online jpg to pdf, free image converter, images to pdf 2025, batch image converter",
-    ogImage: "https://www.altaftoolshub.com/og-jpg-to-pdf.png",
+    ogImage: "https://www.altaftoolshub.app/og-jpg-to-pdf.png",
     structuredData: [howToSchema, softwareSchema],
     additionalMetaTags: [
       { name: "application-name", content: "JPG to PDF Converter - AltafToolsHub" },
