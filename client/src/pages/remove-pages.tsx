@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { useSEO } from "@/hooks/use-seo";
+import { useSEO, generateHowToSchema, generateSoftwareApplicationSchema, generateBreadcrumbSchema } from "@/hooks/use-seo";
 import { FileX, Upload, Download, FileText, Loader2, ArrowLeft, Shield, Trash2, Scissors, FileOutput, Mail, BookOpen, Star, Users, Zap, Clock, CheckCircle2, ChevronRight, Info, HelpCircle, ChevronDown, Layers, RotateCw } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
@@ -46,25 +46,41 @@ export default function RemovePages() {
   const [processedPdf, setProcessedPdf] = useState<Uint8Array | null>(null);
   const { toast } = useToast();
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Remove PDF Pages - AltafToolsHub",
-    "description": "Free online tool to remove unwanted pages from PDF documents",
-    "url": "https://www.altaftoolshub.app/remove-pages",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Any",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.7",
-      "ratingCount": "923"
-    }
-  };
+  // Generate structured data for SEO
+  const howToSchema = generateHowToSchema({
+    name: "How to Remove Pages from PDF",
+    description: "Delete unwanted pages from PDF documents easily",
+    totalTime: "PT1M",
+    steps: [
+      { name: "Upload PDF", text: "Select or drag your PDF file" },
+      { name: "Select Pages", text: "Click on pages you want to remove" },
+      { name: "Remove Pages", text: "Click 'Remove Selected Pages' to delete them" },
+      { name: "Download Result", text: "Download your updated PDF instantly" }
+    ]
+  });
+
+  const softwareSchema = generateSoftwareApplicationSchema({
+    name: "Remove PDF Pages - AltafToolsHub",
+    description: "Free online tool to remove unwanted pages from PDF documents. Select and delete specific pages with visual preview. 100% browser-based processing.",
+    applicationCategory: "BusinessApplication",
+    url: "https://www.altaftoolshub.app/remove-pages",
+    aggregateRating: { ratingValue: 4.7, ratingCount: 923, bestRating: 5 },
+    featureList: [
+      "Visual page selection",
+      "Multiple page deletion",
+      "Page thumbnails preview",
+      "Range selection support",
+      "100% client-side processing",
+      "Preserves document quality"
+    ],
+    datePublished: "2024-01-01",
+    dateModified: "2025-01-20"
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "PDF Tools", url: "/all-tools?category=pdf" },
+    { name: "Remove Pages", url: "/remove-pages" }
+  ]);
 
   useSEO({
     title: "Remove PDF Pages Online Free - Delete Unwanted Pages | AltafToolsHub",
@@ -72,7 +88,7 @@ export default function RemovePages() {
     path: "/remove-pages",
     keywords: "remove pdf pages, delete pdf pages, pdf page remover, pdf page deletion, remove pages from pdf",
     ogImage: "https://www.altaftoolshub.app/og-remove-pages.png",
-    structuredData: [structuredData],
+    structuredData: [howToSchema, softwareSchema, breadcrumbSchema],
     additionalMetaTags: [
       { name: "application-name", content: "Remove PDF Pages - AltafToolsHub" },
       { property: "article:section", content: "PDF Tools" }

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
-import { useSEO } from "@/hooks/use-seo";
+import { useSEO, generateHowToSchema, generateSoftwareApplicationSchema, generateBreadcrumbSchema } from "@/hooks/use-seo";
 import { Scissors, Upload, Download, FileText, Loader2, ArrowLeft, Shield, FileSearch, Star, Users, Zap, Clock, CheckCircle2, ChevronRight, Info, HelpCircle, ChevronDown, Mail, BookOpen } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { ContactSupportSection } from "@/components/contact-support";
+import { scrollBy } from "@/lib/scroll-utils";
 import {
   Dialog,
   DialogContent,
@@ -48,25 +49,41 @@ export default function SplitPDF() {
   const [splitResults, setSplitResults] = useState<SplitResult[]>([]);
   const { toast } = useToast();
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "PDF Splitter - AltafToolsHub",
-    "description": "Free online PDF splitter to divide PDF files into separate documents with precision",
-    "url": "https://www.altaftoolshub.app/split-pdf",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Any",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "ratingCount": "2456"
-    }
-  };
+  // Generate structured data for SEO
+  const howToSchema = generateHowToSchema({
+    name: "How to Split PDF Files Online",
+    description: "Divide PDF documents into separate files by page ranges or fixed sizes",
+    totalTime: "PT1M",
+    steps: [
+      { name: "Upload PDF", text: "Select or drag your PDF file to split" },
+      { name: "Choose Split Method", text: "Select page ranges, single pages, or fixed size splits" },
+      { name: "Split PDF", text: "Click 'Split PDF' to divide the document" },
+      { name: "Download Files", text: "Download your split PDF files separately or as a zip" }
+    ]
+  });
+
+  const softwareSchema = generateSoftwareApplicationSchema({
+    name: "PDF Splitter - AltafToolsHub",
+    description: "Free online PDF splitter to divide PDF files into separate documents with precision. Extract pages or split by custom ranges. 100% browser-based.",
+    applicationCategory: "BusinessApplication",
+    url: "https://www.altaftoolshub.app/split-pdf",
+    aggregateRating: { ratingValue: 4.9, ratingCount: 2456, bestRating: 5 },
+    featureList: [
+      "Split by page ranges",
+      "Extract single pages",
+      "Fixed size splitting",
+      "100% client-side processing",
+      "No file upload to servers",
+      "Batch download support"
+    ],
+    datePublished: "2024-01-01",
+    dateModified: "2025-01-20"
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "PDF Tools", url: "/all-tools?category=pdf" },
+    { name: "Split PDF", url: "/split-pdf" }
+  ]);
 
   useSEO({
     title: "Split PDF Online Free - Divide PDF by Pages | AltafToolsHub",
@@ -74,7 +91,7 @@ export default function SplitPDF() {
     path: "/split-pdf",
     keywords: "split pdf, divide pdf, pdf splitter, extract pdf pages, split pdf online, pdf page separator, pdf divider, extract pages from pdf",
     ogImage: "https://www.altaftoolshub.app/og-split-pdf.png",
-    structuredData: [structuredData],
+    structuredData: [howToSchema, softwareSchema, breadcrumbSchema],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Splitter - AltafToolsHub" },
       { property: "article:section", content: "PDF Tools" },

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { useSEO } from "@/hooks/use-seo";
+import { useSEO, generateHowToSchema, generateSoftwareApplicationSchema, generateBreadcrumbSchema } from "@/hooks/use-seo";
 import { RotateCw, Upload, Download, FileText, Loader2, ArrowLeft, Shield, RotateCcw, RefreshCw, Star, Users, Zap, Clock, CheckCircle2, ChevronRight, Info, HelpCircle, ChevronDown, Mail, BookOpen } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/accordion";
 import * as pdfjsLib from 'pdfjs-dist';
 import { ContactSupportSection } from "@/components/contact-support";
+import { scrollBy } from "@/lib/scroll-utils";
 import {
   Dialog,
   DialogContent,
@@ -49,25 +50,41 @@ export default function RotatePDF() {
   const [expandedCategories, setExpandedCategories] = useState<string[]>(['general']);
   const { toast } = useToast();
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "PDF Rotator - AltafToolsHub",
-    "description": "Free online PDF rotator to fix page orientation issues",
-    "url": "https://www.altaftoolshub.app/rotate-pdf",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Any",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "ratingCount": "1234"
-    }
-  };
+  // Generate structured data for SEO
+  const howToSchema = generateHowToSchema({
+    name: "How to Rotate PDF Pages Online",
+    description: "Fix PDF page orientation quickly and easily in your browser",
+    totalTime: "PT1M",
+    steps: [
+      { name: "Upload PDF", text: "Select or drag your PDF file" },
+      { name: "Select Pages", text: "Choose which pages to rotate" },
+      { name: "Choose Rotation", text: "Click rotate buttons to adjust orientation" },
+      { name: "Download Result", text: "Download your rotated PDF instantly" }
+    ]
+  });
+
+  const softwareSchema = generateSoftwareApplicationSchema({
+    name: "PDF Rotator - AltafToolsHub",
+    description: "Free online PDF rotator to fix page orientation issues. Rotate individual pages or all pages at once. 100% client-side processing.",
+    applicationCategory: "BusinessApplication",
+    url: "https://www.altaftoolshub.app/rotate-pdf",
+    aggregateRating: { ratingValue: 4.8, ratingCount: 1234, bestRating: 5 },
+    featureList: [
+      "Rotate individual pages",
+      "Batch page rotation",
+      "90, 180, 270 degree rotation",
+      "Visual page previews",
+      "100% client-side processing",
+      "No file upload to servers"
+    ],
+    datePublished: "2024-01-01",
+    dateModified: "2025-01-20"
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "PDF Tools", url: "/all-tools?category=pdf" },
+    { name: "Rotate PDF", url: "/rotate-pdf" }
+  ]);
 
   useSEO({
     title: "Rotate PDF Pages Online Free - Fix Page Orientation | AltafToolsHub",
@@ -75,7 +92,7 @@ export default function RotatePDF() {
     path: "/rotate-pdf",
     keywords: "rotate pdf, pdf rotator, fix pdf orientation, rotate pdf pages, flip pdf pages, pdf rotation tool",
     ogImage: "https://www.altaftoolshub.app/og-rotate-pdf.png",
-    structuredData: [structuredData],
+    structuredData: [howToSchema, softwareSchema, breadcrumbSchema],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Rotator - AltafToolsHub" },
       { property: "article:section", content: "PDF Tools" }

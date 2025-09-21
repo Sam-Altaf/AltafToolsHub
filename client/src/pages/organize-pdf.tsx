@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { useSEO } from "@/hooks/use-seo";
+import { useSEO, generateHowToSchema, generateSoftwareApplicationSchema, generateBreadcrumbSchema } from "@/hooks/use-seo";
 import { Layers, Upload, Download, FileText, Loader2, ArrowLeft, Shield, Trash2, GripVertical, RotateCw, Copy, Scissors, FileOutput, Mail, BookOpen, Star, Users, Zap, Clock, CheckCircle2, ChevronRight, Info, HelpCircle, ChevronDown } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
@@ -51,25 +51,41 @@ export default function OrganizePDF() {
   const [draggedPage, setDraggedPage] = useState<PageData | null>(null);
   const { toast } = useToast();
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "PDF Organizer - AltafToolsHub",
-    "description": "Free online PDF organizer to rearrange, rotate, and manage PDF pages",
-    "url": "https://www.altaftoolshub.app/organize-pdf",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Any",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "ratingCount": "1567"
-    }
-  };
+  // Generate structured data for SEO
+  const howToSchema = generateHowToSchema({
+    name: "How to Organize PDF Pages Online",
+    description: "Rearrange, rotate, delete, and manage PDF pages with drag-and-drop",
+    totalTime: "PT2M",
+    steps: [
+      { name: "Upload PDF", text: "Select or drag your PDF file" },
+      { name: "Rearrange Pages", text: "Drag and drop pages to reorder them" },
+      { name: "Manage Pages", text: "Rotate, delete, or duplicate pages as needed" },
+      { name: "Download Result", text: "Download your reorganized PDF instantly" }
+    ]
+  });
+
+  const softwareSchema = generateSoftwareApplicationSchema({
+    name: "PDF Organizer - AltafToolsHub",
+    description: "Free online PDF organizer to rearrange, rotate, and manage PDF pages. Complete page management with visual drag-and-drop interface. 100% browser-based.",
+    applicationCategory: "BusinessApplication",
+    url: "https://www.altaftoolshub.app/organize-pdf",
+    aggregateRating: { ratingValue: 4.9, ratingCount: 1567, bestRating: 5 },
+    featureList: [
+      "Drag-and-drop page reordering",
+      "Rotate individual pages",
+      "Delete unwanted pages",
+      "Duplicate pages",
+      "Visual page previews",
+      "100% client-side processing"
+    ],
+    datePublished: "2024-01-01",
+    dateModified: "2025-01-20"
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "PDF Tools", url: "/all-tools?category=pdf" },
+    { name: "Organize PDF", url: "/organize-pdf" }
+  ]);
 
   useSEO({
     title: "Organize PDF Pages Online Free - Rearrange & Manage | AltafToolsHub",
@@ -77,7 +93,7 @@ export default function OrganizePDF() {
     path: "/organize-pdf",
     keywords: "organize pdf, rearrange pdf pages, pdf page manager, reorder pdf, pdf organizer, manage pdf pages",
     ogImage: "https://www.altaftoolshub.app/og-organize-pdf.png",
-    structuredData: [structuredData],
+    structuredData: [howToSchema, softwareSchema, breadcrumbSchema],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Organizer - AltafToolsHub" },
       { property: "article:section", content: "PDF Tools" }

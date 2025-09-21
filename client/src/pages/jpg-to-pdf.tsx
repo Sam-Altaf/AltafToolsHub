@@ -23,6 +23,7 @@ import { Camera, Presentation, BookOpen, Package, Globe2, Users, Upload } from "
 import { Download as DownloadIcon } from "lucide-react";
 import { generateSmartFileName, enhanceDownloadName } from "@/lib/smart-file-namer";
 import { ContactSupportSection } from "@/components/contact-support";
+import { scrollBy } from "@/lib/scroll-utils";
 
 interface ConversionResult {
   pdfBlob: Blob;

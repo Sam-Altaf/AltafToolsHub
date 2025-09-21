@@ -19,6 +19,7 @@ import { WhyUseSection, UseCasesSection, ComparisonSection, HowItWorksSection, c
 import { ToolFAQ, generatePDFUnlockFAQs } from "@/components/seo/tool-faq";
 import { Building2, Users, Briefcase, Home, Archive, FileKey, School } from "lucide-react";
 import { ContactSupportSection } from "@/components/contact-support";
+import { scrollBy } from "@/lib/scroll-utils";
 
 interface UnlockResult {
   originalSize: number;

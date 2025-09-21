@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { useSEO } from "@/hooks/use-seo";
+import { useSEO, generateHowToSchema, generateSoftwareApplicationSchema, generateBreadcrumbSchema } from "@/hooks/use-seo";
 import { FileOutput, Upload, Download, FileText, Loader2, ArrowLeft, Shield, CheckCircle, Scissors, Mail, BookOpen, Star, Users, Zap, Clock, ChevronRight, Info, HelpCircle, ChevronDown, Layers, RotateCw, FileX } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
@@ -51,25 +51,41 @@ export default function ExtractPages() {
   const [totalPages, setTotalPages] = useState(0);
   const { toast } = useToast();
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Extract PDF Pages - AltafToolsHub",
-    "description": "Free online tool to extract specific pages from PDF documents",
-    "url": "https://www.altaftoolshub.app/extract-pages",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Any",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "ratingCount": "1432"
-    }
-  };
+  // Generate structured data for SEO
+  const howToSchema = generateHowToSchema({
+    name: "How to Extract Pages from PDF",
+    description: "Save specific pages from PDF documents as a new file",
+    totalTime: "PT1M",
+    steps: [
+      { name: "Upload PDF", text: "Select or drag your PDF file" },
+      { name: "Select Pages", text: "Click pages or enter page ranges to extract" },
+      { name: "Extract Pages", text: "Click 'Extract Pages' to create new PDF" },
+      { name: "Download Result", text: "Download your extracted pages as a new PDF" }
+    ]
+  });
+
+  const softwareSchema = generateSoftwareApplicationSchema({
+    name: "Extract PDF Pages - AltafToolsHub",
+    description: "Free online tool to extract specific pages from PDF documents. Visual page selection with thumbnails. Create new PDFs from selected pages. 100% browser-based.",
+    applicationCategory: "BusinessApplication",
+    url: "https://www.altaftoolshub.app/extract-pages",
+    aggregateRating: { ratingValue: 4.9, ratingCount: 1432, bestRating: 5 },
+    featureList: [
+      "Visual page selection with thumbnails",
+      "Range input support (e.g., 1-5, 8, 10-12)",
+      "Click to select individual pages",
+      "Create new PDF from selected pages",
+      "100% client-side processing",
+      "Preserves original quality"
+    ],
+    datePublished: "2024-01-01",
+    dateModified: "2025-01-20"
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "PDF Tools", url: "/all-tools?category=pdf" },
+    { name: "Extract Pages", url: "/extract-pages" }
+  ]);
 
   useSEO({
     title: "Extract PDF Pages Online Free - Select & Save Specific Pages | AltafToolsHub",
@@ -77,7 +93,7 @@ export default function ExtractPages() {
     path: "/extract-pages",
     keywords: "extract pdf pages, pdf page extractor, save pdf pages, select pdf pages, pdf extraction tool",
     ogImage: "https://www.altaftoolshub.app/og-extract-pages.png",
-    structuredData: [structuredData],
+    structuredData: [howToSchema, softwareSchema, breadcrumbSchema],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Page Extractor - AltafToolsHub" },
       { property: "article:section", content: "PDF Tools" }

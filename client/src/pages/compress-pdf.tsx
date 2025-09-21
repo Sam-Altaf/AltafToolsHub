@@ -21,6 +21,7 @@ import { ToolFAQ, generatePDFCompressFAQs } from "@/components/seo/tool-faq";
 import { Briefcase, School, Users, Mail, Smartphone, Globe2, Upload, Settings, FileDown as FileDownIcon } from "lucide-react";
 import { generateSmartFileName, enhanceDownloadName } from "@/lib/smart-file-namer";
 import { ContactSupportSection } from "@/components/contact-support";
+import { scrollBy } from "@/lib/scroll-utils";
 
 type TargetSize = "10KB" | "20KB" | "50KB" | "100KB" | "150KB" | "200KB" | "300KB" | "500KB" | "1MB" | "2MB" | "5MB" | "max";
 
@@ -267,8 +268,8 @@ export default function CompressPDF() {
   };
 
   const compressPDF = async () => {
-    // Scroll to top to show processing area
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Scroll to processing area when starting
+    scrollBy(300, 100);
     
     if (!selectedFile) return;
     
@@ -366,6 +367,14 @@ export default function CompressPDF() {
         setIsProcessing(false);
         setProgress(0);
         setProgressMessage("");
+        
+        // Scroll to download section when ready
+        setTimeout(() => {
+          const downloadBtn = document.querySelector('[data-testid="button-download"]');
+          if (downloadBtn) {
+            downloadBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 100);
       }, 500);
       
     } catch (err) {
@@ -681,20 +690,20 @@ export default function CompressPDF() {
                 <FileText className="w-5 h-5 text-primary" />
                 Selected File
               </h3>
-              <div className="glass rounded-lg p-4 flex items-center justify-between">
+              <div className="glass rounded-lg p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                 <span className="text-sm font-medium truncate" data-testid="text-filename">{selectedFile.name}</span>
-                <span className="text-sm font-bold gradient-text" data-testid="text-filesize">{formatFileSize(selectedFile.size)}</span>
+                <span className="text-sm font-bold gradient-text flex-shrink-0" data-testid="text-filesize">{formatFileSize(selectedFile.size)}</span>
               </div>
             </div>
 
-            <div>
+            <div className="flex flex-col">
               {/* HD Quality Mode Selection */}
               <div className="mb-6">
                 <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-primary" />
                   Compression Quality
                 </h3>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <Button
                     type="button"
                     variant={compressionMode === 'highest' ? "default" : "outline"}
@@ -810,7 +819,8 @@ export default function CompressPDF() {
                     </div>
                   </div>
                   
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  {/* Stats section - will be reordered on mobile */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 order-2 sm:order-1 mt-6 sm:mt-0">
                     <Card className="p-4 bg-gradient-to-br from-purple-50 to-transparent dark:from-purple-950/20">
                       <div className="flex items-center gap-2 mb-2">
                         <TrendingDown className="h-4 w-4 text-purple-600 dark:text-purple-400" />
@@ -850,7 +860,7 @@ export default function CompressPDF() {
                 </div>
               ) : (
                 // Target Size Mode (Advanced)
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 mb-6">
                   {targetSizeOptions.map((option) => (
                     <button
                       key={option.value}
@@ -895,17 +905,20 @@ export default function CompressPDF() {
                 </Alert>
               )}
 
-              <Button 
-                onClick={compressPDF}
-                className="w-full btn-gradient text-white font-semibold"
-                size="lg"
-                data-testid="button-compress"
-              >
-                <Zap className="w-5 h-5 mr-2" />
-                {useAdvancedMode 
-                  ? `Compress to ${targetSizeOptions.find(o => o.value === targetSize)?.label}`
-                  : `Compress PDF (${compressionLevel}%)`}
-              </Button>
+              {/* Action button - moved before stats on mobile */}
+              <div className="order-1 sm:order-2">
+                <Button 
+                  onClick={compressPDF}
+                  className="w-full btn-gradient text-white font-semibold"
+                  size="lg"
+                  data-testid="button-compress"
+                >
+                  <Zap className="w-5 h-5 mr-2" />
+                  {useAdvancedMode 
+                    ? `Compress to ${targetSizeOptions.find(o => o.value === targetSize)?.label}`
+                    : `Compress PDF (${compressionLevel}%)`}
+                </Button>
+              </div>
             </div>
           </Card>
         )}

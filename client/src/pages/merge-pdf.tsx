@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { useSEO } from "@/hooks/use-seo";
+import { useSEO, generateHowToSchema, generateSoftwareApplicationSchema, generateBreadcrumbSchema } from "@/hooks/use-seo";
 import { FilePlus, Upload, Download, X, ChevronUp, ChevronDown, Loader2, GripVertical, FileText, ArrowLeft, Star, Users, Shield, Zap, Clock, CheckCircle2 } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { ContactSupportSection } from "@/components/contact-support";
+import { scrollBy } from "@/lib/scroll-utils";
 
 interface PDFFile {
   id: string;
@@ -30,26 +31,41 @@ export default function MergePDF() {
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const { toast } = useToast();
 
-  // SEO structured data
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "PDF Merger - AltafToolsHub",
-    "description": "Free online PDF merger to combine multiple PDFs into one document",
-    "url": "https://www.altaftoolshub.app/merge-pdf",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Any",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "ratingCount": "3842"
-    }
-  };
+  // Generate structured data for SEO
+  const howToSchema = generateHowToSchema({
+    name: "How to Merge PDF Files Online",
+    description: "Combine multiple PDF documents into a single file quickly and easily",
+    totalTime: "PT2M",
+    steps: [
+      { name: "Upload PDFs", text: "Select or drag and drop multiple PDF files to merge" },
+      { name: "Arrange Order", text: "Drag files to reorder them as needed" },
+      { name: "Merge Files", text: "Click 'Merge PDFs' to combine all documents" },
+      { name: "Download Result", text: "Download your merged PDF file instantly" }
+    ]
+  });
+
+  const softwareSchema = generateSoftwareApplicationSchema({
+    name: "PDF Merger - AltafToolsHub",
+    description: "Free online PDF merger to combine multiple PDFs into one document with drag-and-drop reordering. 100% browser-based for complete privacy.",
+    applicationCategory: "BusinessApplication",
+    url: "https://www.altaftoolshub.app/merge-pdf",
+    aggregateRating: { ratingValue: 4.9, ratingCount: 3842, bestRating: 5 },
+    featureList: [
+      "Merge unlimited PDF files",
+      "Drag and drop file reordering",
+      "100% client-side processing",
+      "No file upload to servers",
+      "Preserves document quality",
+      "Works with all PDF versions"
+    ],
+    datePublished: "2024-01-01",
+    dateModified: "2025-01-20"
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "PDF Tools", url: "/all-tools?category=pdf" },
+    { name: "Merge PDF", url: "/merge-pdf" }
+  ]);
 
   useSEO({
     title: "Merge PDF Files Online Free - Combine Multiple PDFs | AltafToolsHub",
@@ -57,7 +73,7 @@ export default function MergePDF() {
     path: "/merge-pdf",
     keywords: "merge pdf, combine pdf, pdf merger, join pdf files, combine pdf files, merge pdf online, free pdf merger, pdf combiner",
     ogImage: "https://www.altaftoolshub.app/og-merge-pdf.png",
-    structuredData: [structuredData],
+    structuredData: [howToSchema, softwareSchema, breadcrumbSchema],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Merger - AltafToolsHub" },
       { property: "article:section", content: "PDF Tools" },
@@ -140,8 +156,8 @@ export default function MergePDF() {
   };
 
   const mergePDFs = async () => {
-    // Scroll to top to show processing area
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Scroll to processing area
+    scrollBy(300, 100);
     
     if (pdfFiles.length < 2) {
       toast({
@@ -172,6 +188,14 @@ export default function MergePDF() {
 
       const mergedPdfBytes = await mergedPdf.save();
       setMergedPdf(mergedPdfBytes);
+      
+      // Scroll to download section when ready
+      setTimeout(() => {
+        const downloadBtn = document.querySelector('[data-testid="button-download"]');
+        if (downloadBtn) {
+          downloadBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
       
       toast({
         title: "Success!",

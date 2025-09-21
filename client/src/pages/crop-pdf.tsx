@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Slider } from "@/components/ui/slider";
 import { useToast } from "@/hooks/use-toast";
-import { useSEO } from "@/hooks/use-seo";
+import { useSEO, generateHowToSchema, generateSoftwareApplicationSchema, generateBreadcrumbSchema } from "@/hooks/use-seo";
 import { Crop, Upload, Download, FileText, Loader2, ArrowLeft, Shield, Maximize2, Move, Scissors, FileOutput, Mail, BookOpen, Star, Users, Zap, Clock, CheckCircle2, ChevronRight, Info, HelpCircle, ChevronDown, Layers, RotateCw, FileX } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
@@ -53,25 +53,41 @@ export default function CropPDF() {
   const [croppedPdf, setCroppedPdf] = useState<Uint8Array | null>(null);
   const { toast } = useToast();
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "PDF Cropper - AltafToolsHub",
-    "description": "Free online PDF cropper to remove margins and whitespace",
-    "url": "https://www.altaftoolshub.app/crop-pdf",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Any",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "ratingCount": "1089"
-    }
-  };
+  // Generate structured data for SEO
+  const howToSchema = generateHowToSchema({
+    name: "How to Crop PDF Pages",
+    description: "Remove unwanted margins and whitespace from PDF documents",
+    totalTime: "PT1M",
+    steps: [
+      { name: "Upload PDF", text: "Select or drag your PDF file" },
+      { name: "Adjust Crop Area", text: "Use sliders to set crop margins" },
+      { name: "Preview Changes", text: "See live preview of cropped pages" },
+      { name: "Download Result", text: "Download your cropped PDF instantly" }
+    ]
+  });
+
+  const softwareSchema = generateSoftwareApplicationSchema({
+    name: "PDF Cropper - AltafToolsHub",
+    description: "Free online PDF cropper to remove margins, headers, footers, and whitespace. Visual preview with adjustable crop areas. 100% browser-based processing.",
+    applicationCategory: "BusinessApplication",
+    url: "https://www.altaftoolshub.app/crop-pdf",
+    aggregateRating: { ratingValue: 4.8, ratingCount: 1089, bestRating: 5 },
+    featureList: [
+      "Remove margins and whitespace",
+      "Crop from all sides",
+      "Visual preview",
+      "Apply to all pages",
+      "Preserve content quality",
+      "100% client-side processing"
+    ],
+    datePublished: "2024-01-01",
+    dateModified: "2025-01-20"
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "PDF Tools", url: "/all-tools?category=pdf" },
+    { name: "Crop PDF", url: "/crop-pdf" }
+  ]);
 
   useSEO({
     title: "Crop PDF Online Free - Remove Margins & Whitespace | AltafToolsHub",
@@ -79,7 +95,7 @@ export default function CropPDF() {
     path: "/crop-pdf",
     keywords: "crop pdf, pdf cropper, remove pdf margins, trim pdf, pdf crop tool, remove whitespace pdf",
     ogImage: "https://www.altaftoolshub.app/og-crop-pdf.png",
-    structuredData: [structuredData],
+    structuredData: [howToSchema, softwareSchema, breadcrumbSchema],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Cropper - AltafToolsHub" },
       { property: "article:section", content: "PDF Tools" }

@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { useSEO } from "@/hooks/use-seo";
+import { useSEO, generateHowToSchema, generateSoftwareApplicationSchema, generateBreadcrumbSchema } from "@/hooks/use-seo";
 import { Hash, Upload, Download, FileText, Loader2, ArrowLeft, Shield } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
@@ -38,25 +38,41 @@ export default function AddPageNumber() {
   const [numberedPdf, setNumberedPdf] = useState<Uint8Array | null>(null);
   const { toast } = useToast();
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Add Page Numbers to PDF - AltafToolsHub",
-    "description": "Free online tool to add page numbers to PDF documents",
-    "url": "https://www.altaftoolshub.app/add-page-number",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Any",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "ratingCount": "1265"
-    }
-  };
+  // Generate structured data for SEO
+  const howToSchema = generateHowToSchema({
+    name: "How to Add Page Numbers to PDF",
+    description: "Add page numbers to PDF documents with custom formatting",
+    totalTime: "PT1M",
+    steps: [
+      { name: "Upload PDF", text: "Select or drag your PDF file" },
+      { name: "Choose Position", text: "Select where to place page numbers" },
+      { name: "Customize Format", text: "Set format, font size, and custom text" },
+      { name: "Download Result", text: "Download your numbered PDF instantly" }
+    ]
+  });
+
+  const softwareSchema = generateSoftwareApplicationSchema({
+    name: "Add Page Numbers to PDF - AltafToolsHub",
+    description: "Free online tool to add page numbers to PDF documents. Customize position, format, font size, and add custom prefix/suffix. 100% browser-based.",
+    applicationCategory: "BusinessApplication",
+    url: "https://www.altaftoolshub.app/add-page-number",
+    aggregateRating: { ratingValue: 4.8, ratingCount: 1265, bestRating: 5 },
+    featureList: [
+      "6 position options for page numbers",
+      "Multiple number formats (numeric, roman, etc.)",
+      "Customizable font size and margins",
+      "Add prefix and suffix text",
+      "Live preview",
+      "100% client-side processing"
+    ],
+    datePublished: "2024-01-01",
+    dateModified: "2025-01-20"
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "PDF Tools", url: "/all-tools?category=pdf" },
+    { name: "Add Page Numbers", url: "/add-page-number" }
+  ]);
 
   useSEO({
     title: "Add Page Numbers to PDF Online Free - Customize Position & Format | AltafToolsHub",
@@ -64,7 +80,7 @@ export default function AddPageNumber() {
     path: "/add-page-number",
     keywords: "add page numbers pdf, pdf page numbering, number pdf pages, pdf page counter, page numbers tool",
     ogImage: "https://www.altaftoolshub.app/og-add-page-number.png",
-    structuredData: [structuredData],
+    structuredData: [howToSchema, softwareSchema, breadcrumbSchema],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Page Number Tool - AltafToolsHub" },
       { property: "article:section", content: "PDF Tools" }
