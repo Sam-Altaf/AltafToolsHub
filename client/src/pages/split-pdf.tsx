@@ -534,24 +534,26 @@ export default function SplitPDF() {
                     )}
 
                     {/* Action Button */}
-                    <Button
-                      onClick={splitPDF}
-                      disabled={isProcessing}
-                      className="w-full h-12 text-base"
-                      data-testid="button-split"
-                    >
-                      {isProcessing ? (
-                        <>
-                          <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                          Splitting PDF...
-                        </>
-                      ) : (
-                        <>
-                          <Scissors className="w-5 h-5 mr-2" />
-                          Split PDF Now
-                        </>
-                      )}
-                    </Button>
+                    <div className="pb-8">
+                      <Button
+                        onClick={splitPDF}
+                        disabled={isProcessing}
+                        className="w-full h-12 text-base"
+                        data-testid="button-split"
+                      >
+                        {isProcessing ? (
+                          <>
+                            <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                            Splitting PDF...
+                          </>
+                        ) : (
+                          <>
+                            <Scissors className="w-5 h-5 mr-2" />
+                            Split PDF Now
+                          </>
+                        )}
+                      </Button>
+                    </div>
                   </>
                 )}
               </>

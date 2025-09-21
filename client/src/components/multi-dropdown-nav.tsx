@@ -9,7 +9,7 @@ import {
 import { toolCategories, Tool } from "@/lib/tools-data";
 
 // Helper component for navigation items
-const ToolNavItem = ({ tool }: { tool: Tool }) => {
+const ToolNavItem = ({ tool, onClick }: { tool: Tool; onClick?: () => void }) => {
   const Icon = tool.icon;
   
   const content = (
@@ -72,6 +72,7 @@ const ToolNavItem = ({ tool }: { tool: Tool }) => {
         "border border-transparent hover:border-primary/20"
       )}
       data-testid={`nav-${tool.id}`}
+      onClick={onClick}
     >
       {content}
     </Link>
@@ -314,7 +315,7 @@ export function MultiDropdownNav() {
                             whileHover={{ y: -2 }}
                             className="h-full"
                           >
-                            <ToolNavItem tool={tool} />
+                            <ToolNavItem tool={tool} onClick={() => setOpenMenu(null)} />
                           </motion.div>
                         ))}
                       </div>
