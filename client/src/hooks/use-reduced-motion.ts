@@ -36,16 +36,19 @@ export function useReducedMotion(): boolean {
 
 /**
  * Utility function to get animation variants based on reduced motion preference
+ * When reduced motion is enabled, omits all animation props to prevent handler attachment
  */
 export function getMotionProps(reducedMotion: boolean, normalProps: any, reducedProps?: any) {
   if (reducedMotion) {
-    return reducedProps || {
-      initial: false,
-      animate: false,
-      transition: { duration: 0 },
-      whileHover: {},
-      whileTap: {},
-    };
+    return reducedProps || {};
   }
   return normalProps;
+}
+
+/**
+ * Utility function to conditionally apply motion props
+ * Returns empty object when reduced motion is enabled
+ */
+export function motionProps(reducedMotion: boolean, props: any) {
+  return reducedMotion ? {} : props;
 }

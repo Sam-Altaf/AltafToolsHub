@@ -24,7 +24,8 @@ import {
   Tool 
 } from "@/lib/tools-data";
 import { cn } from "@/lib/utils";
-import { useReducedMotion, getMotionProps } from "@/hooks/use-reduced-motion";
+import { getMotionProps } from "@/hooks/use-reduced-motion";
+import { useReducedMotionContext } from "@/components/reduced-motion-provider";
 
 const features = [
   {
@@ -81,7 +82,7 @@ const testimonials = [
 // Enhanced Tool Card Component with premium animations
 const ToolCard = ({ tool }: { tool: Tool }) => {
   const Icon = tool.icon;
-  const reducedMotion = useReducedMotion();
+  const { reducedMotion } = useReducedMotionContext();
   
   const cardContent = (
     <motion.div

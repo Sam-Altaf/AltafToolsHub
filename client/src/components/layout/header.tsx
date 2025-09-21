@@ -18,13 +18,15 @@ import {
 } from "lucide-react";
 import { toolCategories, popularTools, Tool } from "@/lib/tools-data";
 import { MultiDropdownNav } from "@/components/multi-dropdown-nav";
-import { useReducedMotion, getMotionProps } from "@/hooks/use-reduced-motion";
+import { getMotionProps } from "@/hooks/use-reduced-motion";
+import { ReducedMotionToggle } from "@/components/reduced-motion-toggle";
+import { useReducedMotionContext } from "@/components/reduced-motion-provider";
 
 export default function Header() {
   const [location] = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const reducedMotion = useReducedMotion();
+  const { reducedMotion } = useReducedMotionContext();
   
   useEffect(() => {
     const handleScroll = () => {
@@ -140,11 +142,13 @@ export default function Header() {
                 </Link>
               </Button>
             </motion.div>
+            <ReducedMotionToggle />
             <ThemeToggle />
           </div>
 
           {/* Mobile Right Section */}
           <div className="flex lg:hidden items-center space-x-2">
+            <ReducedMotionToggle />
             <ThemeToggle />
             
             {/* Mobile Menu Trigger */}

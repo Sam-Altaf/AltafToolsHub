@@ -124,6 +124,56 @@
     }
   }
 
+  /* User-controlled reduced motion via data attribute */
+  [data-reduced-motion="true"] *,
+  [data-reduced-motion="true"] *::before,
+  [data-reduced-motion="true"] *::after {
+    animation: none !important;
+    transition-duration: 0ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+    transform: none !important;
+  }
+  
+  [data-reduced-motion="true"] .hero-gradient::before,
+  [data-reduced-motion="true"] .hero-gradient::after,
+  [data-reduced-motion="true"] .hero-circuit {
+    animation: none !important;
+  }
+  
+  /* Disable all Tailwind animations when reduced motion is active */
+  [data-reduced-motion="true"] .animate-pulse,
+  [data-reduced-motion="true"] .animate-bounce,
+  [data-reduced-motion="true"] .animate-spin,
+  [data-reduced-motion="true"] .animate-ping,
+  [data-reduced-motion="true"] .animate-blob,
+  [data-reduced-motion="true"] .animate-float,
+  [data-reduced-motion="true"] .animate-float-delayed {
+    animation: none !important;
+  }
+  
+  /* Enhanced system preference rules */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation: none !important;
+      transition-duration: 0ms !important;
+      transition-delay: 0ms !important;
+      scroll-behavior: auto !important;
+    }
+    
+    .animate-pulse,
+    .animate-bounce,
+    .animate-spin,
+    .animate-ping,
+    .animate-blob,
+    .animate-float,
+    .animate-float-delayed {
+      animation: none !important;
+    }
+  }
+
   body {
     @apply font-sans antialiased bg-background text-foreground;
     min-height: 100vh;

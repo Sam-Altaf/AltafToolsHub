@@ -4,6 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/contexts/theme-context";
+import { ReducedMotionProvider } from "@/components/reduced-motion-provider";
 import ScrollToTop from "@/components/scroll-to-top";
 import NotFound from "@/pages/not-found";
 import NavigationMemory from "@/components/navigation-memory";
@@ -71,11 +72,13 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <TooltipProvider>
-          <Toaster />
-          <CookieConsent />
-          <Router />
-        </TooltipProvider>
+        <ReducedMotionProvider>
+          <TooltipProvider>
+            <Toaster />
+            <CookieConsent />
+            <Router />
+          </TooltipProvider>
+        </ReducedMotionProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );
