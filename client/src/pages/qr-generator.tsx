@@ -199,7 +199,7 @@ export default function QRGenerator() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 mb-4">
             <QrCode className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-4xl font-bold mb-4">QR Code Generator</h1>
+          <h1 className="text-4xl font-bold mb-4 text-primary">QR Code Generator</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Generate QR codes instantly from any text or URL. Customize colors and sizes, all processed securely in your browser.
           </p>

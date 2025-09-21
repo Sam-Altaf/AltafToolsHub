@@ -137,7 +137,7 @@ export default function PrivacyPolicy() {
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500 to-blue-500 mb-6">
               <Shield className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-4xl sm:text-5xl font-bold mb-4">Privacy Policy</h1>
+            <h1 className="text-4xl sm:text-5xl font-bold mb-4 text-primary">Privacy Policy</h1>
             <p className="text-lg text-muted-foreground">
               Your privacy matters. Learn how we protect it.
             </p>

@@ -269,7 +269,7 @@ export default function PasswordGenerator() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 mb-4">
             <Lock className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-4xl font-bold mb-4">Password Generator</h1>
+          <h1 className="text-4xl font-bold mb-4 text-primary">Password Generator</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Generate strong, secure passwords with customizable options. All passwords are created using cryptographically secure randomness.
           </p>

@@ -176,7 +176,7 @@ export default function TermsConditions() {
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 mb-6">
               <ScrollText className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-4xl sm:text-5xl font-bold mb-4">Terms & Conditions</h1>
+            <h1 className="text-4xl sm:text-5xl font-bold mb-4 text-primary">Terms & Conditions</h1>
             <p className="text-lg text-muted-foreground">
               Please read these terms carefully before using our services
             </p>

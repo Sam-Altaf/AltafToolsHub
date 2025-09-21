@@ -285,7 +285,7 @@ export default function AllToolsPage() {
               {availableToolsCount} Tools Available • {totalToolsCount - availableToolsCount} Coming Soon
             </Badge>
             
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-primary">
               All Tools at Your Fingertips
             </h1>
             

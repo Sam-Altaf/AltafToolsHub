@@ -391,7 +391,7 @@ export default function JpgToPDF() {
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Tools
             </Button>
-            <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-foreground">JPG to PDF Converter</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-primary">JPG to PDF Converter</h1>
             <p className="text-lg text-muted-foreground">Your images have been converted successfully!</p>
           </div>
 
@@ -467,7 +467,7 @@ export default function JpgToPDF() {
       <div className="min-h-screen pattern-bg">
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           <div className="text-center mb-8">
-            <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-foreground">JPG to PDF Converter</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-primary">JPG to PDF Converter</h1>
             <p className="text-lg text-muted-foreground">Converting your images to PDF...</p>
           </div>
 
@@ -511,7 +511,7 @@ export default function JpgToPDF() {
             <Sparkles className="w-4 h-4" />
             <span className="text-sm font-medium">Smart Image Processing</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-primary">
             JPG to PDF Converter
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">

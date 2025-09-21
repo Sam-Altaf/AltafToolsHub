@@ -182,7 +182,7 @@ export default function FAQPage() {
               <HelpCircle className="w-3 h-3 mr-1" />
               Help Center
             </Badge>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-primary">
               Frequently Asked Questions
             </h1>
             <p className="text-lg text-muted-foreground">

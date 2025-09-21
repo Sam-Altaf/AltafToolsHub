@@ -325,7 +325,7 @@ export default function RotatePDF() {
               <Shield className="w-4 h-4" />
               <span>Trusted by 500,000+ users worldwide</span>
             </div>
-            <h1 className="text-5xl font-bold mb-4">
+            <h1 className="text-5xl font-bold mb-4 text-primary">
               Rotate PDF Pages Online
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">

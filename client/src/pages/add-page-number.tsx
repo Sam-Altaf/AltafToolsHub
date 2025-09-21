@@ -305,7 +305,7 @@ export default function AddPageNumber() {
 
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-4">
+            <h1 className="text-4xl font-bold mb-4 text-primary">
               Add Page Numbers
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">

@@ -242,7 +242,7 @@ export default function MergePDF() {
                 Trusted by 50,000+ users worldwide
               </Badge>
             </div>
-            <h1 className="text-5xl font-bold mb-4">
+            <h1 className="text-5xl font-bold mb-4 text-primary">
               Merge PDF Files Online
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-6">

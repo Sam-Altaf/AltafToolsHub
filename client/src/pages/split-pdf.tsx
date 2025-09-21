@@ -323,7 +323,7 @@ export default function SplitPDF() {
                 Trusted by 100,000+ professionals worldwide
               </Badge>
             </div>
-            <h1 className="text-5xl font-bold mb-4">
+            <h1 className="text-5xl font-bold mb-4 text-primary">
               Split PDF Files with Precision
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-6">

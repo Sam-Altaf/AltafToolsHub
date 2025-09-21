@@ -284,7 +284,7 @@ export default function ExtractText() {
             <div className="p-3 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-500">
               <ScanLine className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-4xl font-bold">Image Text Extractor</h1>
+            <h1 className="text-4xl font-bold text-primary">Image Text Extractor</h1>
           </div>
           
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
