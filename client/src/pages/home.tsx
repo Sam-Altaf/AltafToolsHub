@@ -160,8 +160,10 @@ const ToolCard = ({ tool }: { tool: Tool }) => {
             "bg-gradient-to-br", tool.color,
             tool.available && "group-hover:scale-110 group-hover:shadow-xl group-hover:rotate-3"
           )}
-          whileHover={tool.available ? { rotate: [0, -5, 5, 0] } : {}}
-          transition={{ duration: 0.5 }}
+          {...getMotionProps(reducedMotion, {
+            whileHover: tool.available ? { rotate: [0, -5, 5, 0] } : {},
+            transition: { duration: 0.5 }
+          })}
         >
           <Icon className="w-8 h-8 text-white drop-shadow-lg" />
         </motion.div>
@@ -173,7 +175,9 @@ const ToolCard = ({ tool }: { tool: Tool }) => {
             <motion.div
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 0, x: -10 }}
-              whileHover={{ opacity: 1, x: 0 }}
+              {...getMotionProps(reducedMotion, {
+                whileHover: { opacity: 1, x: 0 }
+              })}
               className="inline-block"
             >
               <ChevronRight className="w-5 h-5 text-primary" />
@@ -257,6 +261,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [, navigate] = useLocation();
+  const { reducedMotion } = useReducedMotionContext();
   
   // Show limited tools per category initially
   const INITIAL_TOOLS_COUNT = 3; // Show only 3, then redirect to All Tools page
@@ -337,7 +342,9 @@ export default function Home() {
               initial={{ scale: 0, opacity: 0, y: -20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               transition={{ delay: 0.2, type: "spring", stiffness: 200, damping: 15 }}
-              whileHover={{ scale: 1.08, boxShadow: "0 0 30px rgba(255,255,255,0.3)" }}
+              {...getMotionProps(reducedMotion, {
+                whileHover: { scale: 1.08, boxShadow: "0 0 30px rgba(255,255,255,0.3)" }
+              })}
               data-testid="hero-badge"
             >
               <motion.div
@@ -376,7 +383,9 @@ export default function Home() {
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 }}
-                whileHover={{ scale: 1.05 }}
+                {...getMotionProps(reducedMotion, {
+                  whileHover: { scale: 1.05 }
+                })}
               >
                 Zero Cloud Upload
               </motion.span>
