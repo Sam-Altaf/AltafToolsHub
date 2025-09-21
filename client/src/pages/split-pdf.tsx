@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import { useSEO } from "@/hooks/use-seo";
-import { Scissors, Upload, Download, FileText, Loader2, ArrowLeft, Shield, FileSearch, Star, Users, Zap, Clock, CheckCircle2, ChevronRight, Info, HelpCircle, ChevronDown, Mail, MessageCircle, BookOpen } from "lucide-react";
+import { Scissors, Upload, Download, FileText, Loader2, ArrowLeft, Shield, FileSearch, Star, Users, Zap, Clock, CheckCircle2, ChevronRight, Info, HelpCircle, ChevronDown, Mail, BookOpen } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
 import { PDFDocument } from "pdf-lib";
@@ -15,6 +15,14 @@ import { cn } from "@/lib/utils";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { ContactSupportSection } from "@/components/contact-support";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   Accordion,
   AccordionContent,
@@ -1108,18 +1116,67 @@ export default function SplitPDF() {
                 We're here to help! Reach out to our support team or check our comprehensive documentation.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="h-12">
-                  <Mail className="w-5 h-5 mr-2" />
-                  Email Support
-                </Button>
-                <Button size="lg" variant="outline" className="h-12">
-                  <MessageCircle className="w-5 h-5 mr-2" />
-                  Live Chat
-                </Button>
-                <Button size="lg" variant="outline" className="h-12">
-                  <BookOpen className="w-5 h-5 mr-2" />
-                  Documentation
-                </Button>
+                <a href="mailto:altaftoolshub@gmail.com?subject=Help%20with%20Split%20PDF%20Tool" className="inline-block">
+                  <Button size="lg" className="h-12">
+                    <Mail className="w-5 h-5 mr-2" />
+                    Email Support
+                  </Button>
+                </a>
+                <Link href="/faq">
+                  <Button size="lg" variant="outline" className="h-12">
+                    <HelpCircle className="w-5 h-5 mr-2" />
+                    FAQ
+                  </Button>
+                </Link>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button size="lg" variant="outline" className="h-12">
+                      <BookOpen className="w-5 h-5 mr-2" />
+                      Documentation
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle>How to Split PDF Files</DialogTitle>
+                      <DialogDescription>
+                        Complete guide for splitting PDFs into separate documents
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 mt-4">
+                      <div>
+                        <h3 className="font-semibold mb-2">Step 1: Upload Your PDF</h3>
+                        <p className="text-muted-foreground">Click the upload area or drag and drop your PDF file. The total page count will be displayed.</p>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold mb-2">Step 2: Choose Split Method</h3>
+                        <p className="text-muted-foreground">Select how to split your PDF:</p>
+                        <ul className="list-disc list-inside mt-1 text-muted-foreground">
+                          <li>By page ranges (e.g., 1-5, 6-10)</li>
+                          <li>Extract single pages</li>
+                          <li>Fixed number of pages per file</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold mb-2">Step 3: Configure Split Settings</h3>
+                        <p className="text-muted-foreground">Enter page ranges or specify the number of pages per split file. Preview shows how files will be divided.</p>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold mb-2">Step 4: Split and Download</h3>
+                        <p className="text-muted-foreground">Click Split PDF to process. Download individual files or all files as a ZIP archive.</p>
+                      </div>
+                      <div className="pt-4 border-t">
+                        <h3 className="font-semibold mb-2">Tips:</h3>
+                        <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                          <li>Use comma to separate ranges: 1-5, 10-15</li>
+                          <li>Extract single pages: 1, 3, 7</li>
+                          <li>Split evenly with fixed size option</li>
+                          <li>Download all splits as ZIP</li>
+                          <li>Processing happens locally</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
           </Card>

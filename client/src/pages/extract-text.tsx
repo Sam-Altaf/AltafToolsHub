@@ -271,13 +271,8 @@ export default function ExtractText() {
             variant="ghost" 
             className="mb-4"
             onClick={() => {
-              const toolsSection = document.getElementById('tools-section');
-              if (toolsSection) {
-                window.history.pushState({}, '', '/');
-                setTimeout(() => {
-                  toolsSection.scrollIntoView({ behavior: 'smooth' });
-                }, 100);
-              }
+              window.location.href = '/';
+              // Removed automatic scrolling to prevent page jumping
             }}
             data-testid="button-back"
           >

@@ -451,6 +451,7 @@ export default function Home() {
                   size="lg" 
                   className="hero-btn-secondary px-10 py-6 text-lg font-semibold"
                   onClick={() => {
+                    // Smooth scrolling is acceptable on the home page for navigation
                     document.getElementById('tools-section')?.scrollIntoView({ behavior: 'smooth' });
                   }}
                   data-testid="button-browse-tools"

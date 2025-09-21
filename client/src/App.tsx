@@ -30,6 +30,7 @@ import PrivacyPolicy from "@/pages/privacy-policy";
 import TermsConditions from "@/pages/terms-conditions";
 import FAQ from "@/pages/faq";
 import Blog from "@/pages/blog";
+import Documentation from "@/pages/documentation";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import CookieConsent from "@/components/cookie-consent";
@@ -61,9 +62,12 @@ function Router() {
           <Route path="/add-page-number" component={AddPageNumber} />
           <Route path="/watermark-pdf" component={WatermarkPDF} />
           <Route path="/privacy" component={PrivacyPolicy} />
+          <Route path="/privacy-policy" component={PrivacyPolicy} />
           <Route path="/terms" component={TermsConditions} />
+          <Route path="/terms-conditions" component={TermsConditions} />
           <Route path="/faq" component={FAQ} />
           <Route path="/blog" component={Blog} />
+          <Route path="/documentation" component={Documentation} />
           <Route component={NotFound} />
         </Switch>
       </div>

@@ -193,7 +193,8 @@ export default function AllToolsPage() {
       setTimeout(() => {
         const categoryElement = document.getElementById(`category-${categoryParam}`);
         if (categoryElement) {
-          categoryElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // Removed automatic scrolling to prevent page jumping
+          // categoryElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       }, 100);
     }

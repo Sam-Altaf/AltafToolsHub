@@ -315,7 +315,7 @@ export function generateOrganizationSchema() {
     "contactPoint": {
       "@type": "ContactPoint",
       "contactType": "customer support",
-      "email": "support@altaftoolshub.com",
+      "email": "altaftoolshub@gmail.com",
       "availableLanguage": ["English"],
       "areaServed": "Worldwide"
     },

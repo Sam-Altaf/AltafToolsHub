@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { useSEO } from "@/hooks/use-seo";
-import { FileX, Upload, Download, FileText, Loader2, ArrowLeft, Shield, Trash2, Scissors, FileOutput, Mail, MessageCircle, BookOpen, Star, Users, Zap, Clock, CheckCircle2, ChevronRight, Info, HelpCircle, ChevronDown, Layers, RotateCw } from "lucide-react";
+import { FileX, Upload, Download, FileText, Loader2, ArrowLeft, Shield, Trash2, Scissors, FileOutput, Mail, BookOpen, Star, Users, Zap, Clock, CheckCircle2, ChevronRight, Info, HelpCircle, ChevronDown, Layers, RotateCw } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
 import { PDFDocument } from "pdf-lib";
@@ -19,6 +19,14 @@ import {
 import { Badge } from "@/components/ui/badge";
 import * as pdfjsLib from 'pdfjs-dist';
 import { ContactSupportSection } from "@/components/contact-support";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 // Configure PDF.js worker - using local worker for privacy
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
@@ -683,18 +691,58 @@ export default function RemovePages() {
               Our support team is here to help you with any questions about removing PDF pages.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Button variant="outline">
-                <Mail className="w-4 h-4 mr-2" />
-                Email Support
-              </Button>
-              <Button variant="outline">
-                <MessageCircle className="w-4 h-4 mr-2" />
-                Live Chat
-              </Button>
-              <Button variant="outline">
-                <BookOpen className="w-4 h-4 mr-2" />
-                Documentation
-              </Button>
+              <a href="mailto:altaftoolshub@gmail.com?subject=Help%20with%20Remove%20Pages%20Tool" className="inline-block">
+                <Button variant="outline">
+                  <Mail className="w-4 h-4 mr-2" />
+                  Email Support
+                </Button>
+              </a>
+              <Link href="/faq">
+                <Button variant="outline">
+                  <HelpCircle className="w-4 h-4 mr-2" />
+                  FAQ
+                </Button>
+              </Link>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline">
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    Documentation
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>How to Remove PDF Pages</DialogTitle>
+                    <DialogDescription>
+                      Complete guide for using the Remove Pages tool
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 mt-4">
+                    <div>
+                      <h3 className="font-semibold mb-2">Step 1: Upload Your PDF</h3>
+                      <p className="text-muted-foreground">Click the upload area or drag and drop your PDF file. The file will be processed entirely in your browser for maximum privacy.</p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-2">Step 2: Select Pages to Remove</h3>
+                      <p className="text-muted-foreground">Click on the page thumbnails to select which pages you want to remove. Selected pages will be highlighted and marked for deletion.</p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-2">Step 3: Remove and Download</h3>
+                      <p className="text-muted-foreground">Click the Remove Pages button to create your new PDF without the selected pages. The modified PDF will download automatically.</p>
+                    </div>
+                    <div className="pt-4 border-t">
+                      <h3 className="font-semibold mb-2">Tips:</h3>
+                      <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                        <li>Click multiple pages to select them</li>
+                        <li>Use Shift+Click for range selection</li>
+                        <li>Double-check before removing pages</li>
+                        <li>Your original file remains unchanged</li>
+                        <li>All processing happens locally</li>
+                      </ul>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </Card>
         </div>

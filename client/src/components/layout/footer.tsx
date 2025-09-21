@@ -33,7 +33,7 @@ const productLinks = [
 const resourceLinks = [
   { name: "FAQ", href: "/faq" },
   { name: "Blog", href: "/blog" },
-  // { name: "Documentation", href: "/docs" }, // Coming soon
+  { name: "Documentation", href: "/documentation" },
   { name: "How It Works", href: "/#features-section" },
   { name: "Use Cases", href: "/#use-cases" }
 ];
@@ -216,12 +216,12 @@ export default function Footer() {
             <h4 className="font-semibold text-lg mb-4 text-foreground dark:text-foreground">Contact</h4>
             <div className="space-y-4">
               <a 
-                href="mailto:support@altaftoolshub.com"
+                href="mailto:altaftoolshub@gmail.com?subject=Support%20Request%20-%20AltafToolsHub"
                 className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors group"
                 data-testid="footer-email"
               >
                 <Mail className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity" />
-                <span>support@altaftoolshub.com</span>
+                <span>altaftoolshub@gmail.com</span>
               </a>
               
               <div className="pt-2">

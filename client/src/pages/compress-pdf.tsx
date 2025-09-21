@@ -616,12 +616,7 @@ export default function CompressPDF() {
             data-testid="button-back"
             onClick={() => {
               window.location.href = '/';
-              setTimeout(() => {
-                const toolsSection = document.getElementById('tools-section');
-                if (toolsSection) {
-                  toolsSection.scrollIntoView({ behavior: 'smooth' });
-                }
-              }, 100);
+              // Removed automatic scrolling to prevent page jumping
             }}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />

@@ -278,7 +278,7 @@ export default function FAQPage() {
               Our support team is here to help with any questions not covered in the FAQ
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <a href="mailto:support@altaftoolshub.com" data-testid="faq-email-button">
+              <a href="mailto:altaftoolshub@gmail.com?subject=Support%20Request%20-%20AltafToolsHub" data-testid="faq-email-button">
                 <Button size="lg" className="btn-gradient text-white">
                   <Mail className="w-4 h-4 mr-2" />
                   Email Support

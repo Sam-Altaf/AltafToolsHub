@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { useSEO } from "@/hooks/use-seo";
-import { Layers, Upload, Download, FileText, Loader2, ArrowLeft, Shield, Trash2, GripVertical, RotateCw, Copy, Scissors, FileOutput, Mail, MessageCircle, BookOpen, Star, Users, Zap, Clock, CheckCircle2, ChevronRight, Info, HelpCircle, ChevronDown } from "lucide-react";
+import { Layers, Upload, Download, FileText, Loader2, ArrowLeft, Shield, Trash2, GripVertical, RotateCw, Copy, Scissors, FileOutput, Mail, BookOpen, Star, Users, Zap, Clock, CheckCircle2, ChevronRight, Info, HelpCircle, ChevronDown } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
 import { PDFDocument, degrees } from "pdf-lib";
@@ -19,6 +19,14 @@ import {
 import { Badge } from "@/components/ui/badge";
 import * as pdfjsLib from 'pdfjs-dist';
 import { ContactSupportSection } from "@/components/contact-support";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 // Configure PDF.js worker - using local worker for privacy
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
@@ -884,18 +892,62 @@ export default function OrganizePDF() {
               Our support team is here to help you with any questions about organizing your PDFs.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Button variant="outline">
-                <Mail className="w-4 h-4 mr-2" />
-                Email Support
-              </Button>
-              <Button variant="outline">
-                <MessageCircle className="w-4 h-4 mr-2" />
-                Live Chat
-              </Button>
-              <Button variant="outline">
-                <BookOpen className="w-4 h-4 mr-2" />
-                Documentation
-              </Button>
+              <a href="mailto:altaftoolshub@gmail.com?subject=Help%20with%20Organize%20PDF%20Tool" className="inline-block">
+                <Button variant="outline">
+                  <Mail className="w-4 h-4 mr-2" />
+                  Email Support
+                </Button>
+              </a>
+              <Link href="/faq">
+                <Button variant="outline">
+                  <HelpCircle className="w-4 h-4 mr-2" />
+                  FAQ
+                </Button>
+              </Link>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline">
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    Documentation
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>How to Organize PDF Pages</DialogTitle>
+                    <DialogDescription>
+                      Complete guide for managing and rearranging PDF pages
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 mt-4">
+                    <div>
+                      <h3 className="font-semibold mb-2">Step 1: Upload Your PDF</h3>
+                      <p className="text-muted-foreground">Click the upload area or drag and drop your PDF file. All pages will be displayed as thumbnails.</p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-2">Step 2: Rearrange Pages</h3>
+                      <p className="text-muted-foreground">Drag and drop page thumbnails to reorder them. You can also rotate, duplicate, or delete individual pages.</p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-2">Step 3: Apply Actions</h3>
+                      <p className="text-muted-foreground">Use the toolbar to rotate selected pages, duplicate them, or delete unwanted pages.</p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-2">Step 4: Save Your Changes</h3>
+                      <p className="text-muted-foreground">Click Apply Changes to create your reorganized PDF. The new file will download automatically.</p>
+                    </div>
+                    <div className="pt-4 border-t">
+                      <h3 className="font-semibold mb-2">Tips:</h3>
+                      <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                        <li>Select multiple pages with Ctrl/Cmd+Click</li>
+                        <li>Rotate pages 90° clockwise or counterclockwise</li>
+                        <li>Duplicate important pages easily</li>
+                        <li>Preview changes before applying</li>
+                        <li>All processing is done locally</li>
+                      </ul>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </Card>
         </div>

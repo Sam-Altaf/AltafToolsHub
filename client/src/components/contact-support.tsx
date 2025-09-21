@@ -46,9 +46,9 @@ export function ContactSupportSection() {
               >
                 {/* Email Support */}
                 <a
-                  href="mailto:support@altaftoolshub.com"
+                  href="mailto:altaftoolshub@gmail.com?subject=Support%20Request%20-%20AltafToolsHub"
                   className="group"
-                  aria-label="Contact support via email at support@altaftoolshub.com"
+                  aria-label="Contact support via email at altaftoolshub@gmail.com"
                   data-testid="link-email-support"
                 >
                   <Button
@@ -86,7 +86,7 @@ export function ContactSupportSection() {
 
                 {/* Report Issue */}
                 <a
-                  href="mailto:support@altaftoolshub.com?subject=Issue%20Report"
+                  href="mailto:altaftoolshub@gmail.com?subject=Issue%20Report%20-%20AltafToolsHub"
                   className="group"
                   aria-label="Report an issue via email to support"
                   data-testid="link-report-issue"
@@ -122,7 +122,7 @@ export function ContactSupportSection() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Mail className="w-4 h-4 text-primary" />
-                    <span>Email: <strong className="text-foreground">support@altaftoolshub.com</strong></span>
+                    <span>Email: <strong className="text-foreground">altaftoolshub@gmail.com</strong></span>
                   </div>
                 </div>
               </motion.div>
