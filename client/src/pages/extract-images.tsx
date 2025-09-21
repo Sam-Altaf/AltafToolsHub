@@ -10,6 +10,7 @@ import FileUpload from "@/components/ui/file-upload";
 import { PDFDocument } from "pdf-lib";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import * as pdfjsLib from 'pdfjs-dist';
+import { ContactSupportSection } from "@/components/contact-support";
 
 // Configure PDF.js worker - using local worker for privacy  
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
@@ -467,6 +468,9 @@ export default function ExtractImages() {
           </Card>
         </div>
       </div>
+
+      <ContactSupportSection />
     </div>
+
   );
 }

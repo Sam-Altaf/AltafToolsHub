@@ -11,6 +11,7 @@ import { PDFDocument } from "pdf-lib";
 import { cn } from "@/lib/utils";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import { ContactSupportSection } from "@/components/contact-support";
 
 interface PDFFile {
   id: string;
@@ -936,6 +937,9 @@ export default function MergePDF() {
           </Card>
         </div>
       </div>
+
+      <ContactSupportSection />
     </div>
+
   );
 }

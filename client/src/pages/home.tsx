@@ -9,11 +9,13 @@ import {
   FileText, Lock, Image, Shield, Zap, Check, ArrowRight, 
   Search, Star, Users, Globe, Download, TrendingUp,
   Clock, ChevronRight, Sparkles, QrCode, Calculator,
-  BookOpen, FileCode, Type, PenTool, Book
+  BookOpen, FileCode, Type, PenTool, Book, CloudOff, Gift
 } from "lucide-react";
 import { useSEO, generateOrganizationSchema, generateWebApplicationSchema, generateFAQSchema, generateServiceSchema } from "@/hooks/use-seo";
 import { motion, AnimatePresence } from "framer-motion";
 import { LogoIcon } from "@/components/logo";
+import { ComparisonTable } from "@/components/comparison-table";
+import { ContactSupportSection } from "@/components/contact-support";
 import { 
   toolCategories, 
   allTools, 
@@ -35,16 +37,22 @@ const features = [
     gradient: "from-purple-500 to-blue-500"
   },
   {
-    icon: Zap,
-    title: "Lightning Fast", 
-    description: "Instant processing with no upload delays or server wait times.",
+    icon: CloudOff,
+    title: "No Upload Required", 
+    description: "Everything works offline. No server uploads mean instant processing.",
     gradient: "from-blue-500 to-cyan-500"
   },
   {
-    icon: Check,
-    title: "Always Free",
-    description: "Professional-grade tools, completely free. No limits, no subscriptions.",
+    icon: Zap,
+    title: "Lightning Fast",
+    description: "Instant processing with no delays or server wait times.",
     gradient: "from-cyan-500 to-teal-500"
+  },
+  {
+    icon: Gift,
+    title: "Free Forever",
+    description: "Professional-grade tools, completely free. No limits, no subscriptions.",
+    gradient: "from-teal-500 to-green-500"
   }
 ];
 
@@ -105,7 +113,7 @@ const ToolCard = ({ tool }: { tool: Tool }) => {
       })}
     >
       <Card className={cn(
-        "tool-card relative h-full p-7 transition-all duration-500 group min-h-[320px]",
+        "tool-card relative h-full p-6 transition-all duration-500 group min-h-[280px] rounded-lg",
         tool.available 
           ? "cursor-pointer hover:shadow-2xl focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2" 
           : "cursor-not-allowed opacity-70",
@@ -169,7 +177,7 @@ const ToolCard = ({ tool }: { tool: Tool }) => {
         </motion.div>
         
         {/* Content */}
-        <h3 className="font-semibold text-xl mb-3 flex items-center gap-2">
+        <h3 className="font-semibold text-lg sm:text-xl mb-3 flex items-center gap-2 line-clamp-1">
           {tool.title}
           {tool.available && (
             <motion.div
@@ -184,7 +192,7 @@ const ToolCard = ({ tool }: { tool: Tool }) => {
             </motion.div>
           )}
         </h3>
-        <p className="text-base text-muted-foreground leading-relaxed group-hover:text-foreground/80 transition-colors duration-300 mb-3">
+        <p className="text-sm sm:text-base text-muted-foreground leading-relaxed group-hover:text-foreground/80 transition-colors duration-300 mb-3 truncate-3">
           {tool.extendedDescription || tool.description}
         </p>
         {tool.features && (
@@ -323,13 +331,13 @@ export default function Home() {
   });
 
   return (
-    <div className="min-h-screen pattern-bg">
+    <div className="min-h-screen pattern-bg overflow-x-hidden">
       {/* Hero Section */}
       <section className="relative overflow-hidden hero-gradient">
         {/* Tech Circuit Animation Layer */}
         <div className="hero-circuit" />
         
-        <div className="hero-content container mx-auto px-4 py-6 lg:py-10">
+        <div className="hero-content container-section py-6 lg:py-10">
           <motion.div 
             className="text-center max-w-4xl mx-auto text-white"
             initial={{ opacity: 0, y: -20 }}
@@ -358,7 +366,7 @@ export default function Home() {
 
             {/* Enhanced Heading with better contrast */}
             <motion.h1 
-              className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-6 text-white leading-tight"
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-white leading-tight"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
@@ -703,9 +711,12 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Comparison Table */}
+      <ComparisonTable />
+
       {/* Features Section */}
-      <section className="py-16 bg-muted/30">
-        <div className="container mx-auto px-4">
+      <section className="py-16 bg-muted/30 overflow-hidden">
+        <div className="container-section">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Why Choose AltafToolsHub?</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -722,7 +733,7 @@ export default function Home() {
                 transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="p-6 h-full glass hover:shadow-lg transition-shadow">
+                <Card className="p-6 h-full glass hover:shadow-lg transition-shadow rounded-lg">
                   <div className={cn(
                     "w-12 h-12 rounded-xl flex items-center justify-center mb-4",
                     "bg-gradient-to-br", feature.gradient
@@ -739,8 +750,8 @@ export default function Home() {
       </section>
 
       {/* Available Tools Section */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
+      <section className="py-16 overflow-hidden">
+        <div className="container-section">
           <div className="text-center mb-12">
             <Badge className="mb-4 bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-600 dark:text-green-400 border-green-500/30">
               <Check className="w-3 h-3 mr-1" />
@@ -818,8 +829,8 @@ export default function Home() {
       </section>
 
       {/* Tools Section */}
-      <section id="tools-section" className="py-16 bg-muted/30">
-        <div className="container mx-auto px-4">
+      <section id="tools-section" className="py-16 bg-muted/30 overflow-hidden">
+        <div className="container-section">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
               Complete Suite of <span className="gradient-text">60+ Tools</span>
@@ -1051,6 +1062,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Contact Support Section */}
+      <ContactSupportSection />
 
       {/* CTA Section */}
       <section className="py-16 bg-gradient-to-r from-purple-600 to-blue-600 text-white">

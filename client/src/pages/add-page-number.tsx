@@ -14,6 +14,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import * as pdfjsLib from 'pdfjs-dist';
+import { ContactSupportSection } from "@/components/contact-support";
 
 // Configure PDF.js worker - using local worker for privacy
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
@@ -588,6 +589,9 @@ export default function AddPageNumber() {
           </Card>
         </div>
       </div>
+
+      <ContactSupportSection />
     </div>
+
   );
 }

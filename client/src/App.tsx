@@ -28,6 +28,8 @@ import AddPageNumber from "@/pages/add-page-number";
 import WatermarkPDF from "@/pages/watermark-pdf";
 import PrivacyPolicy from "@/pages/privacy-policy";
 import TermsConditions from "@/pages/terms-conditions";
+import FAQ from "@/pages/faq";
+import Blog from "@/pages/blog";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import CookieConsent from "@/components/cookie-consent";
@@ -60,6 +62,8 @@ function Router() {
           <Route path="/watermark-pdf" component={WatermarkPDF} />
           <Route path="/privacy" component={PrivacyPolicy} />
           <Route path="/terms" component={TermsConditions} />
+          <Route path="/faq" component={FAQ} />
+          <Route path="/blog" component={Blog} />
           <Route component={NotFound} />
         </Switch>
       </div>

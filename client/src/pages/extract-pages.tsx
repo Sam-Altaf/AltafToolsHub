@@ -20,6 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import * as pdfjsLib from 'pdfjs-dist';
+import { ContactSupportSection } from "@/components/contact-support";
 
 // Configure PDF.js worker - using local worker for privacy
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
@@ -792,6 +793,9 @@ export default function ExtractPages() {
           </Card>
         </div>
       </div>
+
+      <ContactSupportSection />
     </div>
+
   );
 }

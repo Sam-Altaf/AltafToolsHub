@@ -18,6 +18,7 @@ import PrivacyNotice from "@/components/privacy-notice";
 import { WhyUseSection, UseCasesSection, ComparisonSection, HowItWorksSection, commonFeatures } from "@/components/seo/tool-features";
 import { ToolFAQ, generatePDFUnlockFAQs } from "@/components/seo/tool-faq";
 import { Building2, Users, Briefcase, Home, Archive, FileKey, School } from "lucide-react";
+import { ContactSupportSection } from "@/components/contact-support";
 
 interface UnlockResult {
   originalSize: number;
@@ -619,5 +620,6 @@ export default function UnlockPDF() {
         toolPath="/unlock-pdf"
       />
     </div>
+
   );
 }

@@ -20,6 +20,7 @@ import Breadcrumbs from "@/components/seo/breadcrumbs";
 import ToolSEO from "@/components/seo/tool-seo";
 import PrivacyNotice from "@/components/privacy-notice";
 import Tesseract from 'tesseract.js';
+import { ContactSupportSection } from "@/components/contact-support";
 
 interface ExtractedText {
   text: string;
@@ -622,6 +623,9 @@ export default function ExtractText() {
           </AlertDescription>
         </Alert>
       </div>
+
+      <ContactSupportSection />
     </div>
+
   );
 }

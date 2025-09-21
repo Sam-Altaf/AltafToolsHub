@@ -15,6 +15,7 @@ import PrivacyNotice from "@/components/privacy-notice";
 import { WhyUseSection, UseCasesSection, ComparisonSection, HowItWorksSection, commonFeatures } from "@/components/seo/tool-features";
 import { ToolFAQ, generateQRGeneratorFAQs } from "@/components/seo/tool-faq";
 import { Store, Share2, Wifi, Calendar, MapPin, CreditCard, Type, Settings as SettingsIcon } from "lucide-react";
+import { ContactSupportSection } from "@/components/contact-support";
 
 type QRSize = "small" | "medium" | "large";
 
@@ -538,5 +539,6 @@ export default function QRGenerator() {
         toolPath="/qr-generator"
       />
     </div>
+
   );
 }

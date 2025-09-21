@@ -22,6 +22,7 @@ import { ToolFAQ, generateJPGtoPDFFAQs } from "@/components/seo/tool-faq";
 import { Camera, Presentation, BookOpen, Package, Globe2, Users, Upload } from "lucide-react";
 import { Download as DownloadIcon } from "lucide-react";
 import { generateSmartFileName, enhanceDownloadName } from "@/lib/smart-file-namer";
+import { ContactSupportSection } from "@/components/contact-support";
 
 interface ConversionResult {
   pdfBlob: Blob;
@@ -785,5 +786,6 @@ export default function JpgToPDF() {
         toolPath="/jpg-to-pdf"
       />
     </div>
+
   );
 }

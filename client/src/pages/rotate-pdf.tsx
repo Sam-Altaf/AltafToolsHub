@@ -18,6 +18,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import * as pdfjsLib from 'pdfjs-dist';
+import { ContactSupportSection } from "@/components/contact-support";
 
 // Configure PDF.js worker - using local worker for privacy
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
@@ -907,6 +908,9 @@ export default function RotatePDF() {
           </Card>
         </div>
       </div>
+
+      <ContactSupportSection />
     </div>
+
   );
 }

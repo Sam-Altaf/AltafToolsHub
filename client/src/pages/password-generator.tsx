@@ -14,6 +14,7 @@ import PrivacyNotice from "@/components/privacy-notice";
 import { WhyUseSection, UseCasesSection, ComparisonSection, HowItWorksSection, commonFeatures } from "@/components/seo/tool-features";
 import { ToolFAQ, generatePasswordGeneratorFAQs } from "@/components/seo/tool-faq";
 import { Key, Settings, Download, User, Mail, CreditCard, ShieldCheck, Hash, Briefcase, School, Users, Globe } from "lucide-react";
+import { ContactSupportSection } from "@/components/contact-support";
 
 interface PasswordOptions {
   length: number;
@@ -660,5 +661,6 @@ export default function PasswordGenerator() {
         toolPath="/password-generator"
       />
     </div>
+
   );
 }
