@@ -61,8 +61,19 @@
     <!-- Font loading with display swap for better performance -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Additional SEO Meta Tags -->
+    <meta name="rating" content="general" />
+    <meta name="distribution" content="global" />
+    <meta name="copyright" content="AltafToolsHub © 2025" />
+    <meta name="generator" content="Vite + React" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="google" content="notranslate" />
+    
     <!-- DNS Prefetch for potential external resources -->
     <link rel="dns-prefetch" href="https://www.google-analytics.com">
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
     
     <!-- Prefetch likely navigation targets -->
     <link rel="prefetch" href="/compress-pdf">
@@ -85,6 +96,10 @@
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta name="referrer" content="strict-origin-when-cross-origin">
+    
+    <!-- Search Engine Verification -->
+    <meta name="msvalidate.01" content="3FD512D510D7349BCFA2662B94334B81" />
+    <meta name="google-site-verification" content="QpjRQbEVNOuMt9u9gLprMCPKcHCVhucmxdPSlbXAG-U" />
     
     <!-- Structured Data - Organization -->
     <script type="application/ld+json">
@@ -172,6 +187,43 @@
         }
       ]
     }
+    </script>
+    
+    <!-- Structured Data - BreadcrumbList for Site Navigation -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.altaftoolshub.app/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "All Tools",
+          "item": "https://www.altaftoolshub.app/all-tools"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "PDF Tools",
+          "item": "https://www.altaftoolshub.app/compress-pdf"
+        }
+      ]
+    }
+    </script>
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-26X6DS9BXF"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-26X6DS9BXF');
     </script>
   </head>
   <body>

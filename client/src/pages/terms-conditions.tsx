@@ -115,6 +115,21 @@ const sections = [
     ]
   },
   {
+    icon: Globe,
+    title: "Website Analytics & Tracking",
+    content: [
+      "**Google Analytics**: We use Google Analytics to collect anonymous information about how visitors use our website. This helps us understand user behavior, identify popular tools, and improve our services. Google Analytics collects data such as pages visited, time spent on pages, browser type, device information, and geographic region (country/city level only).",
+      "**Purpose of Analytics**: We use analytics data solely to improve our website's functionality, performance, and user experience. We analyze usage patterns to identify technical issues, understand which tools are most valuable to users, optimize page load times and performance, and plan new features based on user needs.",
+      "**Data Collection Notice**: By using our website, you consent to the collection of anonymous analytics data. This data cannot be used to personally identify you. We have configured Google Analytics with IP anonymization enabled, no remarketing or advertising features, no demographic data collection, and no user-ID tracking.",
+      "**Third-Party Services**: Google Analytics is provided by Google LLC, which has its own privacy policy and terms. We do not control Google's data practices. Google may use the collected data in accordance with its own privacy policy. You can learn more about Google's practices at https://policies.google.com/privacy.",
+      "**Opting Out**: You have several options to opt out of analytics tracking: Install the Google Analytics Opt-out Browser Add-on (https://tools.google.com/dlpage/gaoptout), use private/incognito browsing modes, enable Do Not Track in your browser (we honor DNT signals), or use privacy-focused browsers or extensions that block tracking scripts.",
+      "**Future Advertising Policy**: While we currently do not display advertisements, we reserve the right to introduce advertising in the future to support our free services. If we implement advertising: we will update these Terms and our Privacy Policy 30 days in advance, advertisements will be clearly marked and distinguishable from content, we will not use targeted or behavioral advertising based on your file processing activities, and we will provide options to use the service without advertisements.",
+      "**Data Usage for Website Maintenance**: Analytics data helps us maintain and improve our website by identifying and fixing technical issues, optimizing performance for different devices and browsers, understanding traffic patterns to ensure adequate server resources, and prioritizing development of the most-used features.",
+      "**Cookie Notice**: Our website uses cookies for analytics purposes. These are small text files stored in your browser that help us understand usage patterns. Analytics cookies are optional and can be blocked without affecting core functionality. See our Privacy Policy for detailed cookie information.",
+      "**Transparency Commitment**: We are committed to transparency about our data practices. We will never sell analytics data to third parties, use analytics data to identify individual users, share raw analytics data with advertisers, or use your file processing activities for analytics beyond basic tool usage metrics."
+    ]
+  },
+  {
     icon: Mail,
     title: "Contact Information & Additional Terms",
     content: [
