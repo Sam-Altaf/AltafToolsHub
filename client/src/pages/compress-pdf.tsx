@@ -820,7 +820,7 @@ export default function CompressPDF() {
                   </div>
                   
                   {/* Stats section - will be reordered on mobile */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 order-2 sm:order-1 mt-6 sm:mt-0">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <Card className="p-4 bg-gradient-to-br from-purple-50 to-transparent dark:from-purple-950/20">
                       <div className="flex items-center gap-2 mb-2">
                         <TrendingDown className="h-4 w-4 text-purple-600 dark:text-purple-400" />
@@ -856,6 +856,19 @@ export default function CompressPDF() {
                       </p>
                       <p className="text-xs text-muted-foreground mt-1">Processing time</p>
                     </Card>
+                  </div>
+                  
+                  {/* Compress button for slider mode - mobile first */}
+                  <div className="mt-6 order-first sm:order-none">
+                    <Button 
+                      onClick={compressPDF}
+                      className="w-full btn-gradient text-white font-semibold"
+                      size="lg"
+                      data-testid="button-compress-slider"
+                    >
+                      <Zap className="w-5 h-5 mr-2" />
+                      Compress PDF ({compressionLevel}%)
+                    </Button>
                   </div>
                 </div>
               ) : (
@@ -905,20 +918,20 @@ export default function CompressPDF() {
                 </Alert>
               )}
 
-              {/* Action button - moved before stats on mobile */}
-              <div className="order-1 sm:order-2">
-                <Button 
-                  onClick={compressPDF}
-                  className="w-full btn-gradient text-white font-semibold"
-                  size="lg"
-                  data-testid="button-compress"
-                >
-                  <Zap className="w-5 h-5 mr-2" />
-                  {useAdvancedMode 
-                    ? `Compress to ${targetSizeOptions.find(o => o.value === targetSize)?.label}`
-                    : `Compress PDF (${compressionLevel}%)`}
-                </Button>
-              </div>
+              {/* Action button for advanced mode */}
+              {useAdvancedMode && (
+                <div className="mb-4">
+                  <Button 
+                    onClick={compressPDF}
+                    className="w-full btn-gradient text-white font-semibold"
+                    size="lg"
+                    data-testid="button-compress"
+                  >
+                    <Zap className="w-5 h-5 mr-2" />
+                    Compress to {targetSizeOptions.find(o => o.value === targetSize)?.label}
+                  </Button>
+                </div>
+              )}
             </div>
           </Card>
         )}

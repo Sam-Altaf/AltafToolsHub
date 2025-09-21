@@ -367,11 +367,11 @@ export default function AddPageNumber() {
                       {previewUrl && (
                         <div>
                           <h3 className="font-medium mb-3">Preview</h3>
-                          <div className="border rounded-lg overflow-hidden bg-muted/50">
+                          <div className="border rounded-lg bg-muted/50 p-2">
                             <img 
                               src={previewUrl} 
                               alt="PDF Preview with page number" 
-                              className="w-full h-auto"
+                              className="w-full h-auto max-h-[400px] object-contain"
                             />
                           </div>
                         </div>

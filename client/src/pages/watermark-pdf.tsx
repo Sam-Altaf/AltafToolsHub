@@ -418,11 +418,11 @@ export default function WatermarkPDF() {
                       {previewUrl && (
                         <div>
                           <h3 className="font-medium mb-3">Preview</h3>
-                          <div className="border rounded-lg overflow-hidden bg-muted/50">
+                          <div className="border rounded-lg bg-muted/50 p-2">
                             <img 
                               src={previewUrl} 
                               alt="PDF Preview with watermark" 
-                              className="w-full h-auto"
+                              className="w-full h-auto max-h-[400px] object-contain"
                             />
                           </div>
                         </div>
@@ -494,7 +494,7 @@ export default function WatermarkPDF() {
                               <FileUpload
                                 accept="image/*"
                                 onFileSelect={handleImageUpload}
-                                className="h-32"
+                                className="h-40 min-h-[160px]"
                                 title="Upload watermark image"
                                 description="JPG, PNG supported"
                                 maxSize={5 * 1024 * 1024}

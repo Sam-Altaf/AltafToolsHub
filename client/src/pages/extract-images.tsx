@@ -283,14 +283,14 @@ export default function ExtractImages() {
                         {extractedImages.map((image, index) => (
                           <div
                             key={index}
-                            className="group relative border rounded-lg overflow-hidden hover:shadow-lg transition-all cursor-pointer"
+                            className="group relative border rounded-lg hover:shadow-lg transition-all cursor-pointer"
                             onClick={() => setSelectedImage(image)}
                             data-testid={`image-thumb-${index}`}
                           >
                             <img
                               src={image.url}
                               alt={`Extracted image ${index + 1}`}
-                              className="w-full h-32 object-cover"
+                              className="w-full h-32 object-cover rounded-t-lg"
                             />
                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all flex items-center justify-center">
                               <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
