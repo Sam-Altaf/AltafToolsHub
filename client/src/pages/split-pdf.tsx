@@ -283,7 +283,7 @@ export default function SplitPDF() {
   };
 
   const downloadResult = (result: SplitResult) => {
-    const blob = new Blob([result.data], { type: 'application/pdf' });
+  const blob = new Blob([new Uint8Array(result.data)], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
