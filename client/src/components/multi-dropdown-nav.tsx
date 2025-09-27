@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import * as React from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -111,12 +111,12 @@ const menuItems = [
 ];
 
 export function MultiDropdownNav() {
-  const [openMenu, setOpenMenu] = useState<string | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const buttonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
+  const [openMenu, setOpenMenu] = React.useState<string | null>(null);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const buttonRefs = React.useRef<{ [key: string]: HTMLButtonElement | null }>({});
 
   // Handle click outside to close dropdown
-  useEffect(() => {
+  React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setOpenMenu(null);
@@ -133,7 +133,7 @@ export function MultiDropdownNav() {
   }, [openMenu]);
 
   // Handle escape key
-  useEffect(() => {
+  React.useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setOpenMenu(null);
