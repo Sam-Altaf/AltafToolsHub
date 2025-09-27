@@ -9,7 +9,6 @@ export default defineConfig({
       // Optimize React with SWC for faster builds
       jsxRuntime: 'automatic',
     }),
-    runtimeErrorOverlay(),
     ...(process.env.NODE_ENV !== "production" &&
     process.env.REPL_ID !== undefined
       ? [
@@ -49,39 +48,32 @@ export default defineConfig({
     },
     rollupOptions: {
       output: {
-        // Advanced chunk splitting for optimal caching
-        manualChunks: {
+        // Simplified chunk splitting to avoid PDF library issues
+        manualChunks: (id) => {
+          // Keep PDF libraries together to avoid import issues
+          if (id.includes('pdfjs-dist') || id.includes('pdf-lib') || id.includes('pako')) {
+            return 'pdf-libs';
+          }
           // React ecosystem
-          'vendor-react': ['react', 'react-dom', 'wouter'],
-          
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom') || id.includes('wouter')) {
+            return 'vendor-react';
+          }
           // UI framework
-          'vendor-ui': [
-            '@radix-ui/react-dialog',
-            '@radix-ui/react-dropdown-menu',
-            '@radix-ui/react-toast',
-            '@radix-ui/react-tabs',
-            '@radix-ui/react-select',
-            '@radix-ui/react-progress',
-            '@radix-ui/react-slider',
-            '@radix-ui/react-switch',
-            '@radix-ui/react-checkbox',
-            '@radix-ui/react-radio-group',
-            '@radix-ui/react-label',
-            '@radix-ui/react-separator',
-            '@radix-ui/react-scroll-area'
-          ],
-          
-          // Heavy tool libraries
-          'vendor-pdf': ['pdfjs-dist', 'pdf-lib', 'pdf-lib-with-encrypt'],
-          'vendor-canvas': ['canvas', 'tesseract.js'],
-          'vendor-utils': ['qrcode', 'framer-motion', 'date-fns'],
-          
-          // Analytics and external services
-          'vendor-analytics': ['@tanstack/react-query'],
-          
+          if (id.includes('@radix-ui')) {
+            return 'vendor-ui';
+          }
+          // Utilities
+          if (id.includes('qrcode') || id.includes('framer-motion') || id.includes('date-fns')) {
+            return 'vendor-utils';
+          }
+          // Analytics
+          if (id.includes('@tanstack/react-query')) {
+            return 'vendor-analytics';
+          }
           // Icons and styling
-          'vendor-icons': ['lucide-react', 'react-icons'],
-          'vendor-styling': ['clsx', 'tailwind-merge', 'class-variance-authority'],
+          if (id.includes('lucide-react') || id.includes('react-icons') || id.includes('clsx')) {
+            return 'vendor-styling';
+          }
         },
         // Optimize chunk names for better caching
         chunkFileNames: (chunkInfo) => {
@@ -117,8 +109,11 @@ export default defineConfig({
       strict: true,
       deny: ["**/.*"],
     },
+    hmr: {
+      overlay: false  // Disable HMR overlay for cleaner development
+    },
   },
-  // Optimize dependencies
+  // Optimize dependencies - fix PDF library issues
   optimizeDeps: {
     include: [
       'react',
@@ -131,9 +126,17 @@ export default defineConfig({
     exclude: [
       'pdfjs-dist',
       'pdf-lib',
+      'pdf-lib-with-encrypt', 
+      '@pdf-lib/standard-fonts',
       'tesseract.js',
-      'canvas'
+      'canvas',
     ],
+    esbuildOptions: {
+      target: 'es2020',
+      supported: {
+        'top-level-await': true
+      }
+    }
   },
   // CSS optimization
   css: {

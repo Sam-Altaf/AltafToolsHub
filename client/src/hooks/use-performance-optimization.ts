@@ -6,8 +6,7 @@ export function usePerformanceOptimization() {
     // Preconnect to external domains
     const preconnectDomains = [
       'https://www.googletagmanager.com',
-      'https://www.google-analytics.com',
-      'https://fonts.gstatic.com'
+      'https://www.google-analytics.com'
     ];
 
     preconnectDomains.forEach(domain => {
