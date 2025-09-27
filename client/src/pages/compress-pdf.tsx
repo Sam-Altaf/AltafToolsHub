@@ -21,6 +21,7 @@ import { ToolFAQ, generatePDFCompressFAQs } from "@/components/seo/tool-faq";
 import { Briefcase, School, Users, Mail, Smartphone, Globe2, Upload, Settings, FileDown as FileDownIcon } from "lucide-react";
 import { generateSmartFileName, enhanceDownloadName } from "@/lib/smart-file-namer";
 import { ContactSupportSection } from "@/components/contact-support";
+import { BreadcrumbNavigation } from "@/components/breadcrumb-navigation";
 import { scrollToProcessing } from "@/lib/scroll-utils";
 
 type TargetSize = "10KB" | "20KB" | "50KB" | "100KB" | "150KB" | "200KB" | "300KB" | "500KB" | "1MB" | "2MB" | "5MB" | "max";
