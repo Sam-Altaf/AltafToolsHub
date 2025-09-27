@@ -377,7 +377,7 @@ export default function SplitPDF() {
                     <FileUpload
                       accept="application/pdf"
                       multiple={false}
-                      onFilesSelect={(files) => handleFileUpload(files[0])}
+                      onFileSelect={(file) => handleFileUpload(file)}
                       className="min-h-[400px]"
                       title="Drop your PDF file here or click to browse"
                       description="Upload the PDF you want to split. All processing happens securely in your browser."
