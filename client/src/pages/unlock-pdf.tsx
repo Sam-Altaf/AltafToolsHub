@@ -18,6 +18,8 @@ import PrivacyNotice from "@/components/privacy-notice";
 import { WhyUseSection, UseCasesSection, ComparisonSection, HowItWorksSection, commonFeatures } from "@/components/seo/tool-features";
 import { ToolFAQ, generatePDFUnlockFAQs } from "@/components/seo/tool-faq";
 import { Building2, Users, Briefcase, Home, Archive, FileKey, School } from "lucide-react";
+import { ContactSupportSection } from "@/components/contact-support";
+import { scrollBy } from "@/lib/scroll-utils";
 
 interface UnlockResult {
   originalSize: number;
@@ -50,7 +52,7 @@ export default function UnlockPDF() {
     name: "PDF Unlocker - AltafToolsHub",
     description: "Secure PDF password remover. Unlock password-protected PDFs directly in your browser with complete privacy.",
     applicationCategory: "SecurityApplication",
-    url: "https://www.altaftoolshub.com/unlock-pdf",
+    url: "https://www.altaftoolshub.app/unlock-pdf",
     aggregateRating: { ratingValue: 4.8, ratingCount: 987, bestRating: 5 },
     featureList: [
       "Remove PDF password protection",
@@ -69,7 +71,7 @@ export default function UnlockPDF() {
     description: "Free online PDF unlocker to remove password protection from PDFs. 100% secure client-side processing. Your files and passwords never leave your browser.",
     path: "/unlock-pdf",
     keywords: "unlock pdf, remove pdf password, pdf unlocker, pdf password remover, decrypt pdf, unlock protected pdf, free pdf unlocker, online pdf unlock, pdf security remover 2025",
-    ogImage: "https://www.altaftoolshub.com/og-unlock-pdf.png",
+    ogImage: "https://www.altaftoolshub.app/og-unlock-pdf.png",
     structuredData: [howToSchema, softwareSchema],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Unlocker - AltafToolsHub" },
@@ -129,6 +131,9 @@ export default function UnlockPDF() {
   };
 
   const unlockPDF = async () => {
+    // Scroll to top to show processing area
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     if (!selectedFile || !password.trim()) {
       setError('Please select a file and enter the password.');
       return;
@@ -262,18 +267,13 @@ export default function UnlockPDF() {
               data-testid="button-back"
               onClick={() => {
                 window.location.href = '/';
-                setTimeout(() => {
-                  const toolsSection = document.getElementById('tools-section');
-                  if (toolsSection) {
-                    toolsSection.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }, 100);
+                // Removed automatic scrolling to prevent page jumping
               }}
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Tools
             </Button>
-            <h1 className="text-3xl sm:text-4xl font-bold mb-4 gradient-text">PDF Unlocker</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-primary">PDF Unlocker</h1>
             <p className="text-lg text-muted-foreground">Your PDF has been unlocked successfully!</p>
           </div>
 
@@ -350,7 +350,7 @@ export default function UnlockPDF() {
       <div className="min-h-screen pattern-bg">
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           <div className="text-center mb-8">
-            <h1 className="text-3xl sm:text-4xl font-bold mb-4 gradient-text">PDF Unlocker</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-primary">PDF Unlocker</h1>
             <p className="text-lg text-muted-foreground">Removing password protection...</p>
           </div>
 
@@ -394,8 +394,8 @@ export default function UnlockPDF() {
             <Sparkles className="w-4 h-4" />
             <span className="text-sm font-medium">100% Secure Processing</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-            PDF <span className="gradient-text">Unlocker</span>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-primary">
+            PDF Unlocker
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Remove password protection from PDF files securely in your browser. 
@@ -619,5 +619,6 @@ export default function UnlockPDF() {
         toolPath="/unlock-pdf"
       />
     </div>
+
   );
 }

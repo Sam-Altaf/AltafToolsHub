@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { useSEO } from "@/hooks/use-seo";
-import { RotateCw, Upload, Download, FileText, Loader2, ArrowLeft, Shield, RotateCcw, RefreshCw, Star, Users, Zap, Clock, CheckCircle2, ChevronRight, Info, HelpCircle, ChevronDown, Mail, MessageCircle, BookOpen } from "lucide-react";
+import { useSEO, generateHowToSchema, generateSoftwareApplicationSchema, generateBreadcrumbSchema } from "@/hooks/use-seo";
+import { RotateCw, Upload, Download, FileText, Loader2, ArrowLeft, Shield, RotateCcw, RefreshCw, Star, Users, Zap, Clock, CheckCircle2, ChevronRight, Info, HelpCircle, ChevronDown, Mail, BookOpen } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
 import { PDFDocument, degrees } from "pdf-lib";
@@ -18,6 +18,16 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import * as pdfjsLib from 'pdfjs-dist';
+import { ContactSupportSection } from "@/components/contact-support";
+import { scrollBy } from "@/lib/scroll-utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 // Configure PDF.js worker - using local worker for privacy
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
@@ -40,33 +50,49 @@ export default function RotatePDF() {
   const [expandedCategories, setExpandedCategories] = useState<string[]>(['general']);
   const { toast } = useToast();
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "PDF Rotator - AltafToolsHub",
-    "description": "Free online PDF rotator to fix page orientation issues",
-    "url": "https://www.altaftoolshub.com/rotate-pdf",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Any",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "ratingCount": "1234"
-    }
-  };
+  // Generate structured data for SEO
+  const howToSchema = generateHowToSchema({
+    name: "How to Rotate PDF Pages Online",
+    description: "Fix PDF page orientation quickly and easily in your browser",
+    totalTime: "PT1M",
+    steps: [
+      { name: "Upload PDF", text: "Select or drag your PDF file" },
+      { name: "Select Pages", text: "Choose which pages to rotate" },
+      { name: "Choose Rotation", text: "Click rotate buttons to adjust orientation" },
+      { name: "Download Result", text: "Download your rotated PDF instantly" }
+    ]
+  });
+
+  const softwareSchema = generateSoftwareApplicationSchema({
+    name: "PDF Rotator - AltafToolsHub",
+    description: "Free online PDF rotator to fix page orientation issues. Rotate individual pages or all pages at once. 100% client-side processing.",
+    applicationCategory: "BusinessApplication",
+    url: "https://www.altaftoolshub.app/rotate-pdf",
+    aggregateRating: { ratingValue: 4.8, ratingCount: 1234, bestRating: 5 },
+    featureList: [
+      "Rotate individual pages",
+      "Batch page rotation",
+      "90, 180, 270 degree rotation",
+      "Visual page previews",
+      "100% client-side processing",
+      "No file upload to servers"
+    ],
+    datePublished: "2024-01-01",
+    dateModified: "2025-01-20"
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "PDF Tools", url: "/all-tools?category=pdf" },
+    { name: "Rotate PDF", url: "/rotate-pdf" }
+  ]);
 
   useSEO({
     title: "Rotate PDF Pages Online Free - Fix Page Orientation | AltafToolsHub",
     description: "Free online PDF rotator to fix page orientation issues. Rotate individual pages or all pages at once. 100% client-side processing for complete privacy.",
     path: "/rotate-pdf",
     keywords: "rotate pdf, pdf rotator, fix pdf orientation, rotate pdf pages, flip pdf pages, pdf rotation tool",
-    ogImage: "https://www.altaftoolshub.com/og-rotate-pdf.png",
-    structuredData: [structuredData],
+    ogImage: "https://www.altaftoolshub.app/og-rotate-pdf.png",
+    structuredData: [howToSchema, softwareSchema, breadcrumbSchema],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Rotator - AltafToolsHub" },
       { property: "article:section", content: "PDF Tools" }
@@ -206,6 +232,9 @@ export default function RotatePDF() {
   };
 
   const applyRotation = async () => {
+    // Scroll to top to show processing area
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     if (!pdfDoc || !pdfFile) {
       toast({
         title: "No file loaded",
@@ -316,8 +345,8 @@ export default function RotatePDF() {
               <Shield className="w-4 h-4" />
               <span>Trusted by 500,000+ users worldwide</span>
             </div>
-            <h1 className="text-5xl font-bold mb-4">
-              Rotate <span className="gradient-text">PDF Pages</span> Online
+            <h1 className="text-5xl font-bold mb-4 text-primary">
+              Rotate PDF Pages Online
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Fix page orientation issues instantly. Rotate individual pages or all pages at once 
@@ -890,23 +919,70 @@ export default function RotatePDF() {
               <h2 className="text-3xl font-bold mb-4">Still Have Questions?</h2>
               <p className="text-lg mb-6 opacity-90">Our support team is here to help you with any issues</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" variant="secondary" className="gap-2" data-testid="button-email-support">
-                  <Mail className="w-5 h-5" />
-                  Email Support
-                </Button>
-                <Button size="lg" variant="secondary" className="gap-2" data-testid="button-live-chat">
-                  <MessageCircle className="w-5 h-5" />
-                  Live Chat
-                </Button>
-                <Button size="lg" variant="secondary" className="gap-2" data-testid="button-help-center">
-                  <BookOpen className="w-5 h-5" />
-                  Help Center
-                </Button>
+                <a href="mailto:altaftoolshub@gmail.com?subject=Help%20with%20Rotate%20PDF%20Tool" className="inline-block">
+                  <Button size="lg" variant="secondary" className="gap-2" data-testid="button-email-support">
+                    <Mail className="w-5 h-5" />
+                    Email Support
+                  </Button>
+                </a>
+                <Link href="/faq">
+                  <Button size="lg" variant="secondary" className="gap-2" data-testid="button-faq">
+                    <HelpCircle className="w-5 h-5" />
+                    FAQ
+                  </Button>
+                </Link>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button size="lg" variant="secondary" className="gap-2" data-testid="button-documentation">
+                      <BookOpen className="w-5 h-5" />
+                      Documentation
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle>How to Rotate PDF Pages</DialogTitle>
+                      <DialogDescription>
+                        Complete guide for rotating and fixing PDF page orientation
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 mt-4">
+                      <div>
+                        <h3 className="font-semibold mb-2">Step 1: Upload Your PDF</h3>
+                        <p className="text-muted-foreground">Click the upload area or drag and drop your PDF file. Page thumbnails will appear for preview.</p>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold mb-2">Step 2: Select Pages to Rotate</h3>
+                        <p className="text-muted-foreground">Choose which pages need rotation. You can select individual pages or rotate all pages at once.</p>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold mb-2">Step 3: Choose Rotation Angle</h3>
+                        <p className="text-muted-foreground">Click the rotate buttons to turn pages 90° clockwise or counterclockwise. Preview shows the new orientation.</p>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold mb-2">Step 4: Apply and Download</h3>
+                        <p className="text-muted-foreground">Click Apply Rotation to save changes. Your corrected PDF will download automatically.</p>
+                      </div>
+                      <div className="pt-4 border-t">
+                        <h3 className="font-semibold mb-2">Tips:</h3>
+                        <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                          <li>Preview before applying rotation</li>
+                          <li>Rotate multiple pages at once</li>
+                          <li>Use 180° rotation for upside-down pages</li>
+                          <li>Reset if you make a mistake</li>
+                          <li>All processing is done locally</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
           </Card>
         </div>
       </div>
+
+      <ContactSupportSection />
     </div>
+
   );
 }

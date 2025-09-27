@@ -14,6 +14,7 @@ import PrivacyNotice from "@/components/privacy-notice";
 import { WhyUseSection, UseCasesSection, ComparisonSection, HowItWorksSection, commonFeatures } from "@/components/seo/tool-features";
 import { ToolFAQ, generatePasswordGeneratorFAQs } from "@/components/seo/tool-faq";
 import { Key, Settings, Download, User, Mail, CreditCard, ShieldCheck, Hash, Briefcase, School, Users, Globe } from "lucide-react";
+import { ContactSupportSection } from "@/components/contact-support";
 
 interface PasswordOptions {
   length: number;
@@ -64,7 +65,7 @@ export default function PasswordGenerator() {
     name: "Password Generator - AltafToolsHub",
     description: "Cryptographically secure password generator with strength meter. Create strong passwords with custom settings. 100% browser-based.",
     applicationCategory: "SecurityApplication",
-    url: "https://www.altaftoolshub.com/password-generator",
+    url: "https://www.altaftoolshub.app/password-generator",
     aggregateRating: { ratingValue: 4.9, ratingCount: 3421, bestRating: 5 },
     featureList: [
       "Cryptographically secure random generation",
@@ -84,7 +85,7 @@ export default function PasswordGenerator() {
     description: "Free secure password generator. Create strong, random passwords with custom length and character types. Includes strength meter. 100% client-side processing.",
     path: "/password-generator",
     keywords: "password generator, secure password, strong password, random password generator, password creator, password maker, online password generator, free password tool, password generator 2025, ai password security",
-    ogImage: "https://www.altaftoolshub.com/og-password-generator.png",
+    ogImage: "https://www.altaftoolshub.app/og-password-generator.png",
     structuredData: [howToSchema, softwareSchema],
     additionalMetaTags: [
       { name: "application-name", content: "Password Generator - AltafToolsHub" },
@@ -259,12 +260,7 @@ export default function PasswordGenerator() {
             data-testid="button-back"
             onClick={() => {
               window.location.href = '/';
-              setTimeout(() => {
-                const toolsSection = document.getElementById('tools-section');
-                if (toolsSection) {
-                  toolsSection.scrollIntoView({ behavior: 'smooth' });
-                }
-              }, 100);
+              // Removed automatic scrolling to prevent page jumping
             }}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
@@ -273,7 +269,7 @@ export default function PasswordGenerator() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 mb-4">
             <Lock className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-4xl font-bold mb-4">Password Generator</h1>
+          <h1 className="text-4xl font-bold mb-4 text-primary">Password Generator</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Generate strong, secure passwords with customizable options. All passwords are created using cryptographically secure randomness.
           </p>
@@ -660,5 +656,6 @@ export default function PasswordGenerator() {
         toolPath="/password-generator"
       />
     </div>
+
   );
 }

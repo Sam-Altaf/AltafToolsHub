@@ -1,0 +1,115 @@
+{
+  "project_goal": "Enhance the website without altering or breaking existing tools and functionality. Improve design consistency, responsiveness, SEO, and user experience with a mobile-first approach. The final result must look professional, trustworthy, and polished.",
+
+  "strict_rules": [
+    "Do NOT remove or modify any working tools or features.",
+    "Do NOT break or downgrade any existing good UI/UX.",
+    "All enhancements must be mobile-first and fully responsive.",
+    "No horizontal scrolling or cramped elements on mobile.",
+    "Touch targets must be large and comfortable for fingers.",
+    "Text must remain readable on all screen sizes."
+  ],
+
+  "phases": {
+    "phase_1_ui_consistency": {
+      "objective": "Fix visual inconsistencies globally with mobile-first layout.",
+      "actions": [
+        "Standardize cards: equal height, consistent padding, truncate long text with ellipsis.",
+        "On desktop: grid layout with equal row alignment.",
+        "On mobile: cards stack into 1–2 columns with proper spacing.",
+        "Standardize typography: clear hierarchy (H1, H2, H3, body).",
+        "Use fluid, responsive font sizes and line spacing for readability on small screens.",
+        "Ensure all buttons and links have consistent hover/focus states, and are large enough on mobile."
+      ]
+    },
+
+    "phase_2_comparison_table": {
+      "objective": "Add a professional tool vs competitor comparison, mobile-first.",
+      "requirements": [
+        "Homepage: place below hero/intro, above tool grid.",
+        "Tool pages: place below tool description, above footer.",
+        "Rows: Features, Speed, Pricing, Ease of Use, Privacy/Security.",
+        "Desktop: structured table with sticky headers.",
+        "Mobile: auto-convert to stacked cards or expandable sections (accordion style).",
+        "No horizontal scrolling on mobile — layout must reflow naturally."
+      ]
+    },
+
+    "phase_3_contact_support": {
+      "objective": "Add clear, mobile-friendly support contact option.",
+      "requirements": [
+        "Box titled 'Still have questions? Contact us' on every page.",
+        "Include email and FAQ link.",
+        "Placement: just above footer.",
+        "Styling: highlighted card with padding and spacing.",
+        "On mobile: full-width card with large tap targets, no cramped text."
+      ]
+    },
+
+    "phase_4_footer_navigation": {
+      "objective": "Redesign footer for professionalism and mobile-first UX.",
+      "requirements": [
+        "Desktop: multi-column layout (About, Tools, Blog, Support, Legal).",
+        "Mobile: stacked vertical layout with collapsible sections (accordion style).",
+        "Add social icons with spacing, large enough for touch.",
+        "Include quick navigation links to key pages.",
+        "Footer text must remain readable and well-spaced on mobile."
+      ]
+    },
+
+    "phase_5_performance_seo": {
+      "objective": "Boost performance, SEO, and accessibility with mobile-first testing.",
+      "actions": [
+        "Lazy load non-critical images (`loading='lazy'`).",
+        "Defer or async non-essential scripts.",
+        "Optimize all images (WebP/AVIF where possible).",
+        "Ensure pages load fast on 3G/4G networks.",
+        "Meta tags: unique title + description for each page.",
+        "Heading hierarchy: one H1, proper H2/H3 per page.",
+        "All images must have descriptive alt text.",
+        "Run Lighthouse mobile tests and achieve 90+ score for Performance, SEO, and Accessibility."
+      ]
+    },
+
+    "phase_6_additional_enhancements": {
+      "objective": "Add extra features for professionalism, trust, and SEO growth, mobile-first.",
+      "ideas": [
+        "Homepage: add 'Why Choose Us?' section under comparison table (icons + short text).",
+        "Add FAQ page (linked in footer and contact box).",
+        "Add Blog/Articles page for SEO (linked in footer).",
+        "Add optional testimonials/reviews section with mobile-friendly cards.",
+        "Introduce a site-wide search or filter for tools if tool list grows large.",
+        "Optional: dark mode toggle (mobile-friendly button).",
+        "Accessibility: ARIA labels, keyboard navigation, WCAG color contrast compliance.",
+        "Micro-interactions: smooth hover/tap animations that don’t break mobile performance."
+      ]
+    }
+  },
+
+  "sitemap_suggestions": {
+    "homepage": [
+      "Hero section (existing)",
+      "Comparison Table (new, below hero, mobile-first)",
+      "Why Choose Us section (new, below comparison table)",
+      "Tool cards grid (existing, responsive)",
+      "Still Have Questions contact box (new, above footer, mobile-first)",
+      "Footer (new, redesigned, responsive)"
+    ],
+    "tool_pages": [
+      "Tool title + description (existing)",
+      "Tool functionality (existing, no changes)",
+      "Comparison Table (new, below tool content, mobile-first)",
+      "Still Have Questions contact box (new, above footer, mobile-first)",
+      "Footer (new, redesigned, responsive)"
+    ],
+    "global": [
+      "Navigation bar (existing, ensure mobile hamburger menu).",
+      "FAQ page (new, linked in footer and contact box).",
+      "Blog page (new, linked in footer).",
+      "Contact info (in footer and support box).",
+      "Dark mode toggle (optional, header or footer)."
+    ]
+  },
+
+  "final_result_expectation": "A modern, professional, mobile-first website where every enhancement (cards, comparison tables, contact box, footer, FAQs, blog) looks perfect and user-friendly on both desktop and mobile. No horizontal scrolling, text always readable, and buttons always touch-friendly. Tools remain fully functional and unchanged, while UX, SEO, and trustworthiness improve dramatically."
+}

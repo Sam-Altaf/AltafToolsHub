@@ -72,13 +72,13 @@ export function useSEO({
     }
 
     // Canonical URL
-    updateMetaTag('link[rel="canonical"]', 'href', `https://www.altaftoolshub.com${path}`);
+    updateMetaTag('link[rel="canonical"]', 'href', `https://www.altaftoolshub.app${path}`);
 
     // Open Graph tags
     const ogTags = [
       { property: 'og:title', content: title },
       { property: 'og:description', content: description },
-      { property: 'og:url', content: `https://www.altaftoolshub.com${path}` },
+      { property: 'og:url', content: `https://www.altaftoolshub.app${path}` },
       { property: 'og:type', content: articlePublishedTime ? 'article' : 'website' },
       { property: 'og:site_name', content: 'AltafToolsHub' },
       { property: 'og:locale', content: 'en_US' },
@@ -220,7 +220,7 @@ export function useSEO({
 
 // Helper function to generate breadcrumb structured data
 export function generateBreadcrumbSchema(items: { name: string; url: string }[]) {
-  const baseUrl = 'https://www.altaftoolshub.com';
+  const baseUrl = 'https://www.altaftoolshub.app';
   const breadcrumbItems = [
     { name: 'Home', url: '/' },
     ...items
@@ -273,7 +273,7 @@ export function generateWebApplicationSchema(tool: {
     "publisher": {
       "@type": "Organization",
       "name": "AltafToolsHub",
-      "url": "https://www.altaftoolshub.com"
+      "url": "https://www.altaftoolshub.app"
     }
   };
 }
@@ -283,13 +283,13 @@ export function generateOrganizationSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "@id": "https://www.altaftoolshub.com/#organization",
+    "@id": "https://www.altaftoolshub.app/#organization",
     "name": "AltafToolsHub",
     "alternateName": "Altaf Tools Hub",
-    "url": "https://www.altaftoolshub.com",
+    "url": "https://www.altaftoolshub.app",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://www.altaftoolshub.com/logo.png",
+      "url": "https://www.altaftoolshub.app/logo.png",
       "width": "512",
       "height": "512"
     },
@@ -315,7 +315,7 @@ export function generateOrganizationSchema() {
     "contactPoint": {
       "@type": "ContactPoint",
       "contactType": "customer support",
-      "email": "support@altaftoolshub.com",
+      "email": "altaftoolshub@gmail.com",
       "availableLanguage": ["English"],
       "areaServed": "Worldwide"
     },
@@ -450,7 +450,7 @@ export function generateSoftwareApplicationSchema(app: {
     "publisher": {
       "@type": "Organization",
       "name": "AltafToolsHub",
-      "url": "https://www.altaftoolshub.com",
+      "url": "https://www.altaftoolshub.app",
       "logo": {
         "@type": "ImageObject",
         "url": "https://www.altaftoolshub.com/logo.png"
@@ -459,12 +459,12 @@ export function generateSoftwareApplicationSchema(app: {
     "author": {
       "@type": "Organization",
       "name": "AltafToolsHub",
-      "url": "https://www.altaftoolshub.com"
+      "url": "https://www.altaftoolshub.app"
     },
     "maintainer": {
       "@type": "Organization",
       "name": "AltafToolsHub",
-      "url": "https://www.altaftoolshub.com"
+      "url": "https://www.altaftoolshub.app"
     },
     "potentialAction": {
       "@type": "UseAction",
@@ -636,16 +636,16 @@ export function generateServiceSchema(service: {
     "provider": {
       "@type": "Organization",
       "name": service.provider,
-      "url": "https://www.altaftoolshub.com"
+      "url": "https://www.altaftoolshub.app"
     },
     "serviceType": service.serviceType,
     "areaServed": service.areaServed || "Worldwide",
     "availableChannel": {
       "@type": "ServiceChannel",
-      "serviceUrl": service.url || "https://www.altaftoolshub.com",
+      "serviceUrl": service.url || "https://www.altaftoolshub.app",
       "availableLanguage": ["English"]
     },
-    "termsOfService": "https://www.altaftoolshub.com/terms",
+    "termsOfService": "https://www.altaftoolshub.app/terms",
     "category": "Online Tools",
     "hasOfferCatalog": service.hasOfferCatalog ? {
       "@type": "OfferCatalog",
@@ -696,7 +696,7 @@ export function generateCollectionPageSchema(data: {
       "itemListElement": data.tools.map((tool, index) => ({
         "@type": "ListItem",
         "position": index + 1,
-        "url": `https://www.altaftoolshub.com${tool.url}`,
+        "url": `https://www.altaftoolshub.app${tool.url}`,
         "name": tool.name,
         "description": tool.description
       }))
@@ -709,14 +709,14 @@ export function generateSearchActionSchema() {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "@id": "https://www.altaftoolshub.com/#website",
-    "url": "https://www.altaftoolshub.com",
+    "@id": "https://www.altaftoolshub.app/#website",
+    "url": "https://www.altaftoolshub.app",
     "name": "AltafToolsHub",
     "potentialAction": {
       "@type": "SearchAction",
       "target": {
         "@type": "EntryPoint",
-        "urlTemplate": "https://www.altaftoolshub.com/search?q={search_term_string}"
+        "urlTemplate": "https://www.altaftoolshub.app/search?q={search_term_string}"
       },
       "query-input": "required name=search_term_string"
     }
@@ -747,7 +747,7 @@ export function generateProductSchema(product: {
     "name": product.name,
     "description": product.description,
     "url": product.url,
-    "image": product.image || "https://www.altaftoolshub.com/og-image.png",
+    "image": product.image || "https://www.altaftoolshub.app/og-image.png",
     "brand": {
       "@type": "Brand",
       "name": product.brand || "AltafToolsHub"

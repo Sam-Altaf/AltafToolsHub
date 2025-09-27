@@ -20,6 +20,7 @@ import Breadcrumbs from "@/components/seo/breadcrumbs";
 import ToolSEO from "@/components/seo/tool-seo";
 import PrivacyNotice from "@/components/privacy-notice";
 import Tesseract from 'tesseract.js';
+import { ContactSupportSection } from "@/components/contact-support";
 
 interface ExtractedText {
   text: string;
@@ -74,7 +75,7 @@ export default function ExtractText() {
     name: "Image Text Extractor - AltafToolsHub",
     description: "Free OCR tool to extract text from images. Supports 15+ languages. 100% browser-based processing for complete privacy.",
     applicationCategory: "UtilitiesApplication",
-    url: "https://www.altaftoolshub.com/extract-text",
+    url: "https://www.altaftoolshub.app/extract-text",
     aggregateRating: { ratingValue: 4.8, ratingCount: 892, bestRating: 5 },
     featureList: [
       "Extract text from JPG, PNG, WebP, BMP images",
@@ -92,7 +93,7 @@ export default function ExtractText() {
     path: "/extract-text",
     keywords: "ocr, extract text from image, image to text, optical character recognition, text extraction, ocr online, free ocr tool, tesseract ocr, image text reader",
     structuredData: [howToSchema, softwareSchema],
-    ogImage: "https://www.altaftoolshub.com/og-extract-text.png"
+    ogImage: "https://www.altaftoolshub.app/og-extract-text.png"
   });
 
   const handleFileSelect = useCallback((file: File) => {
@@ -119,6 +120,9 @@ export default function ExtractText() {
   }, []);
 
   const extractText = async () => {
+    // Scroll to top to show processing area
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     if (!selectedFile || !imagePreview) return;
 
     setIsProcessing(true);
@@ -270,13 +274,8 @@ export default function ExtractText() {
             variant="ghost" 
             className="mb-4"
             onClick={() => {
-              const toolsSection = document.getElementById('tools-section');
-              if (toolsSection) {
-                window.history.pushState({}, '', '/');
-                setTimeout(() => {
-                  toolsSection.scrollIntoView({ behavior: 'smooth' });
-                }, 100);
-              }
+              window.location.href = '/';
+              // Removed automatic scrolling to prevent page jumping
             }}
             data-testid="button-back"
           >
@@ -288,7 +287,7 @@ export default function ExtractText() {
             <div className="p-3 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-500">
               <ScanLine className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-4xl font-bold">Image Text Extractor</h1>
+            <h1 className="text-4xl font-bold text-primary">Image Text Extractor</h1>
           </div>
           
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -622,6 +621,9 @@ export default function ExtractText() {
           </AlertDescription>
         </Alert>
       </div>
+
+      <ContactSupportSection />
     </div>
+
   );
 }

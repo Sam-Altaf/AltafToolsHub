@@ -6,14 +6,24 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
-import { useSEO } from "@/hooks/use-seo";
-import { Scissors, Upload, Download, FileText, Loader2, ArrowLeft, Shield, FileSearch, Star, Users, Zap, Clock, CheckCircle2, ChevronRight, Info, HelpCircle, ChevronDown, Mail, MessageCircle, BookOpen } from "lucide-react";
+import { useSEO, generateHowToSchema, generateSoftwareApplicationSchema, generateBreadcrumbSchema } from "@/hooks/use-seo";
+import { Scissors, Upload, Download, FileText, Loader2, ArrowLeft, Shield, FileSearch, Star, Users, Zap, Clock, CheckCircle2, ChevronRight, Info, HelpCircle, ChevronDown, Mail, BookOpen } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
 import { PDFDocument } from "pdf-lib";
 import { cn } from "@/lib/utils";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import { ContactSupportSection } from "@/components/contact-support";
+import { scrollBy } from "@/lib/scroll-utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   Accordion,
   AccordionContent,
@@ -39,33 +49,49 @@ export default function SplitPDF() {
   const [splitResults, setSplitResults] = useState<SplitResult[]>([]);
   const { toast } = useToast();
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "PDF Splitter - AltafToolsHub",
-    "description": "Free online PDF splitter to divide PDF files into separate documents with precision",
-    "url": "https://www.altaftoolshub.com/split-pdf",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Any",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "ratingCount": "2456"
-    }
-  };
+  // Generate structured data for SEO
+  const howToSchema = generateHowToSchema({
+    name: "How to Split PDF Files Online",
+    description: "Divide PDF documents into separate files by page ranges or fixed sizes",
+    totalTime: "PT1M",
+    steps: [
+      { name: "Upload PDF", text: "Select or drag your PDF file to split" },
+      { name: "Choose Split Method", text: "Select page ranges, single pages, or fixed size splits" },
+      { name: "Split PDF", text: "Click 'Split PDF' to divide the document" },
+      { name: "Download Files", text: "Download your split PDF files separately or as a zip" }
+    ]
+  });
+
+  const softwareSchema = generateSoftwareApplicationSchema({
+    name: "PDF Splitter - AltafToolsHub",
+    description: "Free online PDF splitter to divide PDF files into separate documents with precision. Extract pages or split by custom ranges. 100% browser-based.",
+    applicationCategory: "BusinessApplication",
+    url: "https://www.altaftoolshub.app/split-pdf",
+    aggregateRating: { ratingValue: 4.9, ratingCount: 2456, bestRating: 5 },
+    featureList: [
+      "Split by page ranges",
+      "Extract single pages",
+      "Fixed size splitting",
+      "100% client-side processing",
+      "No file upload to servers",
+      "Batch download support"
+    ],
+    datePublished: "2024-01-01",
+    dateModified: "2025-01-20"
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "PDF Tools", url: "/all-tools?category=pdf" },
+    { name: "Split PDF", url: "/split-pdf" }
+  ]);
 
   useSEO({
     title: "Split PDF Online Free - Divide PDF by Pages | AltafToolsHub",
     description: "Free online PDF splitter to divide PDF files by page ranges, extract single pages, or split into fixed sizes. 100% client-side processing for complete privacy. No file size limits.",
     path: "/split-pdf",
     keywords: "split pdf, divide pdf, pdf splitter, extract pdf pages, split pdf online, pdf page separator, pdf divider, extract pages from pdf",
-    ogImage: "https://www.altaftoolshub.com/og-split-pdf.png",
-    structuredData: [structuredData],
+    ogImage: "https://www.altaftoolshub.app/og-split-pdf.png",
+    structuredData: [howToSchema, softwareSchema, breadcrumbSchema],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Splitter - AltafToolsHub" },
       { property: "article:section", content: "PDF Tools" },
@@ -139,6 +165,9 @@ export default function SplitPDF() {
   };
 
   const splitPDF = async () => {
+    // Scroll to top to show processing area
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     if (!pdfDoc) {
       toast({
         title: "No File",
@@ -254,7 +283,7 @@ export default function SplitPDF() {
   };
 
   const downloadResult = (result: SplitResult) => {
-    const blob = new Blob([result.data], { type: 'application/pdf' });
+  const blob = new Blob([new Uint8Array(result.data)], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -314,8 +343,8 @@ export default function SplitPDF() {
                 Trusted by 100,000+ professionals worldwide
               </Badge>
             </div>
-            <h1 className="text-5xl font-bold mb-4">
-              Split <span className="gradient-text">PDF Files</span> with Precision
+            <h1 className="text-5xl font-bold mb-4 text-primary">
+              Split PDF Files with Precision
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-6">
               Extract specific pages, divide by ranges, or split into equal parts. 
@@ -505,24 +534,26 @@ export default function SplitPDF() {
                     )}
 
                     {/* Action Button */}
-                    <Button
-                      onClick={splitPDF}
-                      disabled={isProcessing}
-                      className="w-full h-12 text-base"
-                      data-testid="button-split"
-                    >
-                      {isProcessing ? (
-                        <>
-                          <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                          Splitting PDF...
-                        </>
-                      ) : (
-                        <>
-                          <Scissors className="w-5 h-5 mr-2" />
-                          Split PDF Now
-                        </>
-                      )}
-                    </Button>
+                    <div className="pb-8">
+                      <Button
+                        onClick={splitPDF}
+                        disabled={isProcessing}
+                        className="w-full h-12 text-base"
+                        data-testid="button-split"
+                      >
+                        {isProcessing ? (
+                          <>
+                            <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                            Splitting PDF...
+                          </>
+                        ) : (
+                          <>
+                            <Scissors className="w-5 h-5 mr-2" />
+                            Split PDF Now
+                          </>
+                        )}
+                      </Button>
+                    </div>
                   </>
                 )}
               </>
@@ -1107,23 +1138,75 @@ export default function SplitPDF() {
                 We're here to help! Reach out to our support team or check our comprehensive documentation.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="h-12">
-                  <Mail className="w-5 h-5 mr-2" />
-                  Email Support
-                </Button>
-                <Button size="lg" variant="outline" className="h-12">
-                  <MessageCircle className="w-5 h-5 mr-2" />
-                  Live Chat
-                </Button>
-                <Button size="lg" variant="outline" className="h-12">
-                  <BookOpen className="w-5 h-5 mr-2" />
-                  Documentation
-                </Button>
+                <a href="mailto:altaftoolshub@gmail.com?subject=Help%20with%20Split%20PDF%20Tool" className="inline-block">
+                  <Button size="lg" className="h-12">
+                    <Mail className="w-5 h-5 mr-2" />
+                    Email Support
+                  </Button>
+                </a>
+                <Link href="/faq">
+                  <Button size="lg" variant="outline" className="h-12">
+                    <HelpCircle className="w-5 h-5 mr-2" />
+                    FAQ
+                  </Button>
+                </Link>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button size="lg" variant="outline" className="h-12">
+                      <BookOpen className="w-5 h-5 mr-2" />
+                      Documentation
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle>How to Split PDF Files</DialogTitle>
+                      <DialogDescription>
+                        Complete guide for splitting PDFs into separate documents
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 mt-4">
+                      <div>
+                        <h3 className="font-semibold mb-2">Step 1: Upload Your PDF</h3>
+                        <p className="text-muted-foreground">Click the upload area or drag and drop your PDF file. The total page count will be displayed.</p>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold mb-2">Step 2: Choose Split Method</h3>
+                        <p className="text-muted-foreground">Select how to split your PDF:</p>
+                        <ul className="list-disc list-inside mt-1 text-muted-foreground">
+                          <li>By page ranges (e.g., 1-5, 6-10)</li>
+                          <li>Extract single pages</li>
+                          <li>Fixed number of pages per file</li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold mb-2">Step 3: Configure Split Settings</h3>
+                        <p className="text-muted-foreground">Enter page ranges or specify the number of pages per split file. Preview shows how files will be divided.</p>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold mb-2">Step 4: Split and Download</h3>
+                        <p className="text-muted-foreground">Click Split PDF to process. Download individual files or all files as a ZIP archive.</p>
+                      </div>
+                      <div className="pt-4 border-t">
+                        <h3 className="font-semibold mb-2">Tips:</h3>
+                        <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                          <li>Use comma to separate ranges: 1-5, 10-15</li>
+                          <li>Extract single pages: 1, 3, 7</li>
+                          <li>Split evenly with fixed size option</li>
+                          <li>Download all splits as ZIP</li>
+                          <li>Processing happens locally</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
           </Card>
         </div>
       </div>
+
+      <ContactSupportSection />
     </div>
+
   );
 }

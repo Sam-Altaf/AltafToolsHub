@@ -3,13 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { useSEO } from "@/hooks/use-seo";
+import { useSEO, generateHowToSchema, generateSoftwareApplicationSchema, generateBreadcrumbSchema } from "@/hooks/use-seo";
 import { Image as ImageIcon, Upload, Download, FileText, Loader2, ArrowLeft, Shield, ZoomIn } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
 import { PDFDocument } from "pdf-lib";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import * as pdfjsLib from 'pdfjs-dist';
+import { ContactSupportSection } from "@/components/contact-support";
 
 // Configure PDF.js worker - using local worker for privacy  
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
@@ -30,33 +31,49 @@ export default function ExtractImages() {
   const [selectedImage, setSelectedImage] = useState<ExtractedImage | null>(null);
   const { toast } = useToast();
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Extract Images from PDF - AltafToolsHub",
-    "description": "Free online tool to extract all images from PDF documents",
-    "url": "https://www.altaftoolshub.com/extract-images",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Any",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.7",
-      "ratingCount": "892"
-    }
-  };
+  // Generate structured data for SEO
+  const howToSchema = generateHowToSchema({
+    name: "How to Extract Images from PDF",
+    description: "Save all images from PDF documents in original quality",
+    totalTime: "PT1M",
+    steps: [
+      { name: "Upload PDF", text: "Select or drag your PDF file" },
+      { name: "Process File", text: "Wait while images are extracted automatically" },
+      { name: "Preview Images", text: "Review extracted images in the gallery" },
+      { name: "Download Images", text: "Download individual images or all as ZIP" }
+    ]
+  });
+
+  const softwareSchema = generateSoftwareApplicationSchema({
+    name: "Extract Images from PDF - AltafToolsHub",
+    description: "Free online tool to extract all images from PDF documents. Preserves original quality. Download as JPG/PNG or ZIP archive. 100% browser-based.",
+    applicationCategory: "BusinessApplication",
+    url: "https://www.altaftoolshub.app/extract-images",
+    aggregateRating: { ratingValue: 4.7, ratingCount: 892, bestRating: 5 },
+    featureList: [
+      "Extract all images from PDFs",
+      "Preserve original image quality",
+      "Download as JPG or PNG",
+      "Batch download as ZIP",
+      "Image preview gallery",
+      "100% client-side processing"
+    ],
+    datePublished: "2024-01-01",
+    dateModified: "2025-01-20"
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "PDF Tools", url: "/all-tools?category=pdf" },
+    { name: "Extract Images", url: "/extract-images" }
+  ]);
 
   useSEO({
     title: "Extract Images from PDF Online Free - Save All PDF Images | AltafToolsHub",
     description: "Free online PDF image extractor to save all images from PDF documents. Extract JPG, PNG images with original quality. 100% client-side processing.",
     path: "/extract-images",
     keywords: "extract pdf images, pdf image extractor, save pdf images, extract jpg from pdf, pdf to images",
-    ogImage: "https://www.altaftoolshub.com/og-extract-images.png",
-    structuredData: [structuredData],
+    ogImage: "https://www.altaftoolshub.app/og-extract-images.png",
+    structuredData: [howToSchema, softwareSchema, breadcrumbSchema],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Image Extractor - AltafToolsHub" },
       { property: "article:section", content: "PDF Tools" }
@@ -200,8 +217,8 @@ export default function ExtractImages() {
 
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-4">
-              Extract <span className="gradient-text">Images from PDF</span>
+            <h1 className="text-4xl font-bold mb-4 text-primary">
+              Extract Images from PDF
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Extract all images from your PDF documents with original quality. 
@@ -222,7 +239,7 @@ export default function ExtractImages() {
               <FileUpload
                 accept="application/pdf"
                 onFileSelect={handleFileUpload}
-                className="h-48"
+                className="min-h-[400px]"
                 title="Drop PDF file here or click to select"
                 description="Select a PDF to extract images from"
               />
@@ -266,14 +283,14 @@ export default function ExtractImages() {
                         {extractedImages.map((image, index) => (
                           <div
                             key={index}
-                            className="group relative border rounded-lg overflow-hidden hover:shadow-lg transition-all cursor-pointer"
+                            className="group relative border rounded-lg hover:shadow-lg transition-all cursor-pointer"
                             onClick={() => setSelectedImage(image)}
                             data-testid={`image-thumb-${index}`}
                           >
                             <img
                               src={image.url}
                               alt={`Extracted image ${index + 1}`}
-                              className="w-full h-32 object-cover"
+                              className="w-full aspect-square object-cover rounded-t-lg"
                             />
                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/50 transition-all flex items-center justify-center">
                               <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
@@ -467,6 +484,9 @@ export default function ExtractImages() {
           </Card>
         </div>
       </div>
+
+      <ContactSupportSection />
     </div>
+
   );
 }

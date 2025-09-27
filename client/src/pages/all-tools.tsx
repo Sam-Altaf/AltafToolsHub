@@ -43,8 +43,8 @@ const ToolCard = ({ tool, view }: { tool: any; view: 'grid' | 'list' }) => {
       transition={{ duration: 0.3 }}
     >
       <Card className={cn(
-        "relative h-full transition-all duration-300 cursor-pointer group overflow-hidden",
-        view === 'grid' ? "p-6 min-h-[240px]" : "p-5",
+        "relative h-full transition-all duration-300 cursor-pointer group overflow-hidden rounded-lg",
+        view === 'grid' ? "p-6 min-h-[240px]" : "p-6",
         "hover:shadow-xl hover:border-primary/30",
         !tool.available && "opacity-60 cursor-not-allowed hover:opacity-60"
       )} data-testid={`tool-card-${tool.id}`}>
@@ -90,10 +90,10 @@ const ToolCard = ({ tool, view }: { tool: any; view: 'grid' | 'list' }) => {
             </div>
             
             {/* Content */}
-            <h3 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors">
+            <h3 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors line-clamp-1">
               {tool.title}
             </h3>
-            <p className="text-sm text-muted-foreground line-clamp-3 mb-3">
+            <p className="text-sm text-muted-foreground truncate-3 mb-3">
               {tool.extendedDescription || tool.description}
             </p>
             
@@ -137,10 +137,10 @@ const ToolCard = ({ tool, view }: { tool: any; view: 'grid' | 'list' }) => {
             
             {/* Content */}
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-base mb-1 group-hover:text-primary transition-colors">
+              <h3 className="font-semibold text-base mb-1 group-hover:text-primary transition-colors line-clamp-1">
                 {tool.title}
               </h3>
-              <p className="text-sm text-muted-foreground line-clamp-2">
+              <p className="text-sm text-muted-foreground truncate-2">
                 {tool.extendedDescription || tool.description}
               </p>
             </div>
@@ -156,9 +156,20 @@ const ToolCard = ({ tool, view }: { tool: any; view: 'grid' | 'list' }) => {
   );
   
   return tool.available ? (
-    <Link href={tool.href}>{cardContent}</Link>
+    <Link 
+      href={tool.href}
+      className="block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg"
+    >
+      {cardContent}
+    </Link>
   ) : (
-    cardContent
+    <div
+      className="h-full rounded-lg"
+      aria-label={`${tool.title} - Coming soon`}
+      aria-disabled="true"
+    >
+      {cardContent}
+    </div>
   );
 };
 
@@ -182,7 +193,8 @@ export default function AllToolsPage() {
       setTimeout(() => {
         const categoryElement = document.getElementById(`category-${categoryParam}`);
         if (categoryElement) {
-          categoryElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          // Removed automatic scrolling to prevent page jumping
+          // categoryElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       }, 100);
     }
@@ -261,7 +273,7 @@ export default function AllToolsPage() {
       
       {/* Hero Section */}
       <section className="relative pt-20 pb-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="container-section relative z-10">
           <motion.div 
             className="text-center max-w-4xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
@@ -273,8 +285,8 @@ export default function AllToolsPage() {
               {availableToolsCount} Tools Available • {totalToolsCount - availableToolsCount} Coming Soon
             </Badge>
             
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
-              <span className="gradient-text">All Tools</span> at Your Fingertips
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-primary">
+              All Tools at Your Fingertips
             </h1>
             
             <p className="text-xl text-muted-foreground mb-8 leading-relaxed">

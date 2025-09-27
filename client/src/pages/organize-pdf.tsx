@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { useSEO } from "@/hooks/use-seo";
-import { Layers, Upload, Download, FileText, Loader2, ArrowLeft, Shield, Trash2, GripVertical, RotateCw, Copy, Scissors, FileOutput, Mail, MessageCircle, BookOpen, Star, Users, Zap, Clock, CheckCircle2, ChevronRight, Info, HelpCircle, ChevronDown } from "lucide-react";
+import { useSEO, generateHowToSchema, generateSoftwareApplicationSchema, generateBreadcrumbSchema } from "@/hooks/use-seo";
+import { Layers, Upload, Download, FileText, Loader2, ArrowLeft, Shield, Trash2, GripVertical, RotateCw, Copy, Scissors, FileOutput, Mail, BookOpen, Star, Users, Zap, Clock, CheckCircle2, ChevronRight, Info, HelpCircle, ChevronDown } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
 import { PDFDocument, degrees } from "pdf-lib";
@@ -18,6 +18,15 @@ import {
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import * as pdfjsLib from 'pdfjs-dist';
+import { ContactSupportSection } from "@/components/contact-support";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 // Configure PDF.js worker - using local worker for privacy
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
@@ -42,33 +51,49 @@ export default function OrganizePDF() {
   const [draggedPage, setDraggedPage] = useState<PageData | null>(null);
   const { toast } = useToast();
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "PDF Organizer - AltafToolsHub",
-    "description": "Free online PDF organizer to rearrange, rotate, and manage PDF pages",
-    "url": "https://www.altaftoolshub.com/organize-pdf",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Any",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "ratingCount": "1567"
-    }
-  };
+  // Generate structured data for SEO
+  const howToSchema = generateHowToSchema({
+    name: "How to Organize PDF Pages Online",
+    description: "Rearrange, rotate, delete, and manage PDF pages with drag-and-drop",
+    totalTime: "PT2M",
+    steps: [
+      { name: "Upload PDF", text: "Select or drag your PDF file" },
+      { name: "Rearrange Pages", text: "Drag and drop pages to reorder them" },
+      { name: "Manage Pages", text: "Rotate, delete, or duplicate pages as needed" },
+      { name: "Download Result", text: "Download your reorganized PDF instantly" }
+    ]
+  });
+
+  const softwareSchema = generateSoftwareApplicationSchema({
+    name: "PDF Organizer - AltafToolsHub",
+    description: "Free online PDF organizer to rearrange, rotate, and manage PDF pages. Complete page management with visual drag-and-drop interface. 100% browser-based.",
+    applicationCategory: "BusinessApplication",
+    url: "https://www.altaftoolshub.app/organize-pdf",
+    aggregateRating: { ratingValue: 4.9, ratingCount: 1567, bestRating: 5 },
+    featureList: [
+      "Drag-and-drop page reordering",
+      "Rotate individual pages",
+      "Delete unwanted pages",
+      "Duplicate pages",
+      "Visual page previews",
+      "100% client-side processing"
+    ],
+    datePublished: "2024-01-01",
+    dateModified: "2025-01-20"
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "PDF Tools", url: "/all-tools?category=pdf" },
+    { name: "Organize PDF", url: "/organize-pdf" }
+  ]);
 
   useSEO({
     title: "Organize PDF Pages Online Free - Rearrange & Manage | AltafToolsHub",
     description: "Free online PDF organizer to rearrange, rotate, delete, and duplicate pages. Complete page management with drag-and-drop. 100% client-side processing.",
     path: "/organize-pdf",
     keywords: "organize pdf, rearrange pdf pages, pdf page manager, reorder pdf, pdf organizer, manage pdf pages",
-    ogImage: "https://www.altaftoolshub.com/og-organize-pdf.png",
-    structuredData: [structuredData],
+    ogImage: "https://www.altaftoolshub.app/og-organize-pdf.png",
+    structuredData: [howToSchema, softwareSchema, breadcrumbSchema],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Organizer - AltafToolsHub" },
       { property: "article:section", content: "PDF Tools" }
@@ -260,6 +285,9 @@ export default function OrganizePDF() {
   };
 
   const applyChanges = async () => {
+    // Scroll to top to show processing area
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     if (!pdfDoc || !pdfFile) {
       toast({
         title: "No file loaded",
@@ -368,8 +396,8 @@ export default function OrganizePDF() {
 
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-4">
-              Organize <span className="gradient-text">PDF Pages</span>
+            <h1 className="text-4xl font-bold mb-4 text-primary">
+              Organize PDF Pages
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Rearrange, rotate, delete, and duplicate PDF pages with drag-and-drop ease.
@@ -883,22 +911,69 @@ export default function OrganizePDF() {
               Our support team is here to help you with any questions about organizing your PDFs.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Button variant="outline">
-                <Mail className="w-4 h-4 mr-2" />
-                Email Support
-              </Button>
-              <Button variant="outline">
-                <MessageCircle className="w-4 h-4 mr-2" />
-                Live Chat
-              </Button>
-              <Button variant="outline">
-                <BookOpen className="w-4 h-4 mr-2" />
-                Documentation
-              </Button>
+              <a href="mailto:altaftoolshub@gmail.com?subject=Help%20with%20Organize%20PDF%20Tool" className="inline-block">
+                <Button variant="outline">
+                  <Mail className="w-4 h-4 mr-2" />
+                  Email Support
+                </Button>
+              </a>
+              <Link href="/faq">
+                <Button variant="outline">
+                  <HelpCircle className="w-4 h-4 mr-2" />
+                  FAQ
+                </Button>
+              </Link>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline">
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    Documentation
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>How to Organize PDF Pages</DialogTitle>
+                    <DialogDescription>
+                      Complete guide for managing and rearranging PDF pages
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 mt-4">
+                    <div>
+                      <h3 className="font-semibold mb-2">Step 1: Upload Your PDF</h3>
+                      <p className="text-muted-foreground">Click the upload area or drag and drop your PDF file. All pages will be displayed as thumbnails.</p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-2">Step 2: Rearrange Pages</h3>
+                      <p className="text-muted-foreground">Drag and drop page thumbnails to reorder them. You can also rotate, duplicate, or delete individual pages.</p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-2">Step 3: Apply Actions</h3>
+                      <p className="text-muted-foreground">Use the toolbar to rotate selected pages, duplicate them, or delete unwanted pages.</p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-2">Step 4: Save Your Changes</h3>
+                      <p className="text-muted-foreground">Click Apply Changes to create your reorganized PDF. The new file will download automatically.</p>
+                    </div>
+                    <div className="pt-4 border-t">
+                      <h3 className="font-semibold mb-2">Tips:</h3>
+                      <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                        <li>Select multiple pages with Ctrl/Cmd+Click</li>
+                        <li>Rotate pages 90° clockwise or counterclockwise</li>
+                        <li>Duplicate important pages easily</li>
+                        <li>Preview changes before applying</li>
+                        <li>All processing is done locally</li>
+                      </ul>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </Card>
         </div>
       </div>
+
+      <ContactSupportSection />
     </div>
+
   );
 }

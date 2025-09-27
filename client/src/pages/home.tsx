@@ -9,11 +9,13 @@ import {
   FileText, Lock, Image, Shield, Zap, Check, ArrowRight, 
   Search, Star, Users, Globe, Download, TrendingUp,
   Clock, ChevronRight, Sparkles, QrCode, Calculator,
-  BookOpen, FileCode, Type, PenTool, Book
+  BookOpen, FileCode, Type, PenTool, Book, CloudOff, Gift
 } from "lucide-react";
 import { useSEO, generateOrganizationSchema, generateWebApplicationSchema, generateFAQSchema, generateServiceSchema } from "@/hooks/use-seo";
 import { motion, AnimatePresence } from "framer-motion";
 import { LogoIcon } from "@/components/logo";
+import { ComparisonTable } from "@/components/comparison-table";
+import { ContactSupportSection } from "@/components/contact-support";
 import { 
   toolCategories, 
   allTools, 
@@ -24,6 +26,8 @@ import {
   Tool 
 } from "@/lib/tools-data";
 import { cn } from "@/lib/utils";
+import { getMotionProps } from "@/hooks/use-reduced-motion";
+import { useReducedMotionContext } from "@/components/reduced-motion-provider";
 
 const features = [
   {
@@ -33,16 +37,22 @@ const features = [
     gradient: "from-purple-500 to-blue-500"
   },
   {
-    icon: Zap,
-    title: "Lightning Fast", 
-    description: "Instant processing with no upload delays or server wait times.",
+    icon: CloudOff,
+    title: "No Upload Required", 
+    description: "Everything works offline. No server uploads mean instant processing.",
     gradient: "from-blue-500 to-cyan-500"
   },
   {
-    icon: Check,
-    title: "Always Free",
-    description: "Professional-grade tools, completely free. No limits, no subscriptions.",
+    icon: Zap,
+    title: "Lightning Fast",
+    description: "Instant processing with no delays or server wait times.",
     gradient: "from-cyan-500 to-teal-500"
+  },
+  {
+    icon: Gift,
+    title: "Free Forever",
+    description: "Professional-grade tools, completely free. No limits, no subscriptions.",
+    gradient: "from-teal-500 to-green-500"
   }
 ];
 
@@ -80,111 +90,153 @@ const testimonials = [
 // Enhanced Tool Card Component with premium animations
 const ToolCard = ({ tool }: { tool: Tool }) => {
   const Icon = tool.icon;
+  const { reducedMotion } = useReducedMotionContext();
   
-  return (
-    <Link href={tool.available ? tool.href : "#"}>
-      <motion.div
-        whileHover={tool.available ? { scale: 1.03, y: -5 } : {}}
-        whileTap={tool.available ? { scale: 0.98 } : {}}
-        className="h-full"
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ 
+  const cardContent = (
+    <motion.div
+      className="h-full"
+      {...getMotionProps(reducedMotion, {
+        whileHover: tool.available ? { scale: 1.03, y: -5 } : {},
+        whileTap: tool.available ? { scale: 0.98 } : {},
+        initial: { opacity: 0, y: 30 },
+        whileInView: { opacity: 1, y: 0 },
+        viewport: { once: true, amount: 0.2 },
+        transition: { 
           duration: 0.5, 
           ease: [0.4, 0, 0.2, 1],
           hover: { duration: 0.3 }
-        }}
-      >
-        <Card className={cn(
-          "tool-card relative h-full p-7 transition-all duration-500 cursor-pointer group min-h-[320px]",
-          "hover:shadow-2xl",
-          !tool.available && "opacity-70 cursor-not-allowed hover:opacity-70"
-        )} data-testid={`tool-card-${tool.id}`}>
-          {/* New/Popular/Coming Soon Badge */}
-          {(tool.new || tool.popular || !tool.available) && (
-            <div className="absolute top-3 right-3">
-              {tool.new && (
-                <motion.div
-                  initial={{ scale: 0, rotate: -180 }}
-                  animate={{ scale: 1, rotate: 0 }}
-                  transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
-                >
-                  <Badge className="bg-gradient-to-r from-green-500/20 to-green-400/10 text-green-600 dark:text-green-400 border-green-500/30 font-semibold shadow-lg">
-                    <Sparkles className="w-3 h-3 mr-1 animate-pulse" />
-                    New
-                  </Badge>
-                </motion.div>
-              )}
-              {tool.popular && (
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
-                >
-                  <Badge className="bg-gradient-to-r from-primary/20 to-blue-500/10 text-primary border-primary/30 font-semibold shadow-lg">
-                    <Star className="w-3 h-3 mr-1 animate-pulse-glow" />
-                    Popular
-                  </Badge>
-                </motion.div>
-              )}
-              {!tool.available && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.4 }}
-                >
-                  <Badge variant="secondary" className="bg-gradient-to-r from-gray-500/20 to-gray-400/10 border-gray-500/30 font-medium">
-                    <Clock className="w-3 h-3 mr-1 animate-pulse" />
-                    Coming Soon
-                  </Badge>
-                </motion.div>
-              )}
-            </div>
-          )}
-          
-          {/* Enhanced Icon with glow effect */}
-          <motion.div 
-            className={cn(
-              "w-16 h-16 rounded-2xl flex items-center justify-center mb-5 transition-all shadow-lg",
-              "bg-gradient-to-br", tool.color,
-              tool.available && "group-hover:scale-110 group-hover:shadow-xl group-hover:rotate-3"
-            )}
-            whileHover={tool.available ? { rotate: [0, -5, 5, 0] } : {}}
-            transition={{ duration: 0.5 }}
-          >
-            <Icon className="w-8 h-8 text-white drop-shadow-lg" />
-          </motion.div>
-          
-          {/* Content */}
-          <h3 className="font-semibold text-xl mb-3 flex items-center gap-2">
-            {tool.title}
-            {tool.available && (
+        }
+      }, {
+        initial: { opacity: 1 },
+        animate: { opacity: 1 },
+        transition: { duration: 0 }
+      })}
+    >
+      <Card className={cn(
+        "tool-card relative h-full p-6 transition-all duration-500 group min-h-[280px] rounded-lg",
+        tool.available 
+          ? "cursor-pointer hover:shadow-2xl focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2" 
+          : "cursor-not-allowed opacity-70",
+        "border border-transparent hover:border-primary/20"
+      )} data-testid={`tool-card-${tool.id}`}>
+        {/* New/Popular/Coming Soon Badge */}
+        {(tool.new || tool.popular || !tool.available) && (
+          <div className="absolute top-3 right-3">
+            {tool.new && (
               <motion.div
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 0, x: -10 }}
-                whileHover={{ opacity: 1, x: 0 }}
-                className="inline-block"
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
               >
-                <ChevronRight className="w-5 h-5 text-primary" />
+                <Badge className="bg-gradient-to-r from-green-500/20 to-green-400/10 text-green-600 dark:text-green-400 border-green-500/30 font-semibold shadow-lg">
+                  <Sparkles className="w-3 h-3 mr-1 animate-pulse" />
+                  New
+                </Badge>
               </motion.div>
             )}
-          </h3>
-          <p className="text-base text-muted-foreground leading-relaxed group-hover:text-foreground/80 transition-colors duration-300 mb-3">
-            {tool.extendedDescription || tool.description}
-          </p>
-          {tool.features && (
-            <div className="space-y-1 text-sm text-muted-foreground/70">
-              {tool.features.slice(0, 2).map((feature, idx) => (
-                <div key={idx} className="flex items-center gap-1">
-                  <Check className="w-3 h-3 text-green-500 flex-shrink-0" />
-                  <span>{feature}</span>
-                </div>
-              ))}
-            </div>
+            {tool.popular && (
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
+              >
+                <Badge className="bg-gradient-to-r from-primary/20 to-blue-500/10 text-primary border-primary/30 font-semibold shadow-lg">
+                  <Star className="w-3 h-3 mr-1 animate-pulse-glow" />
+                  Popular
+                </Badge>
+              </motion.div>
+            )}
+            {!tool.available && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+              >
+                <Badge variant="secondary" className="bg-gradient-to-r from-gray-500/20 to-gray-400/10 border-gray-500/30 font-medium">
+                  <Clock className="w-3 h-3 mr-1 animate-pulse" />
+                  Coming Soon
+                </Badge>
+              </motion.div>
+            )}
+          </div>
+        )}
+        
+        {/* Enhanced Icon with glow effect */}
+        <motion.div 
+          className={cn(
+            "w-16 h-16 rounded-2xl flex items-center justify-center mb-5 transition-all shadow-lg",
+            "bg-gradient-to-br", tool.color,
+            tool.available && "group-hover:scale-110 group-hover:shadow-xl group-hover:rotate-3"
           )}
-        </Card>
-      </motion.div>
+          {...getMotionProps(reducedMotion, {
+            whileHover: tool.available ? { rotate: [0, -5, 5, 0] } : {},
+            transition: { duration: 0.5 }
+          })}
+        >
+          <Icon className="w-8 h-8 text-white drop-shadow-lg" />
+        </motion.div>
+        
+        {/* Content */}
+        <h3 className="font-semibold text-lg sm:text-xl mb-3 flex items-center gap-2 line-clamp-1">
+          {tool.title}
+          {tool.available && (
+            <motion.div
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 0, x: -10 }}
+              {...getMotionProps(reducedMotion, {
+                whileHover: { opacity: 1, x: 0 }
+              })}
+              className="inline-block"
+            >
+              <ChevronRight className="w-5 h-5 text-primary" />
+            </motion.div>
+          )}
+        </h3>
+        <p className="text-sm sm:text-base text-muted-foreground leading-relaxed group-hover:text-foreground/80 transition-colors duration-300 mb-3 truncate-3">
+          {tool.extendedDescription || tool.description}
+        </p>
+        {tool.features && (
+          <div className="space-y-1 text-sm text-muted-foreground/70">
+            {tool.features.slice(0, 2).map((feature, idx) => (
+              <div key={idx} className="flex items-center gap-1">
+                <Check className="w-3 h-3 text-green-500 flex-shrink-0" />
+                <span>{feature}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        
+        {!tool.available && (
+          <div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="text-center p-4">
+              <Clock className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
+              <p className="text-sm font-medium text-muted-foreground">Coming Soon</p>
+              <p className="text-xs text-muted-foreground mt-1">This tool is being developed</p>
+            </div>
+          </div>
+        )}
+      </Card>
+    </motion.div>
+  );
+
+  if (!tool.available) {
+    return (
+      <div
+        className="h-full rounded-lg"
+        aria-label={`${tool.title} - Coming soon`}
+        aria-disabled="true"
+      >
+        {cardContent}
+      </div>
+    );
+  }
+
+  return (
+    <Link 
+      href={tool.href}
+      className="block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg"
+    >
+      {cardContent}
     </Link>
   );
 };
@@ -217,6 +269,7 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [, navigate] = useLocation();
+  const { reducedMotion } = useReducedMotionContext();
   
   // Show limited tools per category initially
   const INITIAL_TOOLS_COUNT = 3; // Show only 3, then redirect to All Tools page
@@ -268,7 +321,7 @@ export default function Home() {
     description: "Complete suite of 60+ privacy-first online tools. PDF compression, image conversion, document processing & more. 100% browser-based processing - your files never leave your device. Free forever, no registration.",
     path: "/",
     keywords: "pdf tools, online file converter, privacy first tools, pdf compressor, image to pdf, document converter, browser based tools, no upload file tools, free pdf editor, secure file processing",
-    ogImage: "https://www.altaftoolshub.com/og-image.png",
+    ogImage: "https://www.altaftoolshub.app/og-image.png",
     structuredData,
     additionalMetaTags: [
       { name: "application-name", content: "AltafToolsHub" },
@@ -278,13 +331,13 @@ export default function Home() {
   });
 
   return (
-    <div className="min-h-screen pattern-bg">
+    <div className="min-h-screen pattern-bg overflow-x-hidden">
       {/* Hero Section */}
       <section className="relative overflow-hidden hero-gradient">
         {/* Tech Circuit Animation Layer */}
         <div className="hero-circuit" />
         
-        <div className="hero-content container mx-auto px-4 py-6 lg:py-10">
+        <div className="hero-content container-section py-6 lg:py-10">
           <motion.div 
             className="text-center max-w-4xl mx-auto text-white"
             initial={{ opacity: 0, y: -20 }}
@@ -297,7 +350,9 @@ export default function Home() {
               initial={{ scale: 0, opacity: 0, y: -20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               transition={{ delay: 0.2, type: "spring", stiffness: 200, damping: 15 }}
-              whileHover={{ scale: 1.08, boxShadow: "0 0 30px rgba(255,255,255,0.3)" }}
+              {...getMotionProps(reducedMotion, {
+                whileHover: { scale: 1.08, boxShadow: "0 0 30px rgba(255,255,255,0.3)" }
+              })}
               data-testid="hero-badge"
             >
               <motion.div
@@ -311,7 +366,7 @@ export default function Home() {
 
             {/* Enhanced Heading with better contrast */}
             <motion.h1 
-              className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-6 text-white leading-tight"
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-white leading-tight"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
@@ -336,7 +391,9 @@ export default function Home() {
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 }}
-                whileHover={{ scale: 1.05 }}
+                {...getMotionProps(reducedMotion, {
+                  whileHover: { scale: 1.05 }
+                })}
               >
                 Zero Cloud Upload
               </motion.span>
@@ -394,6 +451,7 @@ export default function Home() {
                   size="lg" 
                   className="hero-btn-secondary px-10 py-6 text-lg font-semibold"
                   onClick={() => {
+                    // Smooth scrolling is acceptable on the home page for navigation
                     document.getElementById('tools-section')?.scrollIntoView({ behavior: 'smooth' });
                   }}
                   data-testid="button-browse-tools"
@@ -654,12 +712,15 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Comparison Table */}
+      <ComparisonTable />
+
       {/* Features Section */}
-      <section className="py-16 bg-muted/30">
-        <div className="container mx-auto px-4">
+      <section className="py-16 bg-muted/30 dark:bg-gray-900/50 overflow-hidden">
+        <div className="container-section">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Why Choose AltafToolsHub?</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+            <h2 className="text-3xl font-bold mb-4 text-foreground dark:text-foreground">Why Choose AltafToolsHub?</h2>
+            <p className="text-muted-foreground dark:text-muted-foreground max-w-2xl mx-auto">
               Professional-grade tools with enterprise-level security, completely free
             </p>
           </div>
@@ -673,15 +734,15 @@ export default function Home() {
                 transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Card className="p-6 h-full glass hover:shadow-lg transition-shadow">
+                <Card className="p-6 h-full glass dark:glass-dark hover:shadow-lg transition-shadow rounded-lg bg-card dark:bg-card text-card-foreground dark:text-card-foreground">
                   <div className={cn(
                     "w-12 h-12 rounded-xl flex items-center justify-center mb-4",
                     "bg-gradient-to-br", feature.gradient
                   )}>
                     <feature.icon className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                  <p className="text-muted-foreground">{feature.description}</p>
+                  <h3 className="text-xl font-semibold mb-2 text-foreground dark:text-foreground">{feature.title}</h3>
+                  <p className="text-muted-foreground dark:text-muted-foreground">{feature.description}</p>
                 </Card>
               </motion.div>
             ))}
@@ -690,8 +751,8 @@ export default function Home() {
       </section>
 
       {/* Available Tools Section */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
+      <section className="py-16 overflow-hidden">
+        <div className="container-section">
           <div className="text-center mb-12">
             <Badge className="mb-4 bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-600 dark:text-green-400 border-green-500/30">
               <Check className="w-3 h-3 mr-1" />
@@ -769,8 +830,8 @@ export default function Home() {
       </section>
 
       {/* Tools Section */}
-      <section id="tools-section" className="py-16 bg-muted/30">
-        <div className="container mx-auto px-4">
+      <section id="tools-section" className="py-16 bg-muted/30 overflow-hidden">
+        <div className="container-section">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
               Complete Suite of <span className="gradient-text">60+ Tools</span>
@@ -1002,6 +1063,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Contact Support Section */}
+      <ContactSupportSection />
 
       {/* CTA Section */}
       <section className="py-16 bg-gradient-to-r from-purple-600 to-blue-600 text-white">

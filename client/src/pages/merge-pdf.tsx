@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { useSEO } from "@/hooks/use-seo";
+import { useSEO, generateHowToSchema, generateSoftwareApplicationSchema, generateBreadcrumbSchema } from "@/hooks/use-seo";
 import { FilePlus, Upload, Download, X, ChevronUp, ChevronDown, Loader2, GripVertical, FileText, ArrowLeft, Star, Users, Shield, Zap, Clock, CheckCircle2 } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
@@ -11,6 +11,8 @@ import { PDFDocument } from "pdf-lib";
 import { cn } from "@/lib/utils";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import { ContactSupportSection } from "@/components/contact-support";
+import { scrollBy } from "@/lib/scroll-utils";
 
 interface PDFFile {
   id: string;
@@ -29,34 +31,49 @@ export default function MergePDF() {
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const { toast } = useToast();
 
-  // SEO structured data
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "PDF Merger - AltafToolsHub",
-    "description": "Free online PDF merger to combine multiple PDFs into one document",
-    "url": "https://www.altaftoolshub.com/merge-pdf",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Any",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "ratingCount": "3842"
-    }
-  };
+  // Generate structured data for SEO
+  const howToSchema = generateHowToSchema({
+    name: "How to Merge PDF Files Online",
+    description: "Combine multiple PDF documents into a single file quickly and easily",
+    totalTime: "PT2M",
+    steps: [
+      { name: "Upload PDFs", text: "Select or drag and drop multiple PDF files to merge" },
+      { name: "Arrange Order", text: "Drag files to reorder them as needed" },
+      { name: "Merge Files", text: "Click 'Merge PDFs' to combine all documents" },
+      { name: "Download Result", text: "Download your merged PDF file instantly" }
+    ]
+  });
+
+  const softwareSchema = generateSoftwareApplicationSchema({
+    name: "PDF Merger - AltafToolsHub",
+    description: "Free online PDF merger to combine multiple PDFs into one document with drag-and-drop reordering. 100% browser-based for complete privacy.",
+    applicationCategory: "BusinessApplication",
+    url: "https://www.altaftoolshub.app/merge-pdf",
+    aggregateRating: { ratingValue: 4.9, ratingCount: 3842, bestRating: 5 },
+    featureList: [
+      "Merge unlimited PDF files",
+      "Drag and drop file reordering",
+      "100% client-side processing",
+      "No file upload to servers",
+      "Preserves document quality",
+      "Works with all PDF versions"
+    ],
+    datePublished: "2024-01-01",
+    dateModified: "2025-01-20"
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "PDF Tools", url: "/all-tools?category=pdf" },
+    { name: "Merge PDF", url: "/merge-pdf" }
+  ]);
 
   useSEO({
     title: "Merge PDF Files Online Free - Combine Multiple PDFs | AltafToolsHub",
     description: "Free online PDF merger to combine multiple PDF files into one document. Drag and drop to reorder pages. 100% client-side processing for complete privacy. No file size limits, no registration required.",
     path: "/merge-pdf",
     keywords: "merge pdf, combine pdf, pdf merger, join pdf files, combine pdf files, merge pdf online, free pdf merger, pdf combiner",
-    ogImage: "https://www.altaftoolshub.com/og-merge-pdf.png",
-    structuredData: [structuredData],
+    ogImage: "https://www.altaftoolshub.app/og-merge-pdf.png",
+    structuredData: [howToSchema, softwareSchema, breadcrumbSchema],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Merger - AltafToolsHub" },
       { property: "article:section", content: "PDF Tools" },
@@ -139,6 +156,9 @@ export default function MergePDF() {
   };
 
   const mergePDFs = async () => {
+    // Scroll to processing area
+    scrollBy(300, 100);
+    
     if (pdfFiles.length < 2) {
       toast({
         title: "Not enough files",
@@ -168,6 +188,14 @@ export default function MergePDF() {
 
       const mergedPdfBytes = await mergedPdf.save();
       setMergedPdf(mergedPdfBytes);
+      
+      // Scroll to download section when ready
+      setTimeout(() => {
+        const downloadBtn = document.querySelector('[data-testid="button-download"]');
+        if (downloadBtn) {
+          downloadBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
       
       toast({
         title: "Success!",
@@ -241,8 +269,8 @@ export default function MergePDF() {
                 Trusted by 50,000+ users worldwide
               </Badge>
             </div>
-            <h1 className="text-5xl font-bold mb-4">
-              Merge <span className="gradient-text">PDF Files</span> Online
+            <h1 className="text-5xl font-bold mb-4 text-primary">
+              Merge PDF Files Online
             </h1>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-6">
               Combine multiple PDF files into a single document in seconds. 
@@ -936,6 +964,9 @@ export default function MergePDF() {
           </Card>
         </div>
       </div>
+
+      <ContactSupportSection />
     </div>
+
   );
 }

@@ -4,8 +4,8 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Slider } from "@/components/ui/slider";
 import { useToast } from "@/hooks/use-toast";
-import { useSEO } from "@/hooks/use-seo";
-import { Crop, Upload, Download, FileText, Loader2, ArrowLeft, Shield, Maximize2, Move, Scissors, FileOutput, Mail, MessageCircle, BookOpen, Star, Users, Zap, Clock, CheckCircle2, ChevronRight, Info, HelpCircle, ChevronDown, Layers, RotateCw, FileX } from "lucide-react";
+import { useSEO, generateHowToSchema, generateSoftwareApplicationSchema, generateBreadcrumbSchema } from "@/hooks/use-seo";
+import { Crop, Upload, Download, FileText, Loader2, ArrowLeft, Shield, Maximize2, Move, Scissors, FileOutput, Mail, BookOpen, Star, Users, Zap, Clock, CheckCircle2, ChevronRight, Info, HelpCircle, ChevronDown, Layers, RotateCw, FileX } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
 import { PDFDocument } from "pdf-lib";
@@ -18,6 +18,15 @@ import {
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import * as pdfjsLib from 'pdfjs-dist';
+import { ContactSupportSection } from "@/components/contact-support";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 // Configure PDF.js worker - using local worker for privacy
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
@@ -44,33 +53,49 @@ export default function CropPDF() {
   const [croppedPdf, setCroppedPdf] = useState<Uint8Array | null>(null);
   const { toast } = useToast();
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "PDF Cropper - AltafToolsHub",
-    "description": "Free online PDF cropper to remove margins and whitespace",
-    "url": "https://www.altaftoolshub.com/crop-pdf",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Any",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "ratingCount": "1089"
-    }
-  };
+  // Generate structured data for SEO
+  const howToSchema = generateHowToSchema({
+    name: "How to Crop PDF Pages",
+    description: "Remove unwanted margins and whitespace from PDF documents",
+    totalTime: "PT1M",
+    steps: [
+      { name: "Upload PDF", text: "Select or drag your PDF file" },
+      { name: "Adjust Crop Area", text: "Use sliders to set crop margins" },
+      { name: "Preview Changes", text: "See live preview of cropped pages" },
+      { name: "Download Result", text: "Download your cropped PDF instantly" }
+    ]
+  });
+
+  const softwareSchema = generateSoftwareApplicationSchema({
+    name: "PDF Cropper - AltafToolsHub",
+    description: "Free online PDF cropper to remove margins, headers, footers, and whitespace. Visual preview with adjustable crop areas. 100% browser-based processing.",
+    applicationCategory: "BusinessApplication",
+    url: "https://www.altaftoolshub.app/crop-pdf",
+    aggregateRating: { ratingValue: 4.8, ratingCount: 1089, bestRating: 5 },
+    featureList: [
+      "Remove margins and whitespace",
+      "Crop from all sides",
+      "Visual preview",
+      "Apply to all pages",
+      "Preserve content quality",
+      "100% client-side processing"
+    ],
+    datePublished: "2024-01-01",
+    dateModified: "2025-01-20"
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "PDF Tools", url: "/all-tools?category=pdf" },
+    { name: "Crop PDF", url: "/crop-pdf" }
+  ]);
 
   useSEO({
     title: "Crop PDF Online Free - Remove Margins & Whitespace | AltafToolsHub",
     description: "Free online PDF cropper to remove unwanted margins, headers, footers, and whitespace. Visual preview with adjustable crop areas. 100% client-side processing.",
     path: "/crop-pdf",
     keywords: "crop pdf, pdf cropper, remove pdf margins, trim pdf, pdf crop tool, remove whitespace pdf",
-    ogImage: "https://www.altaftoolshub.com/og-crop-pdf.png",
-    structuredData: [structuredData],
+    ogImage: "https://www.altaftoolshub.app/og-crop-pdf.png",
+    structuredData: [howToSchema, softwareSchema, breadcrumbSchema],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Cropper - AltafToolsHub" },
       { property: "article:section", content: "PDF Tools" }
@@ -145,6 +170,9 @@ export default function CropPDF() {
   }, [toast]);
 
   const cropPDF = async () => {
+    // Scroll to top to show processing area
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     if (!pdfDoc || !pdfFile) {
       toast({
         title: "No file loaded",
@@ -269,8 +297,8 @@ export default function CropPDF() {
 
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-4">
-              Crop <span className="gradient-text">PDF Pages</span>
+            <h1 className="text-4xl font-bold mb-4 text-primary">
+              Crop PDF Pages
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Remove unwanted margins, headers, and footers from your PDF documents. 
@@ -739,22 +767,68 @@ export default function CropPDF() {
               Our support team is here to help you with any questions about cropping PDFs.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Button variant="outline">
-                <Mail className="w-4 h-4 mr-2" />
-                Email Support
-              </Button>
-              <Button variant="outline">
-                <MessageCircle className="w-4 h-4 mr-2" />
-                Live Chat
-              </Button>
-              <Button variant="outline">
-                <BookOpen className="w-4 h-4 mr-2" />
-                Documentation
-              </Button>
+              <a href="mailto:altaftoolshub@gmail.com?subject=Help%20with%20Crop%20PDF%20Tool" className="inline-block">
+                <Button variant="outline">
+                  <Mail className="w-4 h-4 mr-2" />
+                  Email Support
+                </Button>
+              </a>
+              <Link href="/faq">
+                <Button variant="outline">
+                  <HelpCircle className="w-4 h-4 mr-2" />
+                  FAQ
+                </Button>
+              </Link>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline">
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    Documentation
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>How to Crop PDF Pages</DialogTitle>
+                    <DialogDescription>
+                      Complete guide for using the Crop PDF tool
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 mt-4">
+                    <div>
+                      <h3 className="font-semibold mb-2">Step 1: Upload Your PDF</h3>
+                      <p className="text-muted-foreground">Click the upload area or drag and drop your PDF file. The file will be processed entirely in your browser.</p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-2">Step 2: Select Crop Area</h3>
+                      <p className="text-muted-foreground">Use the visual crop tool to select the area you want to keep. You can adjust the crop box by dragging its corners or edges.</p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-2">Step 3: Apply to All Pages (Optional)</h3>
+                      <p className="text-muted-foreground">Choose whether to apply the same crop area to all pages or crop each page individually.</p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-2">Step 4: Crop and Download</h3>
+                      <p className="text-muted-foreground">Click the Crop PDF button to process your file. The cropped PDF will be downloaded automatically.</p>
+                    </div>
+                    <div className="pt-4 border-t">
+                      <h3 className="font-semibold mb-2">Tips:</h3>
+                      <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                        <li>Use preset crop sizes for standard dimensions</li>
+                        <li>Preview the crop before applying</li>
+                        <li>Undo changes if needed</li>
+                        <li>All processing is done locally for privacy</li>
+                      </ul>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </Card>
         </div>
       </div>
+
+      <ContactSupportSection />
     </div>
+
   );
 }

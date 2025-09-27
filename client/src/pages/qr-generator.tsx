@@ -15,6 +15,7 @@ import PrivacyNotice from "@/components/privacy-notice";
 import { WhyUseSection, UseCasesSection, ComparisonSection, HowItWorksSection, commonFeatures } from "@/components/seo/tool-features";
 import { ToolFAQ, generateQRGeneratorFAQs } from "@/components/seo/tool-faq";
 import { Store, Share2, Wifi, Calendar, MapPin, CreditCard, Type, Settings as SettingsIcon } from "lucide-react";
+import { ContactSupportSection } from "@/components/contact-support";
 
 type QRSize = "small" | "medium" | "large";
 
@@ -42,7 +43,7 @@ export default function QRGenerator() {
     name: "QR Code Generator - AltafToolsHub",
     description: "Free QR code generator with custom colors and sizes. Create QR codes for URLs, text, WiFi, and more. 100% browser-based.",
     applicationCategory: "BusinessApplication",
-    url: "https://www.altaftoolshub.com/qr-generator",
+    url: "https://www.altaftoolshub.app/qr-generator",
     aggregateRating: { ratingValue: 4.9, ratingCount: 2156, bestRating: 5 },
     featureList: [
       "Generate QR codes for any text or URL",
@@ -62,7 +63,7 @@ export default function QRGenerator() {
     description: "Free online QR code generator. Create custom QR codes from text, URLs, emails, phone numbers. Customize colors and sizes. 100% client-side for privacy.",
     path: "/qr-generator",
     keywords: "qr code generator, create qr code, free qr generator, online qr code, custom qr code, qr code maker, generate qr code, qr code creator, qr code 2025, ai qr generator",
-    ogImage: "https://www.altaftoolshub.com/og-qr-generator.png",
+    ogImage: "https://www.altaftoolshub.app/og-qr-generator.png",
     structuredData: [howToSchema, softwareSchema],
     additionalMetaTags: [
       { name: "application-name", content: "QR Code Generator - AltafToolsHub" },
@@ -189,12 +190,7 @@ export default function QRGenerator() {
             data-testid="button-back"
             onClick={() => {
               window.location.href = '/';
-              setTimeout(() => {
-                const toolsSection = document.getElementById('tools-section');
-                if (toolsSection) {
-                  toolsSection.scrollIntoView({ behavior: 'smooth' });
-                }
-              }, 100);
+              // Removed automatic scrolling to prevent page jumping
             }}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
@@ -203,7 +199,7 @@ export default function QRGenerator() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 mb-4">
             <QrCode className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-4xl font-bold mb-4">QR Code Generator</h1>
+          <h1 className="text-4xl font-bold mb-4 text-primary">QR Code Generator</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Generate QR codes instantly from any text or URL. Customize colors and sizes, all processed securely in your browser.
           </p>
@@ -538,5 +534,6 @@ export default function QRGenerator() {
         toolPath="/qr-generator"
       />
     </div>
+
   );
 }

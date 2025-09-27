@@ -22,6 +22,8 @@ import { ToolFAQ, generateJPGtoPDFFAQs } from "@/components/seo/tool-faq";
 import { Camera, Presentation, BookOpen, Package, Globe2, Users, Upload } from "lucide-react";
 import { Download as DownloadIcon } from "lucide-react";
 import { generateSmartFileName, enhanceDownloadName } from "@/lib/smart-file-namer";
+import { ContactSupportSection } from "@/components/contact-support";
+import { scrollBy } from "@/lib/scroll-utils";
 
 interface ConversionResult {
   pdfBlob: Blob;
@@ -56,7 +58,7 @@ export default function JpgToPDF() {
     name: "JPG to PDF Converter - AltafToolsHub",
     description: "Free image to PDF converter supporting JPG, PNG, WebP. Multiple layouts and custom settings. 100% browser-based.",
     applicationCategory: "MultimediaApplication",
-    url: "https://www.altaftoolshub.com/jpg-to-pdf",
+    url: "https://www.altaftoolshub.app/jpg-to-pdf",
     aggregateRating: { ratingValue: 4.7, ratingCount: 1234, bestRating: 5 },
     featureList: [
       "Convert multiple images to PDF",
@@ -76,7 +78,7 @@ export default function JpgToPDF() {
     description: "Free online JPG to PDF converter. Convert multiple JPG, PNG, WebP images to PDF with custom layouts. 100% client-side processing for complete privacy.",
     path: "/jpg-to-pdf",
     keywords: "jpg to pdf, convert jpg to pdf, image to pdf, png to pdf, photo to pdf, jpeg to pdf converter, online jpg to pdf, free image converter, images to pdf 2025, batch image converter",
-    ogImage: "https://www.altaftoolshub.com/og-jpg-to-pdf.png",
+    ogImage: "https://www.altaftoolshub.app/og-jpg-to-pdf.png",
     structuredData: [howToSchema, softwareSchema],
     additionalMetaTags: [
       { name: "application-name", content: "JPG to PDF Converter - AltafToolsHub" },
@@ -145,6 +147,9 @@ export default function JpgToPDF() {
   };
 
   const convertToPDF = async () => {
+    // Scroll to top to show processing area
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     if (selectedFiles.length === 0) {
       setError('Please select at least one image file.');
       return;
@@ -384,18 +389,13 @@ export default function JpgToPDF() {
               data-testid="button-back"
               onClick={() => {
                 window.location.href = '/';
-                setTimeout(() => {
-                  const toolsSection = document.getElementById('tools-section');
-                  if (toolsSection) {
-                    toolsSection.scrollIntoView({ behavior: 'smooth' });
-                  }
-                }, 100);
+                // Removed automatic scrolling to prevent page jumping
               }}
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Tools
             </Button>
-            <h1 className="text-3xl sm:text-4xl font-bold mb-4 gradient-text">JPG to PDF Converter</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-primary">JPG to PDF Converter</h1>
             <p className="text-lg text-muted-foreground">Your images have been converted successfully!</p>
           </div>
 
@@ -471,7 +471,7 @@ export default function JpgToPDF() {
       <div className="min-h-screen pattern-bg">
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           <div className="text-center mb-8">
-            <h1 className="text-3xl sm:text-4xl font-bold mb-4 gradient-text">JPG to PDF Converter</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-primary">JPG to PDF Converter</h1>
             <p className="text-lg text-muted-foreground">Converting your images to PDF...</p>
           </div>
 
@@ -515,8 +515,8 @@ export default function JpgToPDF() {
             <Sparkles className="w-4 h-4" />
             <span className="text-sm font-medium">Smart Image Processing</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-            JPG to PDF <span className="gradient-text">Converter</span>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-primary">
+            JPG to PDF Converter
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Convert multiple images to PDF with customizable layouts and quality settings. 
@@ -785,5 +785,6 @@ export default function JpgToPDF() {
         toolPath="/jpg-to-pdf"
       />
     </div>
+
   );
 }

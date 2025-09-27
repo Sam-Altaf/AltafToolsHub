@@ -20,6 +20,8 @@ import { WhyUseSection, UseCasesSection, ComparisonSection, HowItWorksSection, c
 import { ToolFAQ, generatePDFCompressFAQs } from "@/components/seo/tool-faq";
 import { Briefcase, School, Users, Mail, Smartphone, Globe2, Upload, Settings, FileDown as FileDownIcon } from "lucide-react";
 import { generateSmartFileName, enhanceDownloadName } from "@/lib/smart-file-namer";
+import { ContactSupportSection } from "@/components/contact-support";
+import { scrollBy } from "@/lib/scroll-utils";
 
 type TargetSize = "10KB" | "20KB" | "50KB" | "100KB" | "150KB" | "200KB" | "300KB" | "500KB" | "1MB" | "2MB" | "5MB" | "max";
 
@@ -73,7 +75,7 @@ export default function CompressPDF() {
     name: "PDF Compressor - AltafToolsHub",
     description: "Free online PDF compression tool with privacy-first approach. Reduce PDF size to specific targets from 10KB to 5MB.",
     applicationCategory: "UtilitiesApplication",
-    url: "https://www.altaftoolshub.com/compress-pdf",
+    url: "https://www.altaftoolshub.app/compress-pdf",
     aggregateRating: { ratingValue: 4.9, ratingCount: 1523, bestRating: 5 },
     featureList: [
       "Compress to specific file sizes (10KB-5MB)",
@@ -92,7 +94,7 @@ export default function CompressPDF() {
     description: "Free online PDF compressor to reduce file size to specific targets (10KB to 5MB). Smart compression preserves quality. 100% client-side processing ensures complete privacy.",
     path: "/compress-pdf",
     keywords: "compress pdf, reduce pdf size, pdf compressor online, compress pdf to 100kb, compress pdf to 50kb, pdf size reducer, online pdf compression, free pdf compressor, compress pdf 2025, ai pdf compression",
-    ogImage: "https://www.altaftoolshub.com/og-compress-pdf.png",
+    ogImage: "https://www.altaftoolshub.app/og-compress-pdf.png",
     structuredData: [howToSchema, softwareSchema],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Compressor - AltafToolsHub" },
@@ -266,6 +268,9 @@ export default function CompressPDF() {
   };
 
   const compressPDF = async () => {
+    // Scroll to processing area when starting
+    scrollBy(300, 100);
+    
     if (!selectedFile) return;
     
     setIsProcessing(true);
@@ -362,6 +367,14 @@ export default function CompressPDF() {
         setIsProcessing(false);
         setProgress(0);
         setProgressMessage("");
+        
+        // Scroll to download section when ready
+        setTimeout(() => {
+          const downloadBtn = document.querySelector('[data-testid="button-download"]');
+          if (downloadBtn) {
+            downloadBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 100);
       }, 500);
       
     } catch (err) {
@@ -468,7 +481,7 @@ export default function CompressPDF() {
                 Back to Tools
               </Button>
             </Link>
-            <h1 className="text-3xl sm:text-4xl font-bold mb-4 gradient-text">Smart PDF Compressor</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-primary">Smart PDF Compressor</h1>
             <p className="text-lg text-muted-foreground">Your PDF has been compressed successfully!</p>
           </div>
 
@@ -575,7 +588,7 @@ export default function CompressPDF() {
       <div className="min-h-screen pattern-bg">
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           <div className="text-center mb-8">
-            <h1 className="text-3xl sm:text-4xl font-bold mb-4 gradient-text">Smart PDF Compressor</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-primary">Smart PDF Compressor</h1>
             <p className="text-lg text-muted-foreground">Intelligently optimizing your PDF...</p>
           </div>
 
@@ -615,12 +628,7 @@ export default function CompressPDF() {
             data-testid="button-back"
             onClick={() => {
               window.location.href = '/';
-              setTimeout(() => {
-                const toolsSection = document.getElementById('tools-section');
-                if (toolsSection) {
-                  toolsSection.scrollIntoView({ behavior: 'smooth' });
-                }
-              }, 100);
+              // Removed automatic scrolling to prevent page jumping
             }}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
@@ -630,8 +638,8 @@ export default function CompressPDF() {
             <Sparkles className="w-4 h-4" />
             <span className="text-sm font-medium">AI-Powered Compression</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-            Smart PDF <span className="gradient-text">Compressor</span>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-primary">
+            Smart PDF Compressor
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Compress PDFs to specific target sizes while preserving maximum quality. 
@@ -682,20 +690,20 @@ export default function CompressPDF() {
                 <FileText className="w-5 h-5 text-primary" />
                 Selected File
               </h3>
-              <div className="glass rounded-lg p-4 flex items-center justify-between">
+              <div className="glass rounded-lg p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                 <span className="text-sm font-medium truncate" data-testid="text-filename">{selectedFile.name}</span>
-                <span className="text-sm font-bold gradient-text" data-testid="text-filesize">{formatFileSize(selectedFile.size)}</span>
+                <span className="text-sm font-bold gradient-text flex-shrink-0" data-testid="text-filesize">{formatFileSize(selectedFile.size)}</span>
               </div>
             </div>
 
-            <div>
+            <div className="flex flex-col">
               {/* HD Quality Mode Selection */}
               <div className="mb-6">
                 <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-primary" />
                   Compression Quality
                 </h3>
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <Button
                     type="button"
                     variant={compressionMode === 'highest' ? "default" : "outline"}
@@ -811,6 +819,20 @@ export default function CompressPDF() {
                     </div>
                   </div>
                   
+                  {/* Compress button for slider mode - BEFORE stats cards */}
+                  <div className="mt-6">
+                    <Button 
+                      onClick={compressPDF}
+                      className="w-full btn-gradient text-white font-semibold"
+                      size="lg"
+                      data-testid="button-compress-slider"
+                    >
+                      <Zap className="w-5 h-5 mr-2" />
+                      Compress PDF ({compressionLevel}%)
+                    </Button>
+                  </div>
+                  
+                  {/* Stats section - after the compress button */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <Card className="p-4 bg-gradient-to-br from-purple-50 to-transparent dark:from-purple-950/20">
                       <div className="flex items-center gap-2 mb-2">
@@ -851,7 +873,7 @@ export default function CompressPDF() {
                 </div>
               ) : (
                 // Target Size Mode (Advanced)
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3 mb-6">
                   {targetSizeOptions.map((option) => (
                     <button
                       key={option.value}
@@ -896,17 +918,20 @@ export default function CompressPDF() {
                 </Alert>
               )}
 
-              <Button 
-                onClick={compressPDF}
-                className="w-full btn-gradient text-white font-semibold"
-                size="lg"
-                data-testid="button-compress"
-              >
-                <Zap className="w-5 h-5 mr-2" />
-                {useAdvancedMode 
-                  ? `Compress to ${targetSizeOptions.find(o => o.value === targetSize)?.label}`
-                  : `Compress PDF (${compressionLevel}%)`}
-              </Button>
+              {/* Action button for advanced mode */}
+              {useAdvancedMode && (
+                <div className="mb-4">
+                  <Button 
+                    onClick={compressPDF}
+                    className="w-full btn-gradient text-white font-semibold"
+                    size="lg"
+                    data-testid="button-compress"
+                  >
+                    <Zap className="w-5 h-5 mr-2" />
+                    Compress to {targetSizeOptions.find(o => o.value === targetSize)?.label}
+                  </Button>
+                </div>
+              )}
             </div>
           </Card>
         )}
@@ -1024,5 +1049,6 @@ export default function CompressPDF() {
         toolPath="/compress-pdf"
       />
     </div>
+
   );
 }

@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { useSEO } from "@/hooks/use-seo";
+import { useSEO, generateHowToSchema, generateSoftwareApplicationSchema, generateBreadcrumbSchema } from "@/hooks/use-seo";
 import { Hash, Upload, Download, FileText, Loader2, ArrowLeft, Shield } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
@@ -14,6 +14,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import * as pdfjsLib from 'pdfjs-dist';
+import { ContactSupportSection } from "@/components/contact-support";
 
 // Configure PDF.js worker - using local worker for privacy
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
@@ -37,33 +38,49 @@ export default function AddPageNumber() {
   const [numberedPdf, setNumberedPdf] = useState<Uint8Array | null>(null);
   const { toast } = useToast();
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Add Page Numbers to PDF - AltafToolsHub",
-    "description": "Free online tool to add page numbers to PDF documents",
-    "url": "https://www.altaftoolshub.com/add-page-number",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Any",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "ratingCount": "1265"
-    }
-  };
+  // Generate structured data for SEO
+  const howToSchema = generateHowToSchema({
+    name: "How to Add Page Numbers to PDF",
+    description: "Add page numbers to PDF documents with custom formatting",
+    totalTime: "PT1M",
+    steps: [
+      { name: "Upload PDF", text: "Select or drag your PDF file" },
+      { name: "Choose Position", text: "Select where to place page numbers" },
+      { name: "Customize Format", text: "Set format, font size, and custom text" },
+      { name: "Download Result", text: "Download your numbered PDF instantly" }
+    ]
+  });
+
+  const softwareSchema = generateSoftwareApplicationSchema({
+    name: "Add Page Numbers to PDF - AltafToolsHub",
+    description: "Free online tool to add page numbers to PDF documents. Customize position, format, font size, and add custom prefix/suffix. 100% browser-based.",
+    applicationCategory: "BusinessApplication",
+    url: "https://www.altaftoolshub.app/add-page-number",
+    aggregateRating: { ratingValue: 4.8, ratingCount: 1265, bestRating: 5 },
+    featureList: [
+      "6 position options for page numbers",
+      "Multiple number formats (numeric, roman, etc.)",
+      "Customizable font size and margins",
+      "Add prefix and suffix text",
+      "Live preview",
+      "100% client-side processing"
+    ],
+    datePublished: "2024-01-01",
+    dateModified: "2025-01-20"
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "PDF Tools", url: "/all-tools?category=pdf" },
+    { name: "Add Page Numbers", url: "/add-page-number" }
+  ]);
 
   useSEO({
     title: "Add Page Numbers to PDF Online Free - Customize Position & Format | AltafToolsHub",
     description: "Free online tool to add page numbers to PDF documents. Choose position, format, font size, and custom text. 100% client-side processing.",
     path: "/add-page-number",
     keywords: "add page numbers pdf, pdf page numbering, number pdf pages, pdf page counter, page numbers tool",
-    ogImage: "https://www.altaftoolshub.com/og-add-page-number.png",
-    structuredData: [structuredData],
+    ogImage: "https://www.altaftoolshub.app/og-add-page-number.png",
+    structuredData: [howToSchema, softwareSchema, breadcrumbSchema],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Page Number Tool - AltafToolsHub" },
       { property: "article:section", content: "PDF Tools" }
@@ -204,6 +221,9 @@ export default function AddPageNumber() {
   };
 
   const addPageNumbers = async () => {
+    // Scroll to top to show processing area
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     if (!pdfDoc || !pdfFile) {
       toast({
         title: "No file loaded",
@@ -304,8 +324,8 @@ export default function AddPageNumber() {
 
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-4">
-              Add <span className="gradient-text">Page Numbers</span>
+            <h1 className="text-4xl font-bold mb-4 text-primary">
+              Add Page Numbers
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Add customizable page numbers to your PDF documents. 
@@ -328,7 +348,7 @@ export default function AddPageNumber() {
                   <FileUpload
                     accept="application/pdf"
                     onFileSelect={handleFileUpload}
-                    className="h-48"
+                    className="min-h-[400px]"
                     title="Drop PDF file here or click to select"
                     description="Select a PDF to add page numbers"
                   />
@@ -347,11 +367,11 @@ export default function AddPageNumber() {
                       {previewUrl && (
                         <div>
                           <h3 className="font-medium mb-3">Preview</h3>
-                          <div className="border rounded-lg overflow-hidden bg-muted/50">
+                          <div className="border rounded-lg bg-muted/50 p-4">
                             <img 
                               src={previewUrl} 
                               alt="PDF Preview with page number" 
-                              className="w-full h-auto"
+                              className="w-full aspect-square object-contain"
                             />
                           </div>
                         </div>
@@ -588,6 +608,9 @@ export default function AddPageNumber() {
           </Card>
         </div>
       </div>
+
+      <ContactSupportSection />
     </div>
+
   );
 }

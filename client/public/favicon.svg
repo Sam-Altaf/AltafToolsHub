@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a855f7;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="grad2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="grad3" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#14b8a6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Hexagonal Background -->
+  <path d="M 32 3 L 60 18 L 60 46 L 32 61 L 4 46 L 4 18 Z" 
+        fill="url(#grad1)" opacity="0.15"/>
+  
+  <!-- Central Hub -->
+  <circle cx="32" cy="32" r="12" fill="url(#grad2)"/>
+  
+  <!-- Tool Elements -->
+  <!-- Wrench -->
+  <path d="M 10 20 L 17 13 Q 20 10 23 13 L 16 20 Q 13 23 10 20 Z" 
+        fill="url(#grad3)" opacity="0.9"/>
+  
+  <!-- Gear -->
+  <g transform="translate(42, 38)">
+    <circle cx="6" cy="6" r="5" fill="none" stroke="url(#grad2)" stroke-width="2"/>
+    <rect x="5.5" y="-0.5" width="1" height="3" fill="url(#grad2)" transform="rotate(0 6 6)"/>
+    <rect x="5.5" y="-0.5" width="1" height="3" fill="url(#grad2)" transform="rotate(45 6 6)"/>
+    <rect x="5.5" y="-0.5" width="1" height="3" fill="url(#grad2)" transform="rotate(90 6 6)"/>
+    <rect x="5.5" y="-0.5" width="1" height="3" fill="url(#grad2)" transform="rotate(135 6 6)"/>
+    <rect x="5.5" y="9.5" width="1" height="3" fill="url(#grad2)" transform="rotate(0 6 6)"/>
+    <rect x="5.5" y="9.5" width="1" height="3" fill="url(#grad2)" transform="rotate(45 6 6)"/>
+    <rect x="5.5" y="9.5" width="1" height="3" fill="url(#grad2)" transform="rotate(90 6 6)"/>
+    <rect x="5.5" y="9.5" width="1" height="3" fill="url(#grad2)" transform="rotate(135 6 6)"/>
+  </g>
+  
+  <!-- File -->
+  <path d="M 38 10 L 48 10 L 52 14 L 52 25 L 38 25 Z" 
+        fill="url(#grad3)" opacity="0.8"/>
+  <path d="M 48 10 L 48 14 L 52 14" fill="url(#grad2)" opacity="0.9"/>
+  
+  <!-- Lock -->
+  <g transform="translate(10, 35)">
+    <rect x="0" y="4" width="10" height="8" rx="1" fill="url(#grad2)" opacity="0.85"/>
+    <path d="M 2 4 L 2 2 Q 2 0 5 0 Q 8 0 8 2 L 8 4" 
+          fill="none" stroke="url(#grad2)" stroke-width="1.5" opacity="0.85"/>
+  </g>
+  
+  <!-- Connecting Lines -->
+  <g opacity="0.3">
+    <line x1="32" y1="32" x2="16" y2="16" stroke="url(#grad1)" stroke-width="1"/>
+    <line x1="32" y1="32" x2="48" y2="16" stroke="url(#grad1)" stroke-width="1"/>
+    <line x1="32" y1="32" x2="16" y2="42" stroke="url(#grad1)" stroke-width="1"/>
+    <line x1="32" y1="32" x2="48" y2="44" stroke="url(#grad1)" stroke-width="1"/>
+  </g>
+  
+  <!-- Central Highlight -->
+  <circle cx="32" cy="32" r="5" fill="white" opacity="0.9"/>
+</svg>

@@ -19,6 +19,9 @@ export function ThemeToggle() {
           variant="ghost" 
           size="icon"
           className="relative w-10 h-10 rounded-lg transition-all duration-300 hover:bg-primary/10"
+          aria-label={`Current theme: ${resolvedTheme === 'dark' ? 'Dark' : 'Light'} mode. Click to change theme`}
+          aria-expanded="false"
+          aria-haspopup="menu"
           data-testid="button-theme-toggle"
         >
           <AnimatePresence mode="wait">

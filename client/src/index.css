@@ -92,6 +92,98 @@
     scroll-padding-top: 5rem; /* Account for sticky header */
   }
 
+  /* Respect reduced motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+    
+    /* Disable specific animations that could cause motion sickness */
+    .hero-gradient::before,
+    .hero-gradient::after,
+    .hero-circuit {
+      animation: none !important;
+    }
+    
+    /* Still allow focus and hover states but without transitions */
+    button:focus-visible,
+    a:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 2px solid hsl(var(--ring));
+      outline-offset: 2px;
+      transition: none;
+    }
+  }
+
+  /* User-controlled reduced motion via data attribute */
+  [data-reduced-motion="true"] *,
+  [data-reduced-motion="true"] *::before,
+  [data-reduced-motion="true"] *::after {
+    animation: none !important;
+    transition: none !important;
+    transition-duration: 0ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+    transform: none !important;
+  }
+  
+  /* Disable hover transformations when reduced motion is active */
+  [data-reduced-motion="true"] .group-hover\\:scale-110,
+  [data-reduced-motion="true"] .group-hover\\:scale-105,
+  [data-reduced-motion="true"] .group-hover\\:rotate-3,
+  [data-reduced-motion="true"] .hover\\:scale-105,
+  [data-reduced-motion="true"] .hover\\:scale-110 {
+    transform: none !important;
+  }
+  
+  [data-reduced-motion="true"] .hero-gradient::before,
+  [data-reduced-motion="true"] .hero-gradient::after,
+  [data-reduced-motion="true"] .hero-circuit {
+    animation: none !important;
+  }
+  
+  /* Disable all Tailwind animations when reduced motion is active */
+  [data-reduced-motion="true"] .animate-pulse,
+  [data-reduced-motion="true"] .animate-bounce,
+  [data-reduced-motion="true"] .animate-spin,
+  [data-reduced-motion="true"] .animate-ping,
+  [data-reduced-motion="true"] .animate-blob,
+  [data-reduced-motion="true"] .animate-float,
+  [data-reduced-motion="true"] .animate-float-delayed {
+    animation: none !important;
+  }
+  
+  /* Enhanced system preference rules */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation: none !important;
+      transition-duration: 0ms !important;
+      transition-delay: 0ms !important;
+      scroll-behavior: auto !important;
+    }
+    
+    .animate-pulse,
+    .animate-bounce,
+    .animate-spin,
+    .animate-ping,
+    .animate-blob,
+    .animate-float,
+    .animate-float-delayed {
+      animation: none !important;
+    }
+  }
+
   body {
     @apply font-sans antialiased bg-background text-foreground;
     min-height: 100vh;
@@ -101,25 +193,102 @@
     -moz-osx-font-smoothing: grayscale;
   }
   
-  /* Typography hierarchy */
+  /* Typography hierarchy - Mobile-first fluid responsive sizing */
   h1 {
     @apply text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight;
+    line-height: 1.1;
   }
   
   h2 {
     @apply text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight;
+    line-height: 1.2;
   }
   
   h3 {
-    @apply text-xl sm:text-2xl lg:text-3xl font-semibold;
+    @apply text-xl sm:text-2xl font-semibold;
+    line-height: 1.3;
   }
   
   h4 {
-    @apply text-lg sm:text-xl lg:text-2xl font-medium;
+    @apply text-lg sm:text-xl font-medium;
+    line-height: 1.4;
   }
   
   p {
     @apply text-base leading-relaxed;
+  }
+  
+  /* Ensure minimum touch target size on mobile for interactive elements */
+  button, 
+  a[role="button"], 
+  [data-testid*="button"], 
+  [data-testid*="link"],
+  .btn {
+    min-height: 44px;
+    min-width: 44px;
+    touch-action: manipulation;
+  }
+  
+  @media (min-width: 640px) {
+    button, 
+    a[role="button"], 
+    [data-testid*="button"], 
+    [data-testid*="link"],
+    .btn {
+      min-height: 40px;
+      min-width: 40px;
+    }
+  }
+  
+  /* Card standardization */
+  .card-standard {
+    @apply p-6 rounded-lg;
+  }
+  
+  /* Text truncation utilities */
+  .truncate-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+  
+  .truncate-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+  
+  /* Container utilities for consistent spacing */
+  .container-section {
+    @apply container mx-auto px-4;
+  }
+  
+  /* Grid layouts - mobile-first */
+  .grid-responsive {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6;
+  }
+  
+  .grid-tools {
+    @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6;
+  }
+  
+  /* Prevent horizontal overflow */
+  html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+  
+  main, section {
+    overflow-x: hidden;
+  }
+  
+  /* Fix for mobile viewport units */
+  @supports (height: 100dvh) {
+    .min-h-screen {
+      min-height: 100dvh;
+    }
   }
 }
 
@@ -1271,4 +1440,124 @@ button, a, input, textarea, select {
 
 .loading {
   animation: loading 1.5s ease-in-out infinite;
+}
+
+/* Phase 7: Additional Enhancements - Smooth Animations & Micro-interactions */
+
+/* Enhanced card hover effects for tool cards */
+.tool-card {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.3s ease;
+}
+
+.tool-card:hover {
+  transform: translateY(-4px) scale(1.01);
+}
+
+/* Smooth button animations */
+button, .btn {
+  transition: transform 0.2s ease, 
+              box-shadow 0.2s ease,
+              background-color 0.2s ease,
+              color 0.2s ease;
+}
+
+button:hover:not(:disabled), .btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+button:active:not(:disabled), .btn:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Mobile touch feedback */
+@media (max-width: 640px) {
+  .tool-card:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+  
+  button:active:not(:disabled), .btn:active:not(:disabled) {
+    transform: scale(0.95);
+  }
+  
+  /* Ensure minimum touch target size */
+  button, .btn, a.btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Larger social icons for mobile */
+  .social-icon {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* Subtle animation for CTAs */
+@keyframes gentlePulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+.animate-gentle-pulse {
+  animation: gentlePulse 3s ease-in-out infinite;
+}
+
+/* Enhanced focus states for accessibility */
+*:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+  transition: outline-offset 0.2s ease;
+}
+
+*:focus-visible:hover {
+  outline-offset: 5px;
+}
+
+/* Smooth transitions for dark mode toggle */
+.dark-mode-toggle {
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.dark-mode-toggle:hover {
+  transform: rotate(15deg) scale(1.1);
+}
+
+/* Testimonial cards mobile optimization */
+@media (max-width: 640px) {
+  .testimonial-card {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+}
+
+/* Ensure no horizontal scroll on mobile */
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+  
+  .container-section {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* High contrast mode support for accessibility */
+@media (prefers-contrast: high) {
+  .btn-gradient,
+  .gradient-text {
+    filter: contrast(1.2);
+  }
+  
+  .glass, .glass-dark {
+    border-width: 2px;
+  }
 }

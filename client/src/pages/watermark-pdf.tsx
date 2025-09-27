@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { useSEO } from "@/hooks/use-seo";
+import { useSEO, generateHowToSchema, generateSoftwareApplicationSchema, generateBreadcrumbSchema } from "@/hooks/use-seo";
 import { Droplets, Upload, Download, FileText, Loader2, ArrowLeft, Shield, Type, Image } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import * as pdfjsLib from 'pdfjs-dist';
+import { ContactSupportSection } from "@/components/contact-support";
 
 // Configure PDF.js worker - using local worker for privacy
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
@@ -39,33 +40,49 @@ export default function WatermarkPDF() {
   const [watermarkedPdf, setWatermarkedPdf] = useState<Uint8Array | null>(null);
   const { toast } = useToast();
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Watermark PDF - AltafToolsHub",
-    "description": "Free online tool to add text or image watermarks to PDF documents",
-    "url": "https://www.altaftoolshub.com/watermark-pdf",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Any",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "ratingCount": "1543"
-    }
-  };
+  // Generate structured data for SEO
+  const howToSchema = generateHowToSchema({
+    name: "How to Add Watermark to PDF",
+    description: "Add text or image watermarks to PDF documents for protection",
+    totalTime: "PT1M",
+    steps: [
+      { name: "Upload PDF", text: "Select or drag your PDF file" },
+      { name: "Choose Watermark Type", text: "Select text or image watermark" },
+      { name: "Customize Settings", text: "Adjust opacity, position, rotation, and size" },
+      { name: "Download Result", text: "Download your watermarked PDF instantly" }
+    ]
+  });
+
+  const softwareSchema = generateSoftwareApplicationSchema({
+    name: "Watermark PDF - AltafToolsHub",
+    description: "Free online tool to add text or image watermarks to PDF documents. Customize opacity, position, rotation, and color. 100% browser-based for complete privacy.",
+    applicationCategory: "BusinessApplication",
+    url: "https://www.altaftoolshub.app/watermark-pdf",
+    aggregateRating: { ratingValue: 4.9, ratingCount: 1543, bestRating: 5 },
+    featureList: [
+      "Text and image watermarks",
+      "Adjustable opacity and rotation",
+      "6 position presets",
+      "Custom colors and fonts",
+      "Live preview",
+      "100% client-side processing"
+    ],
+    datePublished: "2024-01-01",
+    dateModified: "2025-01-20"
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "PDF Tools", url: "/all-tools?category=pdf" },
+    { name: "Watermark PDF", url: "/watermark-pdf" }
+  ]);
 
   useSEO({
     title: "Watermark PDF Online Free - Add Text & Image Watermarks | AltafToolsHub",
     description: "Free online PDF watermarking tool. Add custom text or image watermarks with adjustable opacity, position, and rotation. 100% client-side processing.",
     path: "/watermark-pdf",
     keywords: "watermark pdf, add watermark to pdf, pdf watermark tool, text watermark, image watermark, pdf protection",
-    ogImage: "https://www.altaftoolshub.com/og-watermark-pdf.png",
-    structuredData: [structuredData],
+    ogImage: "https://www.altaftoolshub.app/og-watermark-pdf.png",
+    structuredData: [howToSchema, softwareSchema, breadcrumbSchema],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Watermark Tool - AltafToolsHub" },
       { property: "article:section", content: "PDF Tools" }
@@ -201,6 +218,9 @@ export default function WatermarkPDF() {
   };
 
   const addWatermark = async () => {
+    // Scroll to top to show processing area
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     if (!pdfDoc || !pdfFile) {
       toast({
         title: "No file loaded",
@@ -355,8 +375,8 @@ export default function WatermarkPDF() {
 
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-4">
-              Add <span className="gradient-text">Watermark to PDF</span>
+            <h1 className="text-4xl font-bold mb-4 text-primary">
+              Add Watermark to PDF
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Protect your PDFs with custom text or image watermarks. 
@@ -379,7 +399,7 @@ export default function WatermarkPDF() {
                   <FileUpload
                     accept="application/pdf"
                     onFileSelect={handleFileUpload}
-                    className="h-48"
+                    className="min-h-[400px]"
                     title="Drop PDF file here or click to select"
                     description="Select a PDF to add watermark"
                   />
@@ -398,11 +418,11 @@ export default function WatermarkPDF() {
                       {previewUrl && (
                         <div>
                           <h3 className="font-medium mb-3">Preview</h3>
-                          <div className="border rounded-lg overflow-hidden bg-muted/50">
+                          <div className="border rounded-lg bg-muted/50 p-4">
                             <img 
                               src={previewUrl} 
                               alt="PDF Preview with watermark" 
-                              className="w-full h-auto"
+                              className="w-full aspect-square object-contain"
                             />
                           </div>
                         </div>
@@ -474,7 +494,7 @@ export default function WatermarkPDF() {
                               <FileUpload
                                 accept="image/*"
                                 onFileSelect={handleImageUpload}
-                                className="h-32"
+                                className="aspect-square"
                                 title="Upload watermark image"
                                 description="JPG, PNG supported"
                                 maxSize={5 * 1024 * 1024}
@@ -664,6 +684,9 @@ export default function WatermarkPDF() {
           </Card>
         </div>
       </div>
+
+      <ContactSupportSection />
     </div>
+
   );
 }

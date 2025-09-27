@@ -1,4 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  SITEMAP SUBMISSION GUIDE
+  =========================
+  
+  ## How to Submit to Google Search Console:
+  1. Go to https://search.google.com/search-console/
+  2. Verify your domain ownership if not already done
+  3. Navigate to "Sitemaps" in the left sidebar
+  4. Enter your sitemap URL: https://www.altaftoolshub.app/sitemap.xml
+  5. Click "Submit" - Google will automatically crawl and index your pages
+  6. Monitor the "Coverage" report to track indexing status
+  
+  ## How to Submit to Bing Webmaster Tools:
+  1. Go to https://www.bing.com/webmasters/
+  2. Sign in and add your site if not already added
+  3. Navigate to "Sitemaps" in the left menu
+  4. Click "Submit sitemap"
+  5. Enter: https://www.altaftoolshub.app/sitemap.xml
+  6. Bing will automatically fetch and process your sitemap
+  
+  ## Best Practices for Sitemap Management:
+  - Update lastmod dates when pages change significantly
+  - Keep sitemap under 50MB and 50,000 URLs (we're well within limits)
+  - Use priority to indicate relative importance (1.0 = highest)
+  - Set changefreq realistically:
+    * daily: Homepage with frequent updates
+    * weekly: Active tools and blog pages
+    * monthly: Static pages like terms, privacy, documentation
+  - Include image metadata for better image search visibility
+  - Add mobile:mobile tag for mobile-friendly pages
+  - Validate sitemap at https://www.xml-sitemaps.com/validate-xml-sitemap.html
+  - Submit sitemap URL in robots.txt: Sitemap: https://www.altaftoolshub.app/sitemap.xml
+  - Monitor Google Search Console for crawl errors
+  - Update sitemap when adding new pages or removing old ones
+  
+  ## Priority Guidelines:
+  - 1.0: Homepage
+  - 0.9-0.95: Primary tools and important pages
+  - 0.8-0.85: Secondary tools
+  - 0.7: Resource pages (blog, FAQ, documentation)
+  - 0.6: Legal pages (terms, privacy)
+-->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
@@ -8,7 +50,7 @@
   
   <!-- Homepage -->
   <url>
-    <loc>https://www.altaftoolshub.com/</loc>
+    <loc>https://www.altaftoolshub.app/</loc>
     <lastmod>2025-01-17T12:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
@@ -17,39 +59,39 @@
   
   <!-- PDF Tools (High Priority) -->
   <url>
-    <loc>https://www.altaftoolshub.com/compress-pdf</loc>
+    <loc>https://www.altaftoolshub.app/compress-pdf</loc>
     <lastmod>2025-01-17T12:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
     <mobile:mobile/>
     <image:image>
-      <image:loc>https://www.altaftoolshub.com/og-compress-pdf.png</image:loc>
+      <image:loc>https://www.altaftoolshub.app/og-compress-pdf.png</image:loc>
       <image:title>PDF Compressor Tool</image:title>
       <image:caption>Compress PDF files to specific sizes online</image:caption>
     </image:image>
   </url>
   
   <url>
-    <loc>https://www.altaftoolshub.com/unlock-pdf</loc>
+    <loc>https://www.altaftoolshub.app/unlock-pdf</loc>
     <lastmod>2025-01-17T12:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <mobile:mobile/>
     <image:image>
-      <image:loc>https://www.altaftoolshub.com/og-unlock-pdf.png</image:loc>
+      <image:loc>https://www.altaftoolshub.app/og-unlock-pdf.png</image:loc>
       <image:title>PDF Unlocker Tool</image:title>
       <image:caption>Remove password protection from PDF files</image:caption>
     </image:image>
   </url>
   
   <url>
-    <loc>https://www.altaftoolshub.com/jpg-to-pdf</loc>
+    <loc>https://www.altaftoolshub.app/jpg-to-pdf</loc>
     <lastmod>2025-01-17T12:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <mobile:mobile/>
     <image:image>
-      <image:loc>https://www.altaftoolshub.com/og-jpg-to-pdf.png</image:loc>
+      <image:loc>https://www.altaftoolshub.app/og-jpg-to-pdf.png</image:loc>
       <image:title>JPG to PDF Converter</image:title>
       <image:caption>Convert images to PDF documents</image:caption>
     </image:image>
@@ -57,26 +99,26 @@
   
   <!-- Utility Tools (High Priority) -->
   <url>
-    <loc>https://www.altaftoolshub.com/qr-generator</loc>
+    <loc>https://www.altaftoolshub.app/qr-generator</loc>
     <lastmod>2025-01-17T12:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
     <mobile:mobile/>
     <image:image>
-      <image:loc>https://www.altaftoolshub.com/og-qr-generator.png</image:loc>
+      <image:loc>https://www.altaftoolshub.app/og-qr-generator.png</image:loc>
       <image:title>QR Code Generator</image:title>
       <image:caption>Create custom QR codes online</image:caption>
     </image:image>
   </url>
   
   <url>
-    <loc>https://www.altaftoolshub.com/password-generator</loc>
+    <loc>https://www.altaftoolshub.app/password-generator</loc>
     <lastmod>2025-01-17T12:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
     <mobile:mobile/>
     <image:image>
-      <image:loc>https://www.altaftoolshub.com/og-password-generator.png</image:loc>
+      <image:loc>https://www.altaftoolshub.app/og-password-generator.png</image:loc>
       <image:title>Password Generator</image:title>
       <image:caption>Generate secure passwords online</image:caption>
     </image:image>
@@ -86,7 +128,7 @@
   <!-- Text and Image Tools -->
   
   <url>
-    <loc>https://www.altaftoolshub.com/extract-text</loc>
+    <loc>https://www.altaftoolshub.app/extract-text</loc>
     <lastmod>2025-01-17T12:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -94,23 +136,145 @@
   </url>
   
   
+  <!-- PDF Manipulation Tools -->
+  <url>
+    <loc>https://www.altaftoolshub.app/merge-pdf</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://www.altaftoolshub.app/split-pdf</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://www.altaftoolshub.app/rotate-pdf</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://www.altaftoolshub.app/organize-pdf</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://www.altaftoolshub.app/remove-pages</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://www.altaftoolshub.app/crop-pdf</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://www.altaftoolshub.app/extract-pages</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://www.altaftoolshub.app/extract-images</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://www.altaftoolshub.app/add-page-number</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://www.altaftoolshub.app/watermark-pdf</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+  
   <!-- All Tools Page -->
   <url>
-    <loc>https://www.altaftoolshub.com/all-tools</loc>
+    <loc>https://www.altaftoolshub.app/all-tools</loc>
     <lastmod>2025-01-17T12:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
     <mobile:mobile/>
     <image:image>
-      <image:loc>https://www.altaftoolshub.com/og-all-tools.png</image:loc>
+      <image:loc>https://www.altaftoolshub.app/og-all-tools.png</image:loc>
       <image:title>All Tools - AltafToolsHub</image:title>
       <image:caption>Browse all 60+ privacy-first file tools</image:caption>
     </image:image>
   </url>
   
+  <!-- Resource Pages -->
+  <url>
+    <loc>https://www.altaftoolshub.app/how-it-works</loc>
+    <lastmod>2025-01-21T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://www.altaftoolshub.app/use-cases</loc>
+    <lastmod>2025-01-21T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://www.altaftoolshub.app/blog</loc>
+    <lastmod>2025-01-21T12:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://www.altaftoolshub.app/faq</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://www.altaftoolshub.app/documentation</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <mobile:mobile/>
+  </url>
+
   <!-- Legal Pages -->
   <url>
-    <loc>https://www.altaftoolshub.com/privacy</loc>
+    <loc>https://www.altaftoolshub.app/privacy</loc>
     <lastmod>2025-01-17T12:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -118,7 +282,23 @@
   </url>
   
   <url>
-    <loc>https://www.altaftoolshub.com/terms</loc>
+    <loc>https://www.altaftoolshub.app/terms</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://www.altaftoolshub.app/privacy-policy</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://www.altaftoolshub.app/terms-conditions</loc>
     <lastmod>2025-01-17T12:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

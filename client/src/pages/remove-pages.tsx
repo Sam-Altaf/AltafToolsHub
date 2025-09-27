@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { useSEO } from "@/hooks/use-seo";
-import { FileX, Upload, Download, FileText, Loader2, ArrowLeft, Shield, Trash2, Scissors, FileOutput, Mail, MessageCircle, BookOpen, Star, Users, Zap, Clock, CheckCircle2, ChevronRight, Info, HelpCircle, ChevronDown, Layers, RotateCw } from "lucide-react";
+import { useSEO, generateHowToSchema, generateSoftwareApplicationSchema, generateBreadcrumbSchema } from "@/hooks/use-seo";
+import { FileX, Upload, Download, FileText, Loader2, ArrowLeft, Shield, Trash2, Scissors, FileOutput, Mail, BookOpen, Star, Users, Zap, Clock, CheckCircle2, ChevronRight, Info, HelpCircle, ChevronDown, Layers, RotateCw } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
 import { PDFDocument } from "pdf-lib";
@@ -18,6 +18,15 @@ import {
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import * as pdfjsLib from 'pdfjs-dist';
+import { ContactSupportSection } from "@/components/contact-support";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 // Configure PDF.js worker - using local worker for privacy
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
@@ -37,33 +46,49 @@ export default function RemovePages() {
   const [processedPdf, setProcessedPdf] = useState<Uint8Array | null>(null);
   const { toast } = useToast();
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Remove PDF Pages - AltafToolsHub",
-    "description": "Free online tool to remove unwanted pages from PDF documents",
-    "url": "https://www.altaftoolshub.com/remove-pages",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Any",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.7",
-      "ratingCount": "923"
-    }
-  };
+  // Generate structured data for SEO
+  const howToSchema = generateHowToSchema({
+    name: "How to Remove Pages from PDF",
+    description: "Delete unwanted pages from PDF documents easily",
+    totalTime: "PT1M",
+    steps: [
+      { name: "Upload PDF", text: "Select or drag your PDF file" },
+      { name: "Select Pages", text: "Click on pages you want to remove" },
+      { name: "Remove Pages", text: "Click 'Remove Selected Pages' to delete them" },
+      { name: "Download Result", text: "Download your updated PDF instantly" }
+    ]
+  });
+
+  const softwareSchema = generateSoftwareApplicationSchema({
+    name: "Remove PDF Pages - AltafToolsHub",
+    description: "Free online tool to remove unwanted pages from PDF documents. Select and delete specific pages with visual preview. 100% browser-based processing.",
+    applicationCategory: "BusinessApplication",
+    url: "https://www.altaftoolshub.app/remove-pages",
+    aggregateRating: { ratingValue: 4.7, ratingCount: 923, bestRating: 5 },
+    featureList: [
+      "Visual page selection",
+      "Multiple page deletion",
+      "Page thumbnails preview",
+      "Range selection support",
+      "100% client-side processing",
+      "Preserves document quality"
+    ],
+    datePublished: "2024-01-01",
+    dateModified: "2025-01-20"
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "PDF Tools", url: "/all-tools?category=pdf" },
+    { name: "Remove Pages", url: "/remove-pages" }
+  ]);
 
   useSEO({
     title: "Remove PDF Pages Online Free - Delete Unwanted Pages | AltafToolsHub",
     description: "Free online tool to remove unwanted pages from PDF documents. Select and delete specific pages while preserving quality. 100% client-side processing.",
     path: "/remove-pages",
     keywords: "remove pdf pages, delete pdf pages, pdf page remover, pdf page deletion, remove pages from pdf",
-    ogImage: "https://www.altaftoolshub.com/og-remove-pages.png",
-    structuredData: [structuredData],
+    ogImage: "https://www.altaftoolshub.app/og-remove-pages.png",
+    structuredData: [howToSchema, softwareSchema, breadcrumbSchema],
     additionalMetaTags: [
       { name: "application-name", content: "Remove PDF Pages - AltafToolsHub" },
       { property: "article:section", content: "PDF Tools" }
@@ -161,6 +186,9 @@ export default function RemovePages() {
   };
 
   const removePages = async () => {
+    // Scroll to top to show processing area
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     if (!pdfDoc || !pdfFile) {
       toast({
         title: "No file loaded",
@@ -272,8 +300,8 @@ export default function RemovePages() {
 
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-4">
-              Remove <span className="gradient-text">PDF Pages</span>
+            <h1 className="text-4xl font-bold mb-4 text-primary">
+              Remove PDF Pages
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Delete unwanted pages from your PDF documents. Select specific pages to remove while keeping the rest.
@@ -682,22 +710,65 @@ export default function RemovePages() {
               Our support team is here to help you with any questions about removing PDF pages.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Button variant="outline">
-                <Mail className="w-4 h-4 mr-2" />
-                Email Support
-              </Button>
-              <Button variant="outline">
-                <MessageCircle className="w-4 h-4 mr-2" />
-                Live Chat
-              </Button>
-              <Button variant="outline">
-                <BookOpen className="w-4 h-4 mr-2" />
-                Documentation
-              </Button>
+              <a href="mailto:altaftoolshub@gmail.com?subject=Help%20with%20Remove%20Pages%20Tool" className="inline-block">
+                <Button variant="outline">
+                  <Mail className="w-4 h-4 mr-2" />
+                  Email Support
+                </Button>
+              </a>
+              <Link href="/faq">
+                <Button variant="outline">
+                  <HelpCircle className="w-4 h-4 mr-2" />
+                  FAQ
+                </Button>
+              </Link>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline">
+                    <BookOpen className="w-4 h-4 mr-2" />
+                    Documentation
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>How to Remove PDF Pages</DialogTitle>
+                    <DialogDescription>
+                      Complete guide for using the Remove Pages tool
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 mt-4">
+                    <div>
+                      <h3 className="font-semibold mb-2">Step 1: Upload Your PDF</h3>
+                      <p className="text-muted-foreground">Click the upload area or drag and drop your PDF file. The file will be processed entirely in your browser for maximum privacy.</p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-2">Step 2: Select Pages to Remove</h3>
+                      <p className="text-muted-foreground">Click on the page thumbnails to select which pages you want to remove. Selected pages will be highlighted and marked for deletion.</p>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold mb-2">Step 3: Remove and Download</h3>
+                      <p className="text-muted-foreground">Click the Remove Pages button to create your new PDF without the selected pages. The modified PDF will download automatically.</p>
+                    </div>
+                    <div className="pt-4 border-t">
+                      <h3 className="font-semibold mb-2">Tips:</h3>
+                      <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                        <li>Click multiple pages to select them</li>
+                        <li>Use Shift+Click for range selection</li>
+                        <li>Double-check before removing pages</li>
+                        <li>Your original file remains unchanged</li>
+                        <li>All processing happens locally</li>
+                      </ul>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </Card>
         </div>
       </div>
+
+      <ContactSupportSection />
     </div>
+
   );
 }
