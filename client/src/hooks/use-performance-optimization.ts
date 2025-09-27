@@ -18,20 +18,8 @@ export function usePerformanceOptimization() {
       document.head.appendChild(link);
     });
 
-    // Optimize font loading
-    const fontPreloads = [
-      { href: '/fonts/inter-var.woff2', type: 'font/woff2' }
-    ];
-
-    fontPreloads.forEach(font => {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = 'font';
-      link.type = font.type;
-      link.crossOrigin = 'anonymous';
-      link.href = font.href;
-      document.head.appendChild(link);
-    });
+    // Font optimization will be handled by the existing font loading system
+    // Skip preloading non-existent font files
 
     // Optimize images with loading="lazy" where appropriate
     const images = document.querySelectorAll('img:not([loading])');

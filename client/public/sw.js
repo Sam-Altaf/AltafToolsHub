@@ -9,9 +9,7 @@ const DYNAMIC_CACHE = 'altaftoolshub-dynamic-v2.0.0';
 const CORE_ASSETS = [
   '/',
   '/manifest.json',
-  '/favicon.svg',
-  '/favicon-32x32.png',
-  '/favicon-16x16.png'
+  '/favicon.svg'
 ];
 
 // Tool pages for offline access
