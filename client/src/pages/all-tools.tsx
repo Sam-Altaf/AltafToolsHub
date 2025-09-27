@@ -280,7 +280,7 @@ export default function AllToolsPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <Badge className="mb-4 bg-gradient-to-r from-primary/20 to-secondary/20 text-primary border-primary/30">
+            <Badge className="mb-4 bg-gradient-to-r from-primary to-blue-600 text-white border-0 shadow-md">
               <Sparkles className="w-3 h-3 mr-1" />
               {availableToolsCount} Tools Available • {totalToolsCount - availableToolsCount} Coming Soon
             </Badge>
