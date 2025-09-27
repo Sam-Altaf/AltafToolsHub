@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { MotionConfig } from 'framer-motion';
 
 interface ReducedMotionContextType {
@@ -11,7 +11,7 @@ const ReducedMotionContext = createContext<ReducedMotionContextType | undefined>
 
 const STORAGE_KEY = 'altaf-tools-reduced-motion';
 
-export function ReducedMotionProvider({ children }: { children: ReactNode }) {
+export function ReducedMotionProvider({ children }: { children: React.ReactNode }) {
   const [systemReducedMotion, setSystemReducedMotion] = useState<boolean>(false);
   const [userPreference, setUserPreference] = useState<boolean | null>(null);
 

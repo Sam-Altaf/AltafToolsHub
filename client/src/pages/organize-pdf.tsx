@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -41,14 +41,14 @@ interface PageData {
 }
 
 export default function OrganizePDF() {
-  const [pdfFile, setPdfFile] = React.useState<File | null>(null);
-  const [pdfDoc, setPdfDoc] = React.useState<PDFDocument | null>(null);
-  const [pages, setPages] = React.useState<PageData[]>([]);
-  const [isProcessing, setIsProcessing] = React.useState(false);
-  const [progress, setProgress] = React.useState(0);
-  const [organizedPdf, setOrganizedPdf] = React.useState<Uint8Array | null>(null);
-  const [selectedPages, setSelectedPages] = React.useState<Set<string>>(new Set());
-  const [draggedPage, setDraggedPage] = React.useState<PageData | null>(null);
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
+  const [pdfDoc, setPdfDoc] = useState<PDFDocument | null>(null);
+  const [pages, setPages] = useState<PageData[]>([]);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [organizedPdf, setOrganizedPdf] = useState<Uint8Array | null>(null);
+  const [selectedPages, setSelectedPages] = useState<Set<string>>(new Set());
+  const [draggedPage, setDraggedPage] = useState<PageData | null>(null);
   const { toast } = useToast();
 
   // Generate structured data for SEO
@@ -140,7 +140,7 @@ export default function OrganizePDF() {
     }
   };
 
-  const handleFileUpload = React.useCallback(async (file: File) => {
+  const handleFileUpload = useCallback(async (file: File) => {
     if (file.type !== 'application/pdf') {
       toast({
         title: "Invalid File",

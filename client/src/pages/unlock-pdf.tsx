@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,13 +27,13 @@ interface UnlockResult {
 }
 
 export default function UnlockPDF() {
-  const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
-  const [password, setPassword] = React.useState("");
-  const [showPassword, setShowPassword] = React.useState(false);
-  const [isProcessing, setIsProcessing] = React.useState(false);
-  const [progress, setProgress] = React.useState(0);
-  const [result, setResult] = React.useState<UnlockResult | null>(null);
-  const [error, setError] = React.useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [result, setResult] = useState<UnlockResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   // Generate structured data for SEO
   const howToSchema = generateHowToSchema({

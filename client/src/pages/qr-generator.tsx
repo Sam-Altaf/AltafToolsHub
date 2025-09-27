@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -74,17 +74,17 @@ export default function QRGenerator() {
     ]
   });
 
-  const canvasRef = React.useRef<HTMLCanvasElement>(null);
-  const [text, setText] = React.useState("");
-  const [size, setSize] = React.useState<QRSize>("medium");
-  const [fgColor, setFgColor] = React.useState("#000000");
-  const [bgColor, setBgColor] = React.useState("#ffffff");
-  const [qrDataUrl, setQrDataUrl] = React.useState<string | null>(null);
-  const [isGenerating, setIsGenerating] = React.useState(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [text, setText] = useState("");
+  const [size, setSize] = useState<QRSize>("medium");
+  const [fgColor, setFgColor] = useState("#000000");
+  const [bgColor, setBgColor] = useState("#ffffff");
+  const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
   const { toast } = useToast();
 
   // Generate QR code whenever input changes
-  React.useEffect(() => {
+  useEffect(() => {
     if (!text.trim()) {
       setQrDataUrl(null);
       return;

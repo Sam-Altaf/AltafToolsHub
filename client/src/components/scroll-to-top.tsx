@@ -1,11 +1,11 @@
-import * as React from "react";
+import { useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 
 export default function ScrollToTop() {
   const [location] = useLocation();
-  const previousLocation = React.useRef(location);
+  const previousLocation = useRef(location);
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Only scroll to top if it's an actual route change (different path)
     // Don't scroll if it's just a hash change or same page state update
     const currentPath = location.split('#')[0].split('?')[0];

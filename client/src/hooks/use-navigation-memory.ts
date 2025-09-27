@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useEffect, useRef } from 'react';
 import { useLocation } from 'wouter';
 
 interface PageState {
@@ -32,12 +32,12 @@ if (typeof window !== 'undefined') {
 
 export function useNavigationMemory() {
   const [location, navigate] = useLocation();
-  const previousLocationRef = React.useRef<string>('');
-  const restoringScrollRef = React.useRef(false);
-  const hasRestoredRef = React.useRef(false);
+  const previousLocationRef = useRef<string>('');
+  const restoringScrollRef = useRef(false);
+  const hasRestoredRef = useRef(false);
 
   // On initial load, check if we should restore to a different page
-  React.useEffect(() => {
+  useEffect(() => {
     if (!hasRestoredRef.current) {
       hasRestoredRef.current = true;
       const savedPage = localStorage.getItem(CURRENT_PAGE_KEY);
@@ -48,7 +48,7 @@ export function useNavigationMemory() {
     }
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Save current page to localStorage
     if (location) {
       localStorage.setItem(CURRENT_PAGE_KEY, location);
@@ -117,7 +117,7 @@ export function useNavigationMemory() {
     };
   }, [location]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Save previous location's scroll position
     if (previousLocationRef.current && previousLocationRef.current !== location) {
       const scrollY = window.scrollY;
