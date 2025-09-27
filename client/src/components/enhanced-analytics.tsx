@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "wouter";
+import "@/types/global";
 
 // Enhanced Analytics Component for User Engagement Tracking
 // This component tracks user behavior without compromising privacy
@@ -167,10 +168,10 @@ export function trackPerformanceMetrics() {
         const navigationEntry = entry as PerformanceNavigationTiming;
         
         window.gtag('event', 'page_performance', {
-          page_load_time: navigationEntry.loadEventEnd - navigationEntry.navigationStart,
-          dom_content_loaded: navigationEntry.domContentLoadedEventEnd - navigationEntry.navigationStart,
+          page_load_time: navigationEntry.loadEventEnd - navigationEntry.fetchStart,
+          dom_content_loaded: navigationEntry.domContentLoadedEventEnd - navigationEntry.fetchStart,
           first_contentful_paint: 0, // Will be captured separately
-          time_to_interactive: navigationEntry.domInteractive - navigationEntry.navigationStart,
+          time_to_interactive: navigationEntry.domInteractive - navigationEntry.fetchStart,
           page_path: window.location.pathname
         });
       }

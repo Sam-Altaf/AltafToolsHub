@@ -274,7 +274,7 @@ function generateHowToSchema(toolData: any) {
       "position": index + 1,
       "name": step.name,
       "text": step.text,
-      "image": step.image || `https://www.altaftoolshub.app/screenshots/step-${index + 1}.png`
+      "image": `https://www.altaftoolshub.app/screenshots/step-${index + 1}.png`
     }))
   };
 }

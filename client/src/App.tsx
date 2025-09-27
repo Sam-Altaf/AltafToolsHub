@@ -38,6 +38,13 @@ import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import CookieConsent from "@/components/cookie-consent";
 
+// Performance and Analytics Components
+import { useEffect } from "react";
+import EnhancedAnalytics from "@/components/enhanced-analytics";
+import CriticalCSS from "@/components/critical-css";
+import { usePerformanceOptimization } from "@/hooks/use-performance-optimization";
+import { trackPerformanceMetrics, trackErrors } from "@/components/enhanced-analytics";
+
 function Router() {
   return (
     <div className="min-h-screen flex flex-col">
@@ -82,11 +89,26 @@ function Router() {
 }
 
 function App() {
+  // Initialize performance optimizations
+  usePerformanceOptimization();
+  
+  // Initialize performance and error tracking
+  useEffect(() => {
+    trackPerformanceMetrics();
+    trackErrors();
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <ReducedMotionProvider>
           <TooltipProvider>
+            {/* Critical CSS for above-the-fold performance */}
+            <CriticalCSS />
+            
+            {/* Enhanced Analytics for user engagement tracking */}
+            <EnhancedAnalytics />
+            
             <Toaster />
             <CookieConsent />
             <ScrollToTopButton />
