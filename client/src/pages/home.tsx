@@ -128,7 +128,7 @@ const ToolCard = ({ tool }: { tool: Tool }) => {
                 animate={{ scale: 1, rotate: 0 }}
                 transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
               >
-                <Badge className="bg-gradient-to-r from-green-500/20 to-green-400/10 text-green-600 dark:text-green-400 border-green-500/30 font-semibold shadow-lg">
+                <Badge className="bg-gradient-to-r from-emerald-700 to-emerald-800 text-white border-0 font-semibold shadow-lg">
                   <Sparkles className="w-3 h-3 mr-1 animate-pulse" />
                   New
                 </Badge>
@@ -152,7 +152,7 @@ const ToolCard = ({ tool }: { tool: Tool }) => {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4 }}
               >
-                <Badge variant="secondary" className="bg-gradient-to-r from-gray-500/20 to-gray-400/10 border-gray-500/30 font-medium">
+                <Badge className="bg-gradient-to-r from-gray-600 to-gray-700 text-white border-0 font-medium shadow-md">
                   <Clock className="w-3 h-3 mr-1 animate-pulse" />
                   Coming Soon
                 </Badge>

@@ -58,7 +58,7 @@ const ToolCard = ({ tool, view }: { tool: any; view: 'grid' | 'list' }) => {
         {/* Badges */}
         <div className="absolute top-3 right-3 flex gap-2">
           {tool.new && (
-            <Badge className="bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/30 text-xs">
+            <Badge className="bg-gradient-to-r from-emerald-700 to-emerald-800 text-white border-0 text-xs shadow-md">
               <Sparkles className="w-3 h-3 mr-1" />
               New
             </Badge>
@@ -70,7 +70,7 @@ const ToolCard = ({ tool, view }: { tool: any; view: 'grid' | 'list' }) => {
             </Badge>
           )}
           {!tool.available && (
-            <Badge variant="secondary" className="text-xs">
+            <Badge className="bg-gradient-to-r from-gray-600 to-gray-700 text-white border-0 text-xs shadow-md">
               <Clock className="w-3 h-3 mr-1" />
               Soon
             </Badge>

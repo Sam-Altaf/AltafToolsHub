@@ -26,13 +26,13 @@ const ToolNavItem = ({ tool, onClick }: { tool: Tool; onClick?: () => void }) =>
         <div className="font-medium mb-1 flex items-center justify-center gap-1 flex-wrap">
           <span className="text-sm">{tool.title}</span>
           {tool.new && (
-            <span className="inline-flex items-center text-xs px-1.5 py-0.5 rounded-full bg-gradient-to-r from-green-500/20 to-green-400/10 text-green-600 dark:text-green-400 font-semibold">
+            <span className="inline-flex items-center text-xs px-1.5 py-0.5 rounded-full bg-gradient-to-r from-emerald-700 to-emerald-800 text-white font-semibold shadow-md">
               <Sparkles className="w-2.5 h-2.5 mr-0.5" />
               New
             </span>
           )}
           {!tool.available && (
-            <span className="text-xs px-1.5 py-0.5 rounded-full bg-muted-foreground/10 text-muted-foreground">
+            <span className="text-xs px-1.5 py-0.5 rounded-full bg-gradient-to-r from-gray-600 to-gray-700 text-white shadow-md">
               Soon
             </span>
           )}

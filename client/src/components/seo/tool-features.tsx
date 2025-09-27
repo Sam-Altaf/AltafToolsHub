@@ -276,7 +276,7 @@ export function HowItWorksSection({ steps, toolName }: HowItWorksSectionProps) {
         </div>
         
         <div className="mt-8 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 text-green-600 dark:text-green-400 rounded-full">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-700 to-emerald-800 text-white rounded-full shadow-md">
             <Zap className="w-4 h-4" />
             <span className="text-sm font-medium">Processing time: Less than 5 seconds</span>
           </div>

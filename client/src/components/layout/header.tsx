@@ -270,7 +270,7 @@ export default function Header() {
                                           <div className="flex items-center gap-2">
                                             {tool.title}
                                             {tool.new && (
-                                              <span className="text-xs px-1.5 py-0.5 rounded-full bg-green-500/10 text-green-600">
+                                              <span className="text-xs px-1.5 py-0.5 rounded-full bg-gradient-to-r from-emerald-700 to-emerald-800 text-white shadow-md">
                                                 New
                                               </span>
                                             )}
@@ -287,7 +287,7 @@ export default function Header() {
                                         <div className="flex-1 text-left">
                                           <div className="flex items-center gap-2">
                                             {tool.title}
-                                            <span className="text-xs px-1.5 py-0.5 rounded-full bg-muted-foreground/10 text-muted-foreground">
+                                            <span className="text-xs px-1.5 py-0.5 rounded-full bg-gradient-to-r from-gray-600 to-gray-700 text-white shadow-md">
                                               Soon
                                             </span>
                                           </div>
