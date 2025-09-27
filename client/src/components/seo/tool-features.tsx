@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Card } from "@/components/ui/card";
 import { Check, Zap, Shield, Globe, RefreshCw, Clock, Sparkles, Server } from "lucide-react";
 import { cn } from "@/lib/utils";
