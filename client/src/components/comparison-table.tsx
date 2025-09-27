@@ -78,7 +78,7 @@ export function ComparisonTable() {
           transition={{ duration: 0.6 }}
         >
           <div className="text-center mb-10">
-            <Badge className="mb-4 bg-gradient-to-r from-primary/20 to-blue-500/20 text-primary border-primary/30">
+            <Badge className="mb-4 bg-gradient-to-r from-primary to-blue-600 text-white border-0 shadow-md">
               <Zap className="w-3 h-3 mr-1" />
               Why Choose Us
             </Badge>

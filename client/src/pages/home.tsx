@@ -140,7 +140,7 @@ const ToolCard = ({ tool }: { tool: Tool }) => {
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
               >
-                <Badge className="bg-gradient-to-r from-primary/20 to-blue-500/10 text-primary border-primary/30 font-semibold shadow-lg">
+                <Badge className="bg-gradient-to-r from-primary to-blue-600 text-white border-0 font-semibold shadow-lg">
                   <Star className="w-3 h-3 mr-1 animate-pulse-glow" />
                   Popular
                 </Badge>
