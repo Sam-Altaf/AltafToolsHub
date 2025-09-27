@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -24,11 +24,11 @@ interface PDFFile {
 }
 
 export default function MergePDF() {
-  const [pdfFiles, setPdfFiles] = useState<PDFFile[]>([]);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [mergedPdf, setMergedPdf] = useState<Uint8Array | null>(null);
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [pdfFiles, setPdfFiles] = React.useState<PDFFile[]>([]);
+  const [isProcessing, setIsProcessing] = React.useState(false);
+  const [progress, setProgress] = React.useState(0);
+  const [mergedPdf, setMergedPdf] = React.useState<Uint8Array | null>(null);
+  const [draggedIndex, setDraggedIndex] = React.useState<number | null>(null);
   const { toast } = useToast();
 
   // Generate structured data for SEO
@@ -81,7 +81,7 @@ export default function MergePDF() {
     ]
   });
 
-  const handleFileUpload = useCallback(async (files: FileList | File[]) => {
+  const handleFileUpload = React.useCallback(async (files: FileList | File[]) => {
     const fileArray = Array.from(files);
     const validFiles = fileArray.filter(file => file.type === 'application/pdf');
     
