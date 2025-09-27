@@ -143,9 +143,8 @@ export function deferNonCriticalCSS() {
     link.rel = 'preload';
     link.as = 'style';
     link.href = href;
-    link.onload = function(this: HTMLLinkElement) {
-      this.onload = null;
-      this.rel = 'stylesheet';
+    link.onload = () => {
+      link.rel = 'stylesheet';
     };
     
     // Fallback for browsers that don't support preload
