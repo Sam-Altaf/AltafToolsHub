@@ -25,46 +25,21 @@ export default defineConfig({
       algorithm: 'brotliCompress',
       ext: '.br',
     }),
-    // PWA plugin for offline support
+    // PWA plugin configured to use our custom service worker
     VitePWA({
       registerType: 'autoUpdate',
-      injectRegister: 'auto',
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff,woff2}'],
-        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5MB
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'google-fonts-cache',
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
-              }
-            }
-          },
-          {
-            urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'gstatic-fonts-cache',
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
-              }
-            }
-          }
-        ]
-      },
+      injectRegister: null, // We register manually in main.tsx
+      strategies: 'injectManifest',
+      srcDir: 'public',
+      filename: 'sw.js',
       devOptions: {
-        enabled: false
+        enabled: false,
+        type: 'module'
+      },
+      injectManifest: {
+        injectionPoint: undefined,
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff,woff2}'],
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024 // 5MB
       },
       manifest: false // We already have manifest.json
     }),

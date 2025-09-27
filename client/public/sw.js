@@ -1,6 +1,12 @@
 // AltafToolsHub Service Worker v1.0
 // Provides offline support and performance optimization
 
+// Import Workbox for PWA support (injected by VitePWA plugin in production)
+if (typeof importScripts === 'function') {
+  // The __WB_MANIFEST will be injected here by VitePWA
+  self.__WB_MANIFEST = self.__WB_MANIFEST || [];
+}
+
 const CACHE_NAME = 'altaftoolshub-v1';
 const STATIC_CACHE = 'static-v1';
 const RUNTIME_CACHE = 'runtime-v1';
