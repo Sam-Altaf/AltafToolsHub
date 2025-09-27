@@ -426,7 +426,7 @@ export default function Documentation() {
                                 <ol className="space-y-2">
                                   {tool.steps.map((step, index) => (
                                     <li key={index} className="flex gap-2">
-                                      <span className="flex-shrink-0 w-6 h-6 bg-primary/10 text-primary rounded-full flex items-center justify-center text-sm font-semibold">
+                                      <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-r from-primary to-blue-600 text-white rounded-full flex items-center justify-center text-sm font-semibold shadow-md">
                                         {index + 1}
                                       </span>
                                       <span className="text-sm text-muted-foreground">{step}</span>

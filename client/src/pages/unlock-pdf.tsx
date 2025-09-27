@@ -390,7 +390,7 @@ export default function UnlockPDF() {
               Back to Tools
             </Button>
           </Link>
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary to-blue-600 text-white mb-6 shadow-md">
             <Sparkles className="w-4 h-4" />
             <span className="text-sm font-medium">100% Secure Processing</span>
           </div>

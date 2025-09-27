@@ -180,7 +180,7 @@ export default function BlogPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Badge className="mb-4 bg-primary/10 text-primary border-primary/30">
+            <Badge className="mb-4 bg-gradient-to-r from-primary to-blue-600 text-white border-0 shadow-md">
               <BookOpen className="w-3 h-3 mr-1" />
               Blog & Tutorials
             </Badge>

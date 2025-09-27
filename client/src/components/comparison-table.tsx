@@ -184,7 +184,7 @@ export function ComparisonTable() {
                       </div>
                       <h3 className="font-semibold text-base sm:text-lg text-foreground dark:text-foreground">{item.feature}</h3>
                       {item.highlight && (
-                        <Badge className="ml-auto bg-gradient-to-r from-primary/20 to-blue-500/20 text-primary border-primary/30 text-xs">
+                        <Badge className="ml-auto bg-gradient-to-r from-primary to-blue-600 text-white border-0 text-xs shadow-md">
                           Key
                         </Badge>
                       )}

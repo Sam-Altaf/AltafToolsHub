@@ -996,7 +996,7 @@ export default function Home() {
                         )}>
                           <Icon className="w-7 h-7 text-white" />
                         </div>
-                        <Badge className="bg-primary/10 text-primary border-primary/20">
+                        <Badge className="bg-gradient-to-r from-primary to-blue-600 text-white border-0 shadow-md">
                           <TrendingUp className="w-3 h-3 mr-1" />
                           Trending
                         </Badge>
@@ -1049,7 +1049,7 @@ export default function Home() {
                     "{testimonial.content}"
                   </p>
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center font-semibold text-primary">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-blue-600 flex items-center justify-center font-semibold text-white shadow-md">
                       {testimonial.avatar}
                     </div>
                     <div>
