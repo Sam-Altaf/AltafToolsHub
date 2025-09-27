@@ -1,0 +1,5 @@
+# ads.txt file for AltafToolsHub.app
+# This file indicates that we do not work with any advertising networks
+# as we maintain a completely ad-free experience for our users
+
+# No advertising partners - Privacy-first approach

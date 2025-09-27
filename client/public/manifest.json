@@ -1,81 +1,71 @@
 {
   "name": "AltafToolsHub - Privacy-First File Tools",
   "short_name": "AltafToolsHub",
-  "description": "Free online tools for PDF processing, image conversion, QR generation, and more. 100% client-side processing for complete privacy.",
+  "description": "Privacy-first file processing tools. Compress PDFs, unlock files, convert images - all processed securely in your browser.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#8B5CF6",
+  "theme_color": "#8b5cf6",
   "orientation": "portrait-primary",
-  "scope": "/",
   "categories": ["utilities", "productivity", "business"],
-  "dir": "ltr",
   "lang": "en-US",
-  "prefer_related_applications": false,
+  "scope": "/",
   "icons": [
     {
       "src": "/favicon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
-    },
-    {
-      "src": "/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/screenshot-1.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "label": "Homepage with all tools"
-    },
-    {
-      "src": "/screenshot-2.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "label": "PDF compression tool"
     }
   ],
   "shortcuts": [
     {
       "name": "PDF Compressor",
-      "short_name": "Compress",
+      "short_name": "Compress PDF",
       "description": "Compress PDF files to specific sizes",
       "url": "/compress-pdf",
-      "icons": [{"src": "/favicon.svg", "sizes": "96x96"}]
+      "icons": [
+        {
+          "src": "/favicon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "PDF Unlocker",
+      "short_name": "Unlock PDF",
+      "description": "Remove password protection from PDFs",
+      "url": "/unlock-pdf",
+      "icons": [
+        {
+          "src": "/favicon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
     },
     {
       "name": "QR Generator",
       "short_name": "QR Code",
-      "description": "Generate QR codes instantly",
+      "description": "Generate custom QR codes",
       "url": "/qr-generator",
-      "icons": [{"src": "/favicon.svg", "sizes": "96x96"}]
-    },
-    {
-      "name": "JPG to PDF",
-      "short_name": "Convert",
-      "description": "Convert images to PDF",
-      "url": "/jpg-to-pdf",
-      "icons": [{"src": "/favicon.svg", "sizes": "96x96"}]
+      "icons": [
+        {
+          "src": "/favicon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
     }
   ],
-  "features": [
-    "offline-capable",
-    "privacy-first",
-    "no-upload",
-    "client-side"
-  ],
-  "edge_side_panel": {
-    "preferred_width": 480
-  }
+  "screenshots": [
+    {
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "AltafToolsHub Homepage"
+    }
+  ]
 }

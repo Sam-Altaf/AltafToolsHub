@@ -53,9 +53,6 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon.svg" />
     <link rel="mask-icon" href="/favicon.svg" color="#6366f1" />
     
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="/manifest.json">
-    
     <!-- Preconnect to optimize font loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -222,17 +219,122 @@
     }
     </script>
     
-    <!-- Google tag (gtag.js) -->
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-NH8XW9QZ');</script>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Enhanced Analytics with gtag -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-26X6DS9BXF"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-26X6DS9BXF');
+      
+      // Enhanced Google Analytics configuration
+      gtag('config', 'G-26X6DS9BXF', {
+        // Enhanced ecommerce and user engagement tracking
+        custom_map: {
+          'custom_parameter_1': 'tool_category',
+          'custom_parameter_2': 'file_processing_type'
+        },
+        // Privacy-enhanced analytics
+        anonymize_ip: true,
+        allow_google_signals: false,
+        allow_ad_personalization_signals: false
+      });
+      
+      // Track tool usage events
+      function trackToolUsage(toolName, category, action = 'start') {
+        gtag('event', 'tool_usage', {
+          'tool_name': toolName,
+          'tool_category': category,
+          'action_type': action,
+          'privacy_mode': 'client_side'
+        });
+      }
+      
+      // Track file processing events  
+      function trackFileProcessing(toolName, fileType, fileSize, processingTime) {
+        gtag('event', 'file_processed', {
+          'tool_name': toolName,
+          'file_type': fileType,
+          'file_size_category': getFileSizeCategory(fileSize),
+          'processing_time_ms': processingTime,
+          'processing_location': 'browser'
+        });
+      }
+      
+      // Track user engagement
+      function trackEngagement(eventName, parameters = {}) {
+        gtag('event', eventName, {
+          'engagement_time_msec': parameters.engagementTime || 0,
+          'privacy_first': true,
+          ...parameters
+        });
+      }
+      
+      // Helper function for file size categorization
+      function getFileSizeCategory(bytes) {
+        if (bytes < 1024 * 1024) return 'under_1mb';
+        if (bytes < 10 * 1024 * 1024) return '1mb_to_10mb';
+        if (bytes < 50 * 1024 * 1024) return '10mb_to_50mb';
+        return 'over_50mb';
+      }
+      
+      // Make functions available globally for tool components
+      window.trackToolUsage = trackToolUsage;
+      window.trackFileProcessing = trackFileProcessing;
+      window.trackEngagement = trackEngagement;
     </script>
   </head>
   <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NH8XW9QZ"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js', { scope: '/' })
+            .then(function(registration) {
+              console.log('SW registered: ', registration);
+              
+              // Track PWA installation
+              if (window.gtag) {
+                gtag('event', 'pwa_registered', {
+                  'service_worker': 'v2.0.0'
+                });
+              }
+            })
+            .catch(function(registrationError) {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+        
+        // PWA install prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+          e.preventDefault();
+          deferredPrompt = e;
+          
+          // Track install prompt availability
+          if (window.gtag) {
+            gtag('event', 'pwa_installable', {
+              'prompt_available': true
+            });
+          }
+        });
+      }
+    </script>
   </body>
 </html>

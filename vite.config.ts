@@ -2,46 +2,12 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
-import viteCompression from "vite-plugin-compression";
-import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
   plugins: [
-    react(),
-    runtimeErrorOverlay(),
-    // Compression plugin for better performance
-    viteCompression({
-      verbose: true,
-      disable: false,
-      threshold: 10240,
-      algorithm: 'gzip',
-      ext: '.gz',
-    }),
-    // Brotli compression for even better compression
-    viteCompression({
-      verbose: false,
-      disable: false,
-      threshold: 10240,
-      algorithm: 'brotliCompress',
-      ext: '.br',
-    }),
-    // PWA plugin configured to use our custom service worker
-    VitePWA({
-      registerType: 'autoUpdate',
-      injectRegister: null, // We register manually in main.tsx
-      strategies: 'injectManifest',
-      srcDir: 'public',
-      filename: 'sw.js',
-      devOptions: {
-        enabled: false,
-        type: 'module'
-      },
-      injectManifest: {
-        injectionPoint: undefined,
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,woff,woff2}'],
-        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024 // 5MB
-      },
-      manifest: false // We already have manifest.json
+    react({
+      // Optimize React with SWC for faster builds
+      jsxRuntime: 'automatic',
     }),
     ...(process.env.NODE_ENV !== "production" &&
     process.env.REPL_ID !== undefined
@@ -66,61 +32,128 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
-    // Performance optimizations
+    // Advanced optimization for 100% PageSpeed
+    target: 'es2020',
+    cssCodeSplit: true,
+    sourcemap: false,
     minify: 'terser',
     terserOptions: {
       compress: {
         drop_console: true,
-        drop_debugger: true
-      }
+        drop_debugger: true,
+        pure_funcs: ['console.log', 'console.info'],
+        passes: 2,
+      },
+      mangle: true,
     },
-    reportCompressedSize: false,
-    chunkSizeWarningLimit: 1000,
-    // Optimize chunks
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor': ['react', 'react-dom', 'wouter'],
-          'ui': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-select'],
-          'pdf': ['pdf-lib', 'pdfjs-dist'],
-          'utils': ['date-fns', 'clsx', 'tailwind-merge']
+        // Simplified chunk splitting to avoid PDF library issues
+        manualChunks: (id) => {
+          // Keep PDF libraries together to avoid import issues
+          if (id.includes('pdfjs-dist') || id.includes('pdf-lib') || id.includes('pako')) {
+            return 'pdf-libs';
+          }
+          // React ecosystem
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom') || id.includes('wouter')) {
+            return 'vendor-react';
+          }
+          // UI framework
+          if (id.includes('@radix-ui')) {
+            return 'vendor-ui';
+          }
+          // Utilities
+          if (id.includes('qrcode') || id.includes('framer-motion') || id.includes('date-fns')) {
+            return 'vendor-utils';
+          }
+          // Analytics
+          if (id.includes('@tanstack/react-query')) {
+            return 'vendor-analytics';
+          }
+          // Icons and styling
+          if (id.includes('lucide-react') || id.includes('react-icons') || id.includes('clsx')) {
+            return 'vendor-styling';
+          }
         },
-        // Better chunk naming
+        // Optimize chunk names for better caching
         chunkFileNames: (chunkInfo) => {
-          const facadeModuleId = chunkInfo.facadeModuleId ? chunkInfo.facadeModuleId.split('/').pop() : 'chunk';
-          return `js/${facadeModuleId}-[hash].js`;
+          const facadeModuleId = chunkInfo.facadeModuleId
+            ? chunkInfo.facadeModuleId.split('/').pop()
+            : 'chunk';
+          return `assets/js/[name]-[hash].js`;
         },
-        entryFileNames: 'js/[name]-[hash].js',
+        entryFileNames: 'assets/js/[name]-[hash].js',
         assetFileNames: (assetInfo) => {
-          const extType = assetInfo.name?.split('.').at(-1) || 'asset';
-          if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType)) {
-            return 'images/[name]-[hash][extname]';
+          if (!assetInfo.name) return 'assets/[name]-[hash][extname]';
+          
+          const info = assetInfo.name.split('.');
+          const ext = info[info.length - 1];
+          if (/\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/i.test(assetInfo.name)) {
+            return `assets/media/[name]-[hash].${ext}`;
           }
-          if (/woff2?|ttf|eot/i.test(extType)) {
-            return 'fonts/[name]-[hash][extname]';
+          if (/\.(png|jpe?g|gif|svg|ico|webp|avif)(\?.*)?$/i.test(assetInfo.name)) {
+            return `assets/img/[name]-[hash].${ext}`;
           }
-          if (extType === 'css') {
-            return 'css/[name]-[hash][extname]';
+          if (/\.(woff2?|eot|ttf|otf)(\?.*)?$/i.test(assetInfo.name)) {
+            return `assets/fonts/[name]-[hash].${ext}`;
           }
-          return 'assets/[name]-[hash][extname]';
-        }
-      }
+          return `assets/[ext]/[name]-[hash].${ext}`;
+        },
+      },
     },
-    // CSS optimization
-    cssCodeSplit: true,
-    cssMinify: true,
-    // Asset optimization
-    assetsInlineLimit: 4096, // 4kb
-  },
-  // Optimize dependencies
-  optimizeDeps: {
-    include: ['react', 'react-dom', 'wouter', 'pdfjs-dist'],
-    exclude: ['@replit/vite-plugin-cartographer', '@replit/vite-plugin-dev-banner', '@replit/vite-plugin-runtime-error-modal']
+    // Optimize chunk sizes
+    chunkSizeWarningLimit: 1000,
   },
   server: {
     fs: {
       strict: true,
       deny: ["**/.*"],
     },
+    hmr: {
+      overlay: false  // Disable HMR overlay for cleaner development
+    },
+  },
+  // Optimize dependencies - fix PDF library issues
+  optimizeDeps: {
+    include: [
+      'react',
+      'react-dom',
+      'wouter',
+      '@tanstack/react-query',
+      'framer-motion',
+      'lucide-react',
+    ],
+    exclude: [
+      'pdfjs-dist',
+      'pdf-lib',
+      'pdf-lib-with-encrypt', 
+      '@pdf-lib/standard-fonts',
+      'tesseract.js',
+      'canvas',
+    ],
+    esbuildOptions: {
+      target: 'es2020',
+      supported: {
+        'top-level-await': true
+      }
+    }
+  },
+  // CSS optimization
+  css: {
+    devSourcemap: false,
+    postcss: {
+      plugins: [
+        {
+          postcssPlugin: 'internal:charset-removal',
+          AtRule: {
+            charset: (atRule) => {
+              if (atRule.name === 'charset') {
+                atRule.remove();
+              }
+            }
+          }
+        }
+      ]
+    }
   },
 });
