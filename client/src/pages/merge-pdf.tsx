@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { ContactSupportSection } from "@/components/contact-support";
-import { scrollBy } from "@/lib/scroll-utils";
+import { scrollToProcessing } from "@/lib/scroll-utils";
 
 interface PDFFile {
   id: string;
@@ -157,7 +157,7 @@ export default function MergePDF() {
 
   const mergePDFs = async () => {
     // Scroll to processing area
-    scrollBy(300, 100);
+    scrollToProcessing();
     
     if (pdfFiles.length < 2) {
       toast({

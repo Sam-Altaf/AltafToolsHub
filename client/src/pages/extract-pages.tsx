@@ -21,6 +21,7 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import * as pdfjsLib from 'pdfjs-dist';
 import { ContactSupportSection } from "@/components/contact-support";
+import { scrollToProcessing } from "@/lib/scroll-utils";
 import {
   Dialog,
   DialogContent,
@@ -239,7 +240,7 @@ export default function ExtractPages() {
 
   const extractPages = async () => {
     // Scroll to top to show processing area
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollToProcessing();
     
     if (!pdfDoc || selectedPages.size === 0) {
       toast({

@@ -74,3 +74,39 @@ export const scrollBy = (pixels: number, delay: number = 100) => {
     });
   }, delay);
 };
+
+/**
+ * Scrolls to the processing area when tool starts working
+ * This ensures users see the progress bar and status updates
+ * @param delay - Delay in milliseconds before scrolling (default: 100ms)
+ */
+export const scrollToProcessing = (delay: number = 100) => {
+  setTimeout(() => {
+    // Look for progress bar first (most reliable indicator)
+    let processingElement = document.querySelector('[role="progressbar"], .progress, [data-testid*="progress"]');
+    
+    // If no progress bar, look for main tool card
+    if (!processingElement) {
+      processingElement = document.querySelector('[data-testid="main-tool-card"], .tool-card');
+    }
+    
+    // If no tool card, look for file info section (where processing usually starts)
+    if (!processingElement) {
+      processingElement = document.querySelector('[data-testid="file-info"], [data-testid*="file-display"]');
+    }
+    
+    // Fallback: scroll to a reasonable position (not all the way to top)
+    if (processingElement) {
+      processingElement.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'center' // Centers the element in viewport
+      });
+    } else {
+      // Fallback: scroll to top but with some offset for header/navigation
+      window.scrollTo({ 
+        top: Math.max(0, window.scrollY - 200), 
+        behavior: 'smooth' 
+      });
+    }
+  }, delay);
+};

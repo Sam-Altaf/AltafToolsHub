@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/accordion";
 import * as pdfjsLib from 'pdfjs-dist';
 import { ContactSupportSection } from "@/components/contact-support";
-import { scrollBy } from "@/lib/scroll-utils";
+import { scrollToProcessing } from "@/lib/scroll-utils";
 import {
   Dialog,
   DialogContent,
@@ -233,7 +233,7 @@ export default function RotatePDF() {
 
   const applyRotation = async () => {
     // Scroll to top to show processing area
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollToProcessing();
     
     if (!pdfDoc || !pdfFile) {
       toast({

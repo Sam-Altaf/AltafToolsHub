@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { ContactSupportSection } from "@/components/contact-support";
-import { scrollBy } from "@/lib/scroll-utils";
+import { scrollToProcessing } from "@/lib/scroll-utils";
 import {
   Dialog,
   DialogContent,
@@ -165,8 +165,8 @@ export default function SplitPDF() {
   };
 
   const splitPDF = async () => {
-    // Scroll to top to show processing area
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Scroll to processing area to show progress
+    scrollToProcessing();
     
     if (!pdfDoc) {
       toast({
