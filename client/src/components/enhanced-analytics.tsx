@@ -1,6 +1,13 @@
 import { useEffect } from "react";
 import { useLocation } from "wouter";
-import "@/types/global";
+
+// Type definitions for global analytics functions
+declare global {
+  interface Window {
+    gtag: (command: string, targetId?: string | Date, config?: any) => void;
+    trackEngagement: (eventName: string, parameters?: any) => void;
+  }
+}
 
 // Enhanced Analytics Component for User Engagement Tracking
 // This component tracks user behavior without compromising privacy

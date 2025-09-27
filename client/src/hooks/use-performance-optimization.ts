@@ -155,7 +155,7 @@ export function deferNonCriticalCSS() {
     link.rel = 'preload';
     link.as = 'style';
     link.href = href;
-    link.onload = function() {
+    link.onload = function(this: HTMLLinkElement) {
       this.onload = null;
       this.rel = 'stylesheet';
     };
@@ -193,10 +193,10 @@ export function initWebVitalsMonitoring() {
 
   // First Input Delay (FID) / Interaction to Next Paint (INP)
   const fidObserver = new PerformanceObserver((entryList) => {
-    entryList.getEntries().forEach((entry) => {
+    entryList.getEntries().forEach((entry: any) => {
       if (window.gtag) {
         window.gtag('event', 'fid_measurement', {
-          value: Math.round(entry.processingStart - entry.startTime),
+          value: Math.round((entry.processingStart || entry.startTime) - entry.startTime),
           metric_name: 'first_input_delay'
         });
       }

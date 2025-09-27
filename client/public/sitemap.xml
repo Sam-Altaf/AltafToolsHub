@@ -51,7 +51,7 @@
   <!-- Homepage -->
   <url>
     <loc>https://www.altaftoolshub.app/</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <lastmod>2025-01-27T12:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <mobile:mobile/>
@@ -60,7 +60,7 @@
   <!-- PDF Tools (High Priority) -->
   <url>
     <loc>https://www.altaftoolshub.app/compress-pdf</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <lastmod>2025-01-27T12:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
     <mobile:mobile/>
@@ -73,7 +73,7 @@
   
   <url>
     <loc>https://www.altaftoolshub.app/unlock-pdf</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <lastmod>2025-01-27T12:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <mobile:mobile/>
@@ -86,7 +86,7 @@
   
   <url>
     <loc>https://www.altaftoolshub.app/jpg-to-pdf</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <lastmod>2025-01-27T12:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <mobile:mobile/>
@@ -100,7 +100,7 @@
   <!-- Utility Tools (High Priority) -->
   <url>
     <loc>https://www.altaftoolshub.app/qr-generator</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <lastmod>2025-01-27T12:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
     <mobile:mobile/>
@@ -113,7 +113,7 @@
   
   <url>
     <loc>https://www.altaftoolshub.app/password-generator</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <lastmod>2025-01-27T12:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
     <mobile:mobile/>
@@ -129,7 +129,7 @@
   
   <url>
     <loc>https://www.altaftoolshub.app/extract-text</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <lastmod>2025-01-27T12:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <mobile:mobile/>
@@ -139,7 +139,7 @@
   <!-- PDF Manipulation Tools -->
   <url>
     <loc>https://www.altaftoolshub.app/merge-pdf</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <lastmod>2025-01-27T12:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <mobile:mobile/>
@@ -147,7 +147,7 @@
 
   <url>
     <loc>https://www.altaftoolshub.app/split-pdf</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <lastmod>2025-01-27T12:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <mobile:mobile/>
@@ -155,7 +155,7 @@
 
   <url>
     <loc>https://www.altaftoolshub.app/rotate-pdf</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <lastmod>2025-01-27T12:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <mobile:mobile/>
@@ -163,7 +163,7 @@
 
   <url>
     <loc>https://www.altaftoolshub.app/organize-pdf</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <lastmod>2025-01-27T12:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <mobile:mobile/>
@@ -171,7 +171,7 @@
 
   <url>
     <loc>https://www.altaftoolshub.app/remove-pages</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <lastmod>2025-01-27T12:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <mobile:mobile/>
@@ -179,7 +179,7 @@
 
   <url>
     <loc>https://www.altaftoolshub.app/crop-pdf</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <lastmod>2025-01-27T12:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <mobile:mobile/>
@@ -187,7 +187,7 @@
 
   <url>
     <loc>https://www.altaftoolshub.app/extract-pages</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <lastmod>2025-01-27T12:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <mobile:mobile/>
@@ -195,7 +195,7 @@
 
   <url>
     <loc>https://www.altaftoolshub.app/extract-images</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <lastmod>2025-01-27T12:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <mobile:mobile/>
@@ -203,7 +203,7 @@
 
   <url>
     <loc>https://www.altaftoolshub.app/add-page-number</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <lastmod>2025-01-27T12:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <mobile:mobile/>
@@ -211,7 +211,7 @@
 
   <url>
     <loc>https://www.altaftoolshub.app/watermark-pdf</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <lastmod>2025-01-27T12:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <mobile:mobile/>
@@ -220,7 +220,7 @@
   <!-- All Tools Page -->
   <url>
     <loc>https://www.altaftoolshub.app/all-tools</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <lastmod>2025-01-27T12:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
     <mobile:mobile/>
@@ -258,7 +258,7 @@
 
   <url>
     <loc>https://www.altaftoolshub.app/faq</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <lastmod>2025-01-27T12:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <mobile:mobile/>
@@ -266,7 +266,7 @@
 
   <url>
     <loc>https://www.altaftoolshub.app/documentation</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <lastmod>2025-01-27T12:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <mobile:mobile/>
@@ -275,7 +275,7 @@
   <!-- Legal Pages -->
   <url>
     <loc>https://www.altaftoolshub.app/privacy</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <lastmod>2025-01-27T12:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <mobile:mobile/>
@@ -283,7 +283,7 @@
   
   <url>
     <loc>https://www.altaftoolshub.app/terms</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <lastmod>2025-01-27T12:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <mobile:mobile/>
@@ -291,7 +291,7 @@
 
   <url>
     <loc>https://www.altaftoolshub.app/privacy-policy</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <lastmod>2025-01-27T12:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <mobile:mobile/>
@@ -299,7 +299,7 @@
 
   <url>
     <loc>https://www.altaftoolshub.app/terms-conditions</loc>
-    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <lastmod>2025-01-27T12:00:00+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
     <mobile:mobile/>
