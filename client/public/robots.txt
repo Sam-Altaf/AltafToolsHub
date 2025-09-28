@@ -1,5 +1,5 @@
 # AltafToolsHub Robots.txt
-# https://www.altaftoolshub.app
+# https://altaftoolshub.com
 # Privacy-First Online Tools - All Processing in Your Browser
 
 # Default rules for all bots
@@ -22,7 +22,7 @@ Disallow: /node_modules/
 Crawl-delay: 0
 
 # Sitemap location
-Sitemap: https://www.altaftoolshub.app/sitemap.xml
+Sitemap: https://altaftoolshub.com/sitemap.xml
 
 # Google
 User-agent: Googlebot
@@ -138,4 +138,4 @@ User-agent: PetalBot
 Disallow: /
 
 # Host directive (optional but good for SEO)
-Host: https://www.altaftoolshub.app
+Host: https://altaftoolshub.com

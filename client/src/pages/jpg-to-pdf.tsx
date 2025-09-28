@@ -74,18 +74,20 @@ export default function JpgToPDF() {
   });
 
   useSEO({
-    title: "Convert JPG to PDF Online Free - Multiple Images to PDF | AltafToolsHub",
-    description: "Free online JPG to PDF converter. Convert multiple JPG, PNG, WebP images to PDF with custom layouts. 100% client-side processing for complete privacy.",
+    title: "Convert JPG to PDF Online Free - Multiple Images to PDF",
+    description: "Free JPG to PDF converter online. Convert multiple images (JPG, PNG, WebP, GIF) to PDF with custom layouts and page sizes. 100% secure browser-based processing - your images never leave your device. Batch convert photos to PDF instantly.",
     path: "/jpg-to-pdf",
-    keywords: "jpg to pdf, convert jpg to pdf, image to pdf, png to pdf, photo to pdf, jpeg to pdf converter, online jpg to pdf, free image converter, images to pdf 2025, batch image converter",
-    ogImage: "https://www.altaftoolshub.app/og-jpg-to-pdf.png",
+    keywords: "jpg to pdf converter, convert jpg to pdf online, image to pdf converter, png to pdf free, photo to pdf online, jpeg to pdf converter, batch image to pdf, multiple images to pdf, pictures to pdf converter 2025, convert photos to pdf document",
+    ogImage: "https://altaftoolshub.com/og-jpg-to-pdf.png",
     structuredData: [howToSchema, softwareSchema],
     additionalMetaTags: [
       { name: "application-name", content: "JPG to PDF Converter - AltafToolsHub" },
       { property: "article:section", content: "Image Tools" },
       { property: "article:tag", content: "Image Conversion" },
       { property: "article:tag", content: "PDF Creation" },
-      { property: "article:tag", content: "Batch Processing" }
+      { property: "article:tag", content: "Batch Processing" },
+      { property: "article:author", content: "AltafToolsHub" },
+      { name: "robots", content: "index, follow, max-snippet:-1" }
     ]
   });
 

@@ -90,18 +90,22 @@ export default function CompressPDF() {
   });
 
   useSEO({
-    title: "Compress PDF Online Free - Reduce PDF Size to 10KB-5MB | AltafToolsHub",
-    description: "Free online PDF compressor to reduce file size to specific targets (10KB to 5MB). Smart compression preserves quality. 100% client-side processing ensures complete privacy.",
+    title: "Compress PDF Online Free - Reduce PDF Size to 10KB-5MB",
+    description: "Free online PDF compressor with precise size targeting from 10KB to 5MB. Reduce PDF file size by up to 95% while maintaining quality. 100% secure browser-based processing - no uploads required. Compress PDFs for email, WhatsApp, and web instantly.",
     path: "/compress-pdf",
-    keywords: "compress pdf, reduce pdf size, pdf compressor online, compress pdf to 100kb, compress pdf to 50kb, pdf size reducer, online pdf compression, free pdf compressor, compress pdf 2025, ai pdf compression",
-    ogImage: "https://www.altaftoolshub.app/og-compress-pdf.png",
+    keywords: "compress pdf, reduce pdf size, pdf compressor online free, compress pdf to 100kb, compress pdf to 200kb, shrink pdf file size, pdf compression tool, optimize pdf size, make pdf smaller, pdf size reducer 2025, compress pdf for email, compress pdf for whatsapp",
+    ogImage: "https://altaftoolshub.com/og-compress-pdf.png",
+    ogType: "website",
     structuredData: [howToSchema, softwareSchema],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Compressor - AltafToolsHub" },
       { property: "article:section", content: "PDF Tools" },
       { property: "article:tag", content: "PDF Compression" },
       { property: "article:tag", content: "Privacy-First Tools" },
-      { property: "article:tag", content: "Client-Side Processing" }
+      { property: "article:tag", content: "Client-Side Processing" },
+      { property: "article:tag", content: "Online PDF Tools" },
+      { property: "article:author", content: "AltafToolsHub" },
+      { name: "robots", content: "index, follow, max-snippet:-1" }
     ]
   });
 

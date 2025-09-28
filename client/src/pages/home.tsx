@@ -317,16 +317,22 @@ export default function Home() {
   ];
 
   useSEO({
-    title: "AltafToolsHub - 60+ Free Privacy-First PDF & File Tools | No Upload Required",
-    description: "Complete suite of 60+ privacy-first online tools. PDF compression, image conversion, document processing & more. 100% browser-based processing - your files never leave your device. Free forever, no registration.",
+    title: "AltafToolsHub - 60+ Free Privacy-First PDF & File Tools",
+    description: "Free online PDF tools with 100% privacy. Compress PDFs to exact sizes, unlock password-protected files, convert JPG to PDF, QR generator & more. All processing in your browser - no uploads, no data storage, complete security. Trusted by 50K+ users.",
     path: "/",
-    keywords: "pdf tools, online file converter, privacy first tools, pdf compressor, image to pdf, document converter, browser based tools, no upload file tools, free pdf editor, secure file processing",
-    ogImage: "https://www.altaftoolshub.app/og-image.png",
+    keywords: "free pdf tools, online pdf compressor, pdf unlocker, jpg to pdf converter, privacy-first tools, client-side processing, browser-based pdf editor, free file converter, secure pdf tools, no upload pdf tools, qr code generator, password generator 2025, pdf merger, pdf splitter, watermark pdf, extract text from pdf",
+    ogImage: "https://altaftoolshub.com/og-image.png",
+    ogType: "website",
     structuredData,
     additionalMetaTags: [
       { name: "application-name", content: "AltafToolsHub" },
       { property: "og:site_name", content: "AltafToolsHub" },
-      { property: "og:type", content: "website" }
+      { property: "article:publisher", content: "https://facebook.com/altaftoolshub" },
+      { name: "google", content: "notranslate" },
+      { name: "revisit-after", content: "1 day" },
+      { name: "rating", content: "general" },
+      { name: "coverage", content: "Worldwide" },
+      { name: "distribution", content: "Global" }
     ]
   });
 

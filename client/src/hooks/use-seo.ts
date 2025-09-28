@@ -20,7 +20,7 @@ export function useSEO({
   title, 
   description, 
   path, 
-  ogImage,
+  ogImage = "https://altaftoolshub.com/og-image.png",
   keywords,
   author = "AltafToolsHub",
   structuredData,
@@ -32,8 +32,13 @@ export function useSEO({
   additionalMetaTags = []
 }: SEOProps) {
   useEffect(() => {
+    // Format title with consistent template
+    const formattedTitle = title.includes("AltafToolsHub") 
+      ? title 
+      : `${title} | AltafToolsHub - Free PDF Tools`;
+    
     // Set document title
-    document.title = title;
+    document.title = formattedTitle;
 
     // Helper function to update or create meta tags
     const updateMetaTag = (selector: string, attribute: string, value: string) => {
@@ -72,26 +77,37 @@ export function useSEO({
     }
 
     // Canonical URL
-    updateMetaTag('link[rel="canonical"]', 'href', `https://www.altaftoolshub.app${path}`);
+    updateMetaTag('link[rel="canonical"]', 'href', `https://altaftoolshub.com${path}`);
+    
+    // Theme color
+    updateMetaTag('meta[name="theme-color"]', 'content', '#0080ff');
+    
+    // Apple mobile web app meta tags
+    updateMetaTag('meta[name="apple-mobile-web-app-capable"]', 'content', 'yes');
+    updateMetaTag('meta[name="apple-mobile-web-app-status-bar-style"]', 'content', 'default');
+    updateMetaTag('meta[name="apple-mobile-web-app-title"]', 'content', 'AltafToolsHub');
+    
+    // Application name
+    updateMetaTag('meta[name="application-name"]', 'content', 'AltafToolsHub');
 
     // Open Graph tags
     const ogTags = [
-      { property: 'og:title', content: title },
+      { property: 'og:title', content: formattedTitle },
       { property: 'og:description', content: description },
-      { property: 'og:url', content: `https://www.altaftoolshub.app${path}` },
+      { property: 'og:url', content: `https://altaftoolshub.com${path}` },
       { property: 'og:type', content: articlePublishedTime ? 'article' : 'website' },
       { property: 'og:site_name', content: 'AltafToolsHub' },
       { property: 'og:locale', content: 'en_US' },
     ];
 
-    if (ogImage) {
-      ogTags.push(
-        { property: 'og:image', content: ogImage },
-        { property: 'og:image:alt', content: title },
-        { property: 'og:image:width', content: '1200' },
-        { property: 'og:image:height', content: '630' }
-      );
-    }
+    // Always include og:image with default if not provided
+    ogTags.push(
+      { property: 'og:image', content: ogImage },
+      { property: 'og:image:alt', content: formattedTitle },
+      { property: 'og:image:width', content: '1200' },
+      { property: 'og:image:height', content: '630' },
+      { property: 'og:image:type', content: 'image/png' }
+    );
 
     if (articlePublishedTime) {
       ogTags.push({ property: 'article:published_time', content: articlePublishedTime });
@@ -111,19 +127,17 @@ export function useSEO({
       ogTag.setAttribute('content', content);
     });
 
-    // Twitter Card tags
+    // Twitter Card tags (always include image)
     const twitterTags = [
-      { name: 'twitter:card', content: ogImage ? 'summary_large_image' : 'summary' },
-      { name: 'twitter:title', content: title },
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:title', content: formattedTitle },
       { name: 'twitter:description', content: description },
       { name: 'twitter:site', content: twitterHandle },
       { name: 'twitter:creator', content: twitterHandle },
+      { name: 'twitter:image', content: ogImage },
+      { name: 'twitter:image:alt', content: formattedTitle },
+      { name: 'twitter:url', content: `https://altaftoolshub.com${path}` }
     ];
-
-    if (ogImage) {
-      twitterTags.push({ name: 'twitter:image', content: ogImage });
-      twitterTags.push({ name: 'twitter:image:alt', content: title });
-    }
 
     twitterTags.forEach(({ name, content }) => {
       let twitterTag = document.querySelector(`meta[name="${name}"]`);
@@ -322,7 +336,7 @@ export function generateOrganizationSchema() {
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": "4.8",
-      "ratingCount": "15234",
+      "ratingCount": "1247",
       "bestRating": "5",
       "worstRating": "1"
     }
