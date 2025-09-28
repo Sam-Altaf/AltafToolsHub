@@ -12,7 +12,6 @@ interface SEOProps {
   articlePublishedTime?: string;
   articleModifiedTime?: string;
   twitterHandle?: string;
-  noindex?: boolean;
   additionalMetaTags?: { name?: string; property?: string; content: string }[];
 }
 
@@ -28,7 +27,6 @@ export function useSEO({
   articlePublishedTime,
   articleModifiedTime,
   twitterHandle = "@altaftoolshub",
-  noindex = false,
   additionalMetaTags = []
 }: SEOProps) {
   useEffect(() => {
@@ -69,12 +67,8 @@ export function useSEO({
       updateMetaTag('meta[name="author"]', 'content', author);
     }
 
-    // Robots meta tag
-    if (noindex) {
-      updateMetaTag('meta[name="robots"]', 'content', 'noindex, nofollow');
-    } else {
-      updateMetaTag('meta[name="robots"]', 'content', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
-    }
+    // Robots meta tag - ALWAYS allow indexing for all pages
+    updateMetaTag('meta[name="robots"]', 'content', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
 
     // Canonical URL
     updateMetaTag('link[rel="canonical"]', 'href', `https://altaftoolshub.com${path}`);
@@ -227,7 +221,6 @@ export function useSEO({
     articlePublishedTime,
     articleModifiedTime,
     twitterHandle,
-    noindex,
     additionalMetaTags
   ]);
 }
