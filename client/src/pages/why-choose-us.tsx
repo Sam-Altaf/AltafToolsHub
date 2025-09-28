@@ -188,15 +188,14 @@ export default function WhyChooseUs() {
                   </tr>
                 </thead>
                 <tbody>
-                  {features.map((category, categoryIdx) => (
-                    <>
-                      <tr key={`${category.category}-header`} className="bg-muted/50">
-                        <td colSpan={5} className="py-3 px-2 font-semibold text-sm">
-                          {category.category}
-                        </td>
-                      </tr>
-                      {category.items.map((item, idx) => (
-                        <tr key={`${category.category}-${idx}`} className="border-b hover:bg-muted/20 transition-colors">
+                  {features.map((category, categoryIdx) => [
+                    <tr key={`${category.category}-header`} className="bg-muted/50">
+                      <td colSpan={5} className="py-3 px-2 font-semibold text-sm">
+                        {category.category}
+                      </td>
+                    </tr>,
+                    ...category.items.map((item, idx) => (
+                      <tr key={`${category.category}-${idx}`} className="border-b hover:bg-muted/20 transition-colors">
                           <td className="py-3 px-2 text-sm">{item.feature}</td>
                           <td className="py-3 px-2 text-center">
                             <div className="flex justify-center">
@@ -219,9 +218,8 @@ export default function WhyChooseUs() {
                             </div>
                           </td>
                         </tr>
-                      ))}
-                    </>
-                  ))}
+                    ))
+                  ])}
                 </tbody>
               </table>
             </div>
