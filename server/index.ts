@@ -6,6 +6,16 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Remove X-Robots-Tag headers that block SEO indexing
+// This overrides any headers set by Replit's development environment
+app.use((req, res, next) => {
+  // Remove any existing X-Robots-Tag headers
+  res.removeHeader('X-Robots-Tag');
+  // Set to allow indexing explicitly
+  res.set('X-Robots-Tag', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+  next();
+});
+
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
@@ -45,6 +55,22 @@ app.use((req, res, next) => {
 
     res.status(status).json({ message });
     throw err;
+  });
+
+  // Final middleware to ensure X-Robots-Tag is set correctly
+  // This runs after all other middleware to override any conflicting headers
+  app.use((req, res, next) => {
+    // For all HTML responses, ensure SEO headers are correct
+    const originalSend = res.send;
+    res.send = function(body) {
+      // Remove any existing X-Robots-Tag headers
+      res.removeHeader('X-Robots-Tag');
+      // Set to allow indexing
+      res.set('X-Robots-Tag', 'index, follow');
+      // Call original send
+      return originalSend.call(this, body);
+    };
+    next();
   });
 
   // importantly only setup vite in development and after
