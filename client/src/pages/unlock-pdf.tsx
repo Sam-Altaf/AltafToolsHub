@@ -20,6 +20,7 @@ import { ToolFAQ, generatePDFUnlockFAQs } from "@/components/seo/tool-faq";
 import { Building2, Users, Briefcase, Home, Archive, FileKey, School } from "lucide-react";
 import { ContactSupportSection } from "@/components/contact-support";
 import { scrollBy } from "@/lib/scroll-utils";
+import AdContainer from "@/components/ad-container";
 
 interface UnlockResult {
   originalSize: number;
@@ -383,6 +384,15 @@ export default function UnlockPDF() {
       />
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <Breadcrumbs items={[{ name: "Unlock PDF", url: "/unlock-pdf" }]} />
+        
+        {/* Advertisement Container */}
+        <AdContainer 
+          position="top" 
+          format="banner" 
+          className="mb-6"
+          testId="ad-container-unlock-pdf-top"
+        />
+        
         <div className="text-center mb-10">
           <Link href="/">
             <Button variant="ghost" className="mb-4" data-testid="button-back">

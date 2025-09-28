@@ -19,6 +19,7 @@ import { useSEO, generateFAQSchema, generateBreadcrumbSchema } from "@/hooks/use
 import { ContactSupportSection } from "@/components/contact-support";
 import { blogPosts, blogCategories } from "@/lib/blog-data";
 import { Input } from "@/components/ui/input";
+import AdContainer from "@/components/ad-container";
 
 export default function BlogPage() {
   const [selectedCategory, setSelectedCategory] = useState("All Posts");
@@ -163,6 +164,14 @@ export default function BlogPage() {
               <TrendingUp className="w-6 h-6 text-primary" />
             </div>
 
+            {/* Advertisement Container */}
+            <AdContainer 
+              position="inline" 
+              format="banner" 
+              className="mb-8"
+              testId="ad-container-blog-featured"
+            />
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
               {featuredPosts.map((post, index) => {
                 const Icon = post.icon;
@@ -228,6 +237,14 @@ export default function BlogPage() {
           </div>
         </section>
       )}
+
+      {/* Advertisement Container */}
+      <AdContainer 
+        position="inline" 
+        format="responsive" 
+        className="my-8"
+        testId="ad-container-blog-middle"
+      />
 
       {/* Regular Posts */}
       {regularPosts.length > 0 && (

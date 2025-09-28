@@ -31,6 +31,18 @@ const sections = [
     ]
   },
   {
+    icon: Scale,
+    title: "Service Sustainability Model",
+    content: [
+      "**Free Forever with Ads Model**: AltafToolsHub operates on a 'Free Forever with Ads' model. Our core tools will always remain free to use, supported by advertising revenue to cover server, bandwidth, and maintenance costs.",
+      "**Advertising Support**: We may display advertisements to support our free tools and cover operational costs including server infrastructure, bandwidth expenses, development and maintenance, security updates, and customer support. Advertising helps ensure our tools remain accessible to everyone without charge.",
+      "**Future Premium Features**: We reserve the right to introduce optional premium features if operational costs require it. Potential scenarios for premium tiers include: excessive server costs from rapid growth (e.g., 100,000+ daily users), enterprise-specific features requiring dedicated resources, advanced AI-powered tools with high computational costs, priority processing for time-sensitive needs, and bulk processing capabilities beyond standard limits.",
+      "**Commitment to Free Access**: Basic features and standard usage will always remain free. We will never paywall existing free tools. Any premium features will be optional additions, not replacements. The majority of users will be able to use our tools without payment.",
+      "**Transparency in Pricing**: If we introduce premium features, we will announce changes at least 30 days in advance, clearly distinguish free vs. premium features, maintain grandfathering for any promised free features, and provide clear value propositions for any paid offerings.",
+      "**Sustainable Operations**: This model ensures long-term availability of our services, continuous improvement and new feature development, maintenance of high performance and reliability, ability to scale with user growth, and commitment to user privacy and security."
+    ]
+  },
+  {
     icon: Users,
     title: "User Responsibilities & Obligations",
     content: [
