@@ -31,6 +31,8 @@ const productLinks = [
 ];
 
 const resourceLinks = [
+  { name: "About Us", href: "/about" },
+  { name: "Why Choose Us", href: "/why-choose-us" },
   { name: "FAQ", href: "/faq" },
   { name: "Blog", href: "/blog" },
   { name: "Documentation", href: "/documentation" },
