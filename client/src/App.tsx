@@ -35,6 +35,7 @@ import FAQ from "@/pages/faq";
 import Blog from "@/pages/blog";
 import Documentation from "@/pages/documentation";
 import About from "@/pages/about";
+import WhyChooseUs from "@/pages/why-choose-us";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import CookieConsent from "@/components/cookie-consent";
@@ -73,6 +74,7 @@ function Router() {
           <Route path="/blog" component={Blog} />
           <Route path="/documentation" component={Documentation} />
           <Route path="/about" component={About} />
+          <Route path="/why-choose-us" component={WhyChooseUs} />
           <Route path="/how-it-works" component={HowItWorks} />
           <Route path="/use-cases" component={UseCases} />
           <Route component={NotFound} />
