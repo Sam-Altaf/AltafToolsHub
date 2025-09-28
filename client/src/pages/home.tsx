@@ -322,7 +322,6 @@ export default function Home() {
     path: "/",
     keywords: "free pdf tools, online pdf compressor, pdf unlocker, jpg to pdf converter, privacy-first tools, client-side processing, browser-based pdf editor, free file converter, secure pdf tools, no upload pdf tools, qr code generator, password generator 2025, pdf merger, pdf splitter, watermark pdf, extract text from pdf",
     ogImage: "https://altaftoolshub.com/og-image.png",
-    ogType: "website",
     structuredData,
     additionalMetaTags: [
       { name: "application-name", content: "AltafToolsHub" },

@@ -33,6 +33,7 @@ import PrivacyPolicy from "@/pages/privacy-policy";
 import TermsConditions from "@/pages/terms-conditions";
 import FAQ from "@/pages/faq";
 import Blog from "@/pages/blog";
+import BlogPost from "@/pages/blog-post";
 import Documentation from "@/pages/documentation";
 import About from "@/pages/about";
 import WhyChooseUs from "@/pages/why-choose-us";
@@ -72,6 +73,7 @@ function Router() {
           <Route path="/terms-conditions" component={TermsConditions} />
           <Route path="/faq" component={FAQ} />
           <Route path="/blog" component={Blog} />
+          <Route path="/blog/:slug" component={BlogPost} />
           <Route path="/documentation" component={Documentation} />
           <Route path="/about" component={About} />
           <Route path="/why-choose-us" component={WhyChooseUs} />

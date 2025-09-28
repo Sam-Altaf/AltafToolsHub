@@ -40,6 +40,14 @@ const resourceLinks = [
   { name: "Use Cases", href: "/use-cases" }
 ];
 
+const popularArticles = [
+  { name: "How to Compress PDF Without Losing Quality", href: "/blog/how-to-compress-pdf-without-losing-quality" },
+  { name: "Best PDF Compression Settings 2025", href: "/blog/best-pdf-compression-settings-2025" },
+  { name: "Reduce PDF File Size for Email", href: "/blog/reduce-pdf-file-size-for-email" },
+  { name: "PDF Optimization for Web", href: "/blog/pdf-optimization-for-web-performance" },
+  { name: "PDF vs ZIP Compression", href: "/blog/compress-pdf-vs-zip-compression" }
+];
+
 const legalLinks = [
   { name: "Privacy Policy", href: "/privacy-policy" },
   { name: "Terms of Service", href: "/terms-conditions" },
@@ -99,8 +107,8 @@ export default function Footer() {
           </div>
         </motion.div>
 
-        {/* Main Footer Content - 4 Column Desktop, Stacked Mobile */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        {/* Main Footer Content - 5 Column Desktop, Stacked Mobile */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
           {/* Product Column - Collapsible on Mobile */}
           <Collapsible
             open={!isMobile || openSections.includes('tools')}
@@ -207,6 +215,41 @@ export default function Footer() {
                   >
                     <span>{link.name}</span>
                     <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1" />
+                  </Link>
+                </li>
+              ))}
+            </CollapsibleContent>
+          </Collapsible>
+
+          {/* Popular Articles Column - Collapsible on Mobile */}
+          <Collapsible
+            open={!isMobile || openSections.includes('articles')}
+            onOpenChange={() => setOpenSections(prev => 
+              prev.includes('articles') 
+                ? prev.filter(s => s !== 'articles')
+                : [...prev, 'articles']
+            )}
+            className="group"
+          >
+            <div className="flex sm:block items-center justify-between mb-4">
+              <h4 className="font-semibold text-lg text-foreground dark:text-foreground">Popular Articles</h4>
+              <CollapsibleTrigger className="sm:hidden p-3 min-h-[44px] min-w-[44px] flex items-center justify-center -mr-3" aria-label="Toggle articles section">
+                <ChevronDown className={cn(
+                  "w-5 h-5 transition-transform",
+                  openSections.includes('articles') && "rotate-180"
+                )} />
+              </CollapsibleTrigger>
+            </div>
+            <CollapsibleContent className="space-y-3 sm:!block">
+              {popularArticles.map((article) => (
+                <li key={article.href}>
+                  <Link 
+                    href={article.href}
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1 group line-clamp-2"
+                    data-testid={`footer-article-${article.name.toLowerCase().replace(/\s/g, '-')}`}
+                  >
+                    <span>{article.name}</span>
+                    <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1 flex-shrink-0" />
                   </Link>
                 </li>
               ))}

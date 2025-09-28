@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,170 +8,81 @@ import {
   Clock, 
   ArrowRight, 
   BookOpen,
-  TrendingUp,
-  FileText,
-  Shield,
-  Zap,
-  Users,
   ChevronRight,
   Tag,
-  Sparkles,
-  Bell
+  Search,
+  Filter,
+  TrendingUp
 } from "lucide-react";
 import { Link } from "wouter";
-import { useSEO } from "@/hooks/use-seo";
+import { useSEO, generateFAQSchema, generateBreadcrumbSchema } from "@/hooks/use-seo";
 import { ContactSupportSection } from "@/components/contact-support";
-
-interface BlogPost {
-  id: string;
-  title: string;
-  excerpt: string;
-  category: string;
-  date: string;
-  readTime: string;
-  tags: string[];
-  featured?: boolean;
-  icon: React.ComponentType<{ className?: string }>;
-}
-
-const blogPosts: BlogPost[] = [
-  {
-    id: "ultimate-pdf-compression-guide",
-    title: "The Ultimate Guide to PDF Compression in 2025",
-    excerpt: "Learn how to reduce PDF file sizes by up to 90% while maintaining quality. Discover the best techniques for different use cases, from email attachments to web publishing.",
-    category: "PDF Tools",
-    date: "January 15, 2025",
-    readTime: "8 min read",
-    tags: ["PDF", "Compression", "File Size", "Tutorial"],
-    featured: true,
-    icon: FileText
-  },
-  {
-    id: "privacy-first-file-processing",
-    title: "Why Privacy-First File Processing Matters More Than Ever",
-    excerpt: "Explore the importance of client-side processing and how browser-based tools protect your sensitive documents from data breaches and unauthorized access.",
-    category: "Privacy & Security",
-    date: "January 12, 2025",
-    readTime: "6 min read",
-    tags: ["Privacy", "Security", "Client-Side", "Data Protection"],
-    featured: true,
-    icon: Shield
-  },
-  {
-    id: "image-to-pdf-best-practices",
-    title: "Converting Images to PDF: Best Practices and Tips",
-    excerpt: "Master the art of converting JPG, PNG, and other image formats to PDF. Learn about resolution, compression, and organization techniques for professional results.",
-    category: "Image Tools",
-    date: "January 10, 2025",
-    readTime: "5 min read",
-    tags: ["Images", "PDF", "Conversion", "Quality"],
-    icon: FileText
-  },
-  {
-    id: "qr-code-marketing-2025",
-    title: "QR Codes in 2025: Marketing Strategies That Work",
-    excerpt: "Discover how businesses are leveraging QR codes for contactless payments, digital menus, and customer engagement. Includes case studies and implementation tips.",
-    category: "QR Codes",
-    date: "January 8, 2025",
-    readTime: "7 min read",
-    tags: ["QR Codes", "Marketing", "Business", "Digital"],
-    icon: Zap
-  },
-  {
-    id: "optimize-pdfs-for-web",
-    title: "How to Optimize PDFs for Web Performance",
-    excerpt: "Speed up your website by properly optimizing PDF documents. Learn about file size reduction, lazy loading, and SEO best practices for PDF content.",
-    category: "Web Optimization",
-    date: "January 5, 2025",
-    readTime: "6 min read",
-    tags: ["SEO", "Web Performance", "PDF", "Optimization"],
-    icon: TrendingUp
-  },
-  {
-    id: "document-workflow-automation",
-    title: "Streamline Your Document Workflow with Browser Tools",
-    excerpt: "Save hours every week by automating repetitive document tasks. Learn how to batch process files and create efficient workflows without expensive software.",
-    category: "Productivity",
-    date: "January 3, 2025",
-    readTime: "5 min read",
-    tags: ["Productivity", "Automation", "Workflow", "Efficiency"],
-    icon: Users
-  },
-  {
-    id: "pdf-security-features",
-    title: "Understanding PDF Security: Encryption and Password Protection",
-    excerpt: "A comprehensive guide to PDF security features, including password protection, encryption levels, and best practices for protecting sensitive documents.",
-    category: "Security",
-    date: "December 28, 2024",
-    readTime: "7 min read",
-    tags: ["Security", "PDF", "Encryption", "Privacy"],
-    icon: Shield
-  },
-  {
-    id: "batch-file-processing",
-    title: "Batch Processing Files: Save Time with Bulk Operations",
-    excerpt: "Learn how to process multiple files simultaneously. Perfect for teams handling large volumes of documents, images, or data files.",
-    category: "Productivity",
-    date: "December 25, 2024",
-    readTime: "4 min read",
-    tags: ["Batch Processing", "Productivity", "Efficiency", "Tools"],
-    icon: Zap
-  },
-  {
-    id: "mobile-document-management",
-    title: "Mobile Document Management: Working on the Go",
-    excerpt: "Tips and tricks for managing documents on mobile devices. Learn about the best practices for file compression, sharing, and organization on smartphones.",
-    category: "Mobile",
-    date: "December 20, 2024",
-    readTime: "5 min read",
-    tags: ["Mobile", "Documents", "Productivity", "Tips"],
-    icon: FileText
-  }
-];
-
-const categories = [
-  { name: "All Posts", count: blogPosts.length },
-  { name: "PDF Tools", count: blogPosts.filter(p => p.category === "PDF Tools").length },
-  { name: "Privacy & Security", count: blogPosts.filter(p => p.category.includes("Security")).length },
-  { name: "Productivity", count: blogPosts.filter(p => p.category === "Productivity").length },
-  { name: "Web Optimization", count: blogPosts.filter(p => p.category === "Web Optimization").length }
-];
+import { blogPosts, blogCategories } from "@/lib/blog-data";
+import { Input } from "@/components/ui/input";
 
 export default function BlogPage() {
+  const [selectedCategory, setSelectedCategory] = useState("All Posts");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [visiblePosts, setVisiblePosts] = useState(6);
+
+  // Generate FAQ schema for SEO
+  const faqItems = [
+    {
+      question: "How can I compress PDFs without losing quality?",
+      answer: "Use intelligent compression tools that apply different compression methods to text and images. Our guide shows you how to reduce file sizes by up to 90% while maintaining perfect text quality."
+    },
+    {
+      question: "What are the best PDF compression settings for 2025?",
+      answer: "For email attachments, use 150 DPI and 85% quality. For web publishing, 96 DPI and 80% quality works best. Our comprehensive guide covers all use cases."
+    },
+    {
+      question: "How do I reduce PDF file size for email?",
+      answer: "Most email providers limit attachments to 25MB. Compress your PDFs to under 10MB using our free tools or follow our step-by-step guide for various methods."
+    },
+    {
+      question: "Should I use PDF compression or ZIP compression?",
+      answer: "PDF compression is better for single documents that need immediate viewing, while ZIP works better for bundling multiple files. Our comparison guide helps you choose."
+    }
+  ];
+
+  const breadcrumbItems = [
+    { name: "Home", url: "/" },
+    { name: "Blog", url: "/blog" }
+  ];
+
   useSEO({
-    title: "Blog - File Processing Tips & Tutorials | AltafToolsHub",
-    description: "Expert guides on PDF compression, image conversion, document security, and productivity tips. Learn how to process files efficiently with privacy-first tools.",
+    title: "Blog - Expert PDF Tips & Tutorials | AltafToolsHub",
+    description: "Learn PDF compression techniques, file optimization strategies, and document management best practices. Expert guides and tutorials for all your PDF needs.",
     path: "/blog",
-    keywords: "blog, tutorials, pdf tips, file processing, document management, privacy tools, productivity"
+    keywords: "pdf blog, pdf tutorials, file compression guides, document optimization, pdf tips and tricks, file management blog",
+    structuredData: [
+      generateFAQSchema(faqItems),
+      generateBreadcrumbSchema(breadcrumbItems)
+    ]
   });
 
-  const featuredPosts = blogPosts.filter(post => post.featured);
-  const regularPosts = blogPosts.filter(post => !post.featured);
+  // Filter posts based on category and search
+  const filteredPosts = blogPosts.filter(post => {
+    const categoryMatch = selectedCategory === "All Posts" || post.category === selectedCategory;
+    const searchMatch = searchTerm === "" || 
+      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+    return categoryMatch && searchMatch;
+  });
+
+  const displayedPosts = filteredPosts.slice(0, visiblePosts);
+  const hasMorePosts = filteredPosts.length > visiblePosts;
+
+  const featuredPosts = displayedPosts.filter(post => post.featured);
+  const regularPosts = displayedPosts.filter(post => !post.featured);
+
+  const loadMore = () => {
+    setVisiblePosts(prev => prev + 6);
+  };
 
   return (
     <div className="min-h-screen">
-      {/* Coming Soon Banner */}
-      <motion.section 
-        className="bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 border-b border-primary/30"
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="container-section py-6">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-primary animate-pulse" />
-              <span className="text-lg font-semibold text-primary">Blog Coming Soon!</span>
-              <Sparkles className="w-5 h-5 text-primary animate-pulse" />
-            </div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Bell className="w-4 h-4" />
-              <span>Get notified when we launch our blog with expert tutorials and guides</span>
-            </div>
-          </div>
-        </div>
-      </motion.section>
-
       {/* Hero Section */}
       <section className="py-12 lg:py-16 bg-gradient-to-b from-primary/5 via-background to-background">
         <div className="container-section">
@@ -182,41 +94,55 @@ export default function BlogPage() {
           >
             <Badge className="mb-4 bg-gradient-to-r from-primary to-blue-600 text-white border-0 shadow-md">
               <BookOpen className="w-3 h-3 mr-1" />
-              Blog & Tutorials
+              Blog & Resources
             </Badge>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-primary">
-              Learn & Master File Processing
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+              PDF Tips, Guides & Tutorials
             </h1>
-            <p className="text-lg text-muted-foreground">
-              Expert tips, tutorials, and best practices for working with documents and files
+            <p className="text-lg text-muted-foreground mb-8">
+              Master PDF compression, optimization, and file management with our expert guides
             </p>
-            <Card className="mt-8 p-6 bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900">
-              <div className="flex items-center justify-center gap-3">
-                <Sparkles className="w-6 h-6 text-amber-600 dark:text-amber-400" />
-                <p className="text-amber-900 dark:text-amber-200 font-medium">
-                  We're working on amazing content! Check back soon for in-depth tutorials and guides.
-                </p>
-              </div>
-            </Card>
+
+            {/* Search Bar */}
+            <div className="relative max-w-md mx-auto">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+              <Input
+                type="text"
+                placeholder="Search articles..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 pr-4 py-2 w-full"
+                data-testid="input-blog-search"
+              />
+            </div>
           </motion.div>
         </div>
       </section>
 
       {/* Categories */}
-      <section className="py-8 border-b">
+      <section className="py-8 border-b bg-muted/30">
         <div className="container-section">
           <div className="flex flex-wrap items-center justify-center gap-3">
-            {categories.map((category, index) => (
+            <Filter className="w-5 h-5 text-muted-foreground" />
+            {blogCategories.map((category, index) => (
               <motion.button
                 key={category.name}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-muted hover:bg-primary/10 hover:text-primary transition-colors"
+                onClick={() => setSelectedCategory(category.name)}
+                className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                  selectedCategory === category.name 
+                    ? "bg-primary text-white shadow-lg" 
+                    : "bg-background hover:bg-primary/10 hover:text-primary border"
+                }`}
                 data-testid={`blog-category-${category.name.toLowerCase().replace(/\s/g, '-')}`}
               >
                 <span className="text-sm font-medium">{category.name}</span>
-                <Badge variant="secondary" className="text-xs">
+                <Badge 
+                  variant={selectedCategory === category.name ? "secondary" : "outline"} 
+                  className="text-xs"
+                >
                   {category.count}
                 </Badge>
               </motion.button>
@@ -229,9 +155,12 @@ export default function BlogPage() {
       {featuredPosts.length > 0 && (
         <section className="py-12">
           <div className="container-section">
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold mb-2">Featured Articles</h2>
-              <p className="text-muted-foreground">Popular guides and tutorials</p>
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h2 className="text-2xl font-bold mb-2">Featured Articles</h2>
+                <p className="text-muted-foreground">In-depth guides and tutorials</p>
+              </div>
+              <TrendingUp className="w-6 h-6 text-primary" />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
@@ -245,58 +174,53 @@ export default function BlogPage() {
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.1 }}
                   >
-                    <Card 
-                      className="p-6 h-full hover:shadow-xl transition-all group cursor-not-allowed relative overflow-hidden"
-                      data-testid={`blog-featured-${post.id}`}
-                    >
-                      {/* Coming Soon Overlay */}
-                      <div className="absolute inset-0 bg-background/95 backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
-                        <div className="text-center">
-                          <span className="text-2xl font-bold text-primary">Coming Soon</span>
-                          <p className="text-sm text-muted-foreground mt-1">Check back later!</p>
+                    <Link href={`/blog/${post.slug}`}>
+                      <Card 
+                        className="p-6 h-full hover:shadow-xl transition-all group cursor-pointer border-2 hover:border-primary/50"
+                        data-testid={`blog-featured-${post.id}`}
+                      >
+                        <div className="flex items-start gap-4 mb-4">
+                          <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                            <Icon className="w-6 h-6 text-primary" />
+                          </div>
+                          <div className="flex-1">
+                            <Badge variant="secondary" className="mb-2">
+                              {post.category}
+                            </Badge>
+                            <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                              {post.title}
+                            </h3>
+                          </div>
                         </div>
-                      </div>
-                      <div className="flex items-start gap-4 mb-4">
-                        <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                          <Icon className="w-6 h-6 text-primary" />
-                        </div>
-                        <div className="flex-1">
-                          <Badge variant="secondary" className="mb-2">
-                            {post.category}
-                          </Badge>
-                          <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors line-clamp-2">
-                            {post.title}
-                          </h3>
-                        </div>
-                      </div>
 
-                      <p className="text-muted-foreground mb-4 line-clamp-3">
-                        {post.excerpt}
-                      </p>
+                        <p className="text-muted-foreground mb-4 line-clamp-3">
+                          {post.excerpt}
+                        </p>
 
-                      <div className="flex items-center justify-between text-sm text-muted-foreground">
-                        <div className="flex items-center gap-4">
-                          <span className="flex items-center gap-1">
-                            <Calendar className="w-4 h-4" />
-                            {post.date}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
-                            {post.readTime}
-                          </span>
+                        <div className="flex items-center justify-between text-sm text-muted-foreground">
+                          <div className="flex items-center gap-4">
+                            <span className="flex items-center gap-1">
+                              <Calendar className="w-4 h-4" />
+                              {post.date}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Clock className="w-4 h-4" />
+                              {post.readTime}
+                            </span>
+                          </div>
+                          <ArrowRight className="w-4 h-4 text-primary group-hover:translate-x-1 transition-transform" />
                         </div>
-                        <ArrowRight className="w-4 h-4 text-primary opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-                      </div>
 
-                      <div className="flex flex-wrap gap-2 mt-4">
-                        {post.tags.map(tag => (
-                          <Badge key={tag} variant="outline" className="text-xs">
-                            <Tag className="w-3 h-3 mr-1" />
-                            {tag}
-                          </Badge>
-                        ))}
-                      </div>
-                    </Card>
+                        <div className="flex flex-wrap gap-2 mt-4">
+                          {post.tags.slice(0, 3).map(tag => (
+                            <Badge key={tag} variant="outline" className="text-xs">
+                              <Tag className="w-3 h-3 mr-1" />
+                              {tag}
+                            </Badge>
+                          ))}
+                        </div>
+                      </Card>
+                    </Link>
                   </motion.article>
                 );
               })}
@@ -306,107 +230,120 @@ export default function BlogPage() {
       )}
 
       {/* Regular Posts */}
-      <section className="py-12 bg-muted/30">
-        <div className="container-section">
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold mb-2">Latest Articles</h2>
-            <p className="text-muted-foreground">Fresh content and tutorials</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {regularPosts.map((post, index) => {
-              const Icon = post.icon;
-              return (
-                <motion.article
-                  key={post.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.05 }}
-                >
-                  <Card 
-                    className="p-6 h-full hover:shadow-lg transition-all group cursor-not-allowed relative overflow-hidden"
-                    data-testid={`blog-post-${post.id}`}
-                  >
-                    {/* Coming Soon Overlay */}
-                    <div className="absolute inset-0 bg-background/95 backdrop-blur-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
-                      <div className="text-center">
-                        <span className="text-lg font-bold text-primary">Coming Soon</span>
-                        <p className="text-xs text-muted-foreground mt-1">Stay tuned!</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 mb-3">
-                      <Icon className="w-5 h-5 text-primary" />
-                      <Badge variant="outline" className="text-xs">
-                        {post.category}
-                      </Badge>
-                    </div>
-
-                    <h3 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors line-clamp-2">
-                      {post.title}
-                    </h3>
-
-                    <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
-                      {post.excerpt}
-                    </p>
-
-                    <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span>{post.date}</span>
-                      <span className="flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
-                        {post.readTime}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center mt-4 text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                      <span className="text-sm font-medium">Read More</span>
-                      <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                    </div>
-                  </Card>
-                </motion.article>
-              );
-            })}
-          </div>
-
-          {/* Load More */}
-          <div className="text-center mt-12">
-            <Button 
-              size="lg" 
-              variant="outline"
-              className="group"
-              data-testid="button-load-more"
-            >
-              Load More Articles
-              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Newsletter CTA */}
-      <section className="py-12">
-        <div className="container-section">
-          <Card className="p-8 lg:p-12 bg-gradient-to-r from-primary/10 via-primary/5 to-background">
-            <div className="text-center max-w-2xl mx-auto">
-              <BookOpen className="w-12 h-12 text-primary mx-auto mb-4" />
-              <h3 className="text-2xl font-bold mb-3">Stay Updated</h3>
-              <p className="text-muted-foreground mb-6">
-                Get the latest tips and tutorials delivered to your inbox
+      {regularPosts.length > 0 && (
+        <section className="py-12 bg-muted/30">
+          <div className="container-section">
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold mb-2">
+                {selectedCategory === "All Posts" ? "All Articles" : selectedCategory}
+              </h2>
+              <p className="text-muted-foreground">
+                {filteredPosts.length} articles found {searchTerm && `for "${searchTerm}"`}
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="flex-1 px-4 py-2 rounded-lg border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-                  data-testid="input-newsletter-email"
-                />
-                <Button className="btn-gradient text-white">
-                  Subscribe
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {regularPosts.map((post, index) => {
+                const Icon = post.icon;
+                return (
+                  <motion.article
+                    key={post.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.05 }}
+                  >
+                    <Link href={`/blog/${post.slug}`}>
+                      <Card 
+                        className="p-6 h-full hover:shadow-lg transition-all group cursor-pointer hover:border-primary/50"
+                        data-testid={`blog-post-${post.id}`}
+                      >
+                        <div className="flex items-center gap-2 mb-3">
+                          <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                            <Icon className="w-4 h-4 text-primary" />
+                          </div>
+                          <Badge variant="outline" className="text-xs">
+                            {post.category}
+                          </Badge>
+                        </div>
+
+                        <h3 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                          {post.title}
+                        </h3>
+
+                        <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
+                          {post.excerpt}
+                        </p>
+
+                        <div className="flex items-center justify-between text-xs text-muted-foreground">
+                          <span>{post.date}</span>
+                          <span className="flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            {post.readTime}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center mt-4 text-primary">
+                          <span className="text-sm font-medium">Read More</span>
+                          <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                      </Card>
+                    </Link>
+                  </motion.article>
+                );
+              })}
+            </div>
+
+            {/* Load More / No Results */}
+            {filteredPosts.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-lg text-muted-foreground mb-4">
+                  No articles found matching your criteria.
+                </p>
+                <Button 
+                  variant="outline"
+                  onClick={() => {
+                    setSearchTerm("");
+                    setSelectedCategory("All Posts");
+                  }}
+                >
+                  Clear Filters
                 </Button>
               </div>
-              <p className="text-xs text-muted-foreground mt-4">
-                We respect your privacy. Unsubscribe anytime.
-              </p>
+            ) : hasMorePosts && (
+              <div className="text-center mt-12">
+                <Button 
+                  size="lg" 
+                  variant="outline"
+                  className="group"
+                  onClick={loadMore}
+                  data-testid="button-load-more"
+                >
+                  Load More Articles ({filteredPosts.length - visiblePosts} remaining)
+                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* Popular Topics Section */}
+      <section className="py-12">
+        <div className="container-section">
+          <Card className="p-8 bg-gradient-to-r from-primary/5 via-background to-primary/5">
+            <h3 className="text-xl font-bold mb-6 text-center">Popular Topics</h3>
+            <div className="flex flex-wrap justify-center gap-3">
+              {["PDF Compression", "File Size Reduction", "Email Attachments", "Web Optimization", "Quality Settings", "ZIP vs PDF"].map(topic => (
+                <Badge 
+                  key={topic} 
+                  variant="secondary" 
+                  className="px-4 py-2 cursor-pointer hover:bg-primary hover:text-white transition-colors"
+                  onClick={() => setSearchTerm(topic.split(' ')[0].toLowerCase())}
+                >
+                  {topic}
+                </Badge>
+              ))}
             </div>
           </Card>
         </div>
