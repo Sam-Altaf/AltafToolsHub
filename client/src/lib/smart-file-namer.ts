@@ -119,7 +119,7 @@ export function generateSmartFileName(options: FileNameOptions): SmartFileName {
   }
   
   // Remove duplicates and limit to 5 variations
-  const uniqueVariations = [...new Set(variations)].slice(0, 5);
+  const uniqueVariations = Array.from(new Set(variations)).slice(0, 5);
   
   // Select the best suggestion based on available info
   let suggested = uniqueVariations[0] || `${cleanBaseName}_${dateStr}.${extension}`;
@@ -289,7 +289,7 @@ export function suggestFileNameFromContent(
   suggestions.push(`${detectedType}_edited_${dateStr}.${fileType}`);
   
   // Return unique suggestions
-  return [...new Set(suggestions)].slice(0, 5);
+  return Array.from(new Set(suggestions)).slice(0, 5);
 }
 
 // Function to batch rename multiple files
