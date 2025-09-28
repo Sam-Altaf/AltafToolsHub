@@ -17,22 +17,24 @@ import { Loader2 } from "lucide-react";
 // Critical imports - Load immediately for core functionality
 import Home from "@/pages/home";
 import AllTools from "@/pages/all-tools";
-import CompressPDF from "@/pages/compress-pdf";
-import UnlockPDF from "@/pages/unlock-pdf";
-import JpgToPDF from "@/pages/jpg-to-pdf";
-import QRGenerator from "@/pages/qr-generator";
-import PasswordGenerator from "@/pages/password-generator";
-import ExtractText from "@/pages/extract-text";
-import MergePDF from "@/pages/merge-pdf";
-import SplitPDF from "@/pages/split-pdf";
-import RotatePDF from "@/pages/rotate-pdf";
-import OrganizePDF from "@/pages/organize-pdf";
-import RemovePages from "@/pages/remove-pages";
-import CropPDF from "@/pages/crop-pdf";
-import ExtractPages from "@/pages/extract-pages";
-import ExtractImages from "@/pages/extract-images";
-import AddPageNumber from "@/pages/add-page-number";
-import WatermarkPDF from "@/pages/watermark-pdf";
+
+// Lazy loaded tool components - Load on demand for better performance
+const CompressPDF = lazy(() => import("@/pages/compress-pdf"));
+const UnlockPDF = lazy(() => import("@/pages/unlock-pdf"));
+const JpgToPDF = lazy(() => import("@/pages/jpg-to-pdf"));
+const QRGenerator = lazy(() => import("@/pages/qr-generator"));
+const PasswordGenerator = lazy(() => import("@/pages/password-generator"));
+const ExtractText = lazy(() => import("@/pages/extract-text"));
+const MergePDF = lazy(() => import("@/pages/merge-pdf"));
+const SplitPDF = lazy(() => import("@/pages/split-pdf"));
+const RotatePDF = lazy(() => import("@/pages/rotate-pdf"));
+const OrganizePDF = lazy(() => import("@/pages/organize-pdf"));
+const RemovePages = lazy(() => import("@/pages/remove-pages"));
+const CropPDF = lazy(() => import("@/pages/crop-pdf"));
+const ExtractPages = lazy(() => import("@/pages/extract-pages"));
+const ExtractImages = lazy(() => import("@/pages/extract-images"));
+const AddPageNumber = lazy(() => import("@/pages/add-page-number"));
+const WatermarkPDF = lazy(() => import("@/pages/watermark-pdf"));
 
 // Lazy loaded components - Non-critical pages
 const NotFound = lazy(() => import("@/pages/not-found"));
@@ -81,22 +83,88 @@ function Router() {
           {/* Critical routes - Load immediately */}
           <Route path="/" component={Home} />
           <Route path="/all-tools" component={AllTools} />
-          <Route path="/compress-pdf" component={CompressPDF} />
-          <Route path="/unlock-pdf" component={UnlockPDF} />
-          <Route path="/jpg-to-pdf" component={JpgToPDF} />
-          <Route path="/qr-generator" component={QRGenerator} />
-          <Route path="/password-generator" component={PasswordGenerator} />
-          <Route path="/extract-text" component={ExtractText} />
-          <Route path="/merge-pdf" component={MergePDF} />
-          <Route path="/split-pdf" component={SplitPDF} />
-          <Route path="/rotate-pdf" component={RotatePDF} />
-          <Route path="/organize-pdf" component={OrganizePDF} />
-          <Route path="/remove-pages" component={RemovePages} />
-          <Route path="/crop-pdf" component={CropPDF} />
-          <Route path="/extract-pages" component={ExtractPages} />
-          <Route path="/extract-images" component={ExtractImages} />
-          <Route path="/add-page-number" component={AddPageNumber} />
-          <Route path="/watermark-pdf" component={WatermarkPDF} />
+          
+          {/* Tool routes - Lazy loaded with Suspense for performance */}
+          <Route path="/compress-pdf">
+            <Suspense fallback={<PageLoader />}>
+              <CompressPDF />
+            </Suspense>
+          </Route>
+          <Route path="/unlock-pdf">
+            <Suspense fallback={<PageLoader />}>
+              <UnlockPDF />
+            </Suspense>
+          </Route>
+          <Route path="/jpg-to-pdf">
+            <Suspense fallback={<PageLoader />}>
+              <JpgToPDF />
+            </Suspense>
+          </Route>
+          <Route path="/qr-generator">
+            <Suspense fallback={<PageLoader />}>
+              <QRGenerator />
+            </Suspense>
+          </Route>
+          <Route path="/password-generator">
+            <Suspense fallback={<PageLoader />}>
+              <PasswordGenerator />
+            </Suspense>
+          </Route>
+          <Route path="/extract-text">
+            <Suspense fallback={<PageLoader />}>
+              <ExtractText />
+            </Suspense>
+          </Route>
+          <Route path="/merge-pdf">
+            <Suspense fallback={<PageLoader />}>
+              <MergePDF />
+            </Suspense>
+          </Route>
+          <Route path="/split-pdf">
+            <Suspense fallback={<PageLoader />}>
+              <SplitPDF />
+            </Suspense>
+          </Route>
+          <Route path="/rotate-pdf">
+            <Suspense fallback={<PageLoader />}>
+              <RotatePDF />
+            </Suspense>
+          </Route>
+          <Route path="/organize-pdf">
+            <Suspense fallback={<PageLoader />}>
+              <OrganizePDF />
+            </Suspense>
+          </Route>
+          <Route path="/remove-pages">
+            <Suspense fallback={<PageLoader />}>
+              <RemovePages />
+            </Suspense>
+          </Route>
+          <Route path="/crop-pdf">
+            <Suspense fallback={<PageLoader />}>
+              <CropPDF />
+            </Suspense>
+          </Route>
+          <Route path="/extract-pages">
+            <Suspense fallback={<PageLoader />}>
+              <ExtractPages />
+            </Suspense>
+          </Route>
+          <Route path="/extract-images">
+            <Suspense fallback={<PageLoader />}>
+              <ExtractImages />
+            </Suspense>
+          </Route>
+          <Route path="/add-page-number">
+            <Suspense fallback={<PageLoader />}>
+              <AddPageNumber />
+            </Suspense>
+          </Route>
+          <Route path="/watermark-pdf">
+            <Suspense fallback={<PageLoader />}>
+              <WatermarkPDF />
+            </Suspense>
+          </Route>
           
           {/* Lazy loaded routes with Suspense */}
           <Route path="/privacy">
