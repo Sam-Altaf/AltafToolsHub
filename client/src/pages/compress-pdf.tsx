@@ -22,7 +22,6 @@ import { Briefcase, School, Users, Mail, Smartphone, Globe2, Upload, Settings, F
 import { generateSmartFileName, enhanceDownloadName } from "@/lib/smart-file-namer";
 import { ContactSupportSection } from "@/components/contact-support";
 import { scrollToProcessing } from "@/lib/scroll-utils";
-import AdContainer from "@/components/ad-container";
 
 type TargetSize = "10KB" | "20KB" | "50KB" | "100KB" | "150KB" | "200KB" | "300KB" | "500KB" | "1MB" | "2MB" | "5MB" | "max";
 
@@ -725,13 +724,6 @@ export default function CompressPDF() {
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <Breadcrumbs items={[{ name: "Compress PDF", url: "/compress-pdf" }]} />
         
-        {/* Advertisement Container */}
-        <AdContainer 
-          position="top" 
-          format="banner" 
-          className="mb-6"
-          testId="ad-container-compress-pdf-top"
-        />
         
         <div className="text-center mb-10">
           <Button 
