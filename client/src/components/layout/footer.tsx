@@ -34,6 +34,7 @@ const resourceLinks = [
   { name: "How-To Guides", href: "/guides" },
   { name: "Learning Center", href: "/resources" },
   { name: "Tool Comparisons", href: "/compare/online-pdf-tools-2025" },
+  { name: "Customer Reviews", href: "/testimonials" },
   { name: "About Us", href: "/about" },
   { name: "FAQ", href: "/faq" },
   { name: "Blog", href: "/blog" },
@@ -59,6 +60,34 @@ const socialLinks = [
   { name: "Twitter", icon: Twitter, href: "https://twitter.com/altaftoolshub", ariaLabel: "Follow us on Twitter" },
   { name: "LinkedIn", icon: Linkedin, href: "https://linkedin.com/company/altaftoolshub", ariaLabel: "Connect on LinkedIn" },
   { name: "GitHub", icon: Github, href: "https://github.com/altaftoolshub", ariaLabel: "View our GitHub" }
+];
+
+const popularSearches = [
+  { name: "Compress PDF to 100KB", href: "/compress-pdf" },
+  { name: "Remove PDF Password", href: "/unlock-pdf" },
+  { name: "Convert JPG to PDF", href: "/jpg-to-pdf" },
+  { name: "Merge PDF Files", href: "/merge-pdf" },
+  { name: "Split PDF Pages", href: "/split-pdf" },
+  { name: "Extract PDF Pages", href: "/extract-pages" },
+  { name: "Rotate PDF", href: "/rotate-pdf" },
+  { name: "Add Watermark to PDF", href: "/watermark-pdf" }
+];
+
+const toolCategories = [
+  { name: "PDF Compression Tools", href: "/compress-pdf" },
+  { name: "PDF Security Tools", href: "/unlock-pdf" },
+  { name: "PDF Conversion Tools", href: "/jpg-to-pdf" },
+  { name: "PDF Organization Tools", href: "/organize-pdf" },
+  { name: "PDF Extraction Tools", href: "/extract-text" },
+  { name: "QR & Password Tools", href: "/qr-generator" }
+];
+
+const quickLinks = [
+  { name: "Use Cases", href: "/use-cases" },
+  { name: "How It Works", href: "/how-it-works" },
+  { name: "Why Choose Us", href: "/why-choose-us" },
+  { name: "Customer Reviews", href: "/testimonials" },
+  { name: "Privacy Commitment", href: "/privacy-policy" }
 ];
 
 export default function Footer() {
@@ -294,6 +323,64 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Enhanced SEO Sections */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12 pt-12 border-t border-border/50">
+          {/* Popular Searches */}
+          <div>
+            <h4 className="font-semibold text-lg mb-4 text-foreground dark:text-foreground">Popular Searches</h4>
+            <div className="flex flex-wrap gap-2">
+              {popularSearches.map((search) => (
+                <Link
+                  key={search.href}
+                  href={search.href}
+                  className="text-xs px-3 py-1.5 rounded-full bg-muted hover:bg-primary/10 hover:text-primary transition-all"
+                  data-testid={`popular-search-${search.name.toLowerCase().replace(/\s/g, '-')}`}
+                >
+                  {search.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+          
+          {/* Tool Categories */}
+          <div>
+            <h4 className="font-semibold text-lg mb-4 text-foreground dark:text-foreground">Tool Categories</h4>
+            <div className="space-y-2">
+              {toolCategories.map((category) => (
+                <li key={category.href}>
+                  <Link
+                    href={category.href}
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1 group"
+                    data-testid={`category-${category.name.toLowerCase().replace(/\s/g, '-')}`}
+                  >
+                    <span>{category.name}</span>
+                    <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1" />
+                  </Link>
+                </li>
+              ))}
+            </div>
+          </div>
+          
+          {/* Quick Links */}
+          <div>
+            <h4 className="font-semibold text-lg mb-4 text-foreground dark:text-foreground">Quick Links</h4>
+            <div className="space-y-2">
+              {quickLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1 group"
+                    data-testid={`quick-link-${link.name.toLowerCase().replace(/\s/g, '-')}`}
+                  >
+                    <span>{link.name}</span>
+                    <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1" />
+                  </Link>
+                </li>
+              ))}
+            </div>
+          </div>
+        </div>
+        
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-border/50">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">

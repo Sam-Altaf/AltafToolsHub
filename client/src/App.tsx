@@ -52,6 +52,7 @@ import HowToGeneratePassword from "@/pages/guides/how-to-generate-password";
 import PDFCompressorComparison from "@/pages/compare/pdf-compressor-comparison";
 import OnlinePDFTools2025 from "@/pages/compare/online-pdf-tools-2025";
 import Resources from "@/pages/resources";
+import Testimonials from "@/pages/testimonials";
 
 function Router() {
   return (
@@ -107,6 +108,9 @@ function Router() {
           
           {/* New Route for Resources */}
           <Route path="/resources" component={Resources} />
+          
+          {/* Testimonials Page */}
+          <Route path="/testimonials" component={Testimonials} />
           
           <Route component={NotFound} />
         </Switch>

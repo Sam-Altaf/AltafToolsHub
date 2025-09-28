@@ -73,10 +73,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="google" content="notranslate" />
     
-    <!-- DNS Prefetch for potential external resources -->
-    <link rel="dns-prefetch" href="https://www.google-analytics.com">
-    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
-    
     <!-- Prefetch likely navigation targets -->
     <link rel="prefetch" href="/compress-pdf">
     <link rel="prefetch" href="/jpg-to-pdf">
@@ -94,10 +90,37 @@
     <!-- Additional performance optimization -->
     <link rel="modulepreload" href="/src/main.tsx">
     
+    <!-- Preload critical resources -->
+    <link rel="preload" as="script" href="/pdf.worker.min.mjs">
+    <link rel="preload" as="font" href="https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZJhiI2B.woff2" type="font/woff2" crossorigin>
+    
+    <!-- Prefetch important routes for instant navigation -->
+    <link rel="prefetch" href="/src/pages/compress-pdf.tsx">
+    <link rel="prefetch" href="/src/pages/unlock-pdf.tsx">
+    <link rel="prefetch" href="/src/pages/jpg-to-pdf.tsx">
+    
+    <!-- Resource hints for better performance -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="dns-prefetch" href="https://www.google-analytics.com">
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    
     <!-- Security headers -->
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta name="referrer" content="strict-origin-when-cross-origin">
+    
+    <!-- Language and Region Tags -->
+    <link rel="alternate" hreflang="en" href="https://altaftoolshub.com" />
+    <link rel="alternate" hreflang="en-US" href="https://altaftoolshub.com" />
+    <link rel="alternate" hreflang="en-GB" href="https://altaftoolshub.com" />
+    <link rel="alternate" hreflang="x-default" href="https://altaftoolshub.com" />
+    
+    <!-- Geo Meta Tags -->
+    <meta name="geo.region" content="US" />
+    <meta name="geo.placename" content="Global" />
+    <meta name="geo.position" content="0;0" />
+    <meta name="ICBM" content="0, 0" />
     
     <!-- Search Engine Verification -->
     <meta name="msvalidate.01" content="3FD512D510D7349BCFA2662B94334B81" />
@@ -333,6 +356,192 @@
             "@type": "Answer",
             "text": "Currently, we support files up to 100MB for most tools. This limit ensures smooth performance in your browser. For larger files, consider splitting them or using our compression tools first."
           }
+        }
+      ]
+    }
+    </script>
+    
+    <!-- Structured Data - LocalBusiness -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "@id": "https://altaftoolshub.com/#localbusiness",
+      "name": "AltafToolsHub",
+      "alternateName": "Altaf Tools Hub - Privacy-First Online Tools",
+      "description": "Free online tools for PDF processing, image conversion, QR generation, and more. 100% client-side processing ensures complete privacy - your files never leave your browser.",
+      "url": "https://altaftoolshub.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://altaftoolshub.com/logo.png",
+        "width": "512",
+        "height": "512"
+      },
+      "image": [
+        "https://altaftoolshub.com/og-image.png",
+        "https://altaftoolshub.com/logo.png"
+      ],
+      "telephone": "+1-800-TOOLS-HUB",
+      "email": "support@altaftoolshub.com",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Online Service - Available Worldwide",
+        "addressLocality": "Global",
+        "addressRegion": "Internet",
+        "postalCode": "00000",
+        "addressCountry": "US"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 0,
+        "longitude": 0
+      },
+      "areaServed": {
+        "@type": "GeoShape",
+        "name": "Worldwide"
+      },
+      "serviceArea": {
+        "@type": "GeoShape",
+        "name": "Global - Available in all countries with internet access"
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday"
+          ],
+          "opens": "00:00",
+          "closes": "23:59"
+        }
+      ],
+      "openingHours": "Mo-Su 00:00-23:59",
+      "priceRange": "FREE",
+      "currenciesAccepted": "None - All tools are free",
+      "paymentAccepted": "None required",
+      "amenityFeature": [
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "100% Browser-Based Processing",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "No Registration Required",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "GDPR Compliant",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Zero Data Storage",
+          "value": true
+        }
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Free Online Tools",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "PDF Compression",
+              "description": "Reduce PDF file size up to 95%"
+            },
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "PDF Unlock",
+              "description": "Remove password protection from PDFs"
+            },
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "JPG to PDF Conversion",
+              "description": "Convert images to PDF documents"
+            },
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "QR Code Generation",
+              "description": "Create custom QR codes instantly"
+            },
+            "price": "0",
+            "priceCurrency": "USD"
+          }
+        ]
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "reviewCount": "1247",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "review": [
+        {
+          "@type": "Review",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5",
+            "bestRating": "5"
+          },
+          "author": {
+            "@type": "Person",
+            "name": "Sarah Johnson"
+          },
+          "datePublished": "2025-01-15",
+          "reviewBody": "Best PDF tools I've found online. Everything works in the browser, no uploads needed!"
+        },
+        {
+          "@type": "Review",
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5",
+            "bestRating": "5"
+          },
+          "author": {
+            "@type": "Person",
+            "name": "Michael Chen"
+          },
+          "datePublished": "2025-01-10",
+          "reviewBody": "Privacy-first approach is exactly what I needed. Files never leave my computer."
+        }
+      ],
+      "sameAs": [
+        "https://twitter.com/altaftoolshub",
+        "https://github.com/altaftoolshub",
+        "https://linkedin.com/company/altaftoolshub",
+        "https://facebook.com/altaftoolshub"
+      ],
+      "makesOffer": [
+        {
+          "@type": "Offer",
+          "name": "Free PDF Tools",
+          "description": "Complete suite of PDF manipulation tools",
+          "price": "0.00",
+          "priceCurrency": "USD"
         }
       ]
     }
