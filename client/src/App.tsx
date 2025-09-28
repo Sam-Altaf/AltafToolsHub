@@ -41,6 +41,18 @@ import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import CookieConsent from "@/components/cookie-consent";
 
+// New imports for guides and resources
+import Guides from "@/pages/guides";
+import HowToCompressPDF from "@/pages/guides/how-to-compress-pdf";
+import HowToUnlockPDF from "@/pages/guides/how-to-unlock-pdf";
+import HowToConvertJpgToPDF from "@/pages/guides/how-to-convert-jpg-to-pdf";
+import HowToGenerateQRCode from "@/pages/guides/how-to-generate-qr-code";
+import HowToExtractText from "@/pages/guides/how-to-extract-text-from-pdf";
+import HowToGeneratePassword from "@/pages/guides/how-to-generate-password";
+import PDFCompressorComparison from "@/pages/compare/pdf-compressor-comparison";
+import OnlinePDFTools2025 from "@/pages/compare/online-pdf-tools-2025";
+import Resources from "@/pages/resources";
+
 function Router() {
   return (
     <div className="min-h-screen flex flex-col">
@@ -79,6 +91,23 @@ function Router() {
           <Route path="/why-choose-us" component={WhyChooseUs} />
           <Route path="/how-it-works" component={HowItWorks} />
           <Route path="/use-cases" component={UseCases} />
+          
+          {/* New Routes for Guides */}
+          <Route path="/guides" component={Guides} />
+          <Route path="/guides/how-to-compress-pdf" component={HowToCompressPDF} />
+          <Route path="/guides/how-to-unlock-pdf" component={HowToUnlockPDF} />
+          <Route path="/guides/how-to-convert-jpg-to-pdf" component={HowToConvertJpgToPDF} />
+          <Route path="/guides/how-to-generate-qr-code" component={HowToGenerateQRCode} />
+          <Route path="/guides/how-to-extract-text-from-pdf" component={HowToExtractText} />
+          <Route path="/guides/how-to-generate-password" component={HowToGeneratePassword} />
+          
+          {/* New Routes for Comparisons */}
+          <Route path="/compare/pdf-compressor-comparison" component={PDFCompressorComparison} />
+          <Route path="/compare/online-pdf-tools-2025" component={OnlinePDFTools2025} />
+          
+          {/* New Route for Resources */}
+          <Route path="/resources" component={Resources} />
+          
           <Route component={NotFound} />
         </Switch>
       </div>

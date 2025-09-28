@@ -14,7 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  Menu, X, Home, Info, Mail, ArrowRight, Clock
+  Menu, X, Home, Info, Mail, ArrowRight, Clock, BookOpen, GraduationCap
 } from "lucide-react";
 import { toolCategories, popularTools, Tool } from "@/lib/tools-data";
 import { MultiDropdownNav } from "@/components/multi-dropdown-nav";
@@ -112,6 +112,30 @@ export default function Header() {
             </Button>
             
             <MultiDropdownNav />
+            
+            <Button 
+              variant="ghost" 
+              className="font-medium focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              data-testid="nav-guides-desktop"
+              asChild
+            >
+              <Link href="/guides">
+                <BookOpen className="w-4 h-4 mr-2" />
+                Guides
+              </Link>
+            </Button>
+            
+            <Button 
+              variant="ghost" 
+              className="font-medium focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              data-testid="nav-resources-desktop"
+              asChild
+            >
+              <Link href="/resources">
+                <GraduationCap className="w-4 h-4 mr-2" />
+                Resources
+              </Link>
+            </Button>
             
             <Button 
               variant="ghost" 
@@ -320,6 +344,36 @@ export default function Header() {
                           </div>
                         </div>
                       ))}
+
+                      {/* Guides and Resources */}
+                      <div className="py-3 border-t">
+                        <SheetClose asChild>
+                          <Button
+                            variant={isActive("/guides") ? "secondary" : "ghost"}
+                            className="w-full justify-start focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                            data-testid="nav-guides-mobile"
+                            asChild
+                          >
+                            <Link href="/guides">
+                              <BookOpen className="w-4 h-4 mr-3" />
+                              How-To Guides
+                            </Link>
+                          </Button>
+                        </SheetClose>
+                        <SheetClose asChild>
+                          <Button
+                            variant={isActive("/resources") ? "secondary" : "ghost"}
+                            className="w-full justify-start focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                            data-testid="nav-resources-mobile"
+                            asChild
+                          >
+                            <Link href="/resources">
+                              <GraduationCap className="w-4 h-4 mr-3" />
+                              Learning Center
+                            </Link>
+                          </Button>
+                        </SheetClose>
+                      </div>
 
                       {/* About and Contact */}
                       <div className="py-3 border-t">

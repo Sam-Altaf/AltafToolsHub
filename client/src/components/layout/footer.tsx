@@ -31,13 +31,13 @@ const productLinks = [
 ];
 
 const resourceLinks = [
+  { name: "How-To Guides", href: "/guides" },
+  { name: "Learning Center", href: "/resources" },
+  { name: "Tool Comparisons", href: "/compare/online-pdf-tools-2025" },
   { name: "About Us", href: "/about" },
-  { name: "Why Choose Us", href: "/why-choose-us" },
   { name: "FAQ", href: "/faq" },
   { name: "Blog", href: "/blog" },
-  { name: "Documentation", href: "/documentation" },
-  { name: "How It Works", href: "/how-it-works" },
-  { name: "Use Cases", href: "/use-cases" }
+  { name: "Documentation", href: "/documentation" }
 ];
 
 const popularArticles = [
