@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { Link } from "wouter";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -184,18 +185,16 @@ export default function QRGenerator() {
         <Breadcrumbs items={[{ name: "QR Generator", url: "/qr-generator" }]} />
         {/* Header */}
         <div className="text-center mb-8">
-          <Button 
-            variant="ghost" 
-            className="mb-4" 
-            data-testid="button-back"
-            onClick={() => {
-              window.location.href = '/';
-              // Removed automatic scrolling to prevent page jumping
-            }}
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Tools
-          </Button>
+          <Link href="/all-tools">
+            <Button 
+              variant="ghost" 
+              className="mb-4" 
+              data-testid="button-back"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Tools
+            </Button>
+          </Link>
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 mb-4">
             <QrCode className="w-8 h-8 text-white" />
           </div>

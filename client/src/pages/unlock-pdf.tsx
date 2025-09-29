@@ -333,7 +333,7 @@ export default function UnlockPDF() {
               >
                 Unlock Another File
               </Button>
-              <Link href="/">
+              <Link href="/all-tools">
                 <Button variant="ghost" size="lg" className="w-full" data-testid="button-back-tools">
                   Back to All Tools
                 </Button>

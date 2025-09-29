@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { Link } from "wouter";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -270,18 +271,16 @@ export default function ExtractText() {
         
         {/* Header */}
         <div className="text-center mb-8">
-          <Button 
-            variant="ghost" 
-            className="mb-4"
-            onClick={() => {
-              window.location.href = '/';
-              // Removed automatic scrolling to prevent page jumping
-            }}
-            data-testid="button-back"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Tools
-          </Button>
+          <Link href="/all-tools">
+            <Button 
+              variant="ghost" 
+              className="mb-4"
+              data-testid="button-back"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Tools
+            </Button>
+          </Link>
           
           <div className="flex items-center justify-center gap-3 mb-4">
             <div className="p-3 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-500">
