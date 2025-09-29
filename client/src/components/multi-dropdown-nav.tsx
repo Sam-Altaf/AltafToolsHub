@@ -334,7 +334,7 @@ export function MultiDropdownNav() {
               onMouseLeave={handleMouseLeave}
             >
               {/* Arrow pointing up */}
-              <div className="absolute -top-2 left-40 w-4 h-4 bg-white dark:bg-gray-900 border-l border-t border-gray-200 dark:border-gray-700 transform rotate-45"></div>
+              <div className="absolute -top-3 left-40 w-6 h-6 bg-white dark:bg-gray-900 border-l border-t border-gray-200 dark:border-gray-700 transform rotate-45 z-50"></div>
               <div className="p-4">
                 {/* For All Tools - Add link at top */}
                 {menuItems.find(m => m.id === openMenu)?.type === 'all' && (
