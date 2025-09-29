@@ -105,18 +105,6 @@ export default function Header() {
             <Button 
               variant="ghost" 
               className="font-medium focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-              data-testid="nav-resources-desktop"
-              asChild
-            >
-              <Link href="/resources">
-                <BookOpen className="w-4 h-4 mr-2" />
-                Resources
-              </Link>
-            </Button>
-            
-            <Button 
-              variant="ghost" 
-              className="font-medium focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
               data-testid="nav-about-desktop"
               asChild
             >
@@ -343,31 +331,23 @@ export default function Header() {
                             </Link>
                           </Button>
                         </SheetClose>
-                        <SheetClose asChild>
-                          <Button
-                            variant={isActive("/resources") ? "secondary" : "ghost"}
-                            className="w-full justify-start focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                            data-testid="nav-resources-mobile"
-                            asChild
-                          >
-                            <Link href="/resources">
-                              <GraduationCap className="w-4 h-4 mr-3" />
-                              Learning Center
-                            </Link>
-                          </Button>
-                        </SheetClose>
                       </div>
 
                       {/* About and Contact */}
                       <div className="py-3 border-t">
-                        <Button
-                          variant="ghost"
-                          className="w-full justify-start"
-                          data-testid="nav-about-mobile"
-                        >
-                          <Info className="w-4 h-4 mr-3" />
-                          About
-                        </Button>
+                        <SheetClose asChild>
+                          <Button
+                            variant={isActive("/about") ? "secondary" : "ghost"}
+                            className="w-full justify-start focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                            data-testid="nav-about-mobile"
+                            asChild
+                          >
+                            <Link href="/about">
+                              <Info className="w-4 h-4 mr-3" />
+                              About
+                            </Link>
+                          </Button>
+                        </SheetClose>
                         <Button
                           variant="ghost"
                           className="w-full justify-start"
