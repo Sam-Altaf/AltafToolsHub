@@ -25,7 +25,8 @@ const OPERATION_DESCRIPTORS = {
   merge: ['merged', 'combined', 'joined', 'unified'],
   split: ['split', 'divided', 'separated', 'extracted'],
   unlock: ['unlocked', 'decrypted', 'opened', 'accessible'],
-  watermark: ['watermarked', 'branded', 'marked', 'stamped']
+  watermark: ['watermarked', 'branded', 'marked', 'stamped'],
+  protected: ['protected', 'secured', 'encrypted', 'locked', 'safeguarded', 'shielded']
 };
 
 const SIZE_DESCRIPTORS = {

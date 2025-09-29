@@ -1,3 +1,4 @@
+import React from "react";
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -26,22 +27,9 @@ import Breadcrumbs from "@/components/seo/breadcrumbs";
 import PrivacyNotice from "@/components/privacy-notice";
 import { ContactSupportSection } from "@/components/contact-support";
 import { scrollBy } from "@/lib/scroll-utils";
-import * as pako from "pako";
 import { PDFDocument } from "pdf-lib-with-encrypt";
 import { generateSmartFileName, enhanceDownloadName } from "@/lib/smart-file-namer";
 import { useToast } from "@/hooks/use-toast";
-
-// Extend window interface for pako
-declare global {
-  interface Window {
-    pako: typeof pako;
-  }
-}
-
-// Fix for pdf-lib-with-encrypt pako compatibility
-if (typeof window !== 'undefined' && !window.pako) {
-  window.pako = pako;
-}
 
 interface ProtectionResult {
   originalSize: number;
