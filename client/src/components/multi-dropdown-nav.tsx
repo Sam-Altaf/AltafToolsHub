@@ -28,7 +28,7 @@ const ToolNavItem = ({ tool, onClick }: { tool: NavTool; onClick?: () => void })
   const Icon = tool.icon;
   
   const content = (
-    <div className="group flex items-center gap-1.5 p-1.5 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+    <div className="group flex items-center gap-1.5 p-1 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800">
       <div className={cn(
         "w-4 h-4 rounded flex items-center justify-center flex-shrink-0",
         "bg-gradient-to-br", tool.color
@@ -227,19 +227,14 @@ export function MultiDropdownNav() {
     setOpenMenu(menuId);
   };
 
-  // Handle mouse leave with delay
+  // Handle mouse leave instantly
   const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => {
-      setOpenMenu(null);
-    }, 200);
+    setOpenMenu(null);
   };
 
   // Handle mouse enter on dropdown
   const handleDropdownMouseEnter = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
-    }
+    // Keep dropdown open when hovering over it
   };
 
   // Handle escape key
@@ -301,7 +296,7 @@ export function MultiDropdownNav() {
               ref={(el) => { buttonRefs.current[item.id] = el }}
               variant="ghost"
               className={cn(
-                "text-sm font-medium transition-all duration-200 group px-3",
+                "text-sm font-medium group px-3",
                 "hover:bg-accent hover:text-accent-foreground",
                 openMenu === item.id && "bg-accent text-accent-foreground"
               )}
@@ -311,7 +306,7 @@ export function MultiDropdownNav() {
             >
               <Icon className="w-3.5 h-3.5 mr-1.5" />
               {item.label}
-              <ChevronDown className="w-3 h-3 ml-1 transition-transform group-hover:translate-y-0.5" />
+              <ChevronDown className="w-3 h-3 ml-1 group-hover:translate-y-0.5" />
             </Button>
           );
         })}
@@ -326,7 +321,7 @@ export function MultiDropdownNav() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.15 }}
+              transition={{ duration: 0.05 }}
               className="fixed inset-0 top-16 bg-black/20 dark:bg-black/40"
               style={{ zIndex: 19999 }}
               onClick={() => setOpenMenu(null)}
@@ -337,19 +332,18 @@ export function MultiDropdownNav() {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.05 }}
               className="fixed left-1/2 transform -translate-x-1/2 top-20 bg-white dark:bg-gray-900 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-800 overflow-y-auto"
               style={{ 
                 zIndex: 20000,
                 maxWidth: '1200px',
-                minWidth: '900px',
-                width: '90vw',
+                width: 'auto',
                 maxHeight: 'calc(100vh - 100px)'
               }}
               onMouseEnter={handleDropdownMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
-              <div className="p-4">
+              <div className="p-3">
                 {/* For All Tools - Add link at top */}
                 {menuItems.find(m => m.id === openMenu)?.type === 'all' && (
                   <div className="mb-3 flex justify-end">
@@ -365,7 +359,7 @@ export function MultiDropdownNav() {
                 )}
                 
                 {/* Sections displayed horizontally in columns */}
-                <div className="grid grid-flow-col auto-cols-fr gap-4">
+                <div className={menuItems.find(m => m.id === openMenu)?.type === 'pdf' ? "grid grid-cols-6 gap-2" : menuItems.find(m => m.id === openMenu)?.type === 'image' ? "grid grid-cols-3 gap-3" : "grid grid-cols-3 gap-3"}>
                   {getDropdownContent(menuItems.find(m => m.id === openMenu)?.type || '').map((section, sectionIdx) => (
                     <div key={sectionIdx} className="flex flex-col">
                       <h3 className="text-[10px] font-bold text-gray-600 dark:text-gray-400 mb-1.5 uppercase tracking-wider">
