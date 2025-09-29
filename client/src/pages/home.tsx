@@ -375,14 +375,6 @@ export default function Home() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-              style={{
-                textShadow: `
-                  0 0 30px rgba(0, 168, 255, 0.6),
-                  0 0 60px rgba(0, 168, 255, 0.4),
-                  0 0 90px rgba(0, 168, 255, 0.2),
-                  0 2px 4px rgba(0, 0, 0, 0.8)
-                `
-              }}
             >
               <motion.span
                 initial={{ opacity: 0, x: -50 }}
@@ -392,7 +384,7 @@ export default function Home() {
                 Professional File Tools,{" "}
               </motion.span>
               <motion.span 
-                className="bg-gradient-to-r from-yellow-400 via-amber-400 to-orange-400 bg-clip-text text-transparent inline-block"
+                className="text-amber-400 inline-block"
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 }}

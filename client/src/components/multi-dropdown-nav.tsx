@@ -23,31 +23,28 @@ interface CustomTool {
 
 type NavTool = Tool | CustomTool;
 
-// Helper component for navigation items
+// Helper component for navigation items - horizontal layout with small icons
 const ToolNavItem = ({ tool, onClick }: { tool: NavTool; onClick?: () => void }) => {
   const Icon = tool.icon;
   
   const content = (
-    <div className="group relative flex flex-col items-center text-center select-none rounded-lg p-2 leading-none no-underline outline-none transition-all duration-200">
+    <div className="group flex items-center gap-2 p-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
       <div className={cn(
-        "w-10 h-10 rounded-lg flex items-center justify-center mb-2 transition-all duration-300",
-        "bg-gradient-to-br", tool.color,
-        "group-hover:scale-110 group-hover:shadow-lg",
-        "shadow-sm"
+        "w-5 h-5 rounded flex items-center justify-center flex-shrink-0",
+        "bg-gradient-to-br", tool.color
       )}>
-        <Icon className="w-5 h-5 text-white" />
+        <Icon className="w-3 h-3 text-white" />
       </div>
-      <div className="flex-1 min-h-0">
-        <div className="font-medium text-xs mb-0.5 flex items-center justify-center gap-1 flex-wrap">
-          <span>{tool.title}</span>
+      <div className="flex-1 min-w-0">
+        <div className="text-xs font-medium flex items-center gap-1">
+          <span className="truncate">{tool.title}</span>
           {tool.new && (
-            <span className="inline-flex items-center text-[10px] px-1 py-0.5 rounded-full bg-gradient-to-r from-emerald-700 to-emerald-800 text-white font-semibold">
-              <Sparkles className="w-2 h-2 mr-0.5" />
+            <span className="text-[9px] px-1 rounded bg-emerald-600 text-white">
               New
             </span>
           )}
           {!tool.available && (
-            <span className="text-[10px] px-1 py-0.5 rounded-full bg-gradient-to-r from-gray-600 to-gray-700 text-white">
+            <span className="text-[9px] px-1 rounded bg-gray-500 text-white">
               Soon
             </span>
           )}
@@ -59,10 +56,7 @@ const ToolNavItem = ({ tool, onClick }: { tool: NavTool; onClick?: () => void })
   if (!tool.available) {
     return (
       <button
-        className={cn(
-          "w-full cursor-not-allowed opacity-60",
-          "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none rounded-lg"
-        )}
+        className="w-full cursor-not-allowed opacity-50"
         disabled
         aria-disabled="true"
         data-testid={`nav-${tool.id}-disabled`}
@@ -76,12 +70,7 @@ const ToolNavItem = ({ tool, onClick }: { tool: NavTool; onClick?: () => void })
   return (
     <Link
       href={tool.href}
-      className={cn(
-        "block w-full rounded-lg transition-all duration-200",
-        "hover:bg-gradient-to-b hover:from-primary/5 hover:to-primary/2",
-        "hover:shadow-md hover:translate-y-[-1px]",
-        "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none"
-      )}
+      className="block w-full"
       data-testid={`nav-${tool.id}`}
       onClick={onClick}
     >
@@ -312,7 +301,7 @@ export function MultiDropdownNav() {
               ref={(el) => { buttonRefs.current[item.id] = el }}
               variant="ghost"
               className={cn(
-                "font-medium transition-all duration-200 group",
+                "text-sm font-medium transition-all duration-200 group px-3",
                 "hover:bg-accent hover:text-accent-foreground",
                 openMenu === item.id && "bg-accent text-accent-foreground"
               )}
@@ -320,7 +309,7 @@ export function MultiDropdownNav() {
               onClick={() => setOpenMenu(openMenu === item.id ? null : item.id)}
               data-testid={`nav-button-${item.id}`}
             >
-              <Icon className="w-4 h-4 mr-2" />
+              <Icon className="w-3.5 h-3.5 mr-1.5" />
               {item.label}
               <ChevronDown className="w-3 h-3 ml-1 transition-transform group-hover:translate-y-0.5" />
             </Button>
@@ -328,65 +317,69 @@ export function MultiDropdownNav() {
         })}
       </div>
 
-      {/* Mega Menu Dropdown */}
+      {/* Mega Menu Dropdown - Fixed position and centered */}
       <AnimatePresence>
         {openMenu && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 z-50"
-            onMouseEnter={handleDropdownMouseEnter}
-            onMouseLeave={handleMouseLeave}
-          >
-            <div className="bg-background/98 backdrop-blur-xl border rounded-2xl shadow-2xl p-6"
-                 style={{ 
-                   minWidth: '600px',
-                   maxWidth: '1200px',
-                   width: 'max-content'
-                 }}>
-              
-              {/* For All Tools - Add link at top */}
-              {menuItems.find(m => m.id === openMenu)?.type === 'all' && (
-                <div className="mb-4 flex justify-end">
-                  <Link
-                    href="/all-tools"
-                    className="inline-flex items-center text-sm font-medium text-primary hover:text-primary/80 transition-colors"
-                    onClick={() => setOpenMenu(null)}
-                  >
-                    View All Tools Page
-                    <ArrowRight className="w-4 h-4 ml-1" />
-                  </Link>
-                </div>
-              )}
-              
-              {/* Sections */}
-              <div className="space-y-6">
-                {getDropdownContent(menuItems.find(m => m.id === openMenu)?.type || '').map((section, sectionIdx) => (
-                  <div key={sectionIdx}>
-                    <h3 className="font-bold text-sm text-muted-foreground mb-3">
-                      {section.title}
-                    </h3>
-                    <div className={cn(
-                      "grid gap-2",
-                      section.tools.length > 6 ? "grid-cols-6" : 
-                      section.tools.length > 4 ? "grid-cols-5" : 
-                      section.tools.length > 3 ? "grid-cols-4" : "grid-cols-3"
-                    )}>
-                      {section.tools.map((tool) => tool && (
-                        <ToolNavItem 
-                          key={tool.id} 
-                          tool={tool} 
-                          onClick={() => setOpenMenu(null)}
-                        />
-                      ))}
-                    </div>
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              className="fixed inset-0 top-16 bg-black/20 dark:bg-black/40"
+              style={{ zIndex: 19999 }}
+              onClick={() => setOpenMenu(null)}
+            />
+            
+            {/* Dropdown Menu */}
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="fixed left-1/2 transform -translate-x-1/2 top-20 w-[1000px] max-w-[90vw] bg-white dark:bg-gray-900 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-800 max-h-[80vh] overflow-y-auto"
+              style={{ zIndex: 20000 }}
+              onMouseEnter={handleDropdownMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              <div className="p-6">
+                {/* For All Tools - Add link at top */}
+                {menuItems.find(m => m.id === openMenu)?.type === 'all' && (
+                  <div className="mb-4 flex justify-end">
+                    <Link
+                      href="/all-tools"
+                      className="inline-flex items-center text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                      onClick={() => setOpenMenu(null)}
+                    >
+                      View All Tools Page
+                      <ArrowRight className="w-4 h-4 ml-1" />
+                    </Link>
                   </div>
-                ))}
+                )}
+                
+                {/* Sections with horizontal grid layout */}
+                <div className="space-y-4">
+                  {getDropdownContent(menuItems.find(m => m.id === openMenu)?.type || '').map((section, sectionIdx) => (
+                    <div key={sectionIdx} className={cn(sectionIdx !== 0 && "pt-3 border-t border-gray-100 dark:border-gray-800")}>
+                      <h3 className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-2 uppercase tracking-wide">
+                        {section.title}
+                      </h3>
+                      <div className="grid grid-cols-3 gap-1">
+                        {section.tools.map((tool) => tool && (
+                          <ToolNavItem 
+                            key={tool.id} 
+                            tool={tool} 
+                            onClick={() => setOpenMenu(null)}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </div>
