@@ -79,15 +79,16 @@ const ToolNavItem = ({ tool, onClick }: { tool: NavTool; onClick?: () => void })
   );
 };
 
-// Get organized PDF tools - optimized to 3 sections like Image and All tools
+// Get organized PDF tools - all PDF-related tools from tools-data.ts
 const getPdfToolsSections = () => {
   const pdfTools = allTools.filter(tool => 
     tool.category === "pdf-management" || 
-    tool.category === "pdf-conversion" || 
-    tool.category === "pdf-security" ||
+    tool.category === "document-conversion" || 
+    tool.category === "ebook-conversion" ||
+    tool.category === "image-conversion" ||
+    tool.category === "security" ||
     tool.id === "extract-text" ||
-    tool.id === "add-page-numbers" ||
-    tool.id === "watermark-pdf"
+    tool.id === "pdf-to-zip"
   );
 
   return [
@@ -102,73 +103,96 @@ const getPdfToolsSections = () => {
         pdfTools.find(t => t.id === "rotate-pdf"),
         pdfTools.find(t => t.id === "remove-pages"),
         pdfTools.find(t => t.id === "extract-pages"),
-        pdfTools.find(t => t.id === "organize-pdf")
+        pdfTools.find(t => t.id === "organize-pdf"),
+        pdfTools.find(t => t.id === "crop-pdf")
       ].filter(Boolean) as NavTool[]
     },
     {
-      title: "CONVERT & EDIT",
+      title: "CONVERT TO PDF",
       tools: [
         pdfTools.find(t => t.id === "jpg-to-pdf"),
-        pdfTools.find(t => t.id === "extract-text") ? {...pdfTools.find(t => t.id === "extract-text")!, title: "Extract Text (OCR)"} as NavTool : undefined,
-        pdfTools.find(t => t.id === "add-page-numbers"),
-        pdfTools.find(t => t.id === "watermark-pdf"),
-        pdfTools.find(t => t.id === "crop-pdf"),
+        pdfTools.find(t => t.id === "images-to-pdf"),
+        pdfTools.find(t => t.id === "png-to-pdf"),
+        pdfTools.find(t => t.id === "webp-to-pdf"),
+        pdfTools.find(t => t.id === "svg-to-pdf"),
+        pdfTools.find(t => t.id === "heic-to-pdf"),
+        pdfTools.find(t => t.id === "tiff-to-pdf"),
+        pdfTools.find(t => t.id === "avif-to-pdf"),
         pdfTools.find(t => t.id === "word-to-pdf"),
-        pdfTools.find(t => t.id === "powerpoint-to-pdf"),
         pdfTools.find(t => t.id === "excel-to-pdf"),
-        pdfTools.find(t => t.id === "html-to-pdf")
+        pdfTools.find(t => t.id === "powerpoint-to-pdf"),
+        pdfTools.find(t => t.id === "html-to-pdf"),
+        pdfTools.find(t => t.id === "txt-to-pdf"),
+        pdfTools.find(t => t.id === "epub-to-pdf"),
+        pdfTools.find(t => t.id === "mobi-to-pdf"),
+        pdfTools.find(t => t.id === "azw-to-pdf"),
+        pdfTools.find(t => t.id === "fb2-to-pdf"),
+        pdfTools.find(t => t.id === "djvu-to-pdf")
       ].filter(Boolean) as NavTool[]
     },
     {
-      title: "EXPORT & SIGN",
+      title: "EDIT & EXPORT",
       tools: [
-        pdfTools.find(t => t.id === "pdf-to-jpg"),
-        pdfTools.find(t => t.id === "pdf-to-word"),
-        pdfTools.find(t => t.id === "pdf-to-powerpoint"),
-        pdfTools.find(t => t.id === "pdf-to-excel"),
-        pdfTools.find(t => t.id === "sign-pdf"),
-        pdfTools.find(t => t.id === "pdf-to-pdfa"),
+        pdfTools.find(t => t.id === "add-page-number"),
+        pdfTools.find(t => t.id === "watermark-pdf"),
+        pdfTools.find(t => t.id === "extract-text") ? {...pdfTools.find(t => t.id === "extract-text")!, title: "Extract Text (OCR)"} as NavTool : undefined,
         pdfTools.find(t => t.id === "extract-images"),
-        { id: "scan-to-pdf", title: "Scan to PDF", description: "Scan documents to PDF", icon: FileText, href: "/scan-to-pdf", color: "from-blue-500 to-indigo-500", available: false, category: "pdf-management" } as CustomTool,
-        { id: "compare-pdf", title: "Compare PDF", description: "Compare two PDF files", icon: FileText, href: "/compare-pdf", color: "from-teal-500 to-cyan-500", available: false, category: "pdf-management" } as CustomTool
+        pdfTools.find(t => t.id === "sign-pdf"),
+        pdfTools.find(t => t.id === "redact-pdf"),
+        pdfTools.find(t => t.id === "pdf-to-word"),
+        pdfTools.find(t => t.id === "pdf-to-excel"),
+        pdfTools.find(t => t.id === "pdf-to-powerpoint"),
+        pdfTools.find(t => t.id === "pdf-to-html"),
+        pdfTools.find(t => t.id === "pdf-to-text"),
+        pdfTools.find(t => t.id === "pdf-to-epub"),
+        pdfTools.find(t => t.id === "pdf-to-mobi"),
+        pdfTools.find(t => t.id === "pdf-to-zip")
       ].filter(Boolean) as NavTool[]
     }
   ];
 };
 
-// Get organized Image tools
+// Get organized Image tools - real tools that output images from tools-data.ts
 const getImageToolsSections = () => {
-  const imageTools = allTools.filter(tool => 
-    tool.category === "image-conversion" || 
-    tool.category === "image-editing" ||
-    tool.id === "extract-images"
+  const imageOutputTools = allTools.filter(tool => 
+    tool.id === "pdf-to-images" ||
+    tool.id === "pdf-to-jpg" ||
+    tool.id === "extract-images" ||
+    tool.category === "image-conversion"
   );
 
   return [
     {
-      title: "IMAGE CONVERSION",
+      title: "PDF TO IMAGES",
       tools: [
-        { id: "jpg-to-png", title: "JPG to PNG", description: "Convert JPG to PNG", icon: Image, href: "/jpg-to-png", color: "from-blue-500 to-cyan-500", available: false, category: "image-conversion" } as CustomTool,
-        { id: "png-to-jpg", title: "PNG to JPG", description: "Convert PNG to JPG", icon: Image, href: "/png-to-jpg", color: "from-cyan-500 to-blue-500", available: false, category: "image-conversion" } as CustomTool,
-        { id: "webp-to-jpg", title: "WebP to JPG", description: "Convert WebP to JPG", icon: Image, href: "/webp-to-jpg", color: "from-green-500 to-emerald-500", available: false, category: "image-conversion" } as CustomTool,
-        { id: "svg-to-png", title: "SVG to PNG", description: "Convert SVG to PNG", icon: Image, href: "/svg-to-png", color: "from-purple-500 to-pink-500", available: false, category: "image-conversion" } as CustomTool
-      ]
+        imageOutputTools.find(t => t.id === "pdf-to-images"),
+        imageOutputTools.find(t => t.id === "pdf-to-jpg"),
+        imageOutputTools.find(t => t.id === "extract-images")
+      ].filter(Boolean) as NavTool[]
     },
     {
-      title: "IMAGE OPTIMIZATION",
+      title: "IMAGES TO PDF",
       tools: [
-        imageTools.find(t => t.id === "compress-image") || { id: "compress-image", title: "Compress Images", description: "Reduce image file size", icon: Image, href: "/compress-image", color: "from-orange-500 to-red-500", available: false, category: "image-editing" } as CustomTool,
-        imageTools.find(t => t.id === "resize-image") || { id: "resize-image", title: "Resize Images", description: "Resize images to custom dimensions", icon: Image, href: "/resize-image", color: "from-teal-500 to-green-500", available: false, category: "image-editing" } as CustomTool,
-        imageTools.find(t => t.id === "crop-image") || { id: "crop-image", title: "Crop Images", description: "Crop images to size", icon: Image, href: "/crop-image", color: "from-indigo-500 to-blue-500", available: false, category: "image-editing" } as CustomTool
-      ]
+        imageOutputTools.find(t => t.id === "jpg-to-pdf"),
+        imageOutputTools.find(t => t.id === "images-to-pdf"),
+        imageOutputTools.find(t => t.id === "png-to-pdf"),
+        imageOutputTools.find(t => t.id === "webp-to-pdf"),
+        imageOutputTools.find(t => t.id === "svg-to-pdf"),
+        imageOutputTools.find(t => t.id === "heic-to-pdf"),
+        imageOutputTools.find(t => t.id === "tiff-to-pdf"),
+        imageOutputTools.find(t => t.id === "avif-to-pdf")
+      ].filter(Boolean) as NavTool[]
     },
     {
-      title: "IMAGE EDITING",
+      title: "IMAGE FORMATS",
       tools: [
-        { id: "add-watermark", title: "Add Watermark", description: "Add watermark to images", icon: Image, href: "/add-watermark", color: "from-indigo-500 to-purple-500", available: false, category: "image-editing" } as CustomTool,
-        { id: "rotate-image", title: "Rotate Images", description: "Rotate images", icon: Image, href: "/rotate-image", color: "from-amber-500 to-orange-500", available: false, category: "image-editing" } as CustomTool,
-        { id: "flip-image", title: "Flip Images", description: "Flip images horizontally or vertically", icon: Image, href: "/flip-image", color: "from-pink-500 to-rose-500", available: false, category: "image-editing" } as CustomTool
-      ]
+        imageOutputTools.find(t => t.id === "jpg-to-pdf"),
+        imageOutputTools.find(t => t.id === "png-to-pdf"),
+        imageOutputTools.find(t => t.id === "webp-to-pdf"),
+        imageOutputTools.find(t => t.id === "svg-to-pdf"),
+        imageOutputTools.find(t => t.id === "heic-to-pdf"),
+        imageOutputTools.find(t => t.id === "tiff-to-pdf")
+      ].filter(Boolean) as NavTool[]
     }
   ];
 };
@@ -259,9 +283,29 @@ export function MultiDropdownNav() {
         return getImageToolsSections();
       case 'all':
         return [
-          { title: "PDF TOOLS", tools: allTools.filter(t => t.category.includes("pdf")).slice(0, 6) },
-          { title: "IMAGE TOOLS", tools: allTools.filter(t => t.category.includes("image")).slice(0, 6) },
-          { title: "UTILITIES", tools: allTools.filter(t => t.category === "utilities").slice(0, 6) }
+          { 
+            title: "PDF TOOLS", 
+            tools: allTools.filter(t => 
+              t.category === "pdf-management" || 
+              t.category === "document-conversion" || 
+              t.category === "ebook-conversion" ||
+              t.category === "security" ||
+              (t.category === "image-conversion" && (t.id.includes("to-pdf") || t.id.includes("pdf-to")))
+            ).slice(0, 12) 
+          },
+          { 
+            title: "IMAGE TOOLS", 
+            tools: allTools.filter(t => 
+              t.category === "image-conversion" ||
+              t.id === "extract-images"
+            ).slice(0, 10) 
+          },
+          { 
+            title: "UTILITIES", 
+            tools: allTools.filter(t => 
+              t.category === "utilities"
+            ).slice(0, 8) 
+          }
         ];
       default:
         return [];
@@ -333,8 +377,8 @@ export function MultiDropdownNav() {
               onMouseEnter={handleDropdownMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
-              {/* Arrow pointing up */}
-              <div className="absolute -top-3 left-40 w-6 h-6 bg-white dark:bg-gray-900 border-l border-t border-gray-200 dark:border-gray-700 transform rotate-45 z-50"></div>
+              {/* Arrow pointing up to show which menu */}
+              <div className="absolute -top-2 left-80 w-4 h-4 bg-white dark:bg-gray-900 border-l border-t border-gray-200 dark:border-gray-700 transform rotate-45 shadow-lg"></div>
               <div className="p-4">
                 {/* For All Tools - Add link at top */}
                 {menuItems.find(m => m.id === openMenu)?.type === 'all' && (
