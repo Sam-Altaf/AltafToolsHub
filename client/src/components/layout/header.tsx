@@ -183,6 +183,9 @@ export default function Header() {
                   size="icon"
                   className="relative"
                   data-testid="button-mobile-menu"
+                  aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+                  aria-expanded={mobileMenuOpen}
+                  aria-controls="mobile-navigation"
                 >
                   <AnimatePresence mode="wait">
                     {mobileMenuOpen ? (
@@ -213,7 +216,7 @@ export default function Header() {
                       </motion.div>
                     )}
                   </AnimatePresence>
-                  <span className="sr-only">Toggle menu</span>
+                  <span className="sr-only">{mobileMenuOpen ? "Close menu" : "Open menu"}</span>
                 </Button>
               </SheetTrigger>
               
@@ -231,8 +234,8 @@ export default function Header() {
                 </SheetHeader>
                 
                 <div className="flex flex-col h-full">
-                  <nav className="flex-1 overflow-y-auto px-6 py-6">
-                    <div className="space-y-1">
+                  <nav className="flex-1 overflow-y-auto px-6 py-6" aria-label="Mobile navigation" id="mobile-navigation">
+                    <div className="space-y-1" role="list">
                       {/* Home Link */}
                       <SheetClose asChild>
                         <Button
