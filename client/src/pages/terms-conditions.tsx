@@ -12,7 +12,7 @@ const sections = [
       "By accessing or using AltafToolsHub, you agree to be bound by these Terms. If you disagree with any part of these terms, you may not access our services.",
       "Our services are provided \"as is\" for personal and commercial use, subject to the restrictions outlined in these Terms.",
       "**Acceptance of Terms**: By using our services, you represent that you are at least 16 years old and have the legal capacity to enter into these Terms. If you are using our services on behalf of an organization, you represent and warrant that you have the authority to bind that organization to these Terms.",
-      "**Modifications to Terms**: We reserve the right to modify these Terms at any time. We will notify users of significant changes via a notice on our website. Your continued use of our services after such modifications constitutes acceptance of the updated Terms. We encourage you to review these Terms periodically.",
+      "**Modifications to Terms**: We reserve the right to modify these Terms at any time with or without notice. Changes are effective immediately upon posting unless otherwise stated. Your continued use of our services constitutes acceptance of the updated Terms. You are responsible for regularly reviewing these Terms.",
       "**Account-Free Service**: Our services do not require account creation or registration, reflecting our privacy-first approach. However, you are still bound by these Terms when using our services."
     ]
   },
@@ -34,12 +34,38 @@ const sections = [
     icon: Scale,
     title: "Service Sustainability Model",
     content: [
-      "**Free Forever with Ads Model**: AltafToolsHub operates on a 'Free Forever with Ads' model. Our core tools will always remain free to use, supported by advertising revenue to cover server, bandwidth, and maintenance costs.",
-      "**Advertising Support**: We may display advertisements to support our free tools and cover operational costs including server infrastructure, bandwidth expenses, development and maintenance, security updates, and customer support. Advertising helps ensure our tools remain accessible to everyone without charge.",
-      "**Future Premium Features**: We reserve the right to introduce optional premium features if operational costs require it. Potential scenarios for premium tiers include: excessive server costs from rapid growth (e.g., 100,000+ daily users), enterprise-specific features requiring dedicated resources, advanced AI-powered tools with high computational costs, priority processing for time-sensitive needs, and bulk processing capabilities beyond standard limits.",
-      "**Commitment to Free Access**: Basic features and standard usage will always remain free. We will never paywall existing free tools. Any premium features will be optional additions, not replacements. The majority of users will be able to use our tools without payment.",
-      "**Transparency in Pricing**: If we introduce premium features, we will announce changes at least 30 days in advance, clearly distinguish free vs. premium features, maintain grandfathering for any promised free features, and provide clear value propositions for any paid offerings.",
-      "**Sustainable Operations**: This model ensures long-term availability of our services, continuous improvement and new feature development, maintenance of high performance and reliability, ability to scale with user growth, and commitment to user privacy and security."
+      "**Advertising Supported Model**: AltafToolsHub operates with advertising support to maintain free access to our tools. We reserve the right to display advertisements at any time without prior notice to support operational costs.",
+      "**Advertising Implementation**: We may display advertisements, affiliate links, sponsored content, and promotional materials across our platform without advance notice. This includes but is not limited to display ads, sponsored tool recommendations, affiliate product suggestions, partner service promotions, and contextual advertising based on tool usage.",
+      "**Future Premium Features**: We reserve the right to introduce premium features, paid tiers, or subscription models at any time without prior notice. Implementation may include limiting free tier usage, introducing processing quotas, offering advanced features for payment, creating enterprise pricing tiers, and implementing pay-per-use models.",
+      "**Dynamic Service Model**: Our service model may change at any time based on operational requirements, market conditions, sustainability needs, user growth patterns, or business decisions. We are not obligated to provide notice of such changes.",
+      "**No Grandfathering Obligation**: We are not obligated to maintain any particular pricing, feature set, or service level for any user. Changes apply immediately upon implementation unless we specifically state otherwise.",
+      "**Sustainable Operations**: This flexible model ensures our ability to adapt to changing conditions, maintain service availability, fund development and improvements, respond to market demands, and operate sustainably long-term."
+    ]
+  },
+  {
+    icon: Shield,
+    title: "Monetization & Revenue",
+    content: [
+      "**Comprehensive Monetization Rights**: We reserve the unconditional right to implement any and all monetization methods at our sole discretion, without prior notice, consultation, or user consent.",
+      "**Advertising Without Notice**: We may display any form of advertising immediately, including but not limited to banner ads, interstitial ads, video ads, native advertising, pop-ups or overlays, sponsored content, and retargeting campaigns.",
+      "**Affiliate Marketing**: We may include affiliate links, sponsored recommendations, partner product placements, commission-based promotions, and third-party service integrations throughout our platform without disclosure requirements beyond those legally mandated.",
+      "**Paid Features & Subscriptions**: We may introduce at any time: premium subscriptions, paid tool access, usage-based pricing, feature limitations on free tiers, credit systems, one-time purchases, and enterprise licensing.",
+      "**Data Monetization**: While maintaining privacy commitments, we reserve the right to monetize anonymized, aggregated usage data through analytics services, market research, trend reports, and industry insights.",
+      "**Third-Party Integrations**: We may enter into revenue-sharing agreements, partnership deals, white-label arrangements, API licensing, and service bundling without notice.",
+      "**Future Monetization Methods**: This list is non-exhaustive. We reserve the right to implement any legal monetization method that emerges in the future, including but not limited to blockchain-based models, token systems, NFT integrations, or any other revenue mechanism."
+    ]
+  },
+  {
+    icon: AlertCircle,
+    title: "Free Forever Disclaimer",
+    content: [
+      "**'Free Forever' Definition**: Any reference to 'Free Forever' or similar language refers exclusively to our current operational model and stated intentions. Such statements are not contractual obligations, permanent commitments, or legally binding promises.",
+      "**Subject to Change**: The free nature of our services is explicitly subject to these Terms and Conditions, which permit changes without notice. 'Free Forever' does not constitute a warranty, guarantee, or irrevocable offer.",
+      "**No Reliance**: Users should not rely on the permanent availability of free services for business-critical operations. We recommend maintaining alternative solutions for essential needs.",
+      "**No Legal Recourse**: Users explicitly waive any claims, damages, or legal recourse related to the introduction of paid features, removal of free features, or changes to our service model, regardless of any 'Free Forever' statements.",
+      "**Operational Requirements**: Changes to our free model may be necessitated by increased operational costs, infrastructure requirements, legal or regulatory changes, market conditions, or business sustainability needs.",
+      "**No Vested Rights**: Continued free use does not create any vested rights, expectations of continuity, or claims to ongoing free access. Each use is subject to the current Terms at that time.",
+      "**Marketing Language**: Any marketing statements about free access are aspirational and subject to change based on business needs and sustainability requirements."
     ]
   },
   {
@@ -135,7 +161,7 @@ const sections = [
       "**Data Collection Notice**: By using our website, you consent to the collection of anonymous analytics data. This data cannot be used to personally identify you. We have configured Google Analytics with IP anonymization enabled, no remarketing or advertising features, no demographic data collection, and no user-ID tracking.",
       "**Third-Party Services**: Google Analytics is provided by Google LLC, which has its own privacy policy and terms. We do not control Google's data practices. Google may use the collected data in accordance with its own privacy policy. You can learn more about Google's practices at https://policies.google.com/privacy.",
       "**Opting Out**: You have several options to opt out of analytics tracking: Install the Google Analytics Opt-out Browser Add-on (https://tools.google.com/dlpage/gaoptout), use private/incognito browsing modes, enable Do Not Track in your browser (we honor DNT signals), or use privacy-focused browsers or extensions that block tracking scripts.",
-      "**Future Advertising Policy**: While we currently do not display advertisements, we reserve the right to introduce advertising in the future to support our free services. If we implement advertising: we will update these Terms and our Privacy Policy 30 days in advance, advertisements will be clearly marked and distinguishable from content, we will not use targeted or behavioral advertising based on your file processing activities, and we will provide options to use the service without advertisements.",
+      "**Future Advertising Policy**: We reserve the right to introduce advertising at any time without prior notice to support our free services. Advertisements may include display ads, sponsored content, affiliate links, and promotional materials. We will ensure advertisements are distinguishable from content where legally required, but we are not obligated to provide advance notice of advertising implementation.",
       "**Data Usage for Website Maintenance**: Analytics data helps us maintain and improve our website by identifying and fixing technical issues, optimizing performance for different devices and browsers, understanding traffic patterns to ensure adequate server resources, and prioritizing development of the most-used features.",
       "**Cookie Notice**: Our website uses cookies for analytics purposes. These are small text files stored in your browser that help us understand usage patterns. Analytics cookies are optional and can be blocked without affecting core functionality. See our Privacy Policy for detailed cookie information.",
       "**Transparency Commitment**: We are committed to transparency about our data practices. We will never sell analytics data to third parties, use analytics data to identify individual users, share raw analytics data with advertisers, or use your file processing activities for analytics beyond basic tool usage metrics."
