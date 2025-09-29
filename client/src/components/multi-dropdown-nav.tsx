@@ -23,28 +23,28 @@ interface CustomTool {
 
 type NavTool = Tool | CustomTool;
 
-// Helper component for navigation items - horizontal layout with small icons
+// Helper component for navigation items - compact layout with small icons
 const ToolNavItem = ({ tool, onClick }: { tool: NavTool; onClick?: () => void }) => {
   const Icon = tool.icon;
   
   const content = (
-    <div className="group flex items-center gap-2 p-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+    <div className="group flex items-center gap-1.5 p-1.5 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
       <div className={cn(
-        "w-5 h-5 rounded flex items-center justify-center flex-shrink-0",
+        "w-4 h-4 rounded flex items-center justify-center flex-shrink-0",
         "bg-gradient-to-br", tool.color
       )}>
-        <Icon className="w-3 h-3 text-white" />
+        <Icon className="w-2.5 h-2.5 text-white" />
       </div>
       <div className="flex-1 min-w-0">
-        <div className="text-xs font-medium flex items-center gap-1">
+        <div className="text-[11px] font-medium flex items-center gap-1">
           <span className="truncate">{tool.title}</span>
           {tool.new && (
-            <span className="text-[9px] px-1 rounded bg-emerald-600 text-white">
+            <span className="text-[8px] px-0.5 rounded bg-emerald-600 text-white">
               New
             </span>
           )}
           {!tool.available && (
-            <span className="text-[9px] px-1 rounded bg-gray-500 text-white">
+            <span className="text-[8px] px-0.5 rounded bg-gray-500 text-white">
               Soon
             </span>
           )}
@@ -338,34 +338,40 @@ export function MultiDropdownNav() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="fixed left-1/2 transform -translate-x-1/2 top-20 w-[1000px] max-w-[90vw] bg-white dark:bg-gray-900 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-800 max-h-[80vh] overflow-y-auto"
-              style={{ zIndex: 20000 }}
+              className="fixed left-1/2 transform -translate-x-1/2 top-20 bg-white dark:bg-gray-900 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-800 overflow-y-auto"
+              style={{ 
+                zIndex: 20000,
+                maxWidth: '1200px',
+                minWidth: '900px',
+                width: '90vw',
+                maxHeight: 'calc(100vh - 100px)'
+              }}
               onMouseEnter={handleDropdownMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
-              <div className="p-6">
+              <div className="p-4">
                 {/* For All Tools - Add link at top */}
                 {menuItems.find(m => m.id === openMenu)?.type === 'all' && (
-                  <div className="mb-4 flex justify-end">
+                  <div className="mb-3 flex justify-end">
                     <Link
                       href="/all-tools"
-                      className="inline-flex items-center text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                      className="inline-flex items-center text-xs font-medium text-primary hover:text-primary/80 transition-colors"
                       onClick={() => setOpenMenu(null)}
                     >
                       View All Tools Page
-                      <ArrowRight className="w-4 h-4 ml-1" />
+                      <ArrowRight className="w-3 h-3 ml-1" />
                     </Link>
                   </div>
                 )}
                 
-                {/* Sections with horizontal grid layout */}
-                <div className="space-y-4">
+                {/* Sections displayed horizontally in columns */}
+                <div className="grid grid-flow-col auto-cols-fr gap-4">
                   {getDropdownContent(menuItems.find(m => m.id === openMenu)?.type || '').map((section, sectionIdx) => (
-                    <div key={sectionIdx} className={cn(sectionIdx !== 0 && "pt-3 border-t border-gray-100 dark:border-gray-800")}>
-                      <h3 className="text-xs font-bold text-gray-600 dark:text-gray-400 mb-2 uppercase tracking-wide">
+                    <div key={sectionIdx} className="flex flex-col">
+                      <h3 className="text-[10px] font-bold text-gray-600 dark:text-gray-400 mb-1.5 uppercase tracking-wider">
                         {section.title}
                       </h3>
-                      <div className="grid grid-cols-3 gap-1">
+                      <div className="flex flex-col gap-0.5">
                         {section.tools.map((tool) => tool && (
                           <ToolNavItem 
                             key={tool.id} 
