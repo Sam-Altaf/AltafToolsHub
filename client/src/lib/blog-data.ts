@@ -22,6 +22,25 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    id: "how-to-password-protect-pdf",
+    slug: "how-to-password-protect-pdf",
+    title: "How to Password Protect PDF Files in 2025: Ultimate Security Guide",
+    excerpt: "Learn how to add password protection and encryption to PDF files. Comprehensive guide covering user passwords, owner passwords, and permission settings.",
+    content: "", // Not needed as we have separate component
+    category: "Security",
+    date: "2025-01-29",
+    readTime: "12 min read",
+    tags: ["pdf-security", "password-protection", "encryption", "data-protection"],
+    featured: true,
+    icon: Shield,
+    author: "AltafToolsHub Team",
+    seoTitle: "How to Password Protect PDF Files in 2025 | Complete Security Guide",
+    seoDescription: "Step-by-step guide to password protecting PDF files with AES encryption. Learn about user vs owner passwords, permissions, and security best practices.",
+    keywords: "password protect pdf, pdf encryption, secure pdf files, pdf security, protect pdf online, pdf password protection, aes encryption pdf",
+    relatedTools: ["protect-pdf", "unlock-pdf"],
+    relatedPosts: ["how-to-unlock-pdf", "how-to-compress-pdf"]
+  },
+  {
     id: "how-to-compress-pdf-without-losing-quality",
     slug: "how-to-compress-pdf-without-losing-quality",
     title: "How to Compress PDF Without Losing Quality: Complete Guide 2025",

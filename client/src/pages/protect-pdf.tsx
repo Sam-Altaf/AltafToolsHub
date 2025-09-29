@@ -339,7 +339,7 @@ export default function ProtectPDF() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-red-500 via-pink-500 to-purple-600 text-white">
+      <div className="relative overflow-hidden bg-gradient-to-br from-purple-500 via-blue-500 to-cyan-500 text-white">
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
         
@@ -442,7 +442,7 @@ export default function ProtectPDF() {
                 {/* File Info */}
                 <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                   <div className="flex items-center gap-3">
-                    <FileText className="h-8 w-8 text-red-500" />
+                    <FileText className="h-8 w-8 text-purple-500" />
                     <div>
                       <p className="font-medium" data-testid="text-filename">{selectedFile.name}</p>
                       <p className="text-sm text-muted-foreground" data-testid="text-filesize">
@@ -473,7 +473,7 @@ export default function ProtectPDF() {
                     <div className="space-y-4">
                       <div>
                         <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                          <KeyRound className="h-5 w-5 text-red-500" />
+                          <KeyRound className="h-5 w-5 text-purple-500" />
                           Set Password Protection
                         </h3>
                         
@@ -604,7 +604,7 @@ export default function ProtectPDF() {
                       {/* Encryption Settings */}
                       <div>
                         <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                          <Settings2 className="h-5 w-5 text-red-500" />
+                          <Settings2 className="h-5 w-5 text-purple-500" />
                           Encryption Settings
                         </h3>
                         
@@ -739,7 +739,7 @@ export default function ProtectPDF() {
                       <Button
                         onClick={protectPDF}
                         disabled={isProcessing || !userPassword || !confirmPassword}
-                        className="flex-1 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600"
+                        className="flex-1 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600"
                         size="lg"
                         data-testid="button-protect-pdf"
                       >
@@ -874,8 +874,8 @@ export default function ProtectPDF() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <Card className="p-6 hover:shadow-lg transition-shadow">
               <div className="flex items-start gap-4">
-                <div className="p-3 bg-red-100 dark:bg-red-900/30 rounded-lg">
-                  <LockKeyhole className="h-6 w-6 text-red-600 dark:text-red-400" />
+                <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                  <LockKeyhole className="h-6 w-6 text-purple-600 dark:text-purple-400" />
                 </div>
                 <div>
                   <h3 className="font-semibold mb-2">256-bit AES Encryption</h3>
@@ -967,7 +967,7 @@ export default function ProtectPDF() {
             
             <div className="space-y-6">
               <div className="flex gap-4 items-start">
-                <div className="flex-shrink-0 w-10 h-10 bg-red-500 text-white rounded-full flex items-center justify-center font-bold">
+                <div className="flex-shrink-0 w-10 h-10 bg-purple-500 text-white rounded-full flex items-center justify-center font-bold">
                   1
                 </div>
                 <div className="flex-1">
@@ -980,7 +980,7 @@ export default function ProtectPDF() {
               </div>
 
               <div className="flex gap-4 items-start">
-                <div className="flex-shrink-0 w-10 h-10 bg-red-500 text-white rounded-full flex items-center justify-center font-bold">
+                <div className="flex-shrink-0 w-10 h-10 bg-purple-500 text-white rounded-full flex items-center justify-center font-bold">
                   2
                 </div>
                 <div className="flex-1">
@@ -993,7 +993,7 @@ export default function ProtectPDF() {
               </div>
 
               <div className="flex gap-4 items-start">
-                <div className="flex-shrink-0 w-10 h-10 bg-red-500 text-white rounded-full flex items-center justify-center font-bold">
+                <div className="flex-shrink-0 w-10 h-10 bg-purple-500 text-white rounded-full flex items-center justify-center font-bold">
                   3
                 </div>
                 <div className="flex-1">
@@ -1075,7 +1075,7 @@ export default function ProtectPDF() {
             <div className="overflow-x-auto">
               <table className="w-full border-collapse bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-lg">
                 <thead>
-                  <tr className="bg-gradient-to-r from-red-500 to-pink-500 text-white">
+                  <tr className="bg-gradient-to-r from-purple-500 to-blue-500 text-white">
                     <th className="text-left p-4 font-semibold">Feature</th>
                     <th className="text-center p-4 font-semibold">AltafToolsHub</th>
                     <th className="text-center p-4 font-semibold">Adobe Acrobat</th>
@@ -1354,7 +1354,7 @@ export default function ProtectPDF() {
       </div>
 
       {/* Call to Action */}
-      <div className="bg-gradient-to-r from-red-500 to-pink-500 py-16">
+      <div className="bg-gradient-to-r from-purple-500 to-blue-500 py-16">
         <div className="container mx-auto px-4 text-center text-white">
           <h2 className="text-3xl font-bold mb-4">Ready to Secure Your PDFs?</h2>
           <p className="text-xl mb-8 text-white/90 max-w-2xl mx-auto">
@@ -1362,7 +1362,7 @@ export default function ProtectPDF() {
           </p>
           <Button
             size="lg"
-            className="bg-white text-red-600 hover:bg-gray-100"
+            className="bg-white text-purple-600 hover:bg-gray-100"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             data-testid="button-start-protecting"
           >
