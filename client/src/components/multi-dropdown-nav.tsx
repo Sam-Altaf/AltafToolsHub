@@ -321,7 +321,7 @@ export function MultiDropdownNav() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -5, scale: 0.95 }}
               transition={{ duration: 0.15, ease: "easeOut" }}
-              className="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 bg-white dark:bg-gray-900 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden"
+              className="absolute -left-32 top-full mt-4 bg-white dark:bg-gray-900 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden"
               style={{ 
                 zIndex: 10000,
                 minWidth: '800px',
@@ -333,6 +333,8 @@ export function MultiDropdownNav() {
               onMouseEnter={handleDropdownMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
+              {/* Arrow pointing up */}
+              <div className="absolute -top-2 left-40 w-4 h-4 bg-white dark:bg-gray-900 border-l border-t border-gray-200 dark:border-gray-700 transform rotate-45"></div>
               <div className="p-4">
                 {/* For All Tools - Add link at top */}
                 {menuItems.find(m => m.id === openMenu)?.type === 'all' && (
