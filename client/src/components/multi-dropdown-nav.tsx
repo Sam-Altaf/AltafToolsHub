@@ -238,8 +238,7 @@ export function MultiDropdownNav() {
               }}
             >
             {menuItems.filter(item => item.id === openMenu).map((menuItem) => {
-              const category = toolCategories.find(cat => cat.id === menuItem.categoryId);
-              const tools = category?.tools; // Get ALL tools, no slicing
+              const tools = menuItem.categoryId === 'all' ? toolCategories.flatMap(cat => cat.tools) : toolCategories.find(cat => cat.id === menuItem.categoryId)?.tools;
               const Icon = menuItem.icon;
               
               // Calculate grid columns for horizontal layout

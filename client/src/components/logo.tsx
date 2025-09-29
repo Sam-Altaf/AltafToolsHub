@@ -38,7 +38,7 @@ export function Logo({
     <LogoWrapper
       width={totalWidth}
       height={totalHeight}
-      viewBox={`0 0 ${totalWidth} ${totalHeight}`}
+      viewBox={`0 0 ${totalWidth} ${totalHeight * 1.2}`}
       className={cn("select-none", className)}
       xmlns="http://www.w3.org/2000/svg"
       {...animationProps}
@@ -216,7 +216,7 @@ export function Logo({
       {variant === "full" && (
         <text
           x={iconSize + 12}
-          y={iconSize * 0.5}
+          y={iconSize * 0.55}
           fill="currentColor"
           fontSize={currentSize.text}
           fontWeight="700"
