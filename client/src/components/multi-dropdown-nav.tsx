@@ -82,7 +82,7 @@ const ToolNavItem = ({ tool, onClick }: { tool: NavTool; onClick?: () => void })
   );
 };
 
-// Get organized PDF tools
+// Get organized PDF tools - optimized to 3 sections like Image and All tools
 const getPdfToolsSections = () => {
   const pdfTools = allTools.filter(tool => 
     tool.category === "pdf-management" || 
@@ -95,28 +95,27 @@ const getPdfToolsSections = () => {
 
   return [
     {
-      title: "ORGANIZE PDF",
-      tools: [
-        pdfTools.find(t => t.id === "merge-pdf"),
-        pdfTools.find(t => t.id === "split-pdf"),
-        pdfTools.find(t => t.id === "remove-pages"),
-        pdfTools.find(t => t.id === "extract-pages"),
-        pdfTools.find(t => t.id === "organize-pdf"),
-        { id: "scan-to-pdf", title: "Scan to PDF", description: "Scan documents to PDF", icon: FileText, href: "/scan-to-pdf", color: "from-blue-500 to-indigo-500", available: false, category: "pdf-management" } as CustomTool
-      ].filter(Boolean) as NavTool[]
-    },
-    {
-      title: "OPTIMIZE PDF",
+      title: "MANAGE & ORGANIZE",
       tools: [
         pdfTools.find(t => t.id === "compress-pdf"),
-        { id: "repair-pdf", title: "Repair PDF", description: "Repair corrupted PDF files", icon: FileText, href: "/repair-pdf", color: "from-red-500 to-orange-500", available: false, category: "pdf-management" } as CustomTool,
-        pdfTools.find(t => t.id === "extract-text") ? {...pdfTools.find(t => t.id === "extract-text")!, title: "OCR PDF (Extract Text)"} as NavTool : undefined
+        pdfTools.find(t => t.id === "merge-pdf"),
+        pdfTools.find(t => t.id === "split-pdf"),
+        pdfTools.find(t => t.id === "unlock-pdf"),
+        pdfTools.find(t => t.id === "protect-pdf"),
+        pdfTools.find(t => t.id === "rotate-pdf"),
+        pdfTools.find(t => t.id === "remove-pages"),
+        pdfTools.find(t => t.id === "extract-pages"),
+        pdfTools.find(t => t.id === "organize-pdf")
       ].filter(Boolean) as NavTool[]
     },
     {
-      title: "CONVERT TO PDF",
+      title: "CONVERT & EDIT",
       tools: [
         pdfTools.find(t => t.id === "jpg-to-pdf"),
+        pdfTools.find(t => t.id === "extract-text") ? {...pdfTools.find(t => t.id === "extract-text")!, title: "Extract Text (OCR)"} as NavTool : undefined,
+        pdfTools.find(t => t.id === "add-page-numbers"),
+        pdfTools.find(t => t.id === "watermark-pdf"),
+        pdfTools.find(t => t.id === "crop-pdf"),
         pdfTools.find(t => t.id === "word-to-pdf"),
         pdfTools.find(t => t.id === "powerpoint-to-pdf"),
         pdfTools.find(t => t.id === "excel-to-pdf"),
@@ -124,32 +123,16 @@ const getPdfToolsSections = () => {
       ].filter(Boolean) as NavTool[]
     },
     {
-      title: "CONVERT FROM PDF",
+      title: "EXPORT & SIGN",
       tools: [
         pdfTools.find(t => t.id === "pdf-to-jpg"),
         pdfTools.find(t => t.id === "pdf-to-word"),
         pdfTools.find(t => t.id === "pdf-to-powerpoint"),
         pdfTools.find(t => t.id === "pdf-to-excel"),
-        pdfTools.find(t => t.id === "pdf-to-pdfa")
-      ].filter(Boolean) as NavTool[]
-    },
-    {
-      title: "EDIT PDF",
-      tools: [
-        pdfTools.find(t => t.id === "rotate-pdf"),
-        pdfTools.find(t => t.id === "add-page-numbers"),
-        pdfTools.find(t => t.id === "watermark-pdf"),
-        pdfTools.find(t => t.id === "crop-pdf"),
-        { id: "edit-pdf", title: "Edit PDF", description: "Edit PDF text and images", icon: FileText, href: "/edit-pdf", color: "from-purple-500 to-pink-500", available: false, category: "pdf-management" } as CustomTool
-      ].filter(Boolean) as NavTool[]
-    },
-    {
-      title: "PDF SECURITY",
-      tools: [
-        pdfTools.find(t => t.id === "unlock-pdf"),
-        pdfTools.find(t => t.id === "protect-pdf"),
         pdfTools.find(t => t.id === "sign-pdf"),
-        { id: "redact-pdf", title: "Redact PDF", description: "Redact sensitive information", icon: FileText, href: "/redact-pdf", color: "from-gray-500 to-slate-500", available: false, category: "pdf-security" } as CustomTool,
+        pdfTools.find(t => t.id === "pdf-to-pdfa"),
+        pdfTools.find(t => t.id === "extract-images"),
+        { id: "scan-to-pdf", title: "Scan to PDF", description: "Scan documents to PDF", icon: FileText, href: "/scan-to-pdf", color: "from-blue-500 to-indigo-500", available: false, category: "pdf-management" } as CustomTool,
         { id: "compare-pdf", title: "Compare PDF", description: "Compare two PDF files", icon: FileText, href: "/compare-pdf", color: "from-teal-500 to-cyan-500", available: false, category: "pdf-management" } as CustomTool
       ].filter(Boolean) as NavTool[]
     }
