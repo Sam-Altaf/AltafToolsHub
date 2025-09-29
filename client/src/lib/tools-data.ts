@@ -479,8 +479,9 @@ export const allTools: Tool[] = [
     icon: Shield,
     href: "/protect-pdf",
     color: "from-red-500 to-pink-500",
-    available: false,
+    available: true,
     category: "security",
+    popular: true,
     features: ["256-bit encryption", "Permission settings", "Owner password", "Print restrictions"],
     extendedDescription: "Add military-grade password protection to your sensitive PDFs. Set permissions for printing, copying, and editing. Perfect for confidential documents and secure sharing."
   },

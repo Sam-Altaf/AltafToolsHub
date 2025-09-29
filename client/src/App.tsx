@@ -22,6 +22,7 @@ import AllTools from "@/pages/all-tools";
 // Lazy loaded tool components - Load on demand for better performance
 const CompressPDF = lazy(() => import("@/pages/compress-pdf"));
 const UnlockPDF = lazy(() => import("@/pages/unlock-pdf"));
+const ProtectPDF = lazy(() => import("@/pages/protect-pdf"));
 const JpgToPDF = lazy(() => import("@/pages/jpg-to-pdf"));
 const QRGenerator = lazy(() => import("@/pages/qr-generator"));
 const PasswordGenerator = lazy(() => import("@/pages/password-generator"));
@@ -97,6 +98,11 @@ function Router() {
           <Route path="/unlock-pdf">
             <Suspense fallback={<PageLoader />}>
               <UnlockPDF />
+            </Suspense>
+          </Route>
+          <Route path="/protect-pdf">
+            <Suspense fallback={<PageLoader />}>
+              <ProtectPDF />
             </Suspense>
           </Route>
           <Route path="/jpg-to-pdf">
