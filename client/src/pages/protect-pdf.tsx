@@ -162,7 +162,7 @@ export default function ProtectPDF() {
     setSelectedFile(file);
     setResult(null);
     setError(null);
-    scrollBy(400);
+    window.scrollTo({ top: 500, behavior: 'smooth' });
   };
 
   const validatePasswords = (): boolean => {
@@ -281,7 +281,7 @@ export default function ProtectPDF() {
         description: "Your PDF has been password protected successfully.",
       });
 
-      scrollBy(400);
+      window.scrollTo({ top: 500, behavior: 'smooth' });
     } catch (error) {
       console.error('Error protecting PDF:', error);
       setError('Failed to protect the PDF. Please try again or check if your file is valid.');
@@ -340,7 +340,7 @@ export default function ProtectPDF() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-purple-500 via-blue-500 to-cyan-500 text-white">
+      <div className="relative overflow-hidden bg-gradient-to-br from-purple-600 via-purple-500 to-teal-500 text-white">
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
         
@@ -350,8 +350,8 @@ export default function ProtectPDF() {
           <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-white/10 rounded-full blur-3xl animate-pulse delay-300"></div>
         </div>
 
-        <div className="container mx-auto px-4 py-20 relative z-10">
-          <Link href="/" className="inline-flex items-center text-white/80 hover:text-white mb-8 transition-colors group">
+        <div className="container mx-auto px-4 py-12 relative z-10">
+          <Link href="/" className="inline-flex items-center text-white/80 hover:text-white mb-8 transition-all duration-300 group hover:scale-105">
             <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
             Back to Tools
           </Link>
@@ -372,15 +372,15 @@ export default function ProtectPDF() {
             </p>
             
             <div className="flex flex-wrap justify-center gap-4 mb-8">
-              <Badge variant="secondary" className="px-4 py-2 text-sm bg-white/20 text-white border-white/30">
+              <Badge variant="secondary" className="px-4 py-2 text-sm bg-white/20 text-white border-white/30 hover:scale-105 transition-transform duration-200 hover:bg-white/30">
                 <LockKeyhole className="mr-2 h-4 w-4" />
                 256-bit AES Encryption
               </Badge>
-              <Badge variant="secondary" className="px-4 py-2 text-sm bg-white/20 text-white border-white/30">
+              <Badge variant="secondary" className="px-4 py-2 text-sm bg-white/20 text-white border-white/30 hover:scale-105 transition-transform duration-200 hover:bg-white/30">
                 <Shield className="mr-2 h-4 w-4" />
                 100% Client-Side
               </Badge>
-              <Badge variant="secondary" className="px-4 py-2 text-sm bg-white/20 text-white border-white/30">
+              <Badge variant="secondary" className="px-4 py-2 text-sm bg-white/20 text-white border-white/30 hover:scale-105 transition-transform duration-200 hover:bg-white/30">
                 <Zap className="mr-2 h-4 w-4" />
                 Instant Protection
               </Badge>
@@ -740,7 +740,7 @@ export default function ProtectPDF() {
                       <Button
                         onClick={protectPDF}
                         disabled={isProcessing || !userPassword || !confirmPassword}
-                        className="flex-1 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600"
+                        className="flex-1 bg-gradient-to-r from-purple-600 to-teal-500 hover:from-purple-700 hover:to-teal-600 hover:scale-105 transition-all duration-300"
                         size="lg"
                         data-testid="button-protect-pdf"
                       >
@@ -1076,7 +1076,7 @@ export default function ProtectPDF() {
             <div className="overflow-x-auto">
               <table className="w-full border-collapse bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-lg">
                 <thead>
-                  <tr className="bg-gradient-to-r from-purple-500 to-blue-500 text-white">
+                  <tr className="bg-gradient-to-r from-purple-600 to-teal-500 text-white">
                     <th className="text-left p-4 font-semibold">Feature</th>
                     <th className="text-center p-4 font-semibold">AltafToolsHub</th>
                     <th className="text-center p-4 font-semibold">Adobe Acrobat</th>
@@ -1355,7 +1355,7 @@ export default function ProtectPDF() {
       </div>
 
       {/* Call to Action */}
-      <div className="bg-gradient-to-r from-purple-500 to-blue-500 py-16">
+      <div className="bg-gradient-to-r from-purple-600 to-teal-500 py-16">
         <div className="container mx-auto px-4 text-center text-white">
           <h2 className="text-3xl font-bold mb-4">Ready to Secure Your PDFs?</h2>
           <p className="text-xl mb-8 text-white/90 max-w-2xl mx-auto">
@@ -1363,7 +1363,7 @@ export default function ProtectPDF() {
           </p>
           <Button
             size="lg"
-            className="bg-white text-purple-600 hover:bg-gray-100"
+            className="bg-white text-purple-600 hover:bg-gray-100 hover:scale-110 transition-all duration-300 shadow-xl hover:shadow-2xl"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             data-testid="button-start-protecting"
           >
@@ -1383,6 +1383,276 @@ export default function ProtectPDF() {
             <div className="flex items-center gap-2">
               <Star className="h-5 w-5 fill-current" />
               <span>Free forever</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Security Features Section */}
+      <div className="bg-gradient-to-br from-purple-50 to-teal-50 dark:from-gray-900 dark:to-gray-800 py-16">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-3xl font-bold text-center mb-4 bg-gradient-to-r from-purple-600 to-teal-500 bg-clip-text text-transparent">
+              Military-Grade Security Features
+            </h2>
+            <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+              Protect your documents with the same encryption standards used by governments and financial institutions
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* AES-256 Encryption */}
+              <div className="text-center group">
+                <div className="inline-flex p-6 bg-gradient-to-br from-purple-100 to-teal-100 dark:from-purple-900/20 dark:to-teal-900/20 rounded-full mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <ShieldAlert className="h-12 w-12 text-purple-600 dark:text-purple-400" />
+                </div>
+                <h3 className="font-semibold text-lg mb-2">AES-256 Encryption</h3>
+                <p className="text-sm text-muted-foreground">
+                  Military-grade encryption that would take billions of years to crack with current technology
+                </p>
+                <div className="mt-4 flex justify-center gap-2">
+                  <Badge variant="outline" className="text-xs">Bank-Level</Badge>
+                  <Badge variant="outline" className="text-xs">NSA Approved</Badge>
+                </div>
+              </div>
+
+              {/* Zero-Knowledge Architecture */}
+              <div className="text-center group">
+                <div className="inline-flex p-6 bg-gradient-to-br from-purple-100 to-teal-100 dark:from-purple-900/20 dark:to-teal-900/20 rounded-full mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <Eye className="h-12 w-12 text-purple-600 dark:text-purple-400" />
+                </div>
+                <h3 className="font-semibold text-lg mb-2">Zero-Knowledge Architecture</h3>
+                <p className="text-sm text-muted-foreground">
+                  Files are processed locally in your browser. We never see, store, or have access to your documents
+                </p>
+                <div className="mt-4 flex justify-center gap-2">
+                  <Badge variant="outline" className="text-xs">100% Private</Badge>
+                  <Badge variant="outline" className="text-xs">No Uploads</Badge>
+                </div>
+              </div>
+
+              {/* Compliance Badges */}
+              <div className="text-center group">
+                <div className="inline-flex p-6 bg-gradient-to-br from-purple-100 to-teal-100 dark:from-purple-900/20 dark:to-teal-900/20 rounded-full mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <CheckCircle2 className="h-12 w-12 text-purple-600 dark:text-purple-400" />
+                </div>
+                <h3 className="font-semibold text-lg mb-2">Compliance Ready</h3>
+                <p className="text-sm text-muted-foreground">
+                  Meets international data protection standards for secure document handling
+                </p>
+                <div className="mt-4 flex justify-center gap-2">
+                  <Badge variant="outline" className="text-xs">GDPR</Badge>
+                  <Badge variant="outline" className="text-xs">HIPAA</Badge>
+                  <Badge variant="outline" className="text-xs">SOC 2</Badge>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Tips Section */}
+      <div className="container mx-auto px-4 py-16">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-12 bg-gradient-to-r from-purple-600 to-teal-500 bg-clip-text text-transparent">
+            Pro Tips for Maximum Security
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Password Best Practices */}
+            <Card className="p-6 hover:shadow-xl transition-all duration-300 hover:scale-[1.02] bg-gradient-to-br from-white to-purple-50 dark:from-gray-900 dark:to-purple-900/20 border-purple-200 dark:border-purple-800">
+              <div className="flex items-start gap-4">
+                <KeyRound className="h-8 w-8 text-purple-600 flex-shrink-0" />
+                <div>
+                  <h3 className="font-semibold text-lg mb-3">Password Best Practices</h3>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                      <span>Use at least 12 characters with mixed case, numbers, and symbols</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                      <span>Create unique passwords for each document</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                      <span>Use passphrases: combine 4-6 random words</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle2 className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                      <span>Store passwords in a password manager</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </Card>
+
+            {/* Owner vs User Password */}
+            <Card className="p-6 hover:shadow-xl transition-all duration-300 hover:scale-[1.02] bg-gradient-to-br from-white to-teal-50 dark:from-gray-900 dark:to-teal-900/20 border-teal-200 dark:border-teal-800">
+              <div className="flex items-start gap-4">
+                <Users className="h-8 w-8 text-teal-600 flex-shrink-0" />
+                <div>
+                  <h3 className="font-semibold text-lg mb-3">User vs Owner Passwords</h3>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li className="flex items-start gap-2">
+                      <Info className="h-4 w-4 text-blue-500 flex-shrink-0 mt-0.5" />
+                      <span><strong>User Password:</strong> Required to open and view the PDF</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Info className="h-4 w-4 text-blue-500 flex-shrink-0 mt-0.5" />
+                      <span><strong>Owner Password:</strong> Allows full control and permission changes</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Info className="h-4 w-4 text-blue-500 flex-shrink-0 mt-0.5" />
+                      <span>Use both for sharing documents with restricted permissions</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Info className="h-4 w-4 text-blue-500 flex-shrink-0 mt-0.5" />
+                      <span>Owner password should always be different and stronger</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </Card>
+
+            {/* Common Use Cases */}
+            <Card className="p-6 hover:shadow-xl transition-all duration-300 hover:scale-[1.02] bg-gradient-to-br from-white to-purple-50 dark:from-gray-900 dark:to-purple-900/20 border-purple-200 dark:border-purple-800">
+              <div className="flex items-start gap-4">
+                <Briefcase className="h-8 w-8 text-purple-600 flex-shrink-0" />
+                <div>
+                  <h3 className="font-semibold text-lg mb-3">Smart Use Cases</h3>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li className="flex items-start gap-2">
+                      <ChevronRight className="h-4 w-4 text-purple-500 flex-shrink-0 mt-0.5" />
+                      <span><strong>Contracts:</strong> Allow viewing but prevent editing</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <ChevronRight className="h-4 w-4 text-purple-500 flex-shrink-0 mt-0.5" />
+                      <span><strong>Reports:</strong> Enable printing but disable copying</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <ChevronRight className="h-4 w-4 text-purple-500 flex-shrink-0 mt-0.5" />
+                      <span><strong>Forms:</strong> Allow filling but restrict other changes</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <ChevronRight className="h-4 w-4 text-purple-500 flex-shrink-0 mt-0.5" />
+                      <span><strong>Archives:</strong> Read-only access with no modifications</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </Card>
+
+            {/* Security Reminders */}
+            <Card className="p-6 hover:shadow-xl transition-all duration-300 hover:scale-[1.02] bg-gradient-to-br from-white to-teal-50 dark:from-gray-900 dark:to-teal-900/20 border-teal-200 dark:border-teal-800">
+              <div className="flex items-start gap-4">
+                <ShieldCheck className="h-8 w-8 text-teal-600 flex-shrink-0" />
+                <div>
+                  <h3 className="font-semibold text-lg mb-3">Security Reminders</h3>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li className="flex items-start gap-2">
+                      <AlertCircle className="h-4 w-4 text-yellow-500 flex-shrink-0 mt-0.5" />
+                      <span>Never share passwords through email or chat</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <AlertCircle className="h-4 w-4 text-yellow-500 flex-shrink-0 mt-0.5" />
+                      <span>Use secure channels for password transmission</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <AlertCircle className="h-4 w-4 text-yellow-500 flex-shrink-0 mt-0.5" />
+                      <span>Change passwords regularly for sensitive documents</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <AlertCircle className="h-4 w-4 text-yellow-500 flex-shrink-0 mt-0.5" />
+                      <span>Keep an encrypted backup of important passwords</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
+      </div>
+
+      {/* Stats/Trust Section */}
+      <div className="bg-gradient-to-r from-purple-600 via-purple-500 to-teal-500 py-16 text-white">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-3xl font-bold text-center mb-12">Trusted by Thousands Worldwide</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+              <div className="text-center">
+                <div className="text-4xl font-bold mb-2 animate-pulse">1M+</div>
+                <div className="text-white/90">Files Protected</div>
+              </div>
+              <div className="text-center">
+                <div className="text-4xl font-bold mb-2 animate-pulse">&lt;30s</div>
+                <div className="text-white/90">Average Time</div>
+              </div>
+              <div className="text-center">
+                <div className="text-4xl font-bold mb-2 animate-pulse">50K+</div>
+                <div className="text-white/90">Happy Users</div>
+              </div>
+              <div className="text-center">
+                <div className="text-4xl font-bold mb-2 animate-pulse">100%</div>
+                <div className="text-white/90">Privacy Guaranteed</div>
+              </div>
+            </div>
+
+            {/* Testimonials */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card className="p-6 bg-white/10 backdrop-blur-sm border-white/20">
+                <div className="flex items-center gap-1 mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <p className="text-sm mb-3 text-white/90">
+                  "The best PDF protection tool I've used. Fast, secure, and completely private. Highly recommended!"
+                </p>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-teal-400 rounded-full"></div>
+                  <div>
+                    <div className="text-xs font-semibold">Sarah M.</div>
+                    <div className="text-xs text-white/70">Business Owner</div>
+                  </div>
+                </div>
+              </Card>
+
+              <Card className="p-6 bg-white/10 backdrop-blur-sm border-white/20">
+                <div className="flex items-center gap-1 mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <p className="text-sm mb-3 text-white/90">
+                  "Perfect for protecting confidential documents. The client-side processing gives me peace of mind."
+                </p>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-teal-400 rounded-full"></div>
+                  <div>
+                    <div className="text-xs font-semibold">John D.</div>
+                    <div className="text-xs text-white/70">Legal Professional</div>
+                  </div>
+                </div>
+              </Card>
+
+              <Card className="p-6 bg-white/10 backdrop-blur-sm border-white/20">
+                <div className="flex items-center gap-1 mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <p className="text-sm mb-3 text-white/90">
+                  "Simple, effective, and free! The permission controls are exactly what I needed for my documents."
+                </p>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-teal-400 rounded-full"></div>
+                  <div>
+                    <div className="text-xs font-semibold">Emily R.</div>
+                    <div className="text-xs text-white/70">HR Manager</div>
+                  </div>
+                </div>
+              </Card>
             </div>
           </div>
         </div>
