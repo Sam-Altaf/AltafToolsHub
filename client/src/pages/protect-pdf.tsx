@@ -26,8 +26,7 @@ import Breadcrumbs from "@/components/seo/breadcrumbs";
 import PrivacyNotice from "@/components/privacy-notice";
 import { ContactSupportSection } from "@/components/contact-support";
 import { scrollBy } from "@/lib/scroll-utils";
-import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
-import { encryptPdf } from "pdf-lib-with-encrypt";
+import { PDFDocument } from "pdf-lib-with-encrypt";
 import { generateSmartFileName, enhanceDownloadName } from "@/lib/smart-file-namer";
 import { useToast } from "@/hooks/use-toast";
 
@@ -231,14 +230,18 @@ export default function ProtectPDF() {
 
       setProgress(60);
 
+      // Load the PDF document
+      const pdfDoc = await PDFDocument.load(pdfBytes);
+      
       // Encrypt the PDF
-      const encryptedPdfBytes = await encryptPdf(pdfBytes, {
+      pdfDoc.encrypt({
         userPassword: userPassword,
         ownerPassword: useOwnerPassword ? ownerPassword : userPassword,
-        permissions: pdfPermissions,
-        pdfVersion: '1.7',
-        encryptionAlgorithm: encryptionLevel === '256' ? 'AES256' : 'AES128'
+        permissions: pdfPermissions
       });
+      
+      // Save the encrypted PDF
+      const encryptedPdfBytes = await pdfDoc.save();
 
       setProgress(80);
 
@@ -296,7 +299,7 @@ export default function ProtectPDF() {
 
     const link = document.createElement('a');
     link.href = URL.createObjectURL(result.protectedBlob);
-    const downloadName = enhanceDownloadName(selectedFile.name, 'protected', 'pdf');
+    const downloadName = enhanceDownloadName(selectedFile.name, result.protectedBlob, 'protected');
     link.download = downloadName;
     document.body.appendChild(link);
     link.click();
@@ -405,9 +408,8 @@ export default function ProtectPDF() {
       <div className="container mx-auto px-4 py-4">
         <Breadcrumbs
           items={[
-            { label: "Home", href: "/" },
-            { label: "Security Tools", href: "/all-tools?category=security" },
-            { label: "Protect PDF" }
+            { name: "Security Tools", url: "/all-tools?category=security" },
+            { name: "Protect PDF", url: "/protect-pdf" }
           ]}
         />
       </div>
@@ -428,10 +430,12 @@ export default function ProtectPDF() {
                   accept=".pdf"
                   onFileSelect={handleFileSelect}
                   maxSize={100 * 1024 * 1024} // 100MB limit
+                  title="Upload Your PDF"
+                  description="Drag & drop your PDF file here or click to browse"
                   data-testid="file-upload-pdf"
                 />
                 
-                <PrivacyNotice />
+                <PrivacyNotice message="Your files are processed entirely in your browser. No data is uploaded to our servers." />
               </div>
             ) : (
               <div className="space-y-6">
