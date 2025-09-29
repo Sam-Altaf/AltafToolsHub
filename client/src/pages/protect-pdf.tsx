@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,7 +17,8 @@ import {
   ShieldCheck, Info, FileDown, Users, Building2, School,
   Globe, Briefcase, Home, Archive, FileKey, LockKeyhole,
   CheckCircle2, XCircle, ChevronRight, Star, Clock,
-  Printer, Copy, Edit, FileEdit, Settings2, ShieldAlert
+  Printer, Copy, Edit, FileEdit, Settings2, ShieldAlert,
+  TrendingUp, HeartHandshake, Building, Hospital
 } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
@@ -74,6 +75,22 @@ export default function ProtectPDF() {
     printHighQuality: false,
   });
   const { toast } = useToast();
+  
+  // Use case carousel state
+  const [currentUseCase, setCurrentUseCase] = useState(0);
+  const useCases = [
+    { icon: TrendingUp, text: "Protect Financial Reports", color: "text-green-600" },
+    { icon: Briefcase, text: "Secure Legal Documents", color: "text-blue-600" },
+    { icon: Hospital, text: "Safeguard Medical Records", color: "text-red-600" },
+    { icon: Building, text: "Lock Confidential Contracts", color: "text-purple-600" }
+  ];
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentUseCase((prev) => (prev + 1) % useCases.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Generate structured data for SEO
   const howToSchema = generateHowToSchema({
@@ -162,7 +179,7 @@ export default function ProtectPDF() {
     setSelectedFile(file);
     setResult(null);
     setError(null);
-    window.scrollTo({ top: 500, behavior: 'smooth' });
+    // User stays at upload section to enter password
   };
 
   const validatePasswords = (): boolean => {
@@ -281,7 +298,11 @@ export default function ProtectPDF() {
         description: "Your PDF has been password protected successfully.",
       });
 
-      window.scrollTo({ top: 500, behavior: 'smooth' });
+      // Scroll to show the processing section properly
+      const processingSection = document.getElementById('processing-section');
+      if (processingSection) {
+        processingSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     } catch (error) {
       console.error('Error protecting PDF:', error);
       setError('Failed to protect the PDF. Please try again or check if your file is valid.');
@@ -340,7 +361,7 @@ export default function ProtectPDF() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-purple-600 via-purple-500 to-teal-500 text-white">
+      <div className="relative overflow-hidden bg-gradient-to-br from-purple-500 via-blue-500 to-teal-500 text-white">
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
         
@@ -350,7 +371,7 @@ export default function ProtectPDF() {
           <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-white/10 rounded-full blur-3xl animate-pulse delay-300"></div>
         </div>
 
-        <div className="container mx-auto px-4 py-12 relative z-10">
+        <div className="container mx-auto px-4 py-6 relative z-10">
           <Link href="/" className="inline-flex items-center text-white/80 hover:text-white mb-8 transition-all duration-300 group hover:scale-105">
             <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" />
             Back to Tools
@@ -413,6 +434,43 @@ export default function ProtectPDF() {
             { name: "Protect PDF", url: "/protect-pdf" }
           ]}
         />
+      </div>
+
+      {/* Use Case Carousel */}
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="bg-gradient-to-r from-purple-50 to-teal-50 dark:from-gray-800 dark:to-gray-900 rounded-lg p-6">
+            <h3 className="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">Trusted for</h3>
+            <div className="relative h-16 flex items-center justify-center">
+              {useCases.map((useCase, index) => {
+                const Icon = useCase.icon;
+                return (
+                  <div
+                    key={index}
+                    className={`absolute inset-0 flex items-center justify-center transition-opacity duration-500 ${
+                      currentUseCase === index ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <Icon className={`h-8 w-8 ${useCase.color}`} />
+                      <span className="text-xl font-medium">{useCase.text}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="flex justify-center gap-2 mt-4">
+              {useCases.map((_, index) => (
+                <div
+                  key={index}
+                  className={`h-1.5 w-8 rounded-full transition-colors duration-300 ${
+                    currentUseCase === index ? 'bg-purple-500' : 'bg-gray-300 dark:bg-gray-600'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Main Content */}
@@ -1010,12 +1068,101 @@ export default function ProtectPDF() {
         </div>
       </div>
 
+      {/* Before/After Comparison Visual */}
+      <div className="container mx-auto px-4 py-16">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-4">See the Difference</h2>
+          <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
+            Transform your vulnerable PDFs into secure, encrypted documents
+          </p>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Unprotected PDF */}
+            <div className="relative">
+              <div className="border-4 border-red-500 border-dashed rounded-lg p-8 bg-red-50 dark:bg-red-950/20">
+                <div className="text-center mb-6">
+                  <div className="inline-flex p-4 bg-red-100 dark:bg-red-900/30 rounded-full mb-4">
+                    <FileText className="h-12 w-12 text-red-600" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">Unprotected PDF</h3>
+                  <Badge variant="destructive" className="mb-4">
+                    <AlertCircle className="mr-1 h-3 w-3" />
+                    Vulnerable
+                  </Badge>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <XCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">No password protection</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <XCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Anyone can access content</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <XCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Can be edited freely</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <XCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">No usage restrictions</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Protected PDF */}
+            <div className="relative">
+              <div className="border-4 border-green-500 border-solid rounded-lg p-8 bg-green-50 dark:bg-green-950/20">
+                <div className="text-center mb-6">
+                  <div className="inline-flex p-4 bg-green-100 dark:bg-green-900/30 rounded-full mb-4">
+                    <Shield className="h-12 w-12 text-green-600" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">Protected PDF</h3>
+                  <Badge className="bg-green-100 text-green-800 mb-4">
+                    <ShieldCheck className="mr-1 h-3 w-3" />
+                    Secured
+                  </Badge>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Content encrypted with AES-256</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Password required to open</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Permissions controlled</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-green-500 flex-shrink-0" />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">Print & copy restrictions</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="text-center mt-8">
+            <div className="inline-flex items-center gap-4">
+              <div className="text-4xl font-bold text-gray-400">→</div>
+              <p className="text-lg font-medium">Transform in seconds with 256-bit encryption</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Use Cases Section */}
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">Perfect For Every Use Case</h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <Card className="p-6">
               <Building2 className="h-8 w-8 text-blue-600 mb-4" />
               <h3 className="font-semibold mb-2">Business Documents</h3>
@@ -1076,7 +1223,7 @@ export default function ProtectPDF() {
             <div className="overflow-x-auto">
               <table className="w-full border-collapse bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-lg">
                 <thead>
-                  <tr className="bg-gradient-to-r from-purple-600 to-teal-500 text-white">
+                  <tr className="bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 text-white">
                     <th className="text-left p-4 font-semibold">Feature</th>
                     <th className="text-center p-4 font-semibold">AltafToolsHub</th>
                     <th className="text-center p-4 font-semibold">Adobe Acrobat</th>
@@ -1355,7 +1502,7 @@ export default function ProtectPDF() {
       </div>
 
       {/* Call to Action */}
-      <div className="bg-gradient-to-r from-purple-600 to-teal-500 py-16">
+      <div className="bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 py-16">
         <div className="container mx-auto px-4 text-center text-white">
           <h2 className="text-3xl font-bold mb-4">Ready to Secure Your PDFs?</h2>
           <p className="text-xl mb-8 text-white/90 max-w-2xl mx-auto">
@@ -1363,7 +1510,7 @@ export default function ProtectPDF() {
           </p>
           <Button
             size="lg"
-            className="bg-white text-purple-600 hover:bg-gray-100 hover:scale-110 transition-all duration-300 shadow-xl hover:shadow-2xl"
+            className="bg-white text-purple-600 hover:bg-gray-100 hover:scale-110 transition-all duration-300 shadow-xl hover:shadow-2xl w-full sm:w-auto"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             data-testid="button-start-protecting"
           >
@@ -1371,7 +1518,7 @@ export default function ProtectPDF() {
             <ChevronRight className="ml-2 h-5 w-5" />
           </Button>
           
-          <div className="mt-8 flex items-center justify-center gap-8">
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
             <div className="flex items-center gap-2">
               <Clock className="h-5 w-5" />
               <span>Takes less than 30 seconds</span>
@@ -1392,14 +1539,14 @@ export default function ProtectPDF() {
       <div className="bg-gradient-to-br from-purple-50 to-teal-50 dark:from-gray-900 dark:to-gray-800 py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl font-bold text-center mb-4 bg-gradient-to-r from-purple-600 to-teal-500 bg-clip-text text-transparent">
+            <h2 className="text-3xl font-bold text-center mb-4 bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 bg-clip-text text-transparent">
               Military-Grade Security Features
             </h2>
             <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
               Protect your documents with the same encryption standards used by governments and financial institutions
             </p>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {/* AES-256 Encryption */}
               <div className="text-center group">
                 <div className="inline-flex p-6 bg-gradient-to-br from-purple-100 to-teal-100 dark:from-purple-900/20 dark:to-teal-900/20 rounded-full mb-4 group-hover:scale-110 transition-transform duration-300">
@@ -1457,7 +1604,7 @@ export default function ProtectPDF() {
             Pro Tips for Maximum Security
           </h2>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Password Best Practices */}
             <Card className="p-6 hover:shadow-xl transition-all duration-300 hover:scale-[1.02] bg-gradient-to-br from-white to-purple-50 dark:from-gray-900 dark:to-purple-900/20 border-purple-200 dark:border-purple-800">
               <div className="flex items-start gap-4">
@@ -1579,7 +1726,7 @@ export default function ProtectPDF() {
           <div className="max-w-6xl mx-auto">
             <h2 className="text-3xl font-bold text-center mb-12">Trusted by Thousands Worldwide</h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-12">
               <div className="text-center">
                 <div className="text-4xl font-bold mb-2 animate-pulse">1M+</div>
                 <div className="text-white/90">Files Protected</div>
@@ -1599,7 +1746,7 @@ export default function ProtectPDF() {
             </div>
 
             {/* Testimonials */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               <Card className="p-6 bg-white/10 backdrop-blur-sm border-white/20">
                 <div className="flex items-center gap-1 mb-3">
                   {[...Array(5)].map((_, i) => (
