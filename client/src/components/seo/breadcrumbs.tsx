@@ -1,6 +1,6 @@
+import * as React from "react";
 import { Link } from "wouter";
 import { ChevronRight, Home } from "lucide-react";
-import { useEffect } from "react";
 import { generateBreadcrumbSchema } from "@/hooks/use-seo";
 
 interface BreadcrumbItem {
@@ -18,7 +18,7 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
     ...items
   ];
 
-  useEffect(() => {
+  React.useEffect(() => {
     // Add breadcrumb structured data
     const script = document.createElement('script');
     script.type = 'application/ld+json';

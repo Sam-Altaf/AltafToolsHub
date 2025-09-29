@@ -1,8 +1,8 @@
+import * as React from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Card } from "@/components/ui/card";
 import { HelpCircle, MessageSquare } from "lucide-react";
 import { generateFAQSchema } from "@/hooks/use-seo";
-import { useEffect } from "react";
 
 export interface FAQ {
   question: string;
@@ -18,7 +18,7 @@ interface ToolFAQProps {
 
 export function ToolFAQ({ faqs, toolName, toolPath }: ToolFAQProps) {
   // Add FAQ structured data
-  useEffect(() => {
+  React.useEffect(() => {
     const faqSchema = generateFAQSchema(faqs);
     
     // Remove existing FAQ schema for this page

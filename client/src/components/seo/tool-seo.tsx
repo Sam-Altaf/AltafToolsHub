@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import * as React from "react";
 import { generateWebApplicationSchema, generateFAQSchema } from "@/hooks/use-seo";
 
 interface ToolSEOProps {
@@ -16,7 +16,7 @@ export default function ToolSEO({
   faqs,
   rating
 }: ToolSEOProps) {
-  useEffect(() => {
+  React.useEffect(() => {
     const schemas = [];
     
     // Add WebApplication schema
