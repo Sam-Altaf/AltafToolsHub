@@ -66,12 +66,12 @@ export default function Header() {
         transition: { type: "spring", stiffness: 100, damping: 20 }
       })}
     >
-      <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between gap-4">
+          {/* Logo - Flexible but minimum width */}
           <Link 
             href="/" 
-            className="flex items-center space-x-2" 
+            className="flex items-center space-x-2 flex-shrink-0 min-w-0" 
             data-testid="link-home"
             aria-label="Home - AltafToolsHub"
           >
@@ -86,37 +86,39 @@ export default function Header() {
             </motion.div>
           </Link>
 
-          {/* Desktop Navigation - Consolidated Mega Menu */}
-          <div className="hidden lg:flex items-center space-x-2">
-            <Button 
-              variant="ghost" 
-              className="font-medium focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-              asChild
-            >
-              <Link href="/">
-                <Home className="w-4 h-4 mr-2" />
-                Home
-              </Link>
-            </Button>
-            
-            {/* Mega Menu for Tools */}
-            <MultiDropdownNav />
-            
-            <Button 
-              variant="ghost" 
-              className="font-medium focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-              data-testid="nav-about-desktop"
-              asChild
-            >
-              <Link href="/about">
-                <Info className="w-4 h-4 mr-2" />
-                About
-              </Link>
-            </Button>
+          {/* Desktop Navigation - Centered with proper spacing */}
+          <div className="hidden lg:flex items-center justify-center flex-1 max-w-2xl mx-4">
+            <div className="flex items-center space-x-1">
+              <Button 
+                variant="ghost" 
+                className="font-medium px-3 py-2 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                asChild
+              >
+                <Link href="/">
+                  <Home className="w-4 h-4 mr-2" />
+                  Home
+                </Link>
+              </Button>
+              
+              {/* Mega Menu for Tools */}
+              <MultiDropdownNav />
+              
+              <Button 
+                variant="ghost" 
+                className="font-medium px-3 py-2 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                data-testid="nav-about-desktop"
+                asChild
+              >
+                <Link href="/about">
+                  <Info className="w-4 h-4 mr-2" />
+                  About
+                </Link>
+              </Button>
+            </div>
           </div>
 
-          {/* Desktop Right Section */}
-          <div className="hidden lg:flex items-center space-x-2">
+          {/* Desktop Right Section - Fixed width to prevent overlap */}
+          <div className="hidden lg:flex items-center space-x-3 flex-shrink-0">
             <motion.div 
               {...getMotionProps(reducedMotion, {
                 whileHover: { scale: 1.05 },
@@ -124,7 +126,7 @@ export default function Header() {
               })}
             >
               <Button 
-                className="btn-gradient text-white font-medium focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2"
+                className="btn-gradient text-white font-medium px-4 py-2 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2"
                 data-testid="button-try-now-desktop"
                 asChild
               >

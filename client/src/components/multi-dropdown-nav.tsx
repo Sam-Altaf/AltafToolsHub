@@ -23,31 +23,34 @@ interface CustomTool {
 
 type NavTool = Tool | CustomTool;
 
-// Helper component for navigation items - compact layout with small icons
+// Helper component for navigation items - improved layout with better sizing
 const ToolNavItem = ({ tool, onClick }: { tool: NavTool; onClick?: () => void }) => {
   const Icon = tool.icon;
   
   const content = (
-    <div className="group flex items-center gap-1.5 p-1 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800">
+    <div className="group flex items-center gap-3 p-3 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
       <div className={cn(
-        "w-4 h-4 rounded flex items-center justify-center flex-shrink-0",
-        "bg-gradient-to-br", tool.color
+        "w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0",
+        "bg-gradient-to-br shadow-sm", tool.color
       )}>
-        <Icon className="w-2.5 h-2.5 text-white" />
+        <Icon className="w-4 h-4 text-white" />
       </div>
       <div className="flex-1 min-w-0">
-        <div className="text-[11px] font-medium flex items-center gap-1">
+        <div className="text-sm font-medium flex items-center gap-2 mb-1">
           <span className="truncate">{tool.title}</span>
           {tool.new && (
-            <span className="text-[8px] px-0.5 rounded bg-emerald-600 text-white">
+            <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-600 text-white font-medium">
               New
             </span>
           )}
           {!tool.available && (
-            <span className="text-[8px] px-0.5 rounded bg-gray-500 text-white">
+            <span className="text-xs px-2 py-0.5 rounded-full bg-gray-500 text-white font-medium">
               Soon
             </span>
           )}
+        </div>
+        <div className="text-xs text-muted-foreground line-clamp-2">
+          {tool.description}
         </div>
       </div>
     </div>
@@ -227,14 +230,19 @@ export function MultiDropdownNav() {
     setOpenMenu(menuId);
   };
 
-  // Handle mouse leave instantly
+  // Handle mouse leave with delay for better UX
   const handleMouseLeave = () => {
-    setOpenMenu(null);
+    timeoutRef.current = setTimeout(() => {
+      setOpenMenu(null);
+    }, 150); // Small delay to prevent accidental closing
   };
 
-  // Handle mouse enter on dropdown
+  // Handle mouse enter on dropdown - cancel closing
   const handleDropdownMouseEnter = () => {
-    // Keep dropdown open when hovering over it
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
   };
 
   // Handle escape key
@@ -312,7 +320,7 @@ export function MultiDropdownNav() {
         })}
       </div>
 
-      {/* Mega Menu Dropdown - Fixed position and centered */}
+      {/* Mega Menu Dropdown - Positioned relative to navigation */}
       <AnimatePresence>
         {openMenu && (
           <>
@@ -321,51 +329,57 @@ export function MultiDropdownNav() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.05 }}
-              className="fixed inset-0 top-16 bg-black/20 dark:bg-black/40"
-              style={{ zIndex: 19999 }}
+              transition={{ duration: 0.1 }}
+              className="fixed inset-0 top-16 bg-black/10 dark:bg-black/30"
+              style={{ zIndex: 9999 }}
               onClick={() => setOpenMenu(null)}
             />
             
             {/* Dropdown Menu */}
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.05 }}
-              className="fixed left-1/2 transform -translate-x-1/2 top-20 bg-white dark:bg-gray-900 rounded-lg shadow-2xl border border-gray-200 dark:border-gray-800 overflow-y-auto"
+              initial={{ opacity: 0, y: -5, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -5, scale: 0.95 }}
+              transition={{ duration: 0.15, ease: "easeOut" }}
+              className="absolute left-0 top-full mt-2 bg-white dark:bg-gray-900 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden"
               style={{ 
-                zIndex: 20000,
-                maxWidth: '1200px',
-                width: 'auto',
-                maxHeight: 'calc(100vh - 100px)'
+                zIndex: 10000,
+                minWidth: '800px',
+                maxWidth: '1000px',
+                width: 'max-content'
               }}
               onMouseEnter={handleDropdownMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
-              <div className="p-3">
+              <div className="p-6">
                 {/* For All Tools - Add link at top */}
                 {menuItems.find(m => m.id === openMenu)?.type === 'all' && (
-                  <div className="mb-3 flex justify-end">
+                  <div className="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
                     <Link
                       href="/all-tools"
-                      className="inline-flex items-center text-xs font-medium text-primary hover:text-primary/80 transition-colors"
+                      className="inline-flex items-center text-sm font-medium text-primary hover:text-primary/80 transition-colors"
                       onClick={() => setOpenMenu(null)}
                     >
+                      <Layers className="w-4 h-4 mr-2" />
                       View All Tools Page
-                      <ArrowRight className="w-3 h-3 ml-1" />
+                      <ArrowRight className="w-4 h-4 ml-2" />
                     </Link>
                   </div>
                 )}
                 
-                {/* Sections displayed horizontally in columns */}
-                <div className={menuItems.find(m => m.id === openMenu)?.type === 'pdf' ? "grid grid-cols-6 gap-2" : menuItems.find(m => m.id === openMenu)?.type === 'image' ? "grid grid-cols-3 gap-3" : "grid grid-cols-3 gap-3"}>
+                {/* Sections displayed in optimized grid layout */}
+                <div className={cn(
+                  "grid gap-6",
+                  menuItems.find(m => m.id === openMenu)?.type === 'pdf' && "grid-cols-3", 
+                  menuItems.find(m => m.id === openMenu)?.type === 'image' && "grid-cols-3",
+                  menuItems.find(m => m.id === openMenu)?.type === 'all' && "grid-cols-3"
+                )}>
                   {getDropdownContent(menuItems.find(m => m.id === openMenu)?.type || '').map((section, sectionIdx) => (
-                    <div key={sectionIdx} className="flex flex-col">
-                      <h3 className="text-[10px] font-bold text-gray-600 dark:text-gray-400 mb-1.5 uppercase tracking-wider">
+                    <div key={sectionIdx} className="flex flex-col space-y-2">
+                      <h3 className="text-xs font-bold text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700 pb-2">
                         {section.title}
                       </h3>
-                      <div className="flex flex-col gap-0.5">
+                      <div className="space-y-1">
                         {section.tools.map((tool) => tool && (
                           <ToolNavItem 
                             key={tool.id} 
