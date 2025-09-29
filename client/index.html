@@ -85,11 +85,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="google" content="notranslate" />
     
-    <!-- Prefetch likely navigation targets -->
-    <link rel="prefetch" href="/compress-pdf">
-    <link rel="prefetch" href="/jpg-to-pdf">
-    <link rel="prefetch" href="/unlock-pdf">
-    <link rel="prefetch" href="/qr-generator">
+    <!-- Removed automatic prefetching - will implement hover-based prefetching in JS -->
     
     <!-- Preconnect to CDNs and external services -->
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -106,10 +102,7 @@
     <link rel="preload" as="script" href="/pdf.worker.min.mjs">
     <link rel="preload" as="font" href="https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZJhiI2B.woff2" type="font/woff2" crossorigin>
     
-    <!-- Prefetch important routes for instant navigation -->
-    <link rel="prefetch" href="/src/pages/compress-pdf.tsx">
-    <link rel="prefetch" href="/src/pages/unlock-pdf.tsx">
-    <link rel="prefetch" href="/src/pages/jpg-to-pdf.tsx">
+    <!-- Removed automatic route prefetching - on-demand loading is more efficient -->
     
     <!-- Resource hints for better performance -->
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
@@ -574,7 +567,7 @@
               // Check for updates periodically
               setInterval(() => {
                 registration.update();
-              }, 60000); // Check every minute
+              }, 300000); // Check every 5 minutes
               
               // Handle updates
               registration.addEventListener('updatefound', () => {

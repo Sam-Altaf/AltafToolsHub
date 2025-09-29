@@ -385,18 +385,19 @@ export default function JpgToPDF() {
       <div className="min-h-screen pattern-bg">
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           <div className="text-center mb-8">
-            <Button 
-              variant="ghost" 
-              className="mb-4" 
-              data-testid="button-back"
-              onClick={() => {
-                window.location.href = '/';
-                // Removed automatic scrolling to prevent page jumping
-              }}
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Tools
-            </Button>
+            <Link href="/all-tools">
+              <Button 
+                variant="ghost" 
+                className="mb-4" 
+                asChild
+                data-testid="button-back"
+              >
+                <span>
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back to Tools
+                </span>
+              </Button>
+            </Link>
             <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-primary">JPG to PDF Converter</h1>
             <p className="text-lg text-muted-foreground">Your images have been converted successfully!</p>
           </div>

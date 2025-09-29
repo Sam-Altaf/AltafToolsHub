@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  FileText, Image, FileCode, Zap, ArrowRight, Sparkles
+  FileText, Image, FileCode, Zap, ArrowRight, Sparkles, Layers
 } from "lucide-react";
 import { toolCategories, Tool } from "@/lib/tools-data";
 
@@ -79,34 +79,14 @@ const ToolNavItem = ({ tool, onClick }: { tool: Tool; onClick?: () => void }) =>
   );
 };
 
+// Mega menu for all tools - single dropdown showing all categories
 const menuItems = [
   {
-    id: "pdf-management",
-    label: "PDF Tools",
-    icon: FileText,
-    categoryId: "pdf-management",
-    href: "/#pdf-tools"
-  },
-  {
-    id: "image-conversion",
-    label: "Image Tools", 
-    icon: Image,
-    categoryId: "image-conversion",
-    href: "/#image-tools"
-  },
-  {
-    id: "document-conversion",
-    label: "Convert",
-    icon: FileCode,
-    categoryId: "document-conversion",
-    href: "/#convert-tools"
-  },
-  {
-    id: "utilities",
-    label: "Utilities",
-    icon: Zap,
-    categoryId: "utilities",
-    href: "/#utilities"
+    id: "tools-mega",
+    label: "Tools",
+    icon: Layers,
+    categoryId: "all", // Special case - will show all categories
+    href: "/all-tools"
   }
 ];
 

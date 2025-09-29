@@ -392,7 +392,7 @@ export default function Home() {
                 Professional File Tools,{" "}
               </motion.span>
               <motion.span 
-                className="text-yellow-300 inline-block"
+                className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent inline-block"
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 }}

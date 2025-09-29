@@ -214,19 +214,19 @@ export function Logo({
 
       {/* Text (if variant is "full") */}
       {variant === "full" && (
-        <g transform={`translate(${iconSize + 12}, ${iconSize * 0.5})`}>
-          <text
-            x="0"
-            y="0"
-            fill="currentColor"
-            fontSize={currentSize.text}
-            fontWeight="700"
-            fontFamily="system-ui, -apple-system, sans-serif"
-            alignmentBaseline="middle"
-          >
-            <tspan fill="currentColor">AltafToolsHub</tspan>
-          </text>
-        </g>
+        <text
+          x={iconSize + 12}
+          y={iconSize * 0.5}
+          fill="currentColor"
+          fontSize={currentSize.text}
+          fontWeight="700"
+          fontFamily="'Inter', system-ui, -apple-system, sans-serif"
+          alignmentBaseline="middle"
+          dominantBaseline="middle"
+          textAnchor="start"
+        >
+          AltafToolsHub
+        </text>
       )}
     </LogoWrapper>
   );

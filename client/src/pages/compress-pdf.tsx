@@ -726,18 +726,19 @@ export default function CompressPDF() {
         
         
         <div className="text-center mb-10">
-          <Button 
-            variant="ghost" 
-            className="mb-4" 
-            data-testid="button-back"
-            onClick={() => {
-              window.location.href = '/';
-              // Removed automatic scrolling to prevent page jumping
-            }}
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Tools
-          </Button>
+          <Link href="/all-tools">
+            <Button 
+              variant="ghost" 
+              className="mb-4" 
+              asChild
+              data-testid="button-back"
+            >
+              <span>
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Tools
+              </span>
+            </Button>
+          </Link>
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary to-blue-600 text-white mb-6 shadow-md">
             <Sparkles className="w-4 h-4" />
             <span className="text-sm font-medium">AI-Powered Compression</span>

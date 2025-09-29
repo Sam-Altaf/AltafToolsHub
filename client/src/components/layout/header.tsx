@@ -86,7 +86,7 @@ export default function Header() {
             </motion.div>
           </Link>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation - Consolidated Mega Menu */}
           <div className="hidden lg:flex items-center space-x-2">
             <Button 
               variant="ghost" 
@@ -99,31 +99,8 @@ export default function Header() {
               </Link>
             </Button>
             
-            <Button 
-              variant="ghost" 
-              className="font-medium focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-              data-testid="nav-all-tools-desktop"
-              asChild
-            >
-              <Link href="/all-tools">
-                <Menu className="w-4 h-4 mr-2" />
-                All Tools
-              </Link>
-            </Button>
-            
+            {/* Mega Menu for Tools */}
             <MultiDropdownNav />
-            
-            <Button 
-              variant="ghost" 
-              className="font-medium focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-              data-testid="nav-guides-desktop"
-              asChild
-            >
-              <Link href="/guides">
-                <BookOpen className="w-4 h-4 mr-2" />
-                Guides
-              </Link>
-            </Button>
             
             <Button 
               variant="ghost" 
@@ -132,18 +109,21 @@ export default function Header() {
               asChild
             >
               <Link href="/resources">
-                <GraduationCap className="w-4 h-4 mr-2" />
+                <BookOpen className="w-4 h-4 mr-2" />
                 Resources
               </Link>
             </Button>
             
             <Button 
               variant="ghost" 
-              className="font-medium"
+              className="font-medium focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
               data-testid="nav-about-desktop"
+              asChild
             >
-              <Info className="w-4 h-4 mr-2" />
-              About
+              <Link href="/about">
+                <Info className="w-4 h-4 mr-2" />
+                About
+              </Link>
             </Button>
           </div>
 
