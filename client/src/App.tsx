@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/contexts/theme-context";
 import { ReducedMotionProvider } from "@/components/reduced-motion-provider";
+import { useAnalytics } from "@/hooks/use-analytics";
 import ScrollToTop from "@/components/scroll-to-top";
 import ScrollToTopButton from "@/components/scroll-to-top-button";
 import NavigationMemory from "@/components/navigation-memory";
@@ -73,6 +74,9 @@ const PageLoader = () => (
 );
 
 function Router() {
+  // Initialize analytics tracking for all pages
+  useAnalytics();
+  
   return (
     <div className="min-h-screen flex flex-col">
       <NavigationMemory />

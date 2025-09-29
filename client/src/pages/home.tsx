@@ -759,7 +759,7 @@ export default function Home() {
       <section className="py-16 overflow-hidden">
         <div className="container-section">
           <div className="text-center mb-12">
-            <Badge className="mb-4 bg-gradient-to-r from-green-500/20 to-emerald-500/20 text-green-600 dark:text-green-400 border-green-500/30">
+            <Badge className="mb-4 bg-green-50 dark:bg-green-950 text-green-900 dark:text-green-100 border-green-300 dark:border-green-700 font-semibold">
               <Check className="w-3 h-3 mr-1" />
               Ready to Use Now
             </Badge>

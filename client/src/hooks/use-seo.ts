@@ -191,14 +191,12 @@ export function useSEO({
 
     // Add site verification tags (these should be static but just in case)
     const verificationTags = [
-      { name: 'google-site-verification', content: 'your-google-verification-code' },
-      { name: 'msvalidate.01', content: 'your-bing-verification-code' },
+      { name: 'google-site-verification', content: 'QpjRQbEVNOuMt9u9gLprMCPKcHCVhucmxdPSlbXAG-U' },
+      { name: 'msvalidate.01', content: '3FD512D510D7349BCFA2662B94334B81' },
     ];
 
     verificationTags.forEach(({ name, content }) => {
-      if (content !== 'your-google-verification-code' && content !== 'your-bing-verification-code') {
-        updateMetaTag(`meta[name="${name}"]`, 'content', content);
-      }
+      updateMetaTag(`meta[name="${name}"]`, 'content', content);
     });
 
     // Cleanup function to remove dynamically added elements when component unmounts

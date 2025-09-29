@@ -290,6 +290,137 @@
     <mobile:mobile/>
   </url>
 
+  <url>
+    <loc>https://altaftoolshub.com/resources</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.com/testimonials</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.com/guides</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+
+  <!-- Blog Posts -->
+  <url>
+    <loc>https://altaftoolshub.com/blog/how-to-compress-pdf-without-losing-quality</loc>
+    <lastmod>2025-01-28T12:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.com/blog/best-pdf-compression-settings-2025</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.com/blog/reduce-pdf-file-size-for-email</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.com/blog/pdf-compression-for-business</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.com/blog/future-of-privacy-first-tools</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+
+  <!-- Guide Pages -->
+  <url>
+    <loc>https://altaftoolshub.com/guides/how-to-compress-pdf</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.com/guides/how-to-unlock-pdf</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.com/guides/how-to-convert-jpg-to-pdf</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.com/guides/how-to-generate-qr-code</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.com/guides/how-to-generate-password</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.com/guides/how-to-extract-text-from-pdf</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+
+  <!-- Comparison Pages -->
+  <url>
+    <loc>https://altaftoolshub.com/compare/online-pdf-tools-2025</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.com/compare/pdf-compressor-comparison</loc>
+    <lastmod>2025-01-17T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+
   <!-- Legal Pages -->
   <url>
     <loc>https://altaftoolshub.com/privacy</loc>
