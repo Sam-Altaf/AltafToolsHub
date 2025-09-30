@@ -555,7 +555,7 @@ export const allTools: Tool[] = [
     icon: FileArchive,
     href: "/pdf-to-zip",
     color: "from-indigo-500 to-purple-500",
-    available: false,
+    available: true,
     category: "utilities",
     features: ["Batch compression", "Folder structure", "Size reduction", "Password protection"],
     extendedDescription: "Combine multiple PDF files into a single compressed ZIP archive for easy sharing and storage. Reduces overall file size while maintaining organization."
