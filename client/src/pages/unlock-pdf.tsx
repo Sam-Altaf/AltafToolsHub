@@ -17,7 +17,7 @@ import ToolSEO, { toolFAQs } from "@/components/seo/tool-seo";
 import PrivacyNotice from "@/components/privacy-notice";
 import { WhyUseSection, UseCasesSection, ComparisonSection, HowItWorksSection, commonFeatures } from "@/components/seo/tool-features";
 import { ToolFAQ, generatePDFUnlockFAQs } from "@/components/seo/tool-faq";
-import { Building2, Users, Briefcase, Home, Archive, FileKey, School } from "lucide-react";
+import { Building2, Users, Briefcase, Home, Archive, FileKey, School, Book } from "lucide-react";
 import { ContactSupportSection } from "@/components/contact-support";
 import { scrollBy } from "@/lib/scroll-utils";
 
@@ -533,6 +533,23 @@ export default function UnlockPDF() {
           }
         ]}
       />
+
+      {/* Blog Link */}
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
+            <div className="flex items-center gap-3">
+              <Book className="h-5 w-5 text-purple-600 dark:text-purple-400 flex-shrink-0" />
+              <div>
+                <span className="text-sm text-gray-700 dark:text-gray-300">Want to learn more? </span>
+                <Link href="/guides/how-to-unlock-pdf" className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 underline transition-colors">
+                  Read our complete guide: How to Unlock PDF Files
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <WhyUseSection
         toolName="PDF Unlocker"
