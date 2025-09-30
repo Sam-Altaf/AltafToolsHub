@@ -84,14 +84,14 @@ function Router() {
       <ScrollToTop />
       <Header />
       <div className="flex-1">
-        {/* Blog routes outside of Switch - workaround for wouter v3 parameterized route issue */}
-        <Route path="/blog/:slug">
-          <BlogRouter />
-        </Route>
-        <Route path="/blog">
-          <BlogRouter />
-        </Route>
         <Switch>
+          {/* Blog routes - workaround for wouter v3 parameterized route issue */}
+          <Route path="/blog/:slug">
+            <BlogRouter />
+          </Route>
+          <Route path="/blog">
+            <BlogRouter />
+          </Route>
           {/* Critical routes - Load immediately */}
           <Route path="/" component={Home} />
           <Route path="/all-tools" component={AllTools} />

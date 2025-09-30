@@ -26,6 +26,7 @@ export default function BlogPage() {
   const [selectedCategory, setSelectedCategory] = useState("All Posts");
   const [searchTerm, setSearchTerm] = useState("");
   const [visiblePosts, setVisiblePosts] = useState(6);
+  const [showAllFeaturedArticles, setShowAllFeaturedArticles] = useState(false);
 
   // Generate FAQ schema for SEO
   const faqItems = [
@@ -79,9 +80,9 @@ export default function BlogPage() {
 
   // Show all featured posts (or limit if there are too many)
   const maxFeaturedToShow = 4;
-  const showAllFeatured = allFeaturedPosts.length <= maxFeaturedToShow;
-  const featuredPosts = showAllFeatured ? allFeaturedPosts : allFeaturedPosts.slice(0, maxFeaturedToShow);
-  const hasMoreFeatured = !showAllFeatured;
+  const shouldShowAll = showAllFeaturedArticles || allFeaturedPosts.length <= maxFeaturedToShow;
+  const featuredPosts = shouldShowAll ? allFeaturedPosts : allFeaturedPosts.slice(0, maxFeaturedToShow);
+  const hasMoreFeatured = !shouldShowAll && allFeaturedPosts.length > maxFeaturedToShow;
 
   // Apply pagination only to regular posts
   const regularPosts = allRegularPosts.slice(0, visiblePosts);
@@ -266,9 +267,7 @@ export default function BlogPage() {
                   size="lg" 
                   className="group bg-gradient-to-r from-primary to-blue-600 hover:opacity-90"
                   onClick={() => {
-                    // This would typically navigate to a featured articles page or expand the list
-                    // For now, we'll just show all featured articles
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    setShowAllFeaturedArticles(true);
                   }}
                   data-testid="button-see-all-featured"
                 >
