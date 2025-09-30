@@ -444,13 +444,13 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
 
 export const blogCategories = [
   { name: "All Posts", count: 21 },
-  { name: "Compression", count: 6 },
+  { name: "Compression", count: 3 },
   { name: "Security", count: 4 },
   { name: "Extraction", count: 3 },
   { name: "Organization", count: 3 },
   { name: "Editing", count: 4 },
   { name: "Conversion", count: 1 },
-  { name: "Tools", count: 2 },
+  { name: "Tools", count: 1 },
   { name: "Email", count: 1 },
   { name: "Web", count: 1 }
 ];
