@@ -682,7 +682,7 @@ export default function BlogPostPage() {
                         transition={{ duration: 0.6, delay: 0.1 + index * 0.1 }}
                       >
                         <img
-                          src={image}
+                          src={image.replace('@assets/', '/attached_assets/')}
                           alt={`${post.title} - Supporting image ${index + 1}`}
                           className="w-full h-auto rounded-lg shadow-md"
                           loading="lazy"
