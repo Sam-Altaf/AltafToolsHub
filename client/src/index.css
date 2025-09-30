@@ -86,10 +86,26 @@
     @apply border-border;
   }
 
+  /* Prevent horizontal scrolling on mobile */
+  html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+
   /* Global smooth scrolling */
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 5rem; /* Account for sticky header */
+  }
+
+  /* Hide scrollbar on breadcrumbs for cleaner look */
+  .scrollbar-none {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
   }
 
   /* Respect reduced motion preferences */
