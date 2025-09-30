@@ -17,6 +17,7 @@ import {
   Share2,
   Twitter,
   Linkedin,
+  Facebook,
   Copy,
   Check,
   ChevronRight,
@@ -32,6 +33,8 @@ import { ContactSupportSection } from "@/components/contact-support";
 import ReactMarkdown from 'react-markdown';
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { allTools } from "@/lib/tools-data";
+import { toast } from "@/hooks/use-toast";
 
 // Throttle function for performance optimization
 function throttle<T extends (...args: any[]) => any>(func: T, wait: number) {
@@ -162,17 +165,29 @@ export default function BlogPostPage() {
   });
 
   const copyLink = () => {
-    navigator.clipboard.writeText(postUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    navigator.clipboard.writeText(postUrl).then(() => {
+      toast({
+        title: "Link copied!",
+        description: "The article link has been copied to your clipboard.",
+      });
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
   };
 
   const shareOnTwitter = () => {
-    window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(post.title)}`, '_blank');
+    const url = `https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(post.title)}`;
+    window.open(url, 'share-twitter', 'width=550,height=450,menubar=no,toolbar=no,resizable=yes,scrollbars=yes');
   };
 
   const shareOnLinkedIn = () => {
-    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`, '_blank');
+    const url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`;
+    window.open(url, 'share-linkedin', 'width=570,height=520,menubar=no,toolbar=no,resizable=yes,scrollbars=yes');
+  };
+
+  const shareOnFacebook = () => {
+    const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`;
+    window.open(url, 'share-facebook', 'width=550,height=450,menubar=no,toolbar=no,resizable=yes,scrollbars=yes');
   };
 
   // Extract headings for table of contents
@@ -223,6 +238,66 @@ export default function BlogPostPage() {
         aria-label={`Reading progress: ${Math.round(readingProgress)}%`}
         data-testid="reading-progress-bar"
       />
+
+      {/* Floating Share Sidebar - Desktop Only */}
+      {!isMobile && (
+        <AnimatePresence>
+          {readingProgress > 10 && (
+            <motion.div
+              className="fixed left-4 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col gap-3"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="bg-background/80 backdrop-blur-sm border rounded-lg p-2 shadow-lg flex flex-col gap-2">
+                <span className="text-xs text-muted-foreground text-center mb-1">Share</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-10 h-10 p-0 hover:bg-primary/10"
+                  onClick={shareOnTwitter}
+                  data-testid="button-share-twitter-floating"
+                >
+                  <Twitter className="w-4 h-4" />
+                  <span className="sr-only">Share on Twitter</span>
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-10 h-10 p-0 hover:bg-primary/10"
+                  onClick={shareOnLinkedIn}
+                  data-testid="button-share-linkedin-floating"
+                >
+                  <Linkedin className="w-4 h-4" />
+                  <span className="sr-only">Share on LinkedIn</span>
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-10 h-10 p-0 hover:bg-primary/10"
+                  onClick={shareOnFacebook}
+                  data-testid="button-share-facebook-floating"
+                >
+                  <Facebook className="w-4 h-4" />
+                  <span className="sr-only">Share on Facebook</span>
+                </Button>
+                <Separator className="my-1" />
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-10 h-10 p-0 hover:bg-primary/10"
+                  onClick={copyLink}
+                  data-testid="button-copy-link-floating"
+                >
+                  {copied ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
+                  <span className="sr-only">Copy link</span>
+                </Button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      )}
 
       {/* Breadcrumbs */}
       <section className="py-3 sm:py-4 border-b">
@@ -301,18 +376,8 @@ export default function BlogPostPage() {
               </span>
             </div>
 
-            {/* Tags */}
-            <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-6 sm:mb-8">
-              {post.tags.map(tag => (
-                <Badge key={tag} variant="outline" className="text-xs sm:text-sm py-1 px-2 sm:py-1.5 sm:px-3">
-                  <Tag className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1" />
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-
-            {/* Share Buttons */}
-            <div className="flex flex-wrap items-center gap-2 sm:gap-4">
+            {/* Mobile Share Buttons - Below author info */}
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-4 sm:mb-6 lg:hidden">
               <span className="text-xs sm:text-sm text-muted-foreground flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto mb-2 sm:mb-0">
                 <Share2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 Share:
@@ -323,7 +388,7 @@ export default function BlogPostPage() {
                   size="sm"
                   className="min-h-[44px] min-w-[44px] px-3 sm:px-4"
                   onClick={shareOnTwitter}
-                  data-testid="button-share-twitter"
+                  data-testid="button-share-twitter-mobile"
                 >
                   <Twitter className="w-4 h-4" />
                   <span className="sr-only">Share on Twitter</span>
@@ -333,7 +398,7 @@ export default function BlogPostPage() {
                   size="sm"
                   className="min-h-[44px] min-w-[44px] px-3 sm:px-4"
                   onClick={shareOnLinkedIn}
-                  data-testid="button-share-linkedin"
+                  data-testid="button-share-linkedin-mobile"
                 >
                   <Linkedin className="w-4 h-4" />
                   <span className="sr-only">Share on LinkedIn</span>
@@ -342,13 +407,33 @@ export default function BlogPostPage() {
                   variant="outline"
                   size="sm"
                   className="min-h-[44px] min-w-[44px] px-3 sm:px-4"
+                  onClick={shareOnFacebook}
+                  data-testid="button-share-facebook-mobile"
+                >
+                  <Facebook className="w-4 h-4" />
+                  <span className="sr-only">Share on Facebook</span>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="min-h-[44px] min-w-[44px] px-3 sm:px-4"
                   onClick={copyLink}
-                  data-testid="button-copy-link"
+                  data-testid="button-copy-link-mobile"
                 >
                   {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                   <span className="sr-only">Copy link</span>
                 </Button>
               </div>
+            </div>
+
+            {/* Tags */}
+            <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-6 sm:mb-8">
+              {post.tags.map(tag => (
+                <Badge key={tag} variant="outline" className="text-xs sm:text-sm py-1 px-2 sm:py-1.5 sm:px-3">
+                  <Tag className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1" />
+                  {tag}
+                </Badge>
+              ))}
             </div>
           </motion.div>
         </div>
@@ -557,26 +642,53 @@ export default function BlogPostPage() {
                   </div>
                 )}
 
-                {/* CTA Section */}
-                <Card className="p-4 sm:p-6 mt-6 sm:mt-8 bg-gradient-to-r from-primary/10 via-primary/5 to-background">
-                  <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3">Ready to Get Started?</h3>
-                  <p className="text-sm sm:text-base text-muted-foreground mb-3 sm:mb-4">
-                    Try our free tools to put these techniques into practice.
-                  </p>
-                  <div className="flex flex-wrap gap-2 sm:gap-3">
-                    {post.relatedTools.map(tool => (
-                      <Button 
-                        key={tool}
-                        className="btn-gradient text-white min-h-[44px] text-sm sm:text-base"
-                        onClick={() => setLocation(`/${tool}`)}
-                      >
-                        <span className="hidden sm:inline">Try </span>
-                        {tool.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                        <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2" />
-                      </Button>
-                    ))}
-                  </div>
-                </Card>
+                {/* Related Tools CTA Section */}
+                <div className="mt-8 sm:mt-12">
+                  <Card className="p-6 sm:p-8 bg-gradient-to-br from-primary/5 via-accent/5 to-secondary/5 border-primary/10">
+                    <h2 className="text-2xl sm:text-3xl font-bold mb-2 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                      Try These Tools
+                    </h2>
+                    <p className="text-muted-foreground mb-6 sm:mb-8">
+                      Put what you've learned into practice with our powerful, free tools
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                      {post.relatedTools.slice(0, 3).map(toolId => {
+                        const tool = allTools.find(t => t.id === toolId);
+                        if (!tool) return null;
+                        const ToolIcon = tool.icon;
+                        return (
+                          <motion.div
+                            key={tool.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5 }}
+                            className="group"
+                          >
+                            <Card className="h-full p-5 sm:p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-background/50 backdrop-blur-sm">
+                              <div className="flex flex-col h-full">
+                                <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${tool.color} p-2.5 mb-4 group-hover:scale-110 transition-transform`}>
+                                  <ToolIcon className="w-full h-full text-white" />
+                                </div>
+                                <h3 className="font-semibold text-lg mb-2">{tool.title}</h3>
+                                <p className="text-sm text-muted-foreground mb-4 flex-grow line-clamp-2">
+                                  {tool.description}
+                                </p>
+                                <Button
+                                  className="w-full btn-gradient text-white hover:shadow-lg transition-all"
+                                  onClick={() => setLocation(tool.href)}
+                                  data-testid={`related-tool-${tool.id}`}
+                                >
+                                  Try Now
+                                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                                </Button>
+                              </div>
+                            </Card>
+                          </motion.div>
+                        );
+                      })}
+                    </div>
+                  </Card>
+                </div>
               </motion.article>
 
               {/* Desktop Sidebar Table of Contents */}
