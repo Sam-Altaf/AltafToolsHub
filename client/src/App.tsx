@@ -28,6 +28,7 @@ const JpgToPDF = lazy(() => import("@/pages/jpg-to-pdf"));
 const QRGenerator = lazy(() => import("@/pages/qr-generator"));
 const PasswordGenerator = lazy(() => import("@/pages/password-generator"));
 const ExtractText = lazy(() => import("@/pages/extract-text"));
+const PDFToZIP = lazy(() => import("@/pages/pdf-to-zip"));
 const MergePDF = lazy(() => import("@/pages/merge-pdf"));
 const SplitPDF = lazy(() => import("@/pages/split-pdf"));
 const RotatePDF = lazy(() => import("@/pages/rotate-pdf"));
@@ -130,6 +131,11 @@ function Router() {
           <Route path="/extract-text">
             <Suspense fallback={<PageLoader />}>
               <ExtractText />
+            </Suspense>
+          </Route>
+          <Route path="/pdf-to-zip">
+            <Suspense fallback={<PageLoader />}>
+              <PDFToZIP />
             </Suspense>
           </Route>
           <Route path="/merge-pdf">
