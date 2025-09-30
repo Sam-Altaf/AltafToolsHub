@@ -42,8 +42,8 @@ export function BlogImage({
         // Extract the path from @assets/...
         const assetPath = src.replace('@assets/', '');
         
-        // Dynamic import of the image
-        const imageModule = await import(`/attached_assets/${assetPath}`);
+        // Dynamic import of the image with relative path
+        const imageModule = await import(/* @vite-ignore */ `/attached_assets/${assetPath}`);
         setImageUrl(imageModule.default);
         setLoading(false);
         onLoad?.();
