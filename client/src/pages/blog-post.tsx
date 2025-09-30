@@ -164,12 +164,15 @@ export default function BlogPostPage() {
             transition={{ duration: 0.6 }}
           >
             {/* Back to Blog */}
-            <Link href="/blog">
-              <Button variant="ghost" className="mb-6" data-testid="button-back-to-blog">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Blog
-              </Button>
-            </Link>
+            <Button 
+              variant="ghost" 
+              className="mb-6" 
+              data-testid="button-back-to-blog"
+              onClick={() => setLocation("/blog")}
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Blog
+            </Button>
 
             {/* Post Header */}
             <div className="flex items-center gap-3 mb-4">
@@ -307,11 +310,12 @@ export default function BlogPostPage() {
                       const isInternal = href?.startsWith('/');
                       if (isInternal) {
                         return (
-                          <Link href={href!}>
-                            <a className="text-primary hover:underline inline-flex items-center gap-1">
-                              {children}
-                              <ArrowRight className="w-3 h-3" />
-                            </a>
+                          <Link 
+                            href={href!}
+                            className="text-primary hover:underline inline-flex items-center gap-1"
+                          >
+                            {children}
+                            <ArrowRight className="w-3 h-3" />
                           </Link>
                         );
                       }
@@ -367,12 +371,14 @@ export default function BlogPostPage() {
                   </p>
                   <div className="flex flex-wrap gap-3">
                     {post.relatedTools.map(tool => (
-                      <Link key={tool} href={`/${tool}`}>
-                        <Button className="btn-gradient text-white">
-                          Try {tool.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                          <ArrowRight className="w-4 h-4 ml-2" />
-                        </Button>
-                      </Link>
+                      <Button 
+                        key={tool}
+                        className="btn-gradient text-white"
+                        onClick={() => setLocation(`/${tool}`)}
+                      >
+                        Try {tool.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
                     ))}
                   </div>
                 </Card>
@@ -414,16 +420,16 @@ export default function BlogPostPage() {
                   <h3 className="font-semibold mb-4">Quick Tools</h3>
                   <div className="space-y-2">
                     {post.relatedTools.slice(0, 3).map(tool => (
-                      <Link key={tool} href={`/${tool}`}>
-                        <Button 
-                          variant="ghost" 
-                          className="w-full justify-start"
-                          data-testid={`sidebar-tool-${tool}`}
-                        >
-                          <ArrowRight className="w-4 h-4 mr-2" />
-                          {tool.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                        </Button>
-                      </Link>
+                      <Button 
+                        key={tool}
+                        variant="ghost" 
+                        className="w-full justify-start"
+                        data-testid={`sidebar-tool-${tool}`}
+                        onClick={() => setLocation(`/${tool}`)}
+                      >
+                        <ArrowRight className="w-4 h-4 mr-2" />
+                        {tool.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                      </Button>
                     ))}
                   </div>
                 </Card>
