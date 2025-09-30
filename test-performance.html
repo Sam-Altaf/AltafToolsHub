@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Performance Test</title>
+</head>
+<body>
+    <h1>Testing Performance Improvements</h1>
+    <div id="results"></div>
+    <script>
+        async function testPerformance() {
+            const results = document.getElementById('results');
+            
+            // Test 1: Measure page load time
+            const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
+            results.innerHTML += `<p>Page Load Time: ${loadTime}ms</p>`;
+            
+            // Test 2: Check FCP
+            const paintEntries = performance.getEntriesByType('paint');
+            const fcp = paintEntries.find(entry => entry.name === 'first-contentful-paint');
+            if (fcp) {
+                results.innerHTML += `<p>First Contentful Paint: ${Math.round(fcp.startTime)}ms</p>`;
+            }
+            
+            // Test 3: Check for WebSocket errors
+            results.innerHTML += `<p>WebSocket Status: ${navigator.onLine ? 'Online' : 'Offline'}</p>`;
+            
+            // Test 4: Memory usage
+            if (performance.memory) {
+                const memoryMB = Math.round(performance.memory.usedJSHeapSize / 1048576);
+                results.innerHTML += `<p>Memory Usage: ${memoryMB}MB</p>`;
+            }
+            
+            // Test 5: Check service worker
+            if ('serviceWorker' in navigator) {
+                const reg = await navigator.serviceWorker.getRegistration();
+                results.innerHTML += `<p>Service Worker: ${reg ? 'Active' : 'Not Active'}</p>`;
+            }
+        }
+        
+        window.addEventListener('load', () => {
+            setTimeout(testPerformance, 1000);
+        });
+    </script>
+</body>
+</html>

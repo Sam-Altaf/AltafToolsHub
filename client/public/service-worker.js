@@ -2,28 +2,18 @@
 const CACHE_NAME = 'altaftoolshub-v1.0.0';
 const RUNTIME_CACHE = 'altaftoolshub-runtime-v1.0.0';
 
-// Files to cache during installation
+// Minimal files to cache during installation - only essentials
 const STATIC_CACHE_URLS = [
   '/',
-  '/index.html',
   '/manifest.json',
-  '/favicon.svg',
-  '/robots.txt',
-  '/pdf.worker.min.mjs',
-  // Add essential app routes for offline support
-  '/compress-pdf',
-  '/jpg-to-pdf',
-  '/qr-generator',
-  '/password-generator',
-  '/unlock-pdf',
-  '/all-tools'
+  '/favicon.svg'
 ];
 
-// Install event - cache static assets
+// Install event - cache minimal static assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('[Service Worker] Pre-caching static assets');
+      console.log('[Service Worker] Pre-caching minimal static assets');
       return cache.addAll(STATIC_CACHE_URLS).catch((error) => {
         console.warn('[Service Worker] Failed to cache some resources:', error);
         // Continue installation even if some resources fail to cache

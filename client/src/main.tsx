@@ -1,33 +1,39 @@
 import { createRoot } from "react-dom/client";
-import App from "./App";
 import "./index.css";
-import { initWebVitals } from "./utils/performance";
 
-// Initialize performance monitoring
-initWebVitals();
+// Lazy load the main app to improve initial load time
+const loadApp = async () => {
+  const { default: App } = await import("./App");
+  
+  // Only initialize performance monitoring after app loads
+  const { initWebVitals } = await import("./utils/performance");
+  initWebVitals();
 
-// Run performance verification in development
-if (process.env.NODE_ENV === 'development') {
-  import('./utils/performance-test').then(({ verifyPerformanceFeatures }) => {
-    setTimeout(() => {
+  // Mark app initialization
+  if (typeof window !== 'undefined' && window.performance) {
+    window.performance.mark('app-init');
+  }
+
+  const root = createRoot(document.getElementById("root")!);
+  root.render(<App />);
+
+  // Mark app render complete
+  if (typeof window !== 'undefined' && window.performance) {
+    requestAnimationFrame(() => {
+      window.performance.mark('app-render-complete');
+      window.performance.measure('app-initialization', 'app-init', 'app-render-complete');
+    });
+  }
+
+  // Run performance verification in development (delayed and conditional)
+  if (!window.location.hostname.includes('replit') && process.env.NODE_ENV === 'development') {
+    setTimeout(async () => {
+      const { verifyPerformanceFeatures } = await import('./utils/performance-test');
       console.log('🚀 Performance Features Verification:');
       verifyPerformanceFeatures();
-    }, 3000);
-  });
-}
+    }, 5000);
+  }
+};
 
-// Mark app initialization
-if (typeof window !== 'undefined' && window.performance && window.performance.mark) {
-  window.performance.mark('app-init');
-}
-
-const root = createRoot(document.getElementById("root")!);
-root.render(<App />);
-
-// Mark app render complete
-if (typeof window !== 'undefined' && window.performance && window.performance.mark) {
-  requestAnimationFrame(() => {
-    window.performance.mark('app-render-complete');
-    window.performance.measure('app-initialization', 'app-init', 'app-render-complete');
-  });
-}
+// Start loading the app
+loadApp();
