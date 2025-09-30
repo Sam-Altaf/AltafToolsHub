@@ -17,7 +17,18 @@ import {
   Star,
   Zap,
   Shield,
-  HelpCircle
+  HelpCircle,
+  FilePlus,
+  Scissors,
+  Crop,
+  Layers,
+  RotateCw,
+  FileX,
+  FileSearch,
+  FileImage,
+  Hash,
+  Droplets,
+  Calculator
 } from "lucide-react";
 import { Link } from "wouter";
 import { useSEO } from "@/hooks/use-seo";
@@ -88,6 +99,127 @@ const guides = [
     href: "/guides/how-to-generate-password",
     category: "Security",
     readTime: "4 min read",
+    difficulty: "Easy",
+    popular: false
+  },
+  {
+    id: "merge-pdf",
+    title: "How to Merge Multiple PDFs",
+    description: "Combine multiple PDF files into one seamless document with perfect formatting",
+    icon: FilePlus,
+    href: "/blog/how-to-merge-pdf",
+    category: "PDF Tools",
+    readTime: "3 min read",
+    difficulty: "Easy",
+    popular: false
+  },
+  {
+    id: "split-pdf",
+    title: "How to Split PDF Files",
+    description: "Divide PDF documents into separate files by page ranges or custom requirements",
+    icon: Scissors,
+    href: "/blog/how-to-split-pdf",
+    category: "PDF Tools",
+    readTime: "4 min read",
+    difficulty: "Easy",
+    popular: false
+  },
+  {
+    id: "crop-pdf",
+    title: "How to Crop PDF Pages",
+    description: "Remove unwanted margins, headers, and whitespace from PDF documents",
+    icon: Crop,
+    href: "/blog/how-to-crop-pdf",
+    category: "PDF Tools",
+    readTime: "5 min read",
+    difficulty: "Intermediate",
+    popular: false
+  },
+  {
+    id: "organize-pdf",
+    title: "How to Organize PDF Pages",
+    description: "Rearrange, rotate, and manage PDF pages for perfect document structure",
+    icon: Layers,
+    href: "/blog/how-to-organize-pdf",
+    category: "PDF Tools",
+    readTime: "6 min read",
+    difficulty: "Intermediate",
+    popular: false
+  },
+  {
+    id: "rotate-pdf",
+    title: "How to Rotate PDF Pages",
+    description: "Fix page orientation issues and rotate PDF pages to the correct angle",
+    icon: RotateCw,
+    href: "/blog/how-to-rotate-pdf",
+    category: "PDF Tools",
+    readTime: "2 min read",
+    difficulty: "Easy",
+    popular: false
+  },
+  {
+    id: "remove-pages",
+    title: "How to Remove Pages from PDF",
+    description: "Delete unwanted or blank pages from your PDF documents quickly",
+    icon: FileX,
+    href: "/blog/how-to-remove-pages",
+    category: "PDF Tools",
+    readTime: "3 min read",
+    difficulty: "Easy",
+    popular: false
+  },
+  {
+    id: "extract-pages",
+    title: "How to Extract Pages from PDF",
+    description: "Save specific pages from PDFs as separate files for targeted sharing",
+    icon: FileSearch,
+    href: "/blog/how-to-extract-pages",
+    category: "PDF Tools",
+    readTime: "4 min read",
+    difficulty: "Easy",
+    popular: false
+  },
+  {
+    id: "extract-images",
+    title: "How to Extract Images from PDF",
+    description: "Save all embedded images from PDF files in original quality",
+    icon: FileImage,
+    href: "/blog/how-to-extract-images",
+    category: "PDF Tools",
+    readTime: "5 min read",
+    difficulty: "Intermediate",
+    popular: false
+  },
+  {
+    id: "add-page-number",
+    title: "How to Add Page Numbers to PDF",
+    description: "Insert professional page numbers with custom formatting and positioning",
+    icon: Hash,
+    href: "/blog/how-to-add-page-number",
+    category: "PDF Tools",
+    readTime: "4 min read",
+    difficulty: "Intermediate",
+    popular: false
+  },
+  {
+    id: "watermark-pdf",
+    title: "How to Add Watermark to PDF",
+    description: "Protect your documents with custom text or image watermarks",
+    icon: Droplets,
+    href: "/blog/how-to-watermark-pdf",
+    category: "PDF Tools",
+    readTime: "6 min read",
+    difficulty: "Advanced",
+    popular: false
+  },
+  {
+    id: "word-counter",
+    title: "How to Count Words Efficiently",
+    description: "Accurately count words, characters, and paragraphs in any text",
+    icon: Calculator,
+    href: "/tools/word-counter",
+    category: "Utility Tools",
+    readTime: "3 min read",
     difficulty: "Easy",
     popular: false
   }
