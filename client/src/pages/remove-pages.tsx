@@ -27,6 +27,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { scrollToProcessing } from "@/lib/scroll-utils";
 
 // Configure PDF.js worker - using local worker for privacy
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
@@ -186,9 +187,6 @@ export default function RemovePages() {
   };
 
   const removePages = async () => {
-    // Scroll to top to show processing area
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    
     if (!pdfDoc || !pdfFile) {
       toast({
         title: "No file loaded",
@@ -218,6 +216,9 @@ export default function RemovePages() {
 
     setIsProcessing(true);
     setProgress(0);
+    
+    // Scroll to processing area
+    scrollToProcessing();
 
     try {
       const newPdf = await PDFDocument.create();

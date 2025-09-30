@@ -16,6 +16,7 @@ import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import * as pdfjsLib from 'pdfjs-dist';
 import { ContactSupportSection } from "@/components/contact-support";
+import { scrollToProcessing } from "@/lib/scroll-utils";
 
 // Configure PDF.js worker - using local worker for privacy
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
@@ -218,9 +219,6 @@ export default function WatermarkPDF() {
   };
 
   const addWatermark = async () => {
-    // Scroll to top to show processing area
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    
     if (!pdfDoc || !pdfFile) {
       toast({
         title: "No file loaded",
@@ -250,6 +248,9 @@ export default function WatermarkPDF() {
 
     setIsProcessing(true);
     setProgress(0);
+    
+    // Scroll to processing area
+    scrollToProcessing();
 
     try {
       const totalPages = pdfDoc.getPageCount();
