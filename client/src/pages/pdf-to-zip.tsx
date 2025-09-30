@@ -350,7 +350,7 @@ export default function PDFToZIP() {
             items={[
               { name: "Home", url: "/" },
               { name: "All Tools", url: "/all-tools" },
-              { name: "PDF to ZIP", url: "/pdf-to-zip" }
+              { name: "PDF to ZIP", url: "" }
             ]}
           />
 
@@ -439,7 +439,7 @@ export default function PDFToZIP() {
           items={[
             { name: "Home", url: "/" },
             { name: "All Tools", url: "/all-tools" },
-            { name: "PDF to ZIP", url: "/pdf-to-zip" }
+            { name: "PDF to ZIP", url: "" }
           ]}
         />
 
