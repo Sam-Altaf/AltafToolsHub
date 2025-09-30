@@ -13,6 +13,7 @@ import NavigationMemory from "@/components/navigation-memory";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import CookieConsent from "@/components/cookie-consent";
+import BlogRouter from "@/components/blog-router";
 import { Loader2 } from "lucide-react";
 
 // Critical imports - Load immediately for core functionality
@@ -45,8 +46,7 @@ const UseCases = lazy(() => import("@/pages/use-cases"));
 const PrivacyPolicy = lazy(() => import("@/pages/privacy-policy"));
 const TermsConditions = lazy(() => import("@/pages/terms-conditions"));
 const FAQ = lazy(() => import("@/pages/faq"));
-const Blog = lazy(() => import("@/pages/blog"));
-const BlogPost = lazy(() => import("@/pages/blog-post"));
+
 const Documentation = lazy(() => import("@/pages/documentation"));
 const About = lazy(() => import("@/pages/about"));
 const WhyChooseUs = lazy(() => import("@/pages/why-choose-us"));
@@ -84,6 +84,13 @@ function Router() {
       <ScrollToTop />
       <Header />
       <div className="flex-1">
+        {/* Blog routes outside of Switch - workaround for wouter v3 parameterized route issue */}
+        <Route path="/blog/:slug">
+          <BlogRouter />
+        </Route>
+        <Route path="/blog">
+          <BlogRouter />
+        </Route>
         <Switch>
           {/* Critical routes - Load immediately */}
           <Route path="/" component={Home} />
@@ -202,16 +209,6 @@ function Router() {
               <FAQ />
             </Suspense>
           </Route>
-          <Route path="/blog">
-            <Suspense fallback={<PageLoader />}>
-              <Blog />
-            </Suspense>
-          </Route>
-          <Route path="/blog/:slug">
-            <Suspense fallback={<PageLoader />}>
-              <BlogPost />
-            </Suspense>
-          </Route>
           <Route path="/documentation">
             <Suspense fallback={<PageLoader />}>
               <Documentation />
@@ -235,18 +232,6 @@ function Router() {
           <Route path="/use-cases">
             <Suspense fallback={<PageLoader />}>
               <UseCases />
-            </Suspense>
-          </Route>
-          
-          {/* Lazy loaded Blog */}
-          <Route path="/blog/:slug">
-            <Suspense fallback={<PageLoader />}>
-              <BlogPost />
-            </Suspense>
-          </Route>
-          <Route path="/blog">
-            <Suspense fallback={<PageLoader />}>
-              <Blog />
             </Suspense>
           </Route>
           

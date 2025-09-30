@@ -33,7 +33,9 @@ export default function BlogPostPage() {
   const [copied, setCopied] = useState(false);
   const [currentHeading, setCurrentHeading] = useState("");
 
+  console.log("BlogPostPage - Rendering with slug:", slug);
   const post = getBlogPostBySlug(slug || "");
+  console.log("BlogPostPage - Post found:", !!post, post?.title);
   const relatedPosts = post ? getRelatedPosts(post.slug, 3) : [];
 
   useEffect(() => {
