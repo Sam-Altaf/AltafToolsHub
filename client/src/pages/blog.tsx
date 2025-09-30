@@ -260,7 +260,7 @@ export default function BlogPage() {
               })}
             </div>
 
-            {/* See All Featured Button */}
+            {/* Load More Featured Button */}
             {hasMoreFeatured && (
               <div className="text-center mt-8">
                 <Button 
@@ -269,9 +269,9 @@ export default function BlogPage() {
                   onClick={() => {
                     setShowAllFeaturedArticles(true);
                   }}
-                  data-testid="button-see-all-featured"
+                  data-testid="button-load-more-featured"
                 >
-                  See All Featured Articles ({allFeaturedPosts.length - maxFeaturedToShow} more)
+                  Load More Featured Articles ({allFeaturedPosts.length - maxFeaturedToShow} more)
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </div>
