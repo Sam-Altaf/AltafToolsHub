@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ImageOff } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -99,7 +99,7 @@ export function BlogImage({
   );
 }
 
-// Static image component for known paths
+// Static image component for known paths with Intersection Observer
 export function BlogImageStatic({ 
   src, 
   alt, 
@@ -113,21 +113,52 @@ export function BlogImageStatic({
 }) {
   const [error, setError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [shouldLoad, setShouldLoad] = useState(priority); // Only load if priority or in viewport
+  const imgRef = useRef<HTMLDivElement | null>(null);
 
   // Convert @assets path to direct static URL
   let imagePath = '';
   if (src) {
     if (src.startsWith('@assets/')) {
-      // Replace @assets/ with /attached_assets/ for static serving
       imagePath = src.replace('@assets/', '/attached_assets/');
     } else if (src.startsWith('/attached_assets/')) {
-      // Already has the correct path
       imagePath = src;
     } else {
-      // Assume it's a relative path in attached_assets
       imagePath = `/attached_assets/${src}`;
     }
   }
+
+  useEffect(() => {
+    // If priority, load immediately
+    if (priority || shouldLoad) return;
+
+    // Create intersection observer for lazy loading
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setShouldLoad(true);
+            observer.disconnect();
+          }
+        });
+      },
+      {
+        rootMargin: '200px', // Load 200px before entering viewport
+        threshold: 0.01
+      }
+    );
+
+    const currentRef = imgRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (observer && currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, [priority, shouldLoad]);
 
   if (!src || error) {
     return (
@@ -147,32 +178,35 @@ export function BlogImageStatic({
   }
 
   return (
-    <div className={cn("relative", className)}>
+    <div ref={imgRef} className={cn("relative", className)}>
       {!isLoaded && !error && (
         <Skeleton 
-          className="absolute inset-0" 
+          className="absolute inset-0 w-full h-full" 
           data-testid="image-loading-skeleton-static"
         />
       )}
-      <img
-        src={imagePath}
-        alt={alt}
-        className={cn(
-          className,
-          !isLoaded && !error ? "opacity-0" : "opacity-100",
-          "transition-opacity duration-300"
-        )}
-        loading={priority ? "eager" : "lazy"}
-        onLoad={() => {
-          setIsLoaded(true);
-        }}
-        onError={() => {
-          console.error(`Failed to load image: ${imagePath}`);
-          setError(true);
-          setIsLoaded(false);
-        }}
-        data-testid="blog-image-static"
-      />
+      {shouldLoad && (
+        <img
+          src={imagePath}
+          alt={alt}
+          className={cn(
+            className,
+            !isLoaded && !error ? "opacity-0" : "opacity-100",
+            "transition-opacity duration-300"
+          )}
+          loading={priority ? "eager" : "lazy"}
+          decoding="async"
+          onLoad={() => {
+            setIsLoaded(true);
+          }}
+          onError={() => {
+            console.error(`Failed to load image: ${imagePath}`);
+            setError(true);
+            setIsLoaded(false);
+          }}
+          data-testid="blog-image-static"
+        />
+      )}
     </div>
   );
 }
