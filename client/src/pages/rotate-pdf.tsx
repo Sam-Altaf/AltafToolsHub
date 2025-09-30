@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { useSEO, generateHowToSchema, generateSoftwareApplicationSchema, generateBreadcrumbSchema } from "@/hooks/use-seo";
-import { RotateCw, Upload, Download, FileText, Loader2, ArrowLeft, Shield, RotateCcw, RefreshCw, Star, Users, Zap, Clock, CheckCircle2, ChevronRight, Info, HelpCircle, ChevronDown, Mail, BookOpen } from "lucide-react";
+import { RotateCw, Upload, Download, FileText, Loader2, ArrowLeft, Shield, RotateCcw, RefreshCw, Star, Users, Zap, Clock, CheckCircle2, ChevronRight, Info, HelpCircle, ChevronDown, Mail, BookOpen, Book } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
 import { PDFDocument, degrees } from "pdf-lib";
@@ -601,6 +601,21 @@ export default function RotatePDF() {
               </div>
             </div>
           </Card>
+
+          {/* Blog Link */}
+          <div className="mb-8">
+            <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
+              <div className="flex items-center gap-3">
+                <Book className="h-5 w-5 text-purple-600 dark:text-purple-400 flex-shrink-0" />
+                <div>
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Want to learn more? </span>
+                  <Link href="/guides/how-to-rotate-pdf" className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 underline transition-colors">
+                    Read our complete guide: How to Rotate PDF Pages
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* Why Choose Us */}
           <div className="mb-12">
