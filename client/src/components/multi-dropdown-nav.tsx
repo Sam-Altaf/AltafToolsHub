@@ -79,7 +79,7 @@ const ToolNavItem = ({ tool, onClick }: { tool: NavTool; onClick?: () => void })
   );
 };
 
-// Get organized PDF tools - tools that OUTPUT PDFs
+// Get organized PDF tools - tools that OUTPUT PDFs or have PDF INPUT
 const getPdfToolsSections = () => {
   const pdfTools = allTools.filter(tool => 
     tool.category === "pdf-management" || 
@@ -92,75 +92,69 @@ const getPdfToolsSections = () => {
     (tool.category === "image-conversion" && tool.id.includes("-to-pdf"))
   );
 
-  return [
-    {
-      title: "MANAGE & ORGANIZE",
-      tools: [
-        pdfTools.find(t => t.id === "compress-pdf"),
-        pdfTools.find(t => t.id === "merge-pdf"),
-        pdfTools.find(t => t.id === "split-pdf"),
-        pdfTools.find(t => t.id === "unlock-pdf"),
-        pdfTools.find(t => t.id === "protect-pdf"),
-        pdfTools.find(t => t.id === "rotate-pdf"),
-        pdfTools.find(t => t.id === "remove-pages"),
-        pdfTools.find(t => t.id === "extract-pages"),
-        pdfTools.find(t => t.id === "organize-pdf"),
-        pdfTools.find(t => t.id === "pdf-to-zip")
-      ].filter(Boolean) as NavTool[]
-    },
-    {
-      title: "CONVERT TO PDF",
-      tools: [
-        pdfTools.find(t => t.id === "jpg-to-pdf"),
-        pdfTools.find(t => t.id === "images-to-pdf"),
-        pdfTools.find(t => t.id === "png-to-pdf"),
-        pdfTools.find(t => t.id === "webp-to-pdf"),
-        pdfTools.find(t => t.id === "heic-to-pdf"),
-        pdfTools.find(t => t.id === "word-to-pdf"),
-        pdfTools.find(t => t.id === "excel-to-pdf"),
-        pdfTools.find(t => t.id === "powerpoint-to-pdf"),
-        pdfTools.find(t => t.id === "html-to-pdf"),
-        pdfTools.find(t => t.id === "epub-to-pdf")
-      ].filter(Boolean) as NavTool[]
-    },
-    {
-      title: "EDIT & EXPORT",
-      tools: [
-        pdfTools.find(t => t.id === "add-page-number"),
-        pdfTools.find(t => t.id === "watermark-pdf"),
-        pdfTools.find(t => t.id === "crop-pdf"),
-        pdfTools.find(t => t.id === "sign-pdf"),
-        pdfTools.find(t => t.id === "redact-pdf"),
-        pdfTools.find(t => t.id === "pdf-to-word"),
-        pdfTools.find(t => t.id === "pdf-to-excel"),
-        pdfTools.find(t => t.id === "pdf-to-powerpoint"),
-        pdfTools.find(t => t.id === "pdf-to-html"),
-        pdfTools.find(t => t.id === "extract-text") ? {...pdfTools.find(t => t.id === "extract-text")!, title: "Extract Text (OCR)"} as NavTool : undefined
-      ].filter(Boolean) as NavTool[]
+  // Group tools by their actual categories
+  const categories = new Map<string, NavTool[]>();
+  
+  pdfTools.forEach(tool => {
+    const categoryName = tool.category === "pdf-management" ? "PDF Management" :
+                         tool.category === "document-conversion" ? "Document Conversion" :
+                         tool.category === "image-conversion" ? "Image Conversion" :
+                         tool.category === "security" ? "Security" :
+                         tool.category === "ebook-conversion" ? "eBook Conversion" :
+                         tool.category === "utilities" ? "Utilities" :
+                         "Other";
+    
+    if (!categories.has(categoryName)) {
+      categories.set(categoryName, []);
     }
+    categories.get(categoryName)!.push(tool);
+  });
+
+  // Convert to array format and sort by priority (include all categories)
+  const priorityOrder = ["PDF Management", "Document Conversion", "Image Conversion", "Security", "eBook Conversion", "Utilities", "Other"];
+  
+  // Get all categories, sorted by priority
+  const allCategories = Array.from(categories.keys());
+  const sortedCategories = [
+    ...priorityOrder.filter(cat => categories.has(cat)),
+    ...allCategories.filter(cat => !priorityOrder.includes(cat))
   ];
+  
+  return sortedCategories.map(categoryName => ({
+    title: categoryName.toUpperCase(),
+    tools: categories.get(categoryName)!.slice(0, 10) // Limit to 10 per category
+  }));
 };
 
-// Get organized Image tools - tools that OUTPUT images only
+// Get organized Image tools - tools that OUTPUT images or have IMAGE INPUT
 const getImageToolsSections = () => {
-  const imageOutputTools = allTools.filter(tool => 
+  const imageTools = allTools.filter(tool => 
     tool.id === "pdf-to-images" ||
     tool.id === "pdf-to-jpg" ||
     tool.id === "pdf-to-png" ||
     tool.id === "extract-images"
   );
 
-  return [
-    {
-      title: "PDF TO IMAGES",
-      tools: [
-        imageOutputTools.find(t => t.id === "pdf-to-images"),
-        imageOutputTools.find(t => t.id === "pdf-to-jpg"),
-        imageOutputTools.find(t => t.id === "pdf-to-png"),
-        imageOutputTools.find(t => t.id === "extract-images")
-      ].filter(Boolean) as NavTool[]
+  // Group tools by their actual categories
+  const categories = new Map<string, NavTool[]>();
+  
+  imageTools.forEach(tool => {
+    const categoryName = tool.category === "pdf-management" ? "PDF Management" :
+                         tool.category === "document-conversion" ? "Document Conversion" :
+                         tool.category === "image-conversion" ? "Image Conversion" :
+                         "Other";
+    
+    if (!categories.has(categoryName)) {
+      categories.set(categoryName, []);
     }
-  ];
+    categories.get(categoryName)!.push(tool);
+  });
+
+  // Convert to array format
+  return Array.from(categories.entries()).map(([categoryName, tools]) => ({
+    title: categoryName.toUpperCase(),
+    tools: tools
+  }));
 };
 
 // Menu configuration
@@ -333,12 +327,12 @@ export function MultiDropdownNav() {
               transition={{ duration: 0.15, ease: "easeOut" }}
               className={cn(
                 "absolute top-full mt-4 bg-white dark:bg-gray-900 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden",
-                menuItems.find(m => m.id === openMenu)?.type === 'image' ? '-left-16' : '-left-32'
+                '-left-32'
               )}
               style={{ 
                 zIndex: 10000,
-                minWidth: menuItems.find(m => m.id === openMenu)?.type === 'image' ? '320px' : '800px',
-                maxWidth: menuItems.find(m => m.id === openMenu)?.type === 'image' ? '400px' : '1000px',
+                minWidth: '800px',
+                maxWidth: '1200px',
                 width: 'max-content',
                 maxHeight: 'calc(100vh - 120px)',
                 overflowY: 'auto'
@@ -347,10 +341,7 @@ export function MultiDropdownNav() {
               onMouseLeave={handleMouseLeave}
             >
               {/* Arrow pointing up to show which menu */}
-              <div className={cn(
-                "absolute -top-2 w-4 h-4 bg-white dark:bg-gray-900 border-l border-t border-gray-200 dark:border-gray-700 transform rotate-45 shadow-lg",
-                menuItems.find(m => m.id === openMenu)?.type === 'image' ? 'left-32' : 'left-80'
-              )}></div>
+              <div className="absolute -top-2 left-80 w-4 h-4 bg-white dark:bg-gray-900 border-l border-t border-gray-200 dark:border-gray-700 transform rotate-45 shadow-lg"></div>
               <div className="p-4">
                 {/* Header links for all dropdowns */}
                 {menuItems.find(m => m.id === openMenu)?.type === 'pdf' && (
@@ -396,9 +387,14 @@ export function MultiDropdownNav() {
                 {/* Sections displayed in optimized grid layout */}
                 <div className={cn(
                   "grid gap-6",
-                  menuItems.find(m => m.id === openMenu)?.type === 'pdf' && "grid-cols-3", 
-                  menuItems.find(m => m.id === openMenu)?.type === 'image' && "grid-cols-1",
-                  menuItems.find(m => m.id === openMenu)?.type === 'all' && "grid-cols-3"
+                  (() => {
+                    const sections = getDropdownContent(menuItems.find(m => m.id === openMenu)?.type || '');
+                    const numSections = sections.length;
+                    if (numSections === 1) return "grid-cols-1";
+                    if (numSections === 2) return "grid-cols-2";
+                    if (numSections === 3) return "grid-cols-3";
+                    return "grid-cols-4";
+                  })()
                 )}>
                   {getDropdownContent(menuItems.find(m => m.id === openMenu)?.type || '').map((section, sectionIdx) => (
                     <div key={sectionIdx} className="flex flex-col">
