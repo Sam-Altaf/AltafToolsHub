@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Slider } from "@/components/ui/slider";
 import { 
   Check, AlertCircle, FileDown, Target, Info, TrendingDown, 
-  Gauge, ArrowLeft, FileText, Sparkles, Zap, Shield, Settings2 
+  Gauge, ArrowLeft, FileText, Sparkles, Zap, Shield, Settings2, Book 
 } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
@@ -1066,6 +1066,23 @@ export default function CompressPDF() {
           }
         ]}
       />
+
+      {/* Blog Link */}
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
+            <div className="flex items-center gap-3">
+              <Book className="h-5 w-5 text-purple-600 dark:text-purple-400 flex-shrink-0" />
+              <div>
+                <span className="text-sm text-gray-700 dark:text-gray-300">Want to learn more? </span>
+                <Link href="/guides/how-to-compress-pdf-without-losing-quality" className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 underline transition-colors">
+                  Read our complete guide: How to Compress PDF Without Losing Quality
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <WhyUseSection
         toolName="PDF Compressor"
