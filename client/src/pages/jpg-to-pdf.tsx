@@ -23,7 +23,7 @@ import { Camera, Presentation, BookOpen, Package, Globe2, Users, Upload } from "
 import { Download as DownloadIcon } from "lucide-react";
 import { generateSmartFileName, enhanceDownloadName } from "@/lib/smart-file-namer";
 import { ContactSupportSection } from "@/components/contact-support";
-import { scrollBy } from "@/lib/scroll-utils";
+import { scrollToProcessing } from "@/lib/scroll-utils";
 
 interface ConversionResult {
   pdfBlob: Blob;
@@ -149,9 +149,6 @@ export default function JpgToPDF() {
   };
 
   const convertToPDF = async () => {
-    // Scroll to top to show processing area
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    
     if (selectedFiles.length === 0) {
       setError('Please select at least one image file.');
       return;
@@ -160,6 +157,9 @@ export default function JpgToPDF() {
     setIsProcessing(true);
     setProgress(0);
     setError(null);
+    
+    // Scroll to processing area
+    scrollToProcessing();
 
     try {
       const pdfDoc = await PDFDocument.create();
@@ -332,6 +332,14 @@ export default function JpgToPDF() {
         });
         setIsProcessing(false);
         setProgress(0);
+        
+        // Scroll to download button
+        setTimeout(() => {
+          const downloadBtn = document.querySelector('[data-testid="button-download"]');
+          if (downloadBtn) {
+            downloadBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 100);
       }, 500);
       
     } catch (err) {
