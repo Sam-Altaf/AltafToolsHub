@@ -7,7 +7,7 @@ import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { useSEO, generateHowToSchema, generateSoftwareApplicationSchema } from "@/hooks/use-seo";
-import { Shield, Copy, RefreshCw, Lock, Zap, Check, X, History, Trash2, ArrowLeft } from "lucide-react";
+import { Shield, Copy, RefreshCw, Lock, Zap, Check, X, History, Trash2, ArrowLeft, Book } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Breadcrumbs from "@/components/seo/breadcrumbs";
 import ToolSEO, { toolFAQs } from "@/components/seo/tool-seo";
@@ -566,6 +566,23 @@ export default function PasswordGenerator() {
           }
         ]}
       />
+
+      {/* Blog Link */}
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
+            <div className="flex items-center gap-3">
+              <Book className="h-5 w-5 text-purple-600 dark:text-purple-400 flex-shrink-0" />
+              <div>
+                <span className="text-sm text-gray-700 dark:text-gray-300">Want to learn more? </span>
+                <Link href="/guides/how-to-generate-secure-passwords" className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 underline transition-colors">
+                  Read our complete guide: How to Generate Secure Passwords
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <WhyUseSection
         toolName="Password Generator"
