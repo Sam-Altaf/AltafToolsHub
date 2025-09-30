@@ -101,7 +101,44 @@ export default function BlogPostPage() {
     loadPost();
   }, [slug, setLocation]);
 
+  // Always call hooks before any early returns (React Rules of Hooks)
+  // Compute safe values even when post is null/loading
   const relatedPosts = post ? getRelatedPosts(post.slug, 3) : [];
+  const Icon = post?.icon;
+  const postUrl = `https://altaftoolshub.com/blog/${slug || ''}`;
+
+  // Generate breadcrumb items with safe fallbacks
+  const breadcrumbItems = [
+    { name: "Home", url: "/" },
+    { name: "Blog", url: "/blog" },
+    { name: post?.title || "Loading...", url: `/blog/${slug || ''}` }
+  ];
+
+  // Generate article schema with safe fallbacks
+  const articleSchema = generateArticleSchema({
+    headline: post?.seoTitle || "AltafToolsHub Blog",
+    description: post?.seoDescription || "Privacy-first file processing tools",
+    image: "https://altaftoolshub.com/og-image.png",
+    datePublished: "2025-01-28",
+    dateModified: "2025-01-28",
+    author: {
+      name: post?.author || "AltafToolsHub"
+    }
+  });
+
+  // CRITICAL: useSEO must be called before any early returns
+  useSEO({
+    title: post?.seoTitle || "AltafToolsHub Blog",
+    description: post?.seoDescription || "Privacy-first file processing tools",
+    path: `/blog/${slug || ''}`,
+    keywords: post?.keywords || "pdf tools, file processing, privacy",
+    structuredData: [
+      articleSchema,
+      generateBreadcrumbSchema(breadcrumbItems)
+    ],
+    articlePublishedTime: "2025-01-28T00:00:00Z",
+    articleModifiedTime: "2025-01-28T00:00:00Z"
+  });
 
   useEffect(() => {
     // Scroll to top when post changes
@@ -176,41 +213,6 @@ export default function BlogPostPage() {
   if (!post) {
     return null;
   }
-
-  const Icon = post.icon;
-  const postUrl = `https://altaftoolshub.com/blog/${post.slug}`;
-
-  // Generate breadcrumb items
-  const breadcrumbItems = [
-    { name: "Home", url: "/" },
-    { name: "Blog", url: "/blog" },
-    { name: post.title, url: `/blog/${post.slug}` }
-  ];
-
-  // Generate article schema
-  const articleSchema = generateArticleSchema({
-    headline: post.seoTitle,
-    description: post.seoDescription,
-    image: "https://altaftoolshub.com/og-image.png",
-    datePublished: "2025-01-28",
-    dateModified: "2025-01-28",
-    author: {
-      name: post.author
-    }
-  });
-
-  useSEO({
-    title: post.seoTitle,
-    description: post.seoDescription,
-    path: `/blog/${post.slug}`,
-    keywords: post.keywords,
-    structuredData: [
-      articleSchema,
-      generateBreadcrumbSchema(breadcrumbItems)
-    ],
-    articlePublishedTime: "2025-01-28T00:00:00Z",
-    articleModifiedTime: "2025-01-28T00:00:00Z"
-  });
 
   const copyLink = () => {
     navigator.clipboard.writeText(postUrl).then(() => {
@@ -510,29 +512,6 @@ export default function BlogPostPage() {
           </motion.div>
         </div>
       </section>
-
-      {/* Hero Image */}
-      {post.heroImage && (
-        <section className="py-4 sm:py-6">
-          <div className="container-section px-4 sm:px-6 lg:px-8">
-            <motion.div
-              className="max-w-4xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-            >
-              <img
-                src={post.heroImage}
-                alt={`${post.title} - Hero Image`}
-                className="w-full h-auto rounded-lg shadow-lg object-cover"
-                loading="lazy"
-                style={{ aspectRatio: '16/9' }}
-                data-testid="blog-hero-image"
-              />
-            </motion.div>
-          </div>
-        </section>
-      )}
 
       {/* Mobile Table of Contents (Collapsible) */}
       {tableOfContents.length > 0 && isMobile && (
