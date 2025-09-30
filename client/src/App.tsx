@@ -59,7 +59,6 @@ const HowToConvertJpgToPDF = lazy(() => import("@/pages/guides/how-to-convert-jp
 const HowToGenerateQRCode = lazy(() => import("@/pages/guides/how-to-generate-qr-code"));
 const HowToExtractText = lazy(() => import("@/pages/guides/how-to-extract-text-from-pdf"));
 const HowToGeneratePassword = lazy(() => import("@/pages/guides/how-to-generate-password"));
-const HowToPasswordProtectPDF = lazy(() => import("@/pages/guides/how-to-password-protect-pdf"));
 const PDFCompressorComparison = lazy(() => import("@/pages/compare/pdf-compressor-comparison"));
 const OnlinePDFTools2025 = lazy(() => import("@/pages/compare/online-pdf-tools-2025"));
 const Resources = lazy(() => import("@/pages/resources"));
@@ -255,10 +254,12 @@ function Router() {
               <HowToUnlockPDF />
             </Suspense>
           </Route>
+          {/* Redirects to blog post */}
           <Route path="/guides/how-to-password-protect-pdf">
-            <Suspense fallback={<PageLoader />}>
-              <HowToPasswordProtectPDF />
-            </Suspense>
+            {() => {
+              window.location.href = "/blog/how-to-password-protect-pdf";
+              return null;
+            }}
           </Route>
           <Route path="/guides/how-to-convert-jpg-to-pdf">
             <Suspense fallback={<PageLoader />}>

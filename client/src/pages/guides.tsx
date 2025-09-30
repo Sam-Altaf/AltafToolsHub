@@ -22,6 +22,7 @@ import {
 import { Link } from "wouter";
 import { useSEO } from "@/hooks/use-seo";
 import { ContactSupportSection } from "@/components/contact-support";
+import { allTools } from "@/lib/tools-data";
 
 const guides = [
   {
@@ -288,6 +289,84 @@ export default function GuidesPage() {
                 </Button>
               </CardContent>
             </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Tool Cards Section */}
+      <section className="py-16 px-4">
+        <div className="container mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
+            <p className="text-muted-foreground text-lg">
+              Apply what you've learned with our powerful, free online tools
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {allTools
+              .filter(tool => tool.available)
+              .slice(0, 8)
+              .map((tool, index) => {
+                const Icon = tool.icon;
+                return (
+                  <motion.div
+                    key={tool.id}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.05, duration: 0.3 }}
+                  >
+                    <Link href={tool.href}>
+                      <Card 
+                        className="h-full hover:shadow-xl transition-all duration-300 cursor-pointer group hover:border-primary/50 bg-gradient-to-br from-background to-muted/20"
+                        data-testid={`tool-card-${tool.id}`}
+                      >
+                        <CardHeader className="pb-3">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${tool.color} p-2 text-white group-hover:scale-110 transition-transform`}>
+                              <Icon className="w-full h-full" />
+                            </div>
+                            <div className="flex gap-1">
+                              {tool.popular && (
+                                <Badge variant="secondary" className="text-xs">
+                                  Popular
+                                </Badge>
+                              )}
+                              {tool.new && (
+                                <Badge className="text-xs bg-green-500 text-white">
+                                  New
+                                </Badge>
+                              )}
+                            </div>
+                          </div>
+                          <CardTitle className="text-lg group-hover:text-primary transition-colors">
+                            {tool.title}
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+                            {tool.description}
+                          </p>
+                          <div className="flex items-center text-primary">
+                            <span className="text-sm font-medium">Try Now</span>
+                            <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </Link>
+                  </motion.div>
+                );
+              })}
+          </div>
+
+          <div className="text-center mt-12">
+            <Link href="/all-tools">
+              <Button size="lg" className="group">
+                Explore All Tools
+                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
