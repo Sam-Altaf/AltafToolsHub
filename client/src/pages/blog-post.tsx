@@ -25,7 +25,8 @@ import {
   List,
   ChevronDown,
   ChevronUp,
-  Hash
+  Hash,
+  X
 } from "lucide-react";
 import { useSEO, generateArticleSchema, generateBreadcrumbSchema } from "@/hooks/use-seo";
 import { getBlogPostBySlugAsync, getRelatedPosts } from "@/lib/blog-data-optimized";
@@ -66,6 +67,7 @@ export default function BlogPostPage() {
   const [currentHeading, setCurrentHeading] = useState("");
   const [readingProgress, setReadingProgress] = useState(0);
   const [tocOpen, setTocOpen] = useState(false);
+  const [shareBarVisible, setShareBarVisible] = useState(true);
   const [post, setPost] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const contentRef = useRef<HTMLElement>(null);
@@ -287,15 +289,26 @@ export default function BlogPostPage() {
       {/* Floating Share Sidebar - Desktop Only */}
       {!isMobile && (
         <AnimatePresence>
-          {readingProgress > 10 && (
+          {readingProgress > 30 && shareBarVisible && (
             <motion.div
-              className="fixed left-4 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col gap-3"
+              className="fixed left-5 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col gap-3"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="bg-background/80 backdrop-blur-sm border rounded-lg p-2 shadow-lg flex flex-col gap-2">
+              <div className="bg-background/90 backdrop-blur-sm border rounded-lg p-2 shadow-lg flex flex-col gap-2 opacity-70 hover:opacity-100 transition-opacity duration-200">
+                {/* Close/Minimize Button */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full h-6 p-0 hover:bg-destructive/10 mb-1"
+                  onClick={() => setShareBarVisible(false)}
+                  data-testid="button-close-share-sidebar"
+                >
+                  <X className="w-3 h-3" />
+                  <span className="sr-only">Close share sidebar</span>
+                </Button>
                 <span className="text-xs text-muted-foreground text-center mb-1">Share</span>
                 <Button
                   variant="ghost"
@@ -509,7 +522,7 @@ export default function BlogPostPage() {
 
       {/* Mobile Table of Contents (Collapsible) */}
       {tableOfContents.length > 0 && isMobile && (
-        <section className="py-4 px-4 sm:px-6 lg:hidden">
+        <section className="py-4 px-4 sm:px-6 lg:hidden relative z-30">
           <div className="max-w-4xl mx-auto">
             <Collapsible open={tocOpen} onOpenChange={setTocOpen}>
               <Card className="p-4">
@@ -738,7 +751,7 @@ export default function BlogPostPage() {
 
               {/* Desktop Sidebar Table of Contents */}
               {!isMobile && tableOfContents.length > 0 && (
-                <aside className="hidden lg:block">
+                <aside className="hidden lg:block relative z-30">
                   <div className="sticky top-24 space-y-6">
                     {/* Table of Contents */}
                     <Card className="p-5">
