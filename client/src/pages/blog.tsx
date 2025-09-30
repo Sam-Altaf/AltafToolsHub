@@ -72,11 +72,19 @@ export default function BlogPage() {
     return categoryMatch && searchMatch;
   });
 
-  const displayedPosts = filteredPosts.slice(0, visiblePosts);
-  const hasMorePosts = filteredPosts.length > visiblePosts;
+  // Separate featured and regular posts from ALL filtered posts
+  const allFeaturedPosts = filteredPosts.filter(post => post.featured);
+  const allRegularPosts = filteredPosts.filter(post => !post.featured);
 
-  const featuredPosts = displayedPosts.filter(post => post.featured);
-  const regularPosts = displayedPosts.filter(post => !post.featured);
+  // Show all featured posts (or limit if there are too many)
+  const maxFeaturedToShow = 4;
+  const showAllFeatured = allFeaturedPosts.length <= maxFeaturedToShow;
+  const featuredPosts = showAllFeatured ? allFeaturedPosts : allFeaturedPosts.slice(0, maxFeaturedToShow);
+  const hasMoreFeatured = !showAllFeatured;
+
+  // Apply pagination only to regular posts
+  const regularPosts = allRegularPosts.slice(0, visiblePosts);
+  const hasMoreRegularPosts = allRegularPosts.length > visiblePosts;
 
   const loadMore = () => {
     setVisiblePosts(prev => prev + 6);
@@ -165,7 +173,7 @@ export default function BlogPage() {
             </div>
 
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {featuredPosts.map((post, index) => {
                 const Icon = post.icon;
                 return (
@@ -250,13 +258,32 @@ export default function BlogPage() {
                 );
               })}
             </div>
+
+            {/* See All Featured Button */}
+            {hasMoreFeatured && (
+              <div className="text-center mt-8">
+                <Button 
+                  size="lg" 
+                  className="group bg-gradient-to-r from-primary to-blue-600 hover:opacity-90"
+                  onClick={() => {
+                    // This would typically navigate to a featured articles page or expand the list
+                    // For now, we'll just show all featured articles
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  data-testid="button-see-all-featured"
+                >
+                  See All Featured Articles ({allFeaturedPosts.length - maxFeaturedToShow} more)
+                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </div>
+            )}
           </div>
         </section>
       )}
 
 
       {/* Regular Posts */}
-      {regularPosts.length > 0 && (
+      {(regularPosts.length > 0 || allRegularPosts.length > 0) && (
         <section className="py-12 bg-muted/30">
           <div className="container-section">
             <div className="mb-8">
@@ -264,7 +291,8 @@ export default function BlogPage() {
                 {selectedCategory === "All Posts" ? "All Articles" : selectedCategory}
               </h2>
               <p className="text-muted-foreground">
-                {filteredPosts.length} articles found {searchTerm && `for "${searchTerm}"`}
+                {allRegularPosts.length} {allRegularPosts.length === 1 ? "article" : "articles"} found {searchTerm && `for "${searchTerm}"`}
+                {allFeaturedPosts.length > 0 && ` (plus ${allFeaturedPosts.length} featured)`}
               </p>
             </div>
 
@@ -337,7 +365,7 @@ export default function BlogPage() {
             </div>
 
             {/* Load More / No Results */}
-            {filteredPosts.length === 0 ? (
+            {allRegularPosts.length === 0 && allFeaturedPosts.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-lg text-muted-foreground mb-4">
                   No articles found matching your criteria.
@@ -352,7 +380,7 @@ export default function BlogPage() {
                   Clear Filters
                 </Button>
               </div>
-            ) : hasMorePosts && (
+            ) : hasMoreRegularPosts && (
               <div className="text-center mt-12">
                 <Button 
                   size="lg" 
@@ -361,7 +389,7 @@ export default function BlogPage() {
                   onClick={loadMore}
                   data-testid="button-load-more"
                 >
-                  Load More Articles ({filteredPosts.length - visiblePosts} remaining)
+                  Load More Articles ({allRegularPosts.length - visiblePosts} remaining)
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </div>
