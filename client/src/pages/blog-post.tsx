@@ -269,6 +269,29 @@ export default function BlogPostPage() {
         </div>
       </section>
 
+      {/* Hero Image */}
+      {post.heroImage && (
+        <section className="py-4 sm:py-6">
+          <div className="container-section px-4 sm:px-6 lg:px-8">
+            <motion.div
+              className="max-w-4xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              <img
+                src={post.heroImage}
+                alt={`${post.title} - Hero Image`}
+                className="w-full h-auto rounded-lg shadow-lg object-cover"
+                loading="lazy"
+                style={{ aspectRatio: '16/9' }}
+                data-testid="blog-hero-image"
+              />
+            </motion.div>
+          </div>
+        </section>
+      )}
+
       {/* Main Content */}
       <section className="py-8 sm:py-10 lg:py-12">
         <div className="container-section px-4 sm:px-6 lg:px-8">
@@ -380,6 +403,28 @@ export default function BlogPostPage() {
                 >
                   {post.content}
                 </ReactMarkdown>
+
+                {/* Supporting Images */}
+                {post.supportingImages && post.supportingImages.length > 0 && (
+                  <div className="my-6 sm:my-8 space-y-4 sm:space-y-6">
+                    {post.supportingImages.map((image, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.1 + index * 0.1 }}
+                      >
+                        <img
+                          src={image}
+                          alt={`${post.title} - Supporting image ${index + 1}`}
+                          className="w-full h-auto rounded-lg shadow-md"
+                          loading="lazy"
+                          data-testid={`blog-supporting-image-${index}`}
+                        />
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
 
                 {/* CTA Section */}
                 <Card className="p-4 sm:p-6 mt-6 sm:mt-8 bg-gradient-to-r from-primary/10 via-primary/5 to-background">

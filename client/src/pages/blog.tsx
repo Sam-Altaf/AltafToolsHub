@@ -178,48 +178,63 @@ export default function BlogPage() {
                   >
                     <Link href={`/blog/${post.slug}`}>
                       <Card 
-                        className="p-6 h-full hover:shadow-xl transition-all group cursor-pointer border-2 hover:border-primary/50"
+                        className="h-full hover:shadow-xl transition-all group cursor-pointer border-2 hover:border-primary/50 overflow-hidden"
                         data-testid={`blog-featured-${post.id}`}
                       >
-                        <div className="flex items-start gap-4 mb-4">
-                          <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-                            <Icon className="w-6 h-6 text-primary" />
-                          </div>
-                          <div className="flex-1">
-                            <Badge variant="secondary" className="mb-2">
-                              {post.category}
+                        {post.thumbnailImage && (
+                          <div className="relative w-full h-56 bg-gradient-to-br from-primary/10 to-primary/5 overflow-hidden">
+                            <img
+                              src={post.thumbnailImage}
+                              alt={`${post.title} thumbnail`}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              loading="lazy"
+                            />
+                            <Badge className="absolute top-3 right-3 bg-gradient-to-r from-primary to-blue-600 text-white border-0">
+                              <TrendingUp className="w-4 h-4 mr-1" />
+                              Featured
                             </Badge>
-                            <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors line-clamp-2">
-                              {post.title}
-                            </h3>
                           </div>
-                        </div>
-
-                        <p className="text-muted-foreground mb-4 line-clamp-3">
-                          {post.excerpt}
-                        </p>
-
-                        <div className="flex items-center justify-between text-sm text-muted-foreground">
-                          <div className="flex items-center gap-4">
-                            <span className="flex items-center gap-1">
-                              <Calendar className="w-4 h-4" />
-                              {post.date}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Clock className="w-4 h-4" />
-                              {post.readTime}
-                            </span>
+                        )}
+                        <div className="p-6">
+                          <div className="flex items-start gap-4 mb-4">
+                            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                              <Icon className="w-6 h-6 text-primary" />
+                            </div>
+                            <div className="flex-1">
+                              <Badge variant="secondary" className="mb-2">
+                                {post.category}
+                              </Badge>
+                              <h3 className="text-xl font-semibold mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                                {post.title}
+                              </h3>
+                            </div>
                           </div>
-                          <ArrowRight className="w-4 h-4 text-primary group-hover:translate-x-1 transition-transform" />
-                        </div>
 
-                        <div className="flex flex-wrap gap-2 mt-4">
-                          {post.tags.slice(0, 3).map(tag => (
-                            <Badge key={tag} variant="outline" className="text-xs">
-                              <Tag className="w-3 h-3 mr-1" />
-                              {tag}
-                            </Badge>
-                          ))}
+                          <p className="text-muted-foreground mb-4 line-clamp-3">
+                            {post.excerpt}
+                          </p>
+                          <div className="flex items-center justify-between text-sm text-muted-foreground">
+                            <div className="flex items-center gap-4">
+                              <span className="flex items-center gap-1">
+                                <Calendar className="w-4 h-4" />
+                                {post.date}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Clock className="w-4 h-4" />
+                                {post.readTime}
+                              </span>
+                            </div>
+                            <ArrowRight className="w-4 h-4 text-primary group-hover:translate-x-1 transition-transform" />
+                          </div>
+
+                          <div className="flex flex-wrap gap-2 mt-4">
+                            {post.tags.slice(0, 3).map(tag => (
+                              <Badge key={tag} variant="outline" className="text-xs">
+                                <Tag className="w-3 h-3 mr-1" />
+                                {tag}
+                              </Badge>
+                            ))}
+                          </div>
                         </div>
                       </Card>
                     </Link>
@@ -258,37 +273,49 @@ export default function BlogPage() {
                   >
                     <Link href={`/blog/${post.slug}`}>
                       <Card 
-                        className="p-6 h-full hover:shadow-lg transition-all group cursor-pointer hover:border-primary/50"
+                        className="h-full hover:shadow-lg transition-all group cursor-pointer hover:border-primary/50 overflow-hidden"
                         data-testid={`blog-post-${post.id}`}
                       >
-                        <div className="flex items-center gap-2 mb-3">
-                          <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                            <Icon className="w-4 h-4 text-primary" />
+                        {post.thumbnailImage && (
+                          <div className="relative w-full h-48 bg-gradient-to-br from-primary/10 to-primary/5 overflow-hidden">
+                            <img
+                              src={post.thumbnailImage}
+                              alt={`${post.title} thumbnail`}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              loading="lazy"
+                            />
                           </div>
-                          <Badge variant="outline" className="text-xs">
-                            {post.category}
-                          </Badge>
-                        </div>
+                        )}
+                        <div className="p-6">
+                          <div className="flex items-center gap-2 mb-3">
+                            <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                              <Icon className="w-4 h-4 text-primary" />
+                            </div>
+                            <Badge variant="outline" className="text-xs">
+                              {post.category}
+                            </Badge>
+                          </div>
 
-                        <h3 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors line-clamp-2">
-                          {post.title}
-                        </h3>
+                          <h3 className="font-semibold text-lg mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                            {post.title}
+                          </h3>
 
-                        <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
-                          {post.excerpt}
-                        </p>
+                          <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
+                            {post.excerpt}
+                          </p>
 
-                        <div className="flex items-center justify-between text-xs text-muted-foreground">
-                          <span>{post.date}</span>
-                          <span className="flex items-center gap-1">
-                            <Clock className="w-3 h-3" />
-                            {post.readTime}
-                          </span>
-                        </div>
+                          <div className="flex items-center justify-between text-xs text-muted-foreground">
+                            <span>{post.date}</span>
+                            <span className="flex items-center gap-1">
+                              <Clock className="w-3 h-3" />
+                              {post.readTime}
+                            </span>
+                          </div>
 
-                        <div className="flex items-center mt-4 text-primary">
-                          <span className="text-sm font-medium">Read More</span>
-                          <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                          <div className="flex items-center mt-4 text-primary">
+                            <span className="text-sm font-medium">Read More</span>
+                            <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                          </div>
                         </div>
                       </Card>
                     </Link>

@@ -18,6 +18,9 @@ export interface BlogPost {
   keywords: string;
   relatedTools: string[];
   relatedPosts?: string[];
+  heroImage?: string;
+  thumbnailImage?: string;
+  supportingImages?: string[];
 }
 
 export const blogPosts: BlogPost[] = [
@@ -26,6 +29,8 @@ export const blogPosts: BlogPost[] = [
     slug: "how-to-password-protect-pdf",
     title: "How to Password Protect PDF Files in 2025: Ultimate Security Guide",
     excerpt: "Learn how to add password protection and encryption to PDF files. Comprehensive guide covering user passwords, owner passwords, and permission settings.",
+    heroImage: "@assets/blog_images/password-protect-pdf-hero.png",
+    thumbnailImage: "@assets/blog_images/password-protect-pdf-thumb.png",
     content: `
 # How to Password Protect PDF Files in 2025: Ultimate Security Guide
 
@@ -330,6 +335,9 @@ Remember: The cost of prevention is always less than the cost of a breach. Prote
     seoDescription: "Learn proven techniques to compress PDF files without quality loss. Reduce PDF size by up to 90% while maintaining clarity for text, images, and graphics.",
     keywords: "compress pdf without losing quality, pdf compression, reduce pdf size, pdf optimization, lossless pdf compression, pdf file size reduction",
     excerpt: "Master the art of PDF compression with our comprehensive guide. Learn how to reduce file sizes by up to 90% while maintaining perfect quality for professional documents.",
+    heroImage: "@assets/blog_images/compress-pdf-hero.png",
+    thumbnailImage: "@assets/blog_images/compress-pdf-thumb.png",
+    supportingImages: ["@assets/blog_images/compress-pdf-support1.png", "@assets/blog_images/compress-pdf-support2.png"],
     category: "PDF Tips",
     date: "January 28, 2025",
     readTime: "12 min read",
@@ -592,6 +600,8 @@ With practice and the right approach, you'll consistently achieve 50-90% file si
     seoDescription: "Discover the optimal PDF compression settings for every use case in 2025. Compare compression levels, quality settings, and get expert recommendations.",
     keywords: "best pdf compression settings, pdf compression levels, pdf optimization settings, compression quality comparison, pdf settings guide 2025",
     excerpt: "Compare PDF compression settings across different tools and use cases. Find the perfect balance between file size and quality for your specific needs.",
+    heroImage: "@assets/blog_images/compression-settings-hero.png",
+    thumbnailImage: "@assets/blog_images/compression-settings-thumb.png",
     category: "How-To Guides",
     date: "January 28, 2025",
     readTime: "10 min read",
@@ -1027,6 +1037,8 @@ Start with our recommended settings, test thoroughly, and adjust based on result
     seoDescription: "Learn how to reduce PDF file sizes for email attachments. Overcome Gmail, Outlook, and Yahoo size limits with proven compression techniques and tools.",
     keywords: "reduce pdf file size for email, pdf email attachment, compress pdf for gmail, pdf size limit email, shrink pdf for email",
     excerpt: "Master the art of reducing PDF sizes for email attachments. Learn provider limits, compression techniques, and best practices for Gmail, Outlook, and more.",
+    heroImage: "@assets/blog_images/email-pdf-size-hero.png",
+    thumbnailImage: "@assets/blog_images/email-pdf-size-thumb.png",
     category: "Tool Tutorials",
     date: "January 28, 2025",
     readTime: "9 min read",
@@ -1508,6 +1520,8 @@ The tools and techniques covered here will help you share documents efficiently,
     seoDescription: "Learn how to optimize PDFs for web performance. Improve page load times, SEO rankings, and user experience with proper PDF optimization techniques.",
     keywords: "pdf optimization web performance, optimize pdf for website, pdf seo optimization, reduce pdf load time, web pdf best practices",
     excerpt: "Discover how to optimize PDFs for lightning-fast web performance. Learn techniques to improve load times, SEO, and user experience.",
+    heroImage: "@assets/blog_images/web-optimization-hero.png",
+    thumbnailImage: "@assets/blog_images/web-optimization-thumb.png",
     category: "Web Optimization",
     date: "January 28, 2025",
     readTime: "11 min read",
@@ -2164,6 +2178,8 @@ Start optimizing today and watch your metrics improve immediately.
     seoDescription: "Compare PDF compression and ZIP compression methods. Learn when to use each, understand the differences, and choose the right compression for your needs.",
     keywords: "compress pdf vs zip, pdf compression comparison, zip vs pdf compression, file compression methods, pdf or zip better",
     excerpt: "Discover the key differences between PDF compression and ZIP compression. Learn which method works best for different scenarios and file types.",
+    heroImage: "@assets/blog_images/pdf-vs-zip-hero.png",
+    thumbnailImage: "@assets/blog_images/pdf-vs-zip-thumb.png",
     category: "PDF Tips",
     date: "January 28, 2025",
     readTime: "8 min read",
@@ -2702,6 +2718,8 @@ Remember: The best compression method is the one that meets your specific needs 
     slug: "how-to-convert-jpg-to-pdf", 
     title: "How to Convert JPG to PDF in 2025: Complete Conversion Guide",
     excerpt: "Master JPG to PDF conversion with our comprehensive guide. Learn batch processing, quality settings, page arrangement, and professional document creation techniques.",
+    heroImage: "@assets/blog_images/jpg-to-pdf-hero.png",
+    thumbnailImage: "@assets/blog_images/jpg-to-pdf-thumb.png",
     content: `
 # How to Convert JPG to PDF in 2025: Complete Conversion Guide
 
@@ -3127,6 +3145,8 @@ Start with our recommended settings, experiment with different options, and find
     slug: "how-to-generate-qr-codes",
     title: "How to Generate QR Codes in 2025: Complete QR Code Creation Guide",
     excerpt: "Master QR code generation with our comprehensive guide. Learn about QR code types, customization, tracking, best practices, and professional implementation strategies.",
+    heroImage: "@assets/blog_images/qr-code-hero.png",
+    thumbnailImage: "@assets/blog_images/qr-code-thumb.png",
     content: `
 # How to Generate QR Codes in 2025: Complete QR Code Creation Guide
 
@@ -3665,6 +3685,8 @@ Whether you're creating a simple URL QR code or implementing a complex multi-cha
     slug: "how-to-generate-secure-passwords",
     title: "How to Generate Secure Passwords in 2025: Ultimate Security Guide",
     excerpt: "Learn how to create unbreakable passwords with our comprehensive guide. Discover password best practices, generation techniques, management strategies, and security tools.",
+    heroImage: "@assets/blog_images/password-generator-hero.png",
+    thumbnailImage: "@assets/blog_images/password-generator-thumb.png",
     content: `
 # How to Generate Secure Passwords in 2025: Ultimate Security Guide
 
@@ -4118,6 +4140,8 @@ The investment in password security is minimal compared to the potential cost of
     slug: "how-to-extract-text-from-pdf",
     title: "How to Extract Text from PDF & Images: Complete OCR Guide 2025",
     excerpt: "Master text extraction from PDFs and images using OCR technology. Learn extraction methods, accuracy optimization, bulk processing, and professional document digitization.",
+    heroImage: "@assets/blog_images/text-extraction-hero.png",
+    thumbnailImage: "@assets/blog_images/text-extraction-thumb.png",
     content: `
 # How to Extract Text from PDF & Images: Complete OCR Guide 2025
 
@@ -4683,6 +4707,8 @@ As OCR technology continues advancing with AI and machine learning, we're approa
     slug: "how-to-unlock-pdf",
     title: "How to Unlock PDF Files in 2025: Remove PDF Passwords & Restrictions",
     excerpt: "Complete guide to unlocking password-protected PDFs. Learn how to remove PDF passwords, bypass restrictions, recover forgotten passwords, and unlock documents safely.",
+    heroImage: "@assets/blog_images/unlock-pdf-hero.png",
+    thumbnailImage: "@assets/blog_images/unlock-pdf-thumb.png",
     content: `
 # How to Unlock PDF Files in 2025: Remove PDF Passwords & Restrictions
 
@@ -5240,6 +5266,9 @@ As PDF security continues evolving with stronger encryption and new protection m
     slug: "how-to-merge-pdf-files",
     title: "How to Merge PDF Files: Complete Guide for 2025",
     excerpt: "Learn how to combine multiple PDF documents into one seamless file. Step-by-step guide covering merging techniques, page ordering, and quality preservation.",
+    heroImage: "@assets/blog_images/merge-pdf-hero.png",
+    thumbnailImage: "@assets/blog_images/merge-pdf-thumb.png",
+    supportingImages: ["@assets/blog_images/merge-pdf-support1.png"],
     content: `
 # How to Merge PDF Files: Complete Guide for 2025
 
@@ -5595,6 +5624,9 @@ Start merging your PDFs today and experience the convenience of consolidated doc
     seoDescription: "Master PDF splitting with our comprehensive guide. Learn to extract pages, divide documents, and manage large PDFs efficiently with professional techniques.",
     keywords: "split pdf, divide pdf, extract pdf pages, pdf splitter, separate pdf pages, pdf division, split documents",
     excerpt: "Learn professional techniques to split PDF files efficiently. Extract specific pages, divide large documents, and optimize your document workflow with our comprehensive guide.",
+    heroImage: "@assets/blog_images/split-pdf-hero.png",
+    thumbnailImage: "@assets/blog_images/split-pdf-thumb.png",
+    supportingImages: ["@assets/blog_images/split-pdf-support1.png"],
     category: "PDF Tips",
     date: "2025-01-30",
     readTime: "11 min read",
@@ -5963,6 +5995,8 @@ Master PDF splitting and take control of your document management workflow!
     seoDescription: "Learn professional PDF cropping techniques to remove margins, eliminate whitespace, and focus on content. Complete guide with tips for perfect page dimensions.",
     keywords: "crop pdf, pdf cropping, remove pdf margins, trim pdf pages, pdf whitespace removal, resize pdf pages, pdf page dimensions",
     excerpt: "Master PDF cropping to remove unwanted margins, eliminate whitespace, and create perfectly sized documents. Professional techniques for all industries.",
+    heroImage: "@assets/blog_images/crop-pdf-hero.png",
+    thumbnailImage: "@assets/blog_images/crop-pdf-thumb.png",
     category: "PDF Tips",
     date: "2025-01-30",
     readTime: "10 min read",
@@ -6352,6 +6386,8 @@ Master PDF cropping and deliver perfectly formatted documents every time!
     seoDescription: "Master PDF page organization with our comprehensive guide. Learn to rearrange, rotate, delete, and manage PDF pages efficiently for perfect document structure.",
     keywords: "organize pdf pages, rearrange pdf, reorder pdf pages, pdf page management, sort pdf pages, pdf organization, manage pdf documents",
     excerpt: "Learn professional techniques to organize, rearrange, and manage PDF pages. Create perfectly structured documents with our comprehensive organization guide.",
+    heroImage: "@assets/blog_images/organize-pdf-hero.png",
+    thumbnailImage: "@assets/blog_images/organize-pdf-thumb.png",
     category: "PDF Tips",
     date: "2025-01-30",
     readTime: "11 min read",
@@ -6826,6 +6862,8 @@ Master PDF organization and revolutionize your document workflow!
     seoDescription: "Learn how to rotate PDF pages quickly and easily. Fix sideways, upside-down, or incorrectly oriented PDFs with our comprehensive rotation guide.",
     keywords: "rotate pdf, pdf rotation, fix pdf orientation, turn pdf pages, pdf sideways, rotate pdf online, pdf orientation fix",
     excerpt: "Master PDF rotation to fix orientation issues instantly. Learn professional techniques to rotate single pages, multiple pages, or entire documents with ease.",
+    heroImage: "@assets/blog_images/rotate-pdf-hero.png",
+    thumbnailImage: "@assets/blog_images/rotate-pdf-thumb.png",
     category: "PDF Tips",
     date: "2025-01-30",
     readTime: "9 min read",
@@ -7253,6 +7291,8 @@ Perfect your PDF orientations and present documents professionally every time!
     seoDescription: "Learn how to remove unwanted pages from PDFs quickly and efficiently. Delete blank pages, remove confidential content, and clean up documents professionally.",
     keywords: "remove pdf pages, delete pdf pages, remove pages from pdf, pdf page deletion, clean pdf, remove blank pages, pdf page remover",
     excerpt: "Master the art of removing unwanted pages from PDFs. Learn to delete blank pages, remove sensitive content, and create cleaner, more focused documents.",
+    heroImage: "@assets/blog_images/remove-pages-hero.png",
+    thumbnailImage: "@assets/blog_images/remove-pages-thumb.png",
     category: "PDF Tips",
     date: "2025-01-30",
     readTime: "10 min read",
@@ -7736,6 +7776,8 @@ Create cleaner, more focused PDFs by removing unnecessary content today!
     seoDescription: "Learn how to extract specific pages from PDFs and save them as new documents. Perfect for sharing relevant sections without sending entire files.",
     keywords: "extract pdf pages, save pdf pages, extract pages from pdf, pdf page extraction, separate pdf pages, pdf extractor, isolate pdf content",
     excerpt: "Master PDF page extraction to create focused documents from larger files. Learn professional techniques to extract and save specific pages efficiently.",
+    heroImage: "@assets/blog_images/extract-pages-hero.png",
+    thumbnailImage: "@assets/blog_images/extract-pages-thumb.png",
     category: "PDF Tips",
     date: "2025-01-30",
     readTime: "10 min read",
@@ -8195,6 +8237,8 @@ Transform how you share information with professional PDF page extraction!
     seoDescription: "Learn how to extract all images from PDFs quickly. Save photos, graphics, logos, and illustrations from PDF documents while maintaining original quality.",
     keywords: "extract images from pdf, save pdf images, pdf image extraction, get pictures from pdf, pdf to images, extract graphics, pdf image extractor",
     excerpt: "Master PDF image extraction to save all embedded photos, graphics, and illustrations. Learn professional techniques to extract images while preserving quality.",
+    heroImage: "@assets/blog_images/extract-images-hero.png",
+    thumbnailImage: "@assets/blog_images/extract-images-thumb.png",
     category: "PDF Tips",
     date: "2025-01-30",
     readTime: "10 min read",
@@ -8673,6 +8717,8 @@ Unlock the visual content in your PDFs with professional image extraction!
     seoDescription: "Learn how to add page numbers to PDFs professionally. Customize position, format, style, and create complex numbering schemes for any document type.",
     keywords: "add page numbers to pdf, pdf pagination, number pdf pages, pdf page numbering, add numbers to pdf, pdf footer numbers, document pagination",
     excerpt: "Master PDF page numbering with our comprehensive guide. Add professional page numbers with custom formatting, positioning, and styles for any document.",
+    heroImage: "@assets/blog_images/page-numbers-hero.png",
+    thumbnailImage: "@assets/blog_images/page-numbers-thumb.png",
     category: "PDF Tips",
     date: "2025-01-30",
     readTime: "11 min read",
@@ -9168,6 +9214,8 @@ Master PDF pagination and deliver professionally numbered documents every time!
     seoDescription: "Learn how to add professional watermarks to PDFs. Protect documents with text or image watermarks, control transparency, and prevent unauthorized use.",
     keywords: "watermark pdf, add watermark to pdf, pdf watermarking, document watermark, pdf protection, text watermark, image watermark",
     excerpt: "Master PDF watermarking to protect intellectual property and control document distribution. Learn professional techniques for text and image watermarks.",
+    heroImage: "@assets/blog_images/watermark-hero.png",
+    thumbnailImage: "@assets/blog_images/watermark-thumb.png",
     category: "Security",
     date: "2025-01-30",
     readTime: "12 min read",
