@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { allTools, toolCategories } from "@/lib/tools-data";
 import { Link } from "wouter";
@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { 
   Search, 
   Star, 
@@ -29,6 +30,57 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
+// Lazy loading wrapper for tool cards
+const LazyToolCard = ({ tool, view, priority = false }: { tool: any; view: 'grid' | 'list'; priority?: boolean }) => {
+  const [shouldRender, setShouldRender] = useState(priority);
+  const cardRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    // If priority, render immediately
+    if (priority || shouldRender) return;
+
+    // Create intersection observer for lazy loading
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setShouldRender(true);
+            observer.disconnect();
+          }
+        });
+      },
+      {
+        rootMargin: '300px', // Load 300px before entering viewport
+        threshold: 0.01
+      }
+    );
+
+    const currentRef = cardRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (observer && currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, [priority, shouldRender]);
+
+  return (
+    <div ref={cardRef} className="h-full">
+      {shouldRender ? (
+        <ToolCard tool={tool} view={view} />
+      ) : (
+        <Skeleton className={cn(
+          "w-full rounded-lg",
+          view === 'grid' ? "h-[240px]" : "h-[100px]"
+        )} data-testid={`tool-skeleton-${tool.id}`} />
+      )}
+    </div>
+  );
+};
 
 const ToolCard = ({ tool, view }: { tool: any; view: 'grid' | 'list' }) => {
   const Icon = tool.icon;
@@ -412,8 +464,8 @@ export default function AllToolsPage() {
                           ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
                           : "space-y-3"
                       )}>
-                        {categoryTools.map((tool) => (
-                          <ToolCard key={tool.id} tool={tool} view={viewMode} />
+                        {categoryTools.map((tool, index) => (
+                          <LazyToolCard key={tool.id} tool={tool} view={viewMode} priority={index < 8} />
                         ))}
                       </div>
                     </div>
@@ -433,8 +485,8 @@ export default function AllToolsPage() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
               >
-                {filteredTools.map((tool) => (
-                  <ToolCard key={tool.id} tool={tool} view={viewMode} />
+                {filteredTools.map((tool, index) => (
+                  <LazyToolCard key={tool.id} tool={tool} view={viewMode} priority={index < 8} />
                 ))}
               </motion.div>
             )}
