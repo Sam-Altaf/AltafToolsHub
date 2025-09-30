@@ -1,10 +1,11 @@
 import { useParams, Link, useLocation } from "wouter";
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { 
   Calendar, 
   Clock, 
@@ -19,19 +20,50 @@ import {
   Copy,
   Check,
   ChevronRight,
-  ExternalLink
+  ExternalLink,
+  List,
+  ChevronDown,
+  ChevronUp,
+  Hash
 } from "lucide-react";
 import { useSEO, generateArticleSchema, generateBreadcrumbSchema } from "@/hooks/use-seo";
 import { getBlogPostBySlug, getRelatedPosts } from "@/lib/blog-data";
 import { ContactSupportSection } from "@/components/contact-support";
 import ReactMarkdown from 'react-markdown';
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
+
+// Throttle function for performance optimization
+function throttle<T extends (...args: any[]) => any>(func: T, wait: number) {
+  let timeout: ReturnType<typeof setTimeout> | null = null;
+  let lastArgs: Parameters<T> | null = null;
+  
+  const throttled = (...args: Parameters<T>) => {
+    lastArgs = args;
+    
+    if (!timeout) {
+      func(...lastArgs);
+      timeout = setTimeout(() => {
+        timeout = null;
+        if (lastArgs) {
+          func(...lastArgs);
+        }
+      }, wait);
+    }
+  };
+  
+  return throttled;
+}
 
 export default function BlogPostPage() {
   const { slug } = useParams();
   const [, setLocation] = useLocation();
   const [copied, setCopied] = useState(false);
   const [currentHeading, setCurrentHeading] = useState("");
+  const [readingProgress, setReadingProgress] = useState(0);
+  const [tocOpen, setTocOpen] = useState(false);
+  const contentRef = useRef<HTMLElement>(null);
+  const isMobile = useIsMobile();
 
   console.log("BlogPostPage - Rendering with slug:", slug);
   const post = getBlogPostBySlug(slug || "");
@@ -41,29 +73,53 @@ export default function BlogPostPage() {
   useEffect(() => {
     // Scroll to top when post changes
     window.scrollTo(0, 0);
+    // Reset progress and table of contents state
+    setReadingProgress(0);
+    setCurrentHeading("");
+    setTocOpen(false);
   }, [slug]);
 
-  useEffect(() => {
-    if (!post) return;
+  // Throttled scroll handler for performance
+  const handleScroll = useCallback(
+    throttle(() => {
+      if (!post || !contentRef.current) return;
 
-    // Track scroll position for table of contents
-    const handleScroll = () => {
-      const headings = document.querySelectorAll('h2, h3');
+      // Calculate reading progress
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const scrollTop = window.scrollY;
+      const scrollPercent = (scrollTop / (documentHeight - windowHeight)) * 100;
+      setReadingProgress(Math.min(100, Math.max(0, scrollPercent)));
+
+      // Track current heading for table of contents
+      const headings = document.querySelectorAll('h2[id], h3[id]');
       let current = "";
       
       headings.forEach(heading => {
         const rect = heading.getBoundingClientRect();
+        // Check if heading is in the viewport (with some offset for better UX)
         if (rect.top <= 100) {
           current = heading.id;
         }
       });
       
-      setCurrentHeading(current);
-    };
+      if (current !== currentHeading) {
+        setCurrentHeading(current);
+      }
+    }, 100),
+    [post, currentHeading]
+  );
+
+  useEffect(() => {
+    if (!post) return;
 
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [post]);
+    handleScroll(); // Call once to set initial state
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [post, handleScroll]);
 
   if (!post) {
     setLocation("/blog");
@@ -137,8 +193,37 @@ export default function BlogPostPage() {
 
   const tableOfContents = extractHeadings(post.content);
 
+  const scrollToHeading = (headingId: string) => {
+    const element = document.getElementById(headingId);
+    if (element) {
+      const offset = 80; // Offset for fixed header
+      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+      const offsetPosition = elementPosition - offset;
+      
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+      
+      // Close mobile TOC after clicking
+      if (isMobile) {
+        setTocOpen(false);
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen">
+      {/* Reading Progress Bar */}
+      <div 
+        className="fixed top-0 left-0 w-full h-[3px] z-50 bg-gradient-to-r from-primary via-accent to-secondary transition-transform duration-150 origin-left"
+        style={{ 
+          transform: `scaleX(${readingProgress / 100})`,
+        }}
+        aria-label={`Reading progress: ${Math.round(readingProgress)}%`}
+        data-testid="reading-progress-bar"
+      />
+
       {/* Breadcrumbs */}
       <section className="py-3 sm:py-4 border-b">
         <div className="container-section px-4 sm:px-6 lg:px-8">
@@ -292,11 +377,57 @@ export default function BlogPostPage() {
         </section>
       )}
 
-      {/* Main Content */}
-      <section className="py-8 sm:py-10 lg:py-12">
-        <div className="container-section px-4 sm:px-6 lg:px-8">
+      {/* Mobile Table of Contents (Collapsible) */}
+      {tableOfContents.length > 0 && isMobile && (
+        <section className="py-4 px-4 sm:px-6 lg:hidden">
           <div className="max-w-4xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6 lg:gap-8">
+            <Collapsible open={tocOpen} onOpenChange={setTocOpen}>
+              <Card className="p-4">
+                <CollapsibleTrigger className="flex items-center justify-between w-full text-left">
+                  <h3 className="font-semibold flex items-center gap-2 text-sm">
+                    <List className="w-4 h-4 text-primary" />
+                    Table of Contents
+                  </h3>
+                  {tocOpen ? (
+                    <ChevronUp className="w-4 h-4 text-muted-foreground" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                  )}
+                </CollapsibleTrigger>
+                <CollapsibleContent className="mt-3">
+                  <nav className="space-y-1.5">
+                    {tableOfContents.map((heading) => (
+                      <button
+                        key={heading.id}
+                        onClick={() => scrollToHeading(heading.id)}
+                        className={cn(
+                          "block w-full text-left text-xs py-1.5 px-2 rounded hover:bg-muted transition-colors",
+                          heading.level === 3 && "ml-4 text-xs",
+                          currentHeading === heading.id 
+                            ? "text-primary font-medium bg-primary/10" 
+                            : "text-muted-foreground"
+                        )}
+                        data-testid={`toc-mobile-${heading.id}`}
+                      >
+                        <span className="flex items-center gap-1">
+                          {heading.level === 3 && <Hash className="w-3 h-3 opacity-50" />}
+                          {heading.text}
+                        </span>
+                      </button>
+                    ))}
+                  </nav>
+                </CollapsibleContent>
+              </Card>
+            </Collapsible>
+          </div>
+        </section>
+      )}
+
+      {/* Main Content */}
+      <section className="py-8 sm:py-10 lg:py-12" ref={contentRef}>
+        <div className="container-section px-4 sm:px-6 lg:px-8">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] xl:grid-cols-[1fr_300px] gap-8 lg:gap-10">
               {/* Article Content */}
               <motion.article
                 className="prose prose-sm sm:prose-base lg:prose-lg dark:prose-invert prose-p:text-sm sm:prose-p:text-base prose-li:text-sm sm:prose-li:text-base prose-table:text-xs sm:prose-table:text-sm lg:prose-table:text-base max-w-full prose-img:max-w-full prose-img:h-auto overflow-x-hidden"
@@ -446,87 +577,75 @@ export default function BlogPostPage() {
                     ))}
                   </div>
                 </Card>
-
-                {/* Mobile Table of Contents */}
-                {tableOfContents.length > 0 && (
-                  <Card className="p-4 sm:p-5 mt-6 sm:mt-8 lg:hidden">
-                    <h3 className="font-semibold mb-3 flex items-center gap-2 text-sm sm:text-base">
-                      <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
-                      Table of Contents
-                    </h3>
-                    <nav className="space-y-1.5">
-                      {tableOfContents.map((heading) => (
-                        <a
-                          key={heading.id}
-                          href={`#${heading.id}`}
-                          className={cn(
-                            "block text-xs sm:text-sm py-1 hover:text-primary transition-colors",
-                            heading.level === 3 && "ml-3 sm:ml-4",
-                            currentHeading === heading.id ? "text-primary font-medium" : "text-muted-foreground"
-                          )}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            document.getElementById(heading.id)?.scrollIntoView({ behavior: 'smooth' });
-                          }}
-                        >
-                          {heading.text}
-                        </a>
-                      ))}
-                    </nav>
-                  </Card>
-                )}
               </motion.article>
 
-              {/* Sidebar - Hidden on mobile, shown on lg screens */}
-              <aside className="hidden lg:block lg:sticky lg:top-24 h-fit space-y-6">
-                {/* Table of Contents */}
-                {tableOfContents.length > 0 && (
-                  <Card className="p-6">
-                    <h3 className="font-semibold mb-4 flex items-center gap-2">
-                      <BookOpen className="w-4 h-4 text-primary" />
-                      Table of Contents
-                    </h3>
-                    <nav className="space-y-2">
-                      {tableOfContents.map((heading) => (
-                        <a
-                          key={heading.id}
-                          href={`#${heading.id}`}
-                          className={cn(
-                            "block text-sm hover:text-primary transition-colors",
-                            heading.level === 3 && "ml-4",
-                            currentHeading === heading.id ? "text-primary font-medium" : "text-muted-foreground"
-                          )}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            document.getElementById(heading.id)?.scrollIntoView({ behavior: 'smooth' });
-                          }}
-                        >
-                          {heading.text}
-                        </a>
-                      ))}
-                    </nav>
-                  </Card>
-                )}
+              {/* Desktop Sidebar Table of Contents */}
+              {!isMobile && tableOfContents.length > 0 && (
+                <aside className="hidden lg:block">
+                  <div className="sticky top-24 space-y-6">
+                    {/* Table of Contents */}
+                    <Card className="p-5">
+                      <h3 className="font-semibold mb-4 flex items-center gap-2 text-sm">
+                        <BookOpen className="w-4 h-4 text-primary" />
+                        Table of Contents
+                      </h3>
+                      <nav className="space-y-1">
+                        {tableOfContents.map((heading) => (
+                          <button
+                            key={heading.id}
+                            onClick={() => scrollToHeading(heading.id)}
+                            className={cn(
+                              "block w-full text-left text-sm py-1.5 px-2 rounded hover:bg-muted transition-all duration-200",
+                              heading.level === 3 && "ml-4 text-xs",
+                              currentHeading === heading.id 
+                                ? "text-primary font-medium bg-primary/10 border-l-2 border-primary" 
+                                : "text-muted-foreground hover:text-foreground"
+                            )}
+                            data-testid={`toc-desktop-${heading.id}`}
+                          >
+                            <span className="flex items-center gap-1.5">
+                              {heading.level === 3 && <Hash className="w-3 h-3 opacity-50" />}
+                              {heading.text}
+                            </span>
+                          </button>
+                        ))}
+                      </nav>
+                      {/* Reading Progress Indicator */}
+                      <div className="mt-4 pt-4 border-t">
+                        <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
+                          <span>Reading progress</span>
+                          <span>{Math.round(readingProgress)}%</span>
+                        </div>
+                        <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
+                          <div 
+                            className="h-full bg-gradient-to-r from-primary via-accent to-secondary transition-all duration-300 ease-out"
+                            style={{ width: `${readingProgress}%` }}
+                          />
+                        </div>
+                      </div>
+                    </Card>
 
-                {/* Quick Tools */}
-                <Card className="p-6 bg-gradient-to-br from-primary/5 to-background">
-                  <h3 className="font-semibold mb-4">Quick Tools</h3>
-                  <div className="space-y-2">
-                    {post.relatedTools.slice(0, 3).map(tool => (
-                      <Button 
-                        key={tool}
-                        variant="ghost" 
-                        className="w-full justify-start"
-                        data-testid={`sidebar-tool-${tool}`}
-                        onClick={() => setLocation(`/${tool}`)}
-                      >
-                        <ArrowRight className="w-4 h-4 mr-2" />
-                        {tool.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                      </Button>
-                    ))}
+                    {/* Quick Tools */}
+                    <Card className="p-5 bg-gradient-to-br from-primary/5 to-background">
+                      <h3 className="font-semibold mb-3 text-sm">Quick Tools</h3>
+                      <div className="space-y-1">
+                        {post.relatedTools.slice(0, 3).map(tool => (
+                          <Button 
+                            key={tool}
+                            variant="ghost" 
+                            className="w-full justify-start text-sm h-9"
+                            data-testid={`sidebar-tool-${tool}`}
+                            onClick={() => setLocation(`/${tool}`)}
+                          >
+                            <ArrowRight className="w-3 h-3 mr-2" />
+                            {tool.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                          </Button>
+                        ))}
+                      </div>
+                    </Card>
                   </div>
-                </Card>
-              </aside>
+                </aside>
+              )}
             </div>
           </div>
         </div>
@@ -536,22 +655,40 @@ export default function BlogPostPage() {
       {relatedPosts.length > 0 && (
         <section className="py-8 sm:py-10 lg:py-12 bg-muted/30">
           <div className="container-section px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-6xl mx-auto">
               <h2 className="text-xl sm:text-2xl font-bold mb-6 sm:mb-8">Related Articles</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
                 {relatedPosts.map(relatedPost => {
                   const RelatedIcon = relatedPost.icon;
                   return (
                     <Link key={relatedPost.id} href={`/blog/${relatedPost.slug}`}>
-                      <Card className="p-4 sm:p-5 lg:p-6 hover:shadow-lg transition-all cursor-pointer h-full">
-                        <div className="flex items-center gap-1.5 sm:gap-2 mb-2 sm:mb-3">
-                          <RelatedIcon className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0" />
-                          <Badge variant="outline" className="text-[10px] sm:text-xs">
-                            {relatedPost.category}
-                          </Badge>
+                      <Card className="h-full hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                        <div className="p-4 sm:p-5">
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
+                              <RelatedIcon className="w-5 h-5 text-primary" />
+                            </div>
+                            <Badge variant="outline" className="text-xs">
+                              {relatedPost.category}
+                            </Badge>
+                          </div>
+                          <h3 className="font-semibold mb-2 text-foreground line-clamp-2 text-sm sm:text-base">
+                            {relatedPost.title}
+                          </h3>
+                          <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 mb-3">
+                            {relatedPost.excerpt}
+                          </p>
+                          <div className="flex items-center justify-between text-xs text-muted-foreground">
+                            <span className="flex items-center gap-1">
+                              <Clock className="w-3 h-3" />
+                              {relatedPost.readTime}
+                            </span>
+                            <span className="text-primary flex items-center gap-1 font-medium">
+                              Read more
+                              <ArrowRight className="w-3 h-3" />
+                            </span>
+                          </div>
                         </div>
-                        <h3 className="font-semibold mb-1.5 sm:mb-2 line-clamp-2 text-sm sm:text-base">{relatedPost.title}</h3>
-                        <p className="text-xs sm:text-sm text-muted-foreground line-clamp-3">{relatedPost.excerpt}</p>
                       </Card>
                     </Link>
                   );
