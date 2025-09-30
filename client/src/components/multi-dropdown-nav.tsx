@@ -79,7 +79,7 @@ const ToolNavItem = ({ tool, onClick }: { tool: NavTool; onClick?: () => void })
   );
 };
 
-// Get organized PDF tools - all PDF-related tools from tools-data.ts
+// Get organized PDF tools - curated list of most popular tools
 const getPdfToolsSections = () => {
   const pdfTools = allTools.filter(tool => 
     tool.category === "pdf-management" || 
@@ -103,8 +103,7 @@ const getPdfToolsSections = () => {
         pdfTools.find(t => t.id === "rotate-pdf"),
         pdfTools.find(t => t.id === "remove-pages"),
         pdfTools.find(t => t.id === "extract-pages"),
-        pdfTools.find(t => t.id === "organize-pdf"),
-        pdfTools.find(t => t.id === "crop-pdf")
+        pdfTools.find(t => t.id === "organize-pdf")
       ].filter(Boolean) as NavTool[]
     },
     {
@@ -113,21 +112,12 @@ const getPdfToolsSections = () => {
         pdfTools.find(t => t.id === "jpg-to-pdf"),
         pdfTools.find(t => t.id === "images-to-pdf"),
         pdfTools.find(t => t.id === "png-to-pdf"),
-        pdfTools.find(t => t.id === "webp-to-pdf"),
-        pdfTools.find(t => t.id === "svg-to-pdf"),
-        pdfTools.find(t => t.id === "heic-to-pdf"),
-        pdfTools.find(t => t.id === "tiff-to-pdf"),
-        pdfTools.find(t => t.id === "avif-to-pdf"),
         pdfTools.find(t => t.id === "word-to-pdf"),
         pdfTools.find(t => t.id === "excel-to-pdf"),
         pdfTools.find(t => t.id === "powerpoint-to-pdf"),
         pdfTools.find(t => t.id === "html-to-pdf"),
         pdfTools.find(t => t.id === "txt-to-pdf"),
-        pdfTools.find(t => t.id === "epub-to-pdf"),
-        pdfTools.find(t => t.id === "mobi-to-pdf"),
-        pdfTools.find(t => t.id === "azw-to-pdf"),
-        pdfTools.find(t => t.id === "fb2-to-pdf"),
-        pdfTools.find(t => t.id === "djvu-to-pdf")
+        pdfTools.find(t => t.id === "epub-to-pdf")
       ].filter(Boolean) as NavTool[]
     },
     {
@@ -137,22 +127,17 @@ const getPdfToolsSections = () => {
         pdfTools.find(t => t.id === "watermark-pdf"),
         pdfTools.find(t => t.id === "extract-text") ? {...pdfTools.find(t => t.id === "extract-text")!, title: "Extract Text (OCR)"} as NavTool : undefined,
         pdfTools.find(t => t.id === "extract-images"),
-        pdfTools.find(t => t.id === "sign-pdf"),
-        pdfTools.find(t => t.id === "redact-pdf"),
         pdfTools.find(t => t.id === "pdf-to-word"),
         pdfTools.find(t => t.id === "pdf-to-excel"),
-        pdfTools.find(t => t.id === "pdf-to-powerpoint"),
-        pdfTools.find(t => t.id === "pdf-to-html"),
-        pdfTools.find(t => t.id === "pdf-to-text"),
-        pdfTools.find(t => t.id === "pdf-to-epub"),
-        pdfTools.find(t => t.id === "pdf-to-mobi"),
-        pdfTools.find(t => t.id === "pdf-to-zip")
+        pdfTools.find(t => t.id === "pdf-to-images"),
+        pdfTools.find(t => t.id === "pdf-to-jpg"),
+        pdfTools.find(t => t.id === "sign-pdf")
       ].filter(Boolean) as NavTool[]
     }
   ];
 };
 
-// Get organized Image tools - real tools that output images from tools-data.ts
+// Get organized Image tools - balanced distribution
 const getImageToolsSections = () => {
   const imageOutputTools = allTools.filter(tool => 
     tool.id === "pdf-to-images" ||
@@ -167,31 +152,32 @@ const getImageToolsSections = () => {
       tools: [
         imageOutputTools.find(t => t.id === "pdf-to-images"),
         imageOutputTools.find(t => t.id === "pdf-to-jpg"),
-        imageOutputTools.find(t => t.id === "extract-images")
-      ].filter(Boolean) as NavTool[]
-    },
-    {
-      title: "IMAGES TO PDF",
-      tools: [
+        imageOutputTools.find(t => t.id === "extract-images"),
         imageOutputTools.find(t => t.id === "jpg-to-pdf"),
         imageOutputTools.find(t => t.id === "images-to-pdf"),
-        imageOutputTools.find(t => t.id === "png-to-pdf"),
-        imageOutputTools.find(t => t.id === "webp-to-pdf"),
-        imageOutputTools.find(t => t.id === "svg-to-pdf"),
-        imageOutputTools.find(t => t.id === "heic-to-pdf"),
-        imageOutputTools.find(t => t.id === "tiff-to-pdf"),
-        imageOutputTools.find(t => t.id === "avif-to-pdf")
+        imageOutputTools.find(t => t.id === "png-to-pdf")
       ].filter(Boolean) as NavTool[]
     },
     {
       title: "IMAGE FORMATS",
       tools: [
-        imageOutputTools.find(t => t.id === "jpg-to-pdf"),
-        imageOutputTools.find(t => t.id === "png-to-pdf"),
         imageOutputTools.find(t => t.id === "webp-to-pdf"),
         imageOutputTools.find(t => t.id === "svg-to-pdf"),
         imageOutputTools.find(t => t.id === "heic-to-pdf"),
-        imageOutputTools.find(t => t.id === "tiff-to-pdf")
+        imageOutputTools.find(t => t.id === "tiff-to-pdf"),
+        imageOutputTools.find(t => t.id === "avif-to-pdf"),
+        imageOutputTools.find(t => t.id === "bmp-to-pdf")
+      ].filter(Boolean) as NavTool[]
+    },
+    {
+      title: "MORE CONVERSIONS",
+      tools: [
+        imageOutputTools.find(t => t.id === "gif-to-pdf"),
+        imageOutputTools.find(t => t.id === "ico-to-pdf"),
+        imageOutputTools.find(t => t.id === "psd-to-pdf"),
+        imageOutputTools.find(t => t.id === "raw-to-pdf"),
+        imageOutputTools.find(t => t.id === "eps-to-pdf"),
+        imageOutputTools.find(t => t.id === "ai-to-pdf")
       ].filter(Boolean) as NavTool[]
     }
   ];
@@ -380,7 +366,33 @@ export function MultiDropdownNav() {
               {/* Arrow pointing up to show which menu */}
               <div className="absolute -top-2 left-80 w-4 h-4 bg-white dark:bg-gray-900 border-l border-t border-gray-200 dark:border-gray-700 transform rotate-45 shadow-lg"></div>
               <div className="p-4">
-                {/* For All Tools - Add link at top */}
+                {/* Header links for all dropdowns */}
+                {menuItems.find(m => m.id === openMenu)?.type === 'pdf' && (
+                  <div className="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
+                    <Link
+                      href="/all-tools?category=pdf-management"
+                      className="inline-flex items-center text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                      onClick={() => setOpenMenu(null)}
+                    >
+                      <FileText className="w-4 h-4 mr-2" />
+                      View All PDF Tools
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Link>
+                  </div>
+                )}
+                {menuItems.find(m => m.id === openMenu)?.type === 'image' && (
+                  <div className="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
+                    <Link
+                      href="/all-tools?category=image-conversion"
+                      className="inline-flex items-center text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+                      onClick={() => setOpenMenu(null)}
+                    >
+                      <Image className="w-4 h-4 mr-2" />
+                      View All Image Tools
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Link>
+                  </div>
+                )}
                 {menuItems.find(m => m.id === openMenu)?.type === 'all' && (
                   <div className="mb-4 pb-4 border-b border-gray-200 dark:border-gray-700">
                     <Link
