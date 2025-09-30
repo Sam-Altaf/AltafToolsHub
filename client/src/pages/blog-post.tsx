@@ -473,7 +473,7 @@ export default function BlogPostPage() {
 
             {/* Tags */}
             <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-6 sm:mb-8">
-              {post.tags.map(tag => (
+              {post.tags.map((tag: string) => (
                 <Badge key={tag} variant="outline" className="text-xs sm:text-sm py-1 px-2 sm:py-1.5 sm:px-3">
                   <Tag className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1" />
                   {tag}
@@ -668,7 +668,7 @@ export default function BlogPostPage() {
                 {/* Supporting Images */}
                 {post.supportingImages && post.supportingImages.length > 0 && (
                   <div className="my-6 sm:my-8 space-y-4 sm:space-y-6">
-                    {post.supportingImages.map((image, index) => (
+                    {post.supportingImages.map((image: string, index: number) => (
                       <motion.div
                         key={index}
                         initial={{ opacity: 0, y: 20 }}
@@ -697,7 +697,7 @@ export default function BlogPostPage() {
                       Put what you've learned into practice with our powerful, free tools
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                      {post.relatedTools.slice(0, 3).map(toolId => {
+                      {post.relatedTools.slice(0, 3).map((toolId: string) => {
                         const tool = allTools.find(t => t.id === toolId);
                         if (!tool) return null;
                         const ToolIcon = tool.icon;
@@ -786,7 +786,7 @@ export default function BlogPostPage() {
                     <Card className="p-5 bg-gradient-to-br from-primary/5 to-background">
                       <h3 className="font-semibold mb-3 text-sm">Quick Tools</h3>
                       <div className="space-y-1">
-                        {post.relatedTools.slice(0, 3).map(tool => (
+                        {post.relatedTools.slice(0, 3).map((tool: string) => (
                           <Button 
                             key={tool}
                             variant="ghost" 
@@ -795,7 +795,7 @@ export default function BlogPostPage() {
                             onClick={() => setLocation(`/${tool}`)}
                           >
                             <ArrowRight className="w-3 h-3 mr-2" />
-                            {tool.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                            {tool.replace('-', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
                           </Button>
                         ))}
                       </div>
