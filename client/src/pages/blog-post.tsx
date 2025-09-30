@@ -1,5 +1,5 @@
 import { useParams, Link, useLocation } from "wouter";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -28,13 +28,14 @@ import {
   Hash
 } from "lucide-react";
 import { useSEO, generateArticleSchema, generateBreadcrumbSchema } from "@/hooks/use-seo";
-import { getBlogPostBySlug, getRelatedPosts } from "@/lib/blog-data";
+import { getBlogPostBySlugAsync, getRelatedPosts } from "@/lib/blog-data-optimized";
 import { ContactSupportSection } from "@/components/contact-support";
 import ReactMarkdown from 'react-markdown';
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { allTools } from "@/lib/tools-data";
 import { toast } from "@/hooks/use-toast";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Throttle function for performance optimization
 function throttle<T extends (...args: any[]) => any>(func: T, wait: number) {
@@ -65,12 +66,38 @@ export default function BlogPostPage() {
   const [currentHeading, setCurrentHeading] = useState("");
   const [readingProgress, setReadingProgress] = useState(0);
   const [tocOpen, setTocOpen] = useState(false);
+  const [post, setPost] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const contentRef = useRef<HTMLElement>(null);
   const isMobile = useIsMobile();
 
-  console.log("BlogPostPage - Rendering with slug:", slug);
-  const post = getBlogPostBySlug(slug || "");
-  console.log("BlogPostPage - Post found:", !!post, post?.title);
+  // Load blog post async for better performance
+  useEffect(() => {
+    const loadPost = async () => {
+      if (!slug) {
+        setLocation("/blog");
+        return;
+      }
+      
+      setLoading(true);
+      try {
+        const loadedPost = await getBlogPostBySlugAsync(slug);
+        if (!loadedPost) {
+          setLocation("/blog");
+          return;
+        }
+        setPost(loadedPost);
+      } catch (error) {
+        console.error("Error loading blog post:", error);
+        setLocation("/blog");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadPost();
+  }, [slug, setLocation]);
+
   const relatedPosts = post ? getRelatedPosts(post.slug, 3) : [];
 
   useEffect(() => {
@@ -124,8 +151,26 @@ export default function BlogPostPage() {
     };
   }, [post, handleScroll]);
 
+  // Show loading skeleton while fetching content
+  if (loading) {
+    return (
+      <div className="min-h-screen">
+        <div className="container-section py-12">
+          <Skeleton className="h-10 w-3/4 mb-4" />
+          <Skeleton className="h-6 w-1/2 mb-8" />
+          <div className="space-y-4">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-3/4" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-5/6" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!post) {
-    setLocation("/blog");
     return null;
   }
 

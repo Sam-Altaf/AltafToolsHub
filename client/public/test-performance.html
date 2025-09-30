@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog Performance Test</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    h1 { color: #333; }
+    .metric {
+      background: #f5f5f5;
+      border-left: 4px solid #4CAF50;
+      padding: 12px 16px;
+      margin: 12px 0;
+      border-radius: 4px;
+    }
+    .metric.warning {
+      border-left-color: #ff9800;
+    }
+    .metric.error {
+      border-left-color: #f44336;
+    }
+    .metric.success {
+      background: #e8f5e9;
+      border-left-color: #4CAF50;
+    }
+    button {
+      background: #2196F3;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 10px 5px;
+    }
+    button:hover {
+      background: #1976D2;
+    }
+    #results {
+      margin-top: 20px;
+    }
+    .test-section {
+      margin: 30px 0;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    iframe {
+      width: 100%;
+      height: 600px;
+      border: 1px solid #ddd;
+      margin: 20px 0;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>🚀 Blog System Performance Test</h1>
+  
+  <div class="test-section">
+    <h2>Test Controls</h2>
+    <button onclick="testBlogListing()">Test Blog Listing Page</button>
+    <button onclick="testBlogPost()">Test Blog Post Page</button>
+    <button onclick="runFullTest()">Run Full Test</button>
+  </div>
+
+  <div id="results"></div>
+  
+  <iframe id="testFrame"></iframe>
+
+  <script>
+    const resultsDiv = document.getElementById('results');
+    const testFrame = document.getElementById('testFrame');
+    
+    function logMetric(label, value, type = '') {
+      const metric = document.createElement('div');
+      metric.className = `metric ${type}`;
+      
+      let emoji = '📊';
+      if (type === 'success') emoji = '✅';
+      else if (type === 'warning') emoji = '⚠️';
+      else if (type === 'error') emoji = '❌';
+      
+      metric.innerHTML = `<strong>${emoji} ${label}:</strong> ${value}`;
+      resultsDiv.appendChild(metric);
+    }
+    
+    function clearResults() {
+      resultsDiv.innerHTML = '';
+    }
+    
+    async function measurePagePerformance(url, title) {
+      clearResults();
+      logMetric(title, 'Testing...', '');
+      
+      // Show iframe for visual feedback
+      testFrame.style.display = 'block';
+      testFrame.src = url;
+      
+      // Wait for page to load
+      await new Promise((resolve) => {
+        testFrame.onload = () => {
+          setTimeout(resolve, 2000); // Wait for React to render
+        };
+      });
+      
+      try {
+        // Get performance metrics from the iframe
+        const iframeWindow = testFrame.contentWindow;
+        const perf = iframeWindow.performance.getEntriesByType('navigation')[0];
+        const paintEntries = iframeWindow.performance.getEntriesByType('paint');
+        
+        // Calculate metrics
+        const fcp = paintEntries.find(entry => entry.name === 'first-contentful-paint');
+        const lcp = iframeWindow.performance.getEntriesByType('largest-contentful-paint')[0];
+        
+        const metrics = {
+          domContentLoaded: Math.round(perf.domContentLoadedEventEnd - perf.fetchStart),
+          loadComplete: Math.round(perf.loadEventEnd - perf.fetchStart),
+          firstContentfulPaint: fcp ? Math.round(fcp.startTime) : 0,
+          largestContentfulPaint: lcp ? Math.round(lcp.startTime) : 0,
+          transferSize: Math.round((perf.transferSize || 0) / 1024)
+        };
+        
+        // Display metrics
+        clearResults();
+        logMetric(`${title} - Results`, '', '');
+        
+        // FCP Assessment
+        if (metrics.firstContentfulPaint < 1000) {
+          logMetric('First Contentful Paint (FCP)', `${metrics.firstContentfulPaint}ms - Excellent! Goal achieved!`, 'success');
+        } else if (metrics.firstContentfulPaint < 2000) {
+          logMetric('First Contentful Paint (FCP)', `${metrics.firstContentfulPaint}ms - Good, but above 1000ms target`, 'warning');
+        } else {
+          logMetric('First Contentful Paint (FCP)', `${metrics.firstContentfulPaint}ms - Needs improvement`, 'error');
+        }
+        
+        logMetric('DOM Content Loaded', `${metrics.domContentLoaded}ms`, '');
+        logMetric('Page Load Complete', `${metrics.loadComplete}ms`, '');
+        if (metrics.largestContentfulPaint) {
+          logMetric('Largest Contentful Paint (LCP)', `${metrics.largestContentfulPaint}ms`, '');
+        }
+        logMetric('Transfer Size', `${metrics.transferSize}KB`, '');
+        
+        // Check for optimizations
+        const hasLazyLoading = iframeWindow.document.documentElement.innerHTML.includes('blog-contents/');
+        const hasOptimizedImports = iframeWindow.document.documentElement.innerHTML.includes('blog-data-optimized');
+        
+        logMetric('Optimizations Detected', '', '');
+        logMetric('Lazy Loading', hasLazyLoading ? 'Yes ✅' : 'Not detected', hasLazyLoading ? 'success' : 'warning');
+        logMetric('Optimized Imports', hasOptimizedImports ? 'Yes ✅' : 'Not detected', hasOptimizedImports ? 'success' : 'warning');
+        
+        // Calculate improvement
+        const originalFCP = 7344;
+        const improvement = ((originalFCP - metrics.firstContentfulPaint) / originalFCP * 100).toFixed(1);
+        
+        logMetric('Performance Improvement', '', '');
+        logMetric('Original FCP', `${originalFCP}ms`, '');
+        logMetric('New FCP', `${metrics.firstContentfulPaint}ms`, '');
+        logMetric('Improvement', `${improvement}%`, improvement > 50 ? 'success' : 'warning');
+        
+        return metrics;
+        
+      } catch (error) {
+        logMetric('Error', error.message, 'error');
+        console.error(error);
+      }
+    }
+    
+    async function testBlogListing() {
+      await measurePagePerformance('/blog', 'Blog Listing Page');
+    }
+    
+    async function testBlogPost() {
+      await measurePagePerformance('/blog/how-to-compress-pdf-without-losing-quality', 'Blog Post Page');
+    }
+    
+    async function runFullTest() {
+      clearResults();
+      logMetric('Full Test Started', 'Testing both pages...', '');
+      
+      const listing = await measurePagePerformance('/blog', 'Blog Listing');
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      const post = await measurePagePerformance('/blog/how-to-compress-pdf-without-losing-quality', 'Blog Post');
+      
+      // Summary
+      logMetric('📈 Test Summary', '', '');
+      const avgFCP = Math.round((listing.firstContentfulPaint + post.firstContentfulPaint) / 2);
+      
+      if (avgFCP < 1000) {
+        logMetric('Average FCP', `${avgFCP}ms - 🎉 Goal Achieved! Under 1000ms!`, 'success');
+      } else {
+        logMetric('Average FCP', `${avgFCP}ms - Still above 1000ms target`, 'warning');
+      }
+      
+      testFrame.style.display = 'none';
+    }
+    
+    // Initial message
+    logMetric('Ready', 'Click a button above to test performance', '');
+  </script>
+</body>
+</html>

@@ -17,7 +17,7 @@ import {
 import { Link } from "wouter";
 import { useSEO, generateFAQSchema, generateBreadcrumbSchema } from "@/hooks/use-seo";
 import { ContactSupportSection } from "@/components/contact-support";
-import { blogPosts, blogCategories } from "@/lib/blog-data";
+import { blogPosts, blogCategories } from "@/lib/blog-data-optimized";
 import { Input } from "@/components/ui/input";
 import { allTools } from "@/lib/tools-data";
 
@@ -181,6 +181,7 @@ export default function BlogPage() {
                         className="h-full hover:shadow-xl transition-all group cursor-pointer border-2 hover:border-primary/50 overflow-hidden"
                         data-testid={`blog-featured-${post.id}`}
                       >
+                        {/* Temporarily disabled images until assets are generated
                         {post.thumbnailImage && (
                           <div className="relative w-full h-56 bg-gradient-to-br from-primary/10 to-primary/5 overflow-hidden">
                             <img
@@ -194,7 +195,14 @@ export default function BlogPage() {
                               Featured
                             </Badge>
                           </div>
-                        )}
+                        )} */}
+                        <div className="relative w-full h-56 bg-gradient-to-br from-primary/10 to-primary/5 overflow-hidden flex items-center justify-center">
+                          <Icon className="w-24 h-24 text-primary/30" />
+                          <Badge className="absolute top-3 right-3 bg-gradient-to-r from-primary to-blue-600 text-white border-0">
+                            <TrendingUp className="w-4 h-4 mr-1" />
+                            Featured
+                          </Badge>
+                        </div>
                         <div className="p-6">
                           <div className="flex items-start gap-4 mb-4">
                             <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
@@ -276,6 +284,7 @@ export default function BlogPage() {
                         className="h-full hover:shadow-lg transition-all group cursor-pointer hover:border-primary/50 overflow-hidden"
                         data-testid={`blog-post-${post.id}`}
                       >
+                        {/* Temporarily disabled images until assets are generated
                         {post.thumbnailImage && (
                           <div className="relative w-full h-48 bg-gradient-to-br from-primary/10 to-primary/5 overflow-hidden">
                             <img
@@ -285,7 +294,10 @@ export default function BlogPage() {
                               loading="lazy"
                             />
                           </div>
-                        )}
+                        )} */}
+                        <div className="relative w-full h-48 bg-gradient-to-br from-primary/10 to-primary/5 overflow-hidden flex items-center justify-center">
+                          <Icon className="w-20 h-20 text-primary/20" />
+                        </div>
                         <div className="p-6">
                           <div className="flex items-center gap-2 mb-3">
                             <div className="w-8 h-8 rounded bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
