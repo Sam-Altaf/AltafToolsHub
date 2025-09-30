@@ -322,7 +322,6 @@ export default function ZIPToPDF() {
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           <Breadcrumbs 
             items={[
-              { name: "Home", url: "/" },
               { name: "All Tools", url: "/all-tools" },
               { name: "ZIP to PDF", url: "" }
             ]}
@@ -417,7 +416,6 @@ export default function ZIPToPDF() {
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         <Breadcrumbs 
           items={[
-            { name: "Home", url: "/" },
             { name: "All Tools", url: "/all-tools" },
             { name: "ZIP to PDF", url: "" }
           ]}

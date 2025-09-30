@@ -2,7 +2,7 @@
 
 ## Overview
 
-AltafToolsHub is a web application providing privacy-first file processing and utility tools. All file processing occurs client-side, ensuring user privacy as files never leave the browser. Key features include comprehensive PDF tools (compression, password unlocking, JPG to PDF conversion, merging, splitting, rotating, organizing, watermarking, page manipulation, image extraction, and ZIP bundling) and utility tools (QR code generator, password generator, OCR text extraction). Built with React 18 and Express, it offers a modern, responsive interface with dark/light mode, animations, and SEO optimization. The platform currently has 18 functional tools with plans for over 50 more.
+AltafToolsHub is a web application providing privacy-first file processing and utility tools. All file processing occurs client-side, ensuring user privacy as files never leave the browser. Key features include comprehensive PDF tools (compression, password unlocking, JPG to PDF conversion, merging, splitting, rotating, organizing, watermarking, page manipulation, image extraction, ZIP bundling, and PDF extraction from ZIP) and utility tools (QR code generator, password generator, OCR text extraction). Built with React 18 and Express, it offers a modern, responsive interface with dark/light mode, animations, and SEO optimization. The platform currently has 20 functional tools with plans for over 50 more.
 
 ## User Preferences
 
@@ -35,6 +35,7 @@ Preferred communication style: Simple, everyday language.
 - **PDF Compression**: Canvas-based using PDF.js with binary search for exact target sizes (10KB-5MB).
 - **PDF Manipulation**: Full suite of PDF tools including merge, split, rotate, organize, crop, watermark, page number addition, and page removal.
 - **PDF to ZIP**: Bundle multiple PDFs into compressed ZIP archives using JSZip with maximum compression (level 9).
+- **ZIP to PDF**: Extract PDF files from ZIP archives with selective or batch download capabilities.
 - **Other Features**: PDF password unlocking, JPG to PDF conversion with reordering, QR code generation, password generation, OCR text extraction.
 
 ## External Dependencies
