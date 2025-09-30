@@ -158,7 +158,34 @@ export default function ZIPToPDF() {
 
       setProgress(50);
 
-      // Extract each PDF
+      // Track filenames to detect and handle duplicates (consistent with PDF to ZIP tool)
+      const usedFilenames = new Set<string>();
+      
+      // Helper function to get unique filename (matches PDF to ZIP implementation)
+      const getUniqueFilename = (originalName: string): string => {
+        if (!usedFilenames.has(originalName)) {
+          usedFilenames.add(originalName);
+          return originalName;
+        }
+        
+        // Extract name and extension
+        const lastDotIndex = originalName.lastIndexOf('.');
+        const name = lastDotIndex > 0 ? originalName.substring(0, lastDotIndex) : originalName;
+        const ext = lastDotIndex > 0 ? originalName.substring(lastDotIndex) : '';
+        
+        // Find next available number
+        let counter = 1;
+        let newName = `${name} (${counter})${ext}`;
+        while (usedFilenames.has(newName)) {
+          counter++;
+          newName = `${name} (${counter})${ext}`;
+        }
+        
+        usedFilenames.add(newName);
+        return newName;
+      };
+
+      // Extract each PDF with duplicate name handling
       const progressPerFile = 40 / pdfFileNames.length;
       
       for (let i = 0; i < pdfFileNames.length; i++) {
@@ -171,9 +198,12 @@ export default function ZIPToPDF() {
         // Extract just the filename (remove any path)
         const cleanName = fileName.split('/').pop() || fileName;
         
+        // Get unique filename (handles duplicates automatically)
+        const uniqueName = getUniqueFilename(cleanName);
+        
         pdfFiles.push({
           id: Math.random().toString(36).substr(2, 9),
-          name: cleanName,
+          name: uniqueName,
           blob: pdfBlob,
           size: pdfBlob.size
         });
