@@ -18,6 +18,9 @@ export interface BlogPostMetadata {
   keywords: string;
   relatedTools: string[];
   relatedPosts?: string[];
+  heroImage?: string;
+  thumbnailImage?: string;
+  supportingImages?: string[];
 }
 
 // Extended interface for full blog post with content
@@ -43,7 +46,10 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     seoDescription: "Learn how to add password protection and military-grade AES-256 encryption to PDF files. Step-by-step guide with security best practices for 2025.",
     keywords: "password protect pdf, pdf encryption, secure pdf files, pdf password, pdf security, protect pdf documents, encrypt pdf, pdf protection guide",
     relatedTools: ["protect-pdf", "unlock-pdf"],
-    relatedPosts: ["how-to-unlock-pdf", "pdf-optimization-for-web-performance"]
+    relatedPosts: ["how-to-unlock-pdf", "pdf-optimization-for-web-performance"],
+    heroImage: "@assets/blog_images/password-protect-pdf-hero.png",
+    thumbnailImage: "@assets/blog_images/password-protect-pdf-thumb.png",
+    supportingImages: ["@assets/blog_images/password-protection-types.png"]
   },
   {
     id: "how-to-compress-pdf-without-losing-quality",
@@ -61,7 +67,10 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     seoDescription: "Learn how to reduce PDF file size by up to 90% without quality loss. Expert compression techniques, best settings, and free tools for 2025.",
     keywords: "compress pdf without losing quality, pdf compression, reduce pdf size, pdf optimizer, lossless pdf compression, pdf file size reducer",
     relatedTools: ["compress-pdf"],
-    relatedPosts: ["best-pdf-compression-settings-2025", "reduce-pdf-file-size-for-email"]
+    relatedPosts: ["best-pdf-compression-settings-2025", "reduce-pdf-file-size-for-email"],
+    heroImage: "@assets/blog_images/compress-pdf-without-losing-quality-hero.png",
+    thumbnailImage: "@assets/blog_images/compress-pdf-without-losing-quality-thumb.png",
+    supportingImages: ["@assets/blog_images/pdf-compression-before-after.png", "@assets/blog_images/pdf-compression-workflow.png"]
   },
   {
     id: "best-pdf-compression-settings-2025",
@@ -78,7 +87,9 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     seoDescription: "Find the perfect PDF compression settings for email, web, print, and storage. Detailed guide with recommended DPI, quality levels, and compression ratios.",
     keywords: "best pdf compression settings, pdf optimization settings, pdf dpi settings, pdf quality settings, pdf compression ratio, optimal pdf settings",
     relatedTools: ["compress-pdf"],
-    relatedPosts: ["how-to-compress-pdf-without-losing-quality", "pdf-optimization-for-web-performance"]
+    relatedPosts: ["how-to-compress-pdf-without-losing-quality", "pdf-optimization-for-web-performance"],
+    heroImage: "@assets/blog_images/best-pdf-compression-settings-hero.png",
+    thumbnailImage: "@assets/blog_images/best-pdf-compression-settings-thumb.png"
   },
   {
     id: "reduce-pdf-file-size-for-email",
@@ -96,7 +107,9 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     seoDescription: "Compress PDFs for email quickly. Reduce file size below Gmail's 25MB, Outlook's 20MB limits. Free tools and methods that work in seconds.",
     keywords: "reduce pdf size for email, pdf email attachment, compress pdf for gmail, pdf file too large email, shrink pdf for email",
     relatedTools: ["compress-pdf"],
-    relatedPosts: ["how-to-compress-pdf-without-losing-quality", "best-pdf-compression-settings-2025"]
+    relatedPosts: ["how-to-compress-pdf-without-losing-quality", "best-pdf-compression-settings-2025"],
+    heroImage: "@assets/blog_images/email-pdf-size-hero.png",
+    thumbnailImage: "@assets/blog_images/email-pdf-size-thumb.png"
   },
   {
     id: "pdf-optimization-for-web-performance",
@@ -113,7 +126,9 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     seoDescription: "Optimize PDFs for web performance. Reduce load times by 80%, improve SEO, and enhance user experience with linearization and smart compression.",
     keywords: "pdf web optimization, pdf page speed, pdf seo, linearized pdf, fast loading pdf, web optimized pdf",
     relatedTools: ["compress-pdf"],
-    relatedPosts: ["best-pdf-compression-settings-2025", "compress-pdf-vs-zip-compression"]
+    relatedPosts: ["best-pdf-compression-settings-2025", "compress-pdf-vs-zip-compression"],
+    heroImage: "@assets/blog_images/pdf-optimization-web-hero.png",
+    thumbnailImage: "@assets/blog_images/pdf-optimization-web-thumb.png"
   },
   {
     id: "compress-pdf-vs-zip-compression",

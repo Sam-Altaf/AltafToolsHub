@@ -37,6 +37,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { allTools } from "@/lib/tools-data";
 import { toast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
+import { BlogImageStatic } from "@/components/blog-image";
 
 // Throttle function for performance optimization
 function throttle<T extends (...args: any[]) => any>(func: T, wait: number) {
@@ -394,6 +395,19 @@ export default function BlogPostPage() {
               <span className="hidden sm:inline">Back to Blog</span>
               <span className="sm:hidden">Back</span>
             </Button>
+
+            {/* Hero Image */}
+            {post.heroImage && (
+              <div className="relative w-full mb-6 sm:mb-8 rounded-xl overflow-hidden shadow-xl">
+                <BlogImageStatic
+                  src={post.heroImage}
+                  alt={`${post.title} hero`}
+                  className="w-full h-auto aspect-[16/9] sm:aspect-[21/9] object-cover"
+                  priority={true}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-40" />
+              </div>
+            )}
 
             {/* Post Header */}
             <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-4">
