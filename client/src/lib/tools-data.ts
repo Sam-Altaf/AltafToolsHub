@@ -561,6 +561,19 @@ export const allTools: Tool[] = [
     extendedDescription: "Combine multiple PDF files into a single compressed ZIP archive for easy sharing and storage. Reduces overall file size while maintaining organization."
   },
   {
+    id: "zip-to-pdf",
+    title: "ZIP to PDF",
+    description: "Extract PDF files from ZIP archives instantly",
+    icon: Upload,
+    href: "/zip-to-pdf",
+    color: "from-purple-500 to-indigo-500",
+    available: true,
+    category: "utilities",
+    new: true,
+    features: ["Extract all PDFs", "Selective extraction", "Batch download", "Preview before download"],
+    extendedDescription: "Extract and download PDF files from ZIP archives quickly. Perfect for accessing compressed document collections, email attachments, and archived files."
+  },
+  {
     id: "base64-encoder",
     title: "Base64 Encoder",
     description: "Encode and decode Base64 strings",
