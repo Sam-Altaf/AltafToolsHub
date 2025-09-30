@@ -445,32 +445,39 @@ export default function AllToolsPage() {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
               >
-                {toolCategories.map((category) => {
-                  const categoryTools = groupedTools[category.id] || [];
-                  if (categoryTools.length === 0) return null;
-                  
-                  return (
-                    <div key={category.id} id={`category-${category.id}`} className="space-y-6 scroll-mt-20">
-                      <div className="flex items-center gap-3">
-                        <category.icon className="w-6 h-6 text-primary" />
-                        <h2 className="text-2xl font-bold">{category.name}</h2>
-                        <Badge variant="secondary" className="ml-2">
-                          {categoryTools.length} tools
-                        </Badge>
+                {(() => {
+                  let globalIndex = 0;
+                  return toolCategories.map((category) => {
+                    const categoryTools = groupedTools[category.id] || [];
+                    if (categoryTools.length === 0) return null;
+                    
+                    return (
+                      <div key={category.id} id={`category-${category.id}`} className="space-y-6 scroll-mt-20">
+                        <div className="flex items-center gap-3">
+                          <category.icon className="w-6 h-6 text-primary" />
+                          <h2 className="text-2xl font-bold">{category.name}</h2>
+                          <Badge variant="secondary" className="ml-2">
+                            {categoryTools.length} tools
+                          </Badge>
+                        </div>
+                        
+                        <div className={cn(
+                          viewMode === 'grid' 
+                            ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                            : "space-y-3"
+                        )}>
+                          {categoryTools.map((tool) => {
+                            const priority = globalIndex < 8;
+                            globalIndex++;
+                            return (
+                              <LazyToolCard key={tool.id} tool={tool} view={viewMode} priority={priority} />
+                            );
+                          })}
+                        </div>
                       </div>
-                      
-                      <div className={cn(
-                        viewMode === 'grid' 
-                          ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-                          : "space-y-3"
-                      )}>
-                        {categoryTools.map((tool, index) => (
-                          <LazyToolCard key={tool.id} tool={tool} view={viewMode} priority={index < 8} />
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  });
+                })()}
               </motion.div>
             ) : (
               // Flat View
