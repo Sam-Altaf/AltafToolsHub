@@ -181,6 +181,7 @@ const menuItems = [
 
 export function MultiDropdownNav() {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [arrowPosition, setArrowPosition] = useState<number>(320); // default center position
   const containerRef = useRef<HTMLDivElement>(null);
   const buttonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -192,6 +193,19 @@ export function MultiDropdownNav() {
       timeoutRef.current = null;
     }
     setOpenMenu(menuId);
+    
+    // Calculate arrow position based on button position
+    const button = buttonRefs.current[menuId];
+    const container = containerRef.current;
+    if (button && container) {
+      const buttonRect = button.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
+      const relativeLeft = buttonRect.left - containerRect.left;
+      const buttonCenter = relativeLeft + buttonRect.width / 2;
+      // Add offset for -left-40 (10rem = 160px)
+      const arrowPos = buttonCenter + 160;
+      setArrowPosition(arrowPos);
+    }
   };
 
   // Handle mouse leave with delay for better UX
@@ -293,7 +307,14 @@ export function MultiDropdownNav() {
                 openMenu === item.id && "bg-accent text-accent-foreground"
               )}
               onMouseEnter={() => handleMouseEnter(item.id)}
-              onClick={() => setOpenMenu(openMenu === item.id ? null : item.id)}
+              onClick={() => {
+                const newMenuId = openMenu === item.id ? null : item.id;
+                if (newMenuId) {
+                  handleMouseEnter(newMenuId);
+                } else {
+                  setOpenMenu(null);
+                }
+              }}
               data-testid={`nav-button-${item.id}`}
             >
               <Icon className="w-3.5 h-3.5 mr-1.5" />
@@ -327,12 +348,12 @@ export function MultiDropdownNav() {
               transition={{ duration: 0.15, ease: "easeOut" }}
               className={cn(
                 "absolute top-full mt-4 bg-white dark:bg-gray-900 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden",
-                '-left-32'
+                '-left-40'
               )}
               style={{ 
                 zIndex: 10000,
-                minWidth: '800px',
-                maxWidth: '1200px',
+                minWidth: '650px',
+                maxWidth: '900px',
                 width: 'max-content',
                 maxHeight: 'calc(100vh - 120px)',
                 overflowY: 'auto'
@@ -341,7 +362,10 @@ export function MultiDropdownNav() {
               onMouseLeave={handleMouseLeave}
             >
               {/* Arrow pointing up to show which menu */}
-              <div className="absolute -top-2 left-80 w-4 h-4 bg-white dark:bg-gray-900 border-l border-t border-gray-200 dark:border-gray-700 transform rotate-45 shadow-lg"></div>
+              <div 
+                className="absolute -top-2 w-4 h-4 bg-white dark:bg-gray-900 border-l border-t border-gray-200 dark:border-gray-700 transform rotate-45 shadow-lg transition-all duration-200"
+                style={{ left: `${arrowPosition}px` }}
+              ></div>
               <div className="p-4">
                 {/* Header links for all dropdowns */}
                 {menuItems.find(m => m.id === openMenu)?.type === 'pdf' && (
@@ -386,7 +410,7 @@ export function MultiDropdownNav() {
                 
                 {/* Sections displayed in optimized grid layout */}
                 <div className={cn(
-                  "grid gap-6",
+                  "grid gap-3",
                   (() => {
                     const sections = getDropdownContent(menuItems.find(m => m.id === openMenu)?.type || '');
                     const numSections = sections.length;
@@ -398,7 +422,7 @@ export function MultiDropdownNav() {
                 )}>
                   {getDropdownContent(menuItems.find(m => m.id === openMenu)?.type || '').map((section, sectionIdx) => (
                     <div key={sectionIdx} className="flex flex-col">
-                      <h3 className="text-xs font-bold text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700 pb-2">
+                      <h3 className="text-xs font-bold text-gray-500 dark:text-gray-400 mb-2 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700 pb-1">
                         {section.title}
                       </h3>
                       <div className="space-y-1">
