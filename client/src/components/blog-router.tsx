@@ -1,4 +1,4 @@
-import { useLocation, useParams } from "wouter";
+import { useLocation } from "wouter";
 import { lazy, Suspense } from "react";
 import { Loader2 } from "lucide-react";
 
@@ -22,15 +22,24 @@ const PageLoader = () => (
  */
 export default function BlogRouter() {
   const [location] = useLocation();
-  const params = useParams();
   
-  // Check if we're on a blog route
-  if (!location.startsWith("/blog")) {
+  // Strip query strings and hash fragments for clean path matching
+  const cleanPath = location.split('?')[0].split('#')[0];
+  
+  // Check if we're on a blog route (exact match /blog or /blog/*)
+  // Use regex to prevent matching unrelated routes like /blogger
+  if (!cleanPath.match(/^\/blog(\/|$)/)) {
     return null;
   }
   
-  // If there's a slug param, render the BlogPost component
-  if (params && params.slug) {
+  // Extract slug from URL path: /blog/slug-name -> slug-name
+  // Remove trailing slashes for consistent parsing
+  const normalizedPath = cleanPath.replace(/\/$/, '');
+  const pathParts = normalizedPath.split("/");
+  const hasSlug = pathParts.length > 2 && pathParts[2];
+  
+  // If there's a slug in the URL, render the BlogPost component
+  if (hasSlug) {
     return (
       <Suspense fallback={<PageLoader />}>
         <BlogPost />

@@ -145,7 +145,9 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     seoDescription: "PDF compression vs ZIP files compared. Discover compression ratios, use cases, and when to use each method. Make the right choice for your files.",
     keywords: "pdf vs zip compression, pdf or zip smaller, compress pdf vs zip file, pdf compression comparison, zip pdf files",
     relatedTools: ["compress-pdf"],
-    relatedPosts: ["how-to-compress-pdf-without-losing-quality", "best-pdf-compression-settings-2025"]
+    relatedPosts: ["how-to-compress-pdf-without-losing-quality", "best-pdf-compression-settings-2025"],
+    heroImage: "@assets/blog_images/pdf-vs-zip-hero.png",
+    thumbnailImage: "@assets/blog_images/pdf-vs-zip-thumb.png"
   },
   {
     id: "how-to-convert-jpg-to-pdf",
@@ -163,7 +165,10 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     seoDescription: "Convert JPG images to PDF documents quickly and free. Multiple images, batch conversion, quality settings. Step-by-step guide for all devices.",
     keywords: "jpg to pdf, convert jpg to pdf, image to pdf, jpeg to pdf converter, jpg to pdf free, batch jpg to pdf",
     relatedTools: ["jpg-to-pdf"],
-    relatedPosts: ["how-to-extract-images-from-pdf", "pdf-optimization-for-web-performance"]
+    relatedPosts: ["how-to-extract-images-from-pdf", "pdf-optimization-for-web-performance"],
+    heroImage: "@assets/blog_images/convert-jpg-to-pdf-hero.png",
+    thumbnailImage: "@assets/blog_images/convert-jpg-to-pdf-thumb.png",
+    supportingImages: ["@assets/blog_images/jpg-to-pdf-steps.png"]
   },
   {
     id: "how-to-generate-qr-codes",
@@ -180,7 +185,9 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     seoDescription: "Create custom QR codes for URLs, WiFi, payments, menus. Free generator with logos, colors, tracking. Complete guide for business and personal use.",
     keywords: "generate qr code, qr code generator, create qr code, custom qr code, qr code maker, free qr code",
     relatedTools: ["qr-generator"],
-    relatedPosts: ["how-to-generate-secure-passwords"]
+    relatedPosts: ["how-to-generate-secure-passwords"],
+    heroImage: "@assets/blog_images/qr-code-hero.png",
+    thumbnailImage: "@assets/blog_images/qr-code-thumb.png"
   },
   {
     id: "how-to-generate-secure-passwords",
@@ -197,7 +204,9 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     seoDescription: "Create strong, secure passwords that protect against hackers. Password generator, best practices, 2FA setup. Complete security guide for 2025.",
     keywords: "generate secure password, password generator, strong password, password security, create secure password, password best practices",
     relatedTools: ["password-generator"],
-    relatedPosts: ["how-to-password-protect-pdf"]
+    relatedPosts: ["how-to-password-protect-pdf"],
+    heroImage: "@assets/blog_images/password-generator-hero.png",
+    thumbnailImage: "@assets/blog_images/password-generator-thumb.png"
   },
   {
     id: "how-to-extract-text-from-pdf",
@@ -214,7 +223,9 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     seoDescription: "Extract text from PDFs including scanned documents. Free OCR tools, bulk extraction, format preservation. Works with protected and image PDFs.",
     keywords: "extract text from pdf, pdf text extraction, ocr pdf, copy text from pdf, pdf to text converter, extract pdf content",
     relatedTools: ["extract-text"],
-    relatedPosts: ["how-to-unlock-pdf", "how-to-extract-images-from-pdf"]
+    relatedPosts: ["how-to-unlock-pdf", "how-to-extract-images-from-pdf"],
+    heroImage: "@assets/blog_images/text-extraction-hero.png",
+    thumbnailImage: "@assets/blog_images/text-extraction-thumb.png"
   },
   {
     id: "how-to-unlock-pdf",
@@ -231,7 +242,10 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     seoDescription: "Unlock password-protected PDFs legally. Remove printing, copying, editing restrictions. Recovery methods for forgotten passwords. Free tools guide.",
     keywords: "unlock pdf, remove pdf password, pdf password remover, unlock protected pdf, pdf restrictions remover, decrypt pdf",
     relatedTools: ["unlock-pdf", "protect-pdf"],
-    relatedPosts: ["how-to-password-protect-pdf", "how-to-extract-text-from-pdf"]
+    relatedPosts: ["how-to-password-protect-pdf", "how-to-extract-text-from-pdf"],
+    heroImage: "@assets/blog_images/unlock-pdf-hero.png",
+    thumbnailImage: "@assets/blog_images/unlock-pdf-thumb.png",
+    supportingImages: ["@assets/blog_images/unlock-pdf-password-hero.png"]
   },
   {
     id: "how-to-merge-pdf-files",
@@ -248,7 +262,10 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     seoDescription: "Merge multiple PDFs into one file free. Combine documents, rearrange pages, preserve bookmarks. Quick guide for batch processing and organization.",
     keywords: "merge pdf files, combine pdf, pdf merger, join pdf documents, pdf combiner, merge multiple pdfs",
     relatedTools: ["merge-pdf", "organize-pdf"],
-    relatedPosts: ["how-to-split-pdf", "how-to-organize-pdf"]
+    relatedPosts: ["how-to-split-pdf", "how-to-organize-pdf"],
+    heroImage: "@assets/blog_images/merge-pdf-hero.png",
+    thumbnailImage: "@assets/blog_images/merge-pdf-thumb.png",
+    supportingImages: ["@assets/blog_images/merge-pdf-support1.png", "@assets/blog_images/pdf-merge-process.png"]
   },
   {
     id: "how-to-split-pdf",
@@ -265,7 +282,10 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     seoDescription: "Split PDFs into multiple files free. Extract specific pages, divide by size or bookmarks. Quick methods for document separation and organization.",
     keywords: "split pdf, pdf splitter, extract pdf pages, divide pdf, separate pdf pages, pdf page extractor",
     relatedTools: ["split-pdf", "extract-pages"],
-    relatedPosts: ["how-to-merge-pdf-files", "how-to-extract-pdf-pages"]
+    relatedPosts: ["how-to-merge-pdf-files", "how-to-extract-pdf-pages"],
+    heroImage: "@assets/blog_images/split-pdf-hero.png",
+    thumbnailImage: "@assets/blog_images/split-pdf-thumb.png",
+    supportingImages: ["@assets/blog_images/split-pdf-support1.png", "@assets/blog_images/pdf-split-options.png"]
   },
   {
     id: "how-to-crop-pdf",
@@ -282,7 +302,9 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     seoDescription: "Crop PDF pages to remove margins, headers, footers. Precise cropping tools, batch processing. Perfect for presentations and printing.",
     keywords: "crop pdf, pdf cropper, remove pdf margins, trim pdf pages, pdf page crop, adjust pdf margins",
     relatedTools: ["crop-pdf"],
-    relatedPosts: ["how-to-rotate-pdf", "how-to-organize-pdf"]
+    relatedPosts: ["how-to-rotate-pdf", "how-to-organize-pdf"],
+    heroImage: "@assets/blog_images/crop-pdf-hero.png",
+    thumbnailImage: "@assets/blog_images/crop-pdf-thumb.png"
   },
   {
     id: "how-to-organize-pdf",
@@ -300,7 +322,9 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     seoDescription: "Organize PDF pages with drag-drop reordering. Sort, arrange, restructure documents. Create professional presentations and reports efficiently.",
     keywords: "organize pdf pages, reorder pdf, pdf page organizer, arrange pdf pages, sort pdf pages, pdf page management",
     relatedTools: ["organize-pdf", "merge-pdf"],
-    relatedPosts: ["how-to-merge-pdf-files", "how-to-split-pdf"]
+    relatedPosts: ["how-to-merge-pdf-files", "how-to-split-pdf"],
+    heroImage: "@assets/blog_images/organize-pdf-hero.png",
+    thumbnailImage: "@assets/blog_images/organize-pdf-thumb.png"
   },
   {
     id: "how-to-rotate-pdf",
@@ -317,7 +341,9 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     seoDescription: "Rotate PDF pages 90, 180, 270 degrees. Fix sideways, upside-down documents. Single or multiple pages, permanent rotation. Quick and free.",
     keywords: "rotate pdf, pdf rotation, turn pdf pages, fix pdf orientation, rotate pdf pages, pdf page rotation",
     relatedTools: ["rotate-pdf"],
-    relatedPosts: ["how-to-crop-pdf", "how-to-organize-pdf"]
+    relatedPosts: ["how-to-crop-pdf", "how-to-organize-pdf"],
+    heroImage: "@assets/blog_images/rotate-pdf-hero.png",
+    thumbnailImage: "@assets/blog_images/rotate-pdf-thumb.png"
   },
   {
     id: "how-to-remove-pdf-pages",
@@ -334,7 +360,9 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     seoDescription: "Remove pages from PDF documents free. Delete unwanted content, clean up documents, selective page removal. Quick methods for all devices.",
     keywords: "remove pdf pages, delete pdf pages, pdf page remover, remove pages from pdf, pdf page deletion, clean pdf document",
     relatedTools: ["remove-pages"],
-    relatedPosts: ["how-to-extract-pdf-pages", "how-to-split-pdf"]
+    relatedPosts: ["how-to-extract-pdf-pages", "how-to-split-pdf"],
+    heroImage: "@assets/blog_images/remove-pages-hero.png",
+    thumbnailImage: "@assets/blog_images/remove-pages-thumb.png"
   },
   {
     id: "how-to-extract-pdf-pages",
@@ -351,7 +379,9 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     seoDescription: "Extract specific pages from PDFs free. Save individual pages, page ranges, create new documents. Perfect for sharing relevant content only.",
     keywords: "extract pdf pages, pdf page extractor, save pdf pages, extract specific pages, pdf extraction tool, get pages from pdf",
     relatedTools: ["extract-pages", "split-pdf"],
-    relatedPosts: ["how-to-split-pdf", "how-to-remove-pdf-pages"]
+    relatedPosts: ["how-to-split-pdf", "how-to-remove-pdf-pages"],
+    heroImage: "@assets/blog_images/extract-pages-hero.png",
+    thumbnailImage: "@assets/blog_images/extract-pages-thumb.png"
   },
   {
     id: "how-to-extract-images-from-pdf",
@@ -368,7 +398,9 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     seoDescription: "Extract all images from PDFs free. Save pictures in original quality, JPG, PNG formats. Batch extraction, preserve resolution. Quick and easy.",
     keywords: "extract images from pdf, pdf image extractor, save pdf images, get pictures from pdf, pdf to images, extract pdf photos",
     relatedTools: ["extract-images"],
-    relatedPosts: ["how-to-convert-jpg-to-pdf", "how-to-extract-text-from-pdf"]
+    relatedPosts: ["how-to-convert-jpg-to-pdf", "how-to-extract-text-from-pdf"],
+    heroImage: "@assets/blog_images/extract-images-hero.png",
+    thumbnailImage: "@assets/blog_images/extract-images-thumb.png"
   },
   {
     id: "how-to-add-page-numbers-to-pdf",
@@ -385,7 +417,9 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     seoDescription: "Add page numbers to PDFs free. Custom positioning, formatting, numbering schemes. Create professional documents with proper pagination.",
     keywords: "add page numbers pdf, pdf page numbering, number pdf pages, pdf pagination, insert page numbers pdf, pdf page counter",
     relatedTools: ["add-page-number"],
-    relatedPosts: ["how-to-watermark-pdf", "how-to-organize-pdf"]
+    relatedPosts: ["how-to-watermark-pdf", "how-to-organize-pdf"],
+    heroImage: "@assets/blog_images/page-numbers-hero.png",
+    thumbnailImage: "@assets/blog_images/page-numbers-thumb.png"
   },
   {
     id: "how-to-watermark-pdf",
@@ -402,7 +436,9 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     seoDescription: "Add watermarks to PDFs free. Text, image, transparent overlays. Protect documents, add branding, copyright notices. Professional results.",
     keywords: "watermark pdf, add watermark to pdf, pdf watermark tool, protect pdf watermark, brand pdf documents, pdf overlay",
     relatedTools: ["watermark-pdf"],
-    relatedPosts: ["how-to-password-protect-pdf", "how-to-add-page-numbers-to-pdf"]
+    relatedPosts: ["how-to-password-protect-pdf", "how-to-add-page-numbers-to-pdf"],
+    heroImage: "@assets/blog_images/watermark-pdf-hero.png",
+    thumbnailImage: "@assets/blog_images/watermark-pdf-thumb.png"
   }
 ];
 
