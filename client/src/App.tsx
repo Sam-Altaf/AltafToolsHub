@@ -238,6 +238,18 @@ function Router() {
             </Suspense>
           </Route>
           
+          {/* Lazy loaded Blog */}
+          <Route path="/blog/:slug">
+            <Suspense fallback={<PageLoader />}>
+              <BlogPost />
+            </Suspense>
+          </Route>
+          <Route path="/blog">
+            <Suspense fallback={<PageLoader />}>
+              <Blog />
+            </Suspense>
+          </Route>
+          
           {/* Lazy loaded Guides */}
           <Route path="/guides">
             <Suspense fallback={<PageLoader />}>
