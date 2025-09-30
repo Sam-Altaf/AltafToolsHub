@@ -47,9 +47,9 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     keywords: "password protect pdf, pdf encryption, secure pdf files, pdf password, pdf security, protect pdf documents, encrypt pdf, pdf protection guide",
     relatedTools: ["protect-pdf", "unlock-pdf"],
     relatedPosts: ["how-to-unlock-pdf", "pdf-optimization-for-web-performance"],
-    heroImage: "@assets/blog_images/password-protect-pdf-hero.png",
-    thumbnailImage: "@assets/blog_images/password-protect-pdf-thumb.png",
-    supportingImages: ["@assets/blog_images/password-protection-types.png"]
+    heroImage: "@assets/blog_images/password-protect-pdf-hero.webp",
+    thumbnailImage: "@assets/blog_images/password-protect-pdf-thumb.webp",
+    supportingImages: ["@assets/blog_images/password-protection-types.webp"]
   },
   {
     id: "how-to-compress-pdf-without-losing-quality",
@@ -68,9 +68,9 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     keywords: "compress pdf without losing quality, pdf compression, reduce pdf size, pdf optimizer, lossless pdf compression, pdf file size reducer",
     relatedTools: ["compress-pdf"],
     relatedPosts: ["best-pdf-compression-settings-2025", "reduce-pdf-file-size-for-email"],
-    heroImage: "@assets/blog_images/compress-pdf-without-losing-quality-hero.png",
-    thumbnailImage: "@assets/blog_images/compress-pdf-without-losing-quality-thumb.png",
-    supportingImages: ["@assets/blog_images/pdf-compression-before-after.png", "@assets/blog_images/pdf-compression-workflow.png"]
+    heroImage: "@assets/blog_images/compress-pdf-without-losing-quality-hero.webp",
+    thumbnailImage: "@assets/blog_images/compress-pdf-without-losing-quality-thumb.webp",
+    supportingImages: ["@assets/blog_images/pdf-compression-before-after.webp", "@assets/blog_images/pdf-compression-workflow.webp"]
   },
   {
     id: "best-pdf-compression-settings-2025",
@@ -88,8 +88,8 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     keywords: "best pdf compression settings, pdf optimization settings, pdf dpi settings, pdf quality settings, pdf compression ratio, optimal pdf settings",
     relatedTools: ["compress-pdf"],
     relatedPosts: ["how-to-compress-pdf-without-losing-quality", "pdf-optimization-for-web-performance"],
-    heroImage: "@assets/blog_images/best-pdf-compression-settings-hero.png",
-    thumbnailImage: "@assets/blog_images/best-pdf-compression-settings-thumb.png"
+    heroImage: "@assets/blog_images/best-pdf-compression-settings-hero.webp",
+    thumbnailImage: "@assets/blog_images/best-pdf-compression-settings-thumb.webp"
   },
   {
     id: "reduce-pdf-file-size-for-email",
@@ -108,8 +108,8 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     keywords: "reduce pdf size for email, pdf email attachment, compress pdf for gmail, pdf file too large email, shrink pdf for email",
     relatedTools: ["compress-pdf"],
     relatedPosts: ["how-to-compress-pdf-without-losing-quality", "best-pdf-compression-settings-2025"],
-    heroImage: "@assets/blog_images/email-pdf-size-hero.png",
-    thumbnailImage: "@assets/blog_images/email-pdf-size-thumb.png"
+    heroImage: "@assets/blog_images/email-pdf-size-hero.webp",
+    thumbnailImage: "@assets/blog_images/email-pdf-size-thumb.webp"
   },
   {
     id: "pdf-optimization-for-web-performance",
@@ -127,8 +127,8 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     keywords: "pdf web optimization, pdf page speed, pdf seo, linearized pdf, fast loading pdf, web optimized pdf",
     relatedTools: ["compress-pdf"],
     relatedPosts: ["best-pdf-compression-settings-2025", "compress-pdf-vs-zip-compression"],
-    heroImage: "@assets/blog_images/pdf-optimization-web-hero.png",
-    thumbnailImage: "@assets/blog_images/pdf-optimization-web-thumb.png"
+    heroImage: "@assets/blog_images/pdf-optimization-web-hero.webp",
+    thumbnailImage: "@assets/blog_images/pdf-optimization-web-thumb.webp"
   },
   {
     id: "compress-pdf-vs-zip-compression",
@@ -146,8 +146,8 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     keywords: "pdf vs zip compression, pdf or zip smaller, compress pdf vs zip file, pdf compression comparison, zip pdf files",
     relatedTools: ["compress-pdf"],
     relatedPosts: ["how-to-compress-pdf-without-losing-quality", "best-pdf-compression-settings-2025"],
-    heroImage: "@assets/blog_images/pdf-vs-zip-hero.png",
-    thumbnailImage: "@assets/blog_images/pdf-vs-zip-thumb.png"
+    heroImage: "@assets/blog_images/pdf-vs-zip-hero.webp",
+    thumbnailImage: "@assets/blog_images/pdf-vs-zip-thumb.webp"
   },
   {
     id: "how-to-convert-jpg-to-pdf",
@@ -166,9 +166,9 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     keywords: "jpg to pdf, convert jpg to pdf, image to pdf, jpeg to pdf converter, jpg to pdf free, batch jpg to pdf",
     relatedTools: ["jpg-to-pdf"],
     relatedPosts: ["how-to-extract-images-from-pdf", "pdf-optimization-for-web-performance"],
-    heroImage: "@assets/blog_images/convert-jpg-to-pdf-hero.png",
-    thumbnailImage: "@assets/blog_images/convert-jpg-to-pdf-thumb.png",
-    supportingImages: ["@assets/blog_images/jpg-to-pdf-steps.png"]
+    heroImage: "@assets/blog_images/convert-jpg-to-pdf-hero.webp",
+    thumbnailImage: "@assets/blog_images/convert-jpg-to-pdf-thumb.webp",
+    supportingImages: ["@assets/blog_images/jpg-to-pdf-steps.webp"]
   },
   {
     id: "how-to-generate-qr-codes",
@@ -186,8 +186,8 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     keywords: "generate qr code, qr code generator, create qr code, custom qr code, qr code maker, free qr code",
     relatedTools: ["qr-generator"],
     relatedPosts: ["how-to-generate-secure-passwords"],
-    heroImage: "@assets/blog_images/qr-code-hero.png",
-    thumbnailImage: "@assets/blog_images/qr-code-thumb.png"
+    heroImage: "@assets/blog_images/qr-code-hero.webp",
+    thumbnailImage: "@assets/blog_images/qr-code-thumb.webp"
   },
   {
     id: "how-to-generate-secure-passwords",
@@ -205,8 +205,8 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     keywords: "generate secure password, password generator, strong password, password security, create secure password, password best practices",
     relatedTools: ["password-generator"],
     relatedPosts: ["how-to-password-protect-pdf"],
-    heroImage: "@assets/blog_images/password-generator-hero.png",
-    thumbnailImage: "@assets/blog_images/password-generator-thumb.png"
+    heroImage: "@assets/blog_images/password-generator-hero.webp",
+    thumbnailImage: "@assets/blog_images/password-generator-thumb.webp"
   },
   {
     id: "how-to-extract-text-from-pdf",
@@ -224,8 +224,8 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     keywords: "extract text from pdf, pdf text extraction, ocr pdf, copy text from pdf, pdf to text converter, extract pdf content",
     relatedTools: ["extract-text"],
     relatedPosts: ["how-to-unlock-pdf", "how-to-extract-images-from-pdf"],
-    heroImage: "@assets/blog_images/text-extraction-hero.png",
-    thumbnailImage: "@assets/blog_images/text-extraction-thumb.png"
+    heroImage: "@assets/blog_images/text-extraction-hero.webp",
+    thumbnailImage: "@assets/blog_images/text-extraction-thumb.webp"
   },
   {
     id: "how-to-unlock-pdf",
@@ -243,9 +243,9 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     keywords: "unlock pdf, remove pdf password, pdf password remover, unlock protected pdf, pdf restrictions remover, decrypt pdf",
     relatedTools: ["unlock-pdf", "protect-pdf"],
     relatedPosts: ["how-to-password-protect-pdf", "how-to-extract-text-from-pdf"],
-    heroImage: "@assets/blog_images/unlock-pdf-hero.png",
-    thumbnailImage: "@assets/blog_images/unlock-pdf-thumb.png",
-    supportingImages: ["@assets/blog_images/unlock-pdf-password-hero.png"]
+    heroImage: "@assets/blog_images/unlock-pdf-hero.webp",
+    thumbnailImage: "@assets/blog_images/unlock-pdf-thumb.webp",
+    supportingImages: ["@assets/blog_images/unlock-pdf-password-hero.webp"]
   },
   {
     id: "how-to-merge-pdf-files",
@@ -263,9 +263,9 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     keywords: "merge pdf files, combine pdf, pdf merger, join pdf documents, pdf combiner, merge multiple pdfs",
     relatedTools: ["merge-pdf", "organize-pdf"],
     relatedPosts: ["how-to-split-pdf", "how-to-organize-pdf"],
-    heroImage: "@assets/blog_images/merge-pdf-hero.png",
-    thumbnailImage: "@assets/blog_images/merge-pdf-thumb.png",
-    supportingImages: ["@assets/blog_images/merge-pdf-support1.png", "@assets/blog_images/pdf-merge-process.png"]
+    heroImage: "@assets/blog_images/merge-pdf-hero.webp",
+    thumbnailImage: "@assets/blog_images/merge-pdf-thumb.webp",
+    supportingImages: ["@assets/blog_images/merge-pdf-support1.webp", "@assets/blog_images/pdf-merge-process.webp"]
   },
   {
     id: "how-to-split-pdf",
@@ -283,9 +283,9 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     keywords: "split pdf, pdf splitter, extract pdf pages, divide pdf, separate pdf pages, pdf page extractor",
     relatedTools: ["split-pdf", "extract-pages"],
     relatedPosts: ["how-to-merge-pdf-files", "how-to-extract-pdf-pages"],
-    heroImage: "@assets/blog_images/split-pdf-hero.png",
-    thumbnailImage: "@assets/blog_images/split-pdf-thumb.png",
-    supportingImages: ["@assets/blog_images/split-pdf-support1.png", "@assets/blog_images/pdf-split-options.png"]
+    heroImage: "@assets/blog_images/split-pdf-hero.webp",
+    thumbnailImage: "@assets/blog_images/split-pdf-thumb.webp",
+    supportingImages: ["@assets/blog_images/split-pdf-support1.webp", "@assets/blog_images/pdf-split-options.webp"]
   },
   {
     id: "how-to-crop-pdf",
@@ -303,8 +303,8 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     keywords: "crop pdf, pdf cropper, remove pdf margins, trim pdf pages, pdf page crop, adjust pdf margins",
     relatedTools: ["crop-pdf"],
     relatedPosts: ["how-to-rotate-pdf", "how-to-organize-pdf"],
-    heroImage: "@assets/blog_images/crop-pdf-hero.png",
-    thumbnailImage: "@assets/blog_images/crop-pdf-thumb.png"
+    heroImage: "@assets/blog_images/crop-pdf-hero.webp",
+    thumbnailImage: "@assets/blog_images/crop-pdf-thumb.webp"
   },
   {
     id: "how-to-organize-pdf",
@@ -323,8 +323,8 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     keywords: "organize pdf pages, reorder pdf, pdf page organizer, arrange pdf pages, sort pdf pages, pdf page management",
     relatedTools: ["organize-pdf", "merge-pdf"],
     relatedPosts: ["how-to-merge-pdf-files", "how-to-split-pdf"],
-    heroImage: "@assets/blog_images/organize-pdf-hero.png",
-    thumbnailImage: "@assets/blog_images/organize-pdf-thumb.png"
+    heroImage: "@assets/blog_images/organize-pdf-hero.webp",
+    thumbnailImage: "@assets/blog_images/organize-pdf-thumb.webp"
   },
   {
     id: "how-to-rotate-pdf",
@@ -342,8 +342,8 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     keywords: "rotate pdf, pdf rotation, turn pdf pages, fix pdf orientation, rotate pdf pages, pdf page rotation",
     relatedTools: ["rotate-pdf"],
     relatedPosts: ["how-to-crop-pdf", "how-to-organize-pdf"],
-    heroImage: "@assets/blog_images/rotate-pdf-hero.png",
-    thumbnailImage: "@assets/blog_images/rotate-pdf-thumb.png"
+    heroImage: "@assets/blog_images/rotate-pdf-hero.webp",
+    thumbnailImage: "@assets/blog_images/rotate-pdf-thumb.webp"
   },
   {
     id: "how-to-remove-pdf-pages",
@@ -361,8 +361,8 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     keywords: "remove pdf pages, delete pdf pages, pdf page remover, remove pages from pdf, pdf page deletion, clean pdf document",
     relatedTools: ["remove-pages"],
     relatedPosts: ["how-to-extract-pdf-pages", "how-to-split-pdf"],
-    heroImage: "@assets/blog_images/remove-pages-hero.png",
-    thumbnailImage: "@assets/blog_images/remove-pages-thumb.png"
+    heroImage: "@assets/blog_images/remove-pages-hero.webp",
+    thumbnailImage: "@assets/blog_images/remove-pages-thumb.webp"
   },
   {
     id: "how-to-extract-pdf-pages",
@@ -380,8 +380,8 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     keywords: "extract pdf pages, pdf page extractor, save pdf pages, extract specific pages, pdf extraction tool, get pages from pdf",
     relatedTools: ["extract-pages", "split-pdf"],
     relatedPosts: ["how-to-split-pdf", "how-to-remove-pdf-pages"],
-    heroImage: "@assets/blog_images/extract-pages-hero.png",
-    thumbnailImage: "@assets/blog_images/extract-pages-thumb.png"
+    heroImage: "@assets/blog_images/extract-pages-hero.webp",
+    thumbnailImage: "@assets/blog_images/extract-pages-thumb.webp"
   },
   {
     id: "how-to-extract-images-from-pdf",
@@ -399,8 +399,8 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     keywords: "extract images from pdf, pdf image extractor, save pdf images, get pictures from pdf, pdf to images, extract pdf photos",
     relatedTools: ["extract-images"],
     relatedPosts: ["how-to-convert-jpg-to-pdf", "how-to-extract-text-from-pdf"],
-    heroImage: "@assets/blog_images/extract-images-hero.png",
-    thumbnailImage: "@assets/blog_images/extract-images-thumb.png"
+    heroImage: "@assets/blog_images/extract-images-hero.webp",
+    thumbnailImage: "@assets/blog_images/extract-images-thumb.webp"
   },
   {
     id: "how-to-add-page-numbers-to-pdf",
@@ -418,8 +418,8 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     keywords: "add page numbers pdf, pdf page numbering, number pdf pages, pdf pagination, insert page numbers pdf, pdf page counter",
     relatedTools: ["add-page-number"],
     relatedPosts: ["how-to-watermark-pdf", "how-to-organize-pdf"],
-    heroImage: "@assets/blog_images/page-numbers-hero.png",
-    thumbnailImage: "@assets/blog_images/page-numbers-thumb.png"
+    heroImage: "@assets/blog_images/page-numbers-hero.webp",
+    thumbnailImage: "@assets/blog_images/page-numbers-thumb.webp"
   },
   {
     id: "how-to-watermark-pdf",
@@ -437,8 +437,8 @@ export const blogPostsMetadata: BlogPostMetadata[] = [
     keywords: "watermark pdf, add watermark to pdf, pdf watermark tool, protect pdf watermark, brand pdf documents, pdf overlay",
     relatedTools: ["watermark-pdf"],
     relatedPosts: ["how-to-password-protect-pdf", "how-to-add-page-numbers-to-pdf"],
-    heroImage: "@assets/blog_images/watermark-pdf-hero.png",
-    thumbnailImage: "@assets/blog_images/watermark-pdf-thumb.png"
+    heroImage: "@assets/blog_images/watermark-pdf-hero.webp",
+    thumbnailImage: "@assets/blog_images/watermark-pdf-thumb.webp"
   }
 ];
 
