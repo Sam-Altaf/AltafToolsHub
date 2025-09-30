@@ -30,6 +30,33 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-core': ['react', 'react-dom', 'wouter'],
+          'ui-components': [
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-tabs',
+            '@radix-ui/react-select',
+            '@radix-ui/react-accordion',
+            '@radix-ui/react-toast',
+            '@radix-ui/react-avatar',
+            '@radix-ui/react-checkbox',
+            '@radix-ui/react-label',
+            '@radix-ui/react-separator',
+            '@radix-ui/react-slider',
+            '@radix-ui/react-switch',
+            '@radix-ui/react-progress'
+          ],
+          'animations': ['framer-motion'],
+          'pdf-processing': ['pdfjs-dist', 'pdf-lib', 'pdf-lib-with-encrypt'],
+          'image-processing': ['sharp', 'canvas', 'tesseract.js'],
+          'charts': ['recharts'],
+          'utilities': ['qrcode', 'react-markdown']
+        }
+      }
+    }
   },
   server: {
     fs: {

@@ -25,6 +25,10 @@
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     
+    <!-- Resource Hints for Performance -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    
     <!-- Critical CSS Inline for faster FCP -->
     <style>
       body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
@@ -34,11 +38,9 @@
       @keyframes spin{to{transform:rotate(360deg)}}
     </style>
     
-    <!-- Defer non-critical resources -->
+    <!-- Optimized font loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
-    <!-- Remove automatic font preloading - let the browser decide -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     
     <!-- Single structured data for organization -->
@@ -51,15 +53,6 @@
       "description": "Free online tools for PDF processing, image conversion, QR generation, and more."
     }
     </script>
-    
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-26X6DS9BXF"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-26X6DS9BXF');
-    </script>
   </head>
   <body>
     <div id="root">
@@ -67,7 +60,7 @@
         <div class="spinner"></div>
       </div>
     </div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/src/main.tsx" fetchpriority="high"></script>
     
     <!-- Conditional Service Worker Registration -->
     <script>
@@ -82,6 +75,26 @@
           }, 5000);
         });
       }
+    </script>
+    
+    <!-- Google Analytics - Delayed Load for Performance -->
+    <script>
+      // Load Google Analytics after page is interactive
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          var script = document.createElement('script');
+          script.src = 'https://www.googletagmanager.com/gtag/js?id=G-26X6DS9BXF';
+          script.async = true;
+          document.head.appendChild(script);
+          
+          script.onload = function() {
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-26X6DS9BXF');
+          };
+        }, 2000);
+      });
     </script>
   </body>
 </html>
