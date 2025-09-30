@@ -7,7 +7,7 @@ import {
   Shield,
   Lock,
   ArrowRight,
-  CheckCircle2,
+  CheckCircle,
   AlertCircle,
   Lightbulb,
   Download,
@@ -25,7 +25,6 @@ import {
   Building,
   GraduationCap,
   Heart,
-  FileKey,
   ShieldAlert,
   ShieldCheck,
   XCircle
@@ -342,27 +341,27 @@ export default function HowToPasswordProtectPDF() {
               </h2>
               <div className="grid md:grid-cols-2 gap-3">
                 <div className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-green-500 mt-1 flex-shrink-0" />
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-1 flex-shrink-0" />
                   <span className="text-sm"><strong>AES-256 encryption</strong> provides military-grade security for sensitive documents</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-green-500 mt-1 flex-shrink-0" />
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-1 flex-shrink-0" />
                   <span className="text-sm"><strong>Client-side processing</strong> ensures your files never leave your device</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-green-500 mt-1 flex-shrink-0" />
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-1 flex-shrink-0" />
                   <span className="text-sm"><strong>Dual passwords</strong> offer granular control over viewing and permissions</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-green-500 mt-1 flex-shrink-0" />
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-1 flex-shrink-0" />
                   <span className="text-sm"><strong>12+ character passwords</strong> with mixed characters provide optimal security</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-green-500 mt-1 flex-shrink-0" />
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-1 flex-shrink-0" />
                   <span className="text-sm"><strong>Permission controls</strong> let you restrict printing, copying, and editing</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-green-500 mt-1 flex-shrink-0" />
+                  <CheckCircle className="w-4 h-4 text-green-500 mt-1 flex-shrink-0" />
                   <span className="text-sm"><strong>Industry compliance</strong> meets HIPAA, GDPR, and SOX requirements</span>
                 </div>
               </div>
@@ -611,15 +610,15 @@ export default function HowToPasswordProtectPDF() {
                   </p>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-green-500" />
+                      <CheckCircle className="w-4 h-4 text-green-500" />
                       <span className="text-sm">Prevents unauthorized viewing</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-green-500" />
+                      <CheckCircle className="w-4 h-4 text-green-500" />
                       <span className="text-sm">Encrypts entire document content</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-green-500" />
+                      <CheckCircle className="w-4 h-4 text-green-500" />
                       <span className="text-sm">Required for any document access</span>
                     </div>
                   </div>
@@ -627,7 +626,7 @@ export default function HowToPasswordProtectPDF() {
 
                 <div className="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-lg">
                   <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                    <FileKey className="w-5 h-5 text-purple-600" />
+                    <Key className="w-5 h-5 text-purple-600" />
                     Owner Password (Permissions Password)
                   </h3>
                   <p className="text-muted-foreground mb-3">
@@ -635,15 +634,15 @@ export default function HowToPasswordProtectPDF() {
                   </p>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-green-500" />
+                      <CheckCircle className="w-4 h-4 text-green-500" />
                       <span className="text-sm">Controls printing permissions</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-green-500" />
+                      <CheckCircle className="w-4 h-4 text-green-500" />
                       <span className="text-sm">Manages copy/paste abilities</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-green-500" />
+                      <CheckCircle className="w-4 h-4 text-green-500" />
                       <span className="text-sm">Restricts editing and annotations</span>
                     </div>
                   </div>
@@ -1263,7 +1262,7 @@ export default function HowToPasswordProtectPDF() {
                 <div className="grid md:grid-cols-2 gap-4">
                   <div className="p-4 border rounded-lg">
                     <h3 className="font-semibold mb-2 flex items-center gap-2">
-                      <CheckCircle2 className="w-5 h-5 text-green-500" />
+                      <CheckCircle className="w-5 h-5 text-green-500" />
                       Why Choose AltafToolsHub
                     </h3>
                     <ul className="space-y-1 text-sm text-muted-foreground">
@@ -1895,27 +1894,27 @@ export default function HowToPasswordProtectPDF() {
                   <h3 className="text-lg font-semibold mb-3">Your PDF Security Action Plan</h3>
                   <div className="grid md:grid-cols-2 gap-3">
                     <div className="flex items-start gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-green-500 mt-1" />
+                      <CheckCircle className="w-4 h-4 text-green-500 mt-1" />
                       <span className="text-sm">Audit your current PDF security practices</span>
                     </div>
                     <div className="flex items-start gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-green-500 mt-1" />
+                      <CheckCircle className="w-4 h-4 text-green-500 mt-1" />
                       <span className="text-sm">Implement password policies for your team</span>
                     </div>
                     <div className="flex items-start gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-green-500 mt-1" />
+                      <CheckCircle className="w-4 h-4 text-green-500 mt-1" />
                       <span className="text-sm">Use AES-256 encryption for sensitive documents</span>
                     </div>
                     <div className="flex items-start gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-green-500 mt-1" />
+                      <CheckCircle className="w-4 h-4 text-green-500 mt-1" />
                       <span className="text-sm">Set up secure password distribution channels</span>
                     </div>
                     <div className="flex items-start gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-green-500 mt-1" />
+                      <CheckCircle className="w-4 h-4 text-green-500 mt-1" />
                       <span className="text-sm">Train your team on security best practices</span>
                     </div>
                     <div className="flex items-start gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-green-500 mt-1" />
+                      <CheckCircle className="w-4 h-4 text-green-500 mt-1" />
                       <span className="text-sm">Regular review and update security measures</span>
                     </div>
                   </div>
