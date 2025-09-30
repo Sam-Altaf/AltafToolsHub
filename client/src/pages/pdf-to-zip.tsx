@@ -160,13 +160,41 @@ export default function PDFToZIP() {
       const totalFiles = selectedFiles.length;
       let totalOriginalSize = 0;
 
-      // Add files to ZIP
+      // Track filenames to detect and handle duplicates
+      const usedFilenames = new Set<string>();
+      
+      // Helper function to get unique filename
+      const getUniqueFilename = (originalName: string): string => {
+        if (!usedFilenames.has(originalName)) {
+          usedFilenames.add(originalName);
+          return originalName;
+        }
+        
+        // Extract name and extension
+        const lastDotIndex = originalName.lastIndexOf('.');
+        const name = lastDotIndex > 0 ? originalName.substring(0, lastDotIndex) : originalName;
+        const ext = lastDotIndex > 0 ? originalName.substring(lastDotIndex) : '';
+        
+        // Find next available number
+        let counter = 1;
+        let newName = `${name} (${counter})${ext}`;
+        while (usedFilenames.has(newName)) {
+          counter++;
+          newName = `${name} (${counter})${ext}`;
+        }
+        
+        usedFilenames.add(newName);
+        return newName;
+      };
+
+      // Add files to ZIP with unique names
       for (let i = 0; i < totalFiles; i++) {
         const { file } = selectedFiles[i];
         setProgress(Math.round(((i + 0.5) / totalFiles) * 90));
         
         const arrayBuffer = await file.arrayBuffer();
-        zip.file(file.name, arrayBuffer);
+        const uniqueFilename = getUniqueFilename(file.name);
+        zip.file(uniqueFilename, arrayBuffer);
         totalOriginalSize += file.size;
       }
 
@@ -264,7 +292,7 @@ export default function PDFToZIP() {
     },
     {
       question: "What happens if I have PDFs with the same filename?",
-      answer: "If you upload multiple PDFs with identical filenames, they will all be included in the ZIP. However, when extracting, your computer may ask you to rename duplicates. For best results, ensure your PDFs have unique filenames."
+      answer: "Our tool automatically handles duplicate filenames by appending a number (e.g., 'invoice.pdf' becomes 'invoice (1).pdf', 'invoice (2).pdf', etc.). This ensures all your files are preserved in the ZIP archive without any being overwritten. You don't need to rename files manually."
     },
     {
       question: "Can I password-protect the ZIP archive?",
