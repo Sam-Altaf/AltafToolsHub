@@ -27,6 +27,9 @@ export default function BlogPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [visiblePosts, setVisiblePosts] = useState(6);
   const [showAllFeaturedArticles, setShowAllFeaturedArticles] = useState(false);
+  
+  // Constants for optimization
+  const maxFeaturedToShow = 4;
 
   // Generate FAQ schema for SEO
   const faqItems = [
@@ -64,33 +67,46 @@ export default function BlogPage() {
     ]
   });
 
-  // Filter posts based on category and search
-  const filteredPosts = blogPosts.filter(post => {
-    const categoryMatch = selectedCategory === "All Posts" || post.category === selectedCategory;
-    const searchMatch = searchTerm === "" || 
-      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-    return categoryMatch && searchMatch;
-  });
+  // Filter posts based on category and search - memoized to prevent re-computation
+  const filteredPosts = useMemo(() => {
+    return blogPosts.filter(post => {
+      const categoryMatch = selectedCategory === "All Posts" || post.category === selectedCategory;
+      const searchMatch = searchTerm === "" || 
+        post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+      return categoryMatch && searchMatch;
+    });
+  }, [selectedCategory, searchTerm]);
 
-  // Separate featured and regular posts from ALL filtered posts
-  const allFeaturedPosts = filteredPosts.filter(post => post.featured);
-  const allRegularPosts = filteredPosts.filter(post => !post.featured);
+  // Separate featured and regular posts from ALL filtered posts - memoized
+  const { allFeaturedPosts, allRegularPosts } = useMemo(() => {
+    return {
+      allFeaturedPosts: filteredPosts.filter(post => post.featured),
+      allRegularPosts: filteredPosts.filter(post => !post.featured)
+    };
+  }, [filteredPosts]);
 
-  // Show all featured posts (or limit if there are too many)
-  const maxFeaturedToShow = 4;
-  const shouldShowAll = showAllFeaturedArticles || allFeaturedPosts.length <= maxFeaturedToShow;
-  const featuredPosts = shouldShowAll ? allFeaturedPosts : allFeaturedPosts.slice(0, maxFeaturedToShow);
-  const hasMoreFeatured = !shouldShowAll && allFeaturedPosts.length > maxFeaturedToShow;
+  // Show all featured posts (or limit if there are too many) - memoized
+  const { featuredPosts, hasMoreFeatured } = useMemo(() => {
+    const shouldShowAll = showAllFeaturedArticles || allFeaturedPosts.length <= maxFeaturedToShow;
+    return {
+      featuredPosts: shouldShowAll ? allFeaturedPosts : allFeaturedPosts.slice(0, maxFeaturedToShow),
+      hasMoreFeatured: !shouldShowAll && allFeaturedPosts.length > maxFeaturedToShow
+    };
+  }, [allFeaturedPosts, showAllFeaturedArticles, maxFeaturedToShow]);
 
-  // Apply pagination only to regular posts
-  const regularPosts = allRegularPosts.slice(0, visiblePosts);
-  const hasMoreRegularPosts = allRegularPosts.length > visiblePosts;
+  // Apply pagination only to regular posts - memoized
+  const { regularPosts, hasMoreRegularPosts } = useMemo(() => {
+    return {
+      regularPosts: allRegularPosts.slice(0, visiblePosts),
+      hasMoreRegularPosts: allRegularPosts.length > visiblePosts
+    };
+  }, [allRegularPosts, visiblePosts]);
 
-  const loadMore = () => {
+  const loadMore = useCallback(() => {
     setVisiblePosts(prev => prev + 6);
-  };
+  }, []);
 
   return (
     <div className="min-h-screen">

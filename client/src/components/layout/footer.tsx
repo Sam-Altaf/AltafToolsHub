@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Logo } from "@/components/logo";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
+import { preloadBlogPosts } from "@/lib/blog-data-optimized";
 import { 
   Shield, 
   Lock, 
@@ -93,6 +94,7 @@ const quickLinks = [
 export default function Footer() {
   const [openSections, setOpenSections] = useState<string[]>([]);
   const [isMobile, setIsMobile] = useState(false);
+  const [blogPreloaded, setBlogPreloaded] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -102,6 +104,20 @@ export default function Footer() {
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+  
+  // Preload blog content on hover for faster navigation
+  const handleBlogHover = useCallback(() => {
+    if (!blogPreloaded) {
+      // Preload popular blog posts
+      const popularSlugs = [
+        "how-to-compress-pdf-without-losing-quality",
+        "best-pdf-compression-settings-2025",
+        "reduce-pdf-file-size-for-email"
+      ];
+      preloadBlogPosts(popularSlugs);
+      setBlogPreloaded(true);
+    }
+  }, [blogPreloaded]);
   return (
     <footer className="bg-muted/50 dark:bg-gray-900 border-t border-border transition-colors duration-300">
       <div className="container-section py-12 lg:py-16">
@@ -206,6 +222,7 @@ export default function Footer() {
                     href={link.href}
                     className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1 group"
                     data-testid={`footer-link-${link.name.toLowerCase().replace(/\s/g, '-')}`}
+                    onMouseEnter={link.href.startsWith('/blog') ? handleBlogHover : undefined}
                   >
                     <span>{link.name}</span>
                     <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1" />
@@ -276,6 +293,7 @@ export default function Footer() {
                     href={article.href}
                     className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1 group line-clamp-2"
                     data-testid={`footer-article-${article.name.toLowerCase().replace(/\s/g, '-')}`}
+                    onMouseEnter={handleBlogHover}
                   >
                     <span>{article.name}</span>
                     <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all group-hover:translate-x-1 flex-shrink-0" />
