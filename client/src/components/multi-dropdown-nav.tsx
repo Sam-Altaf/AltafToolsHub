@@ -104,7 +104,8 @@ const getPdfToolsSections = () => {
         pdfTools.find(t => t.id === "rotate-pdf"),
         pdfTools.find(t => t.id === "remove-pages"),
         pdfTools.find(t => t.id === "extract-pages"),
-        pdfTools.find(t => t.id === "organize-pdf")
+        pdfTools.find(t => t.id === "organize-pdf"),
+        pdfTools.find(t => t.id === "pdf-to-zip")
       ].filter(Boolean) as NavTool[]
     },
     {
@@ -114,6 +115,7 @@ const getPdfToolsSections = () => {
         pdfTools.find(t => t.id === "images-to-pdf"),
         pdfTools.find(t => t.id === "png-to-pdf"),
         pdfTools.find(t => t.id === "webp-to-pdf"),
+        pdfTools.find(t => t.id === "heic-to-pdf"),
         pdfTools.find(t => t.id === "word-to-pdf"),
         pdfTools.find(t => t.id === "excel-to-pdf"),
         pdfTools.find(t => t.id === "powerpoint-to-pdf"),
@@ -122,17 +124,18 @@ const getPdfToolsSections = () => {
       ].filter(Boolean) as NavTool[]
     },
     {
-      title: "EDIT & SECURE",
+      title: "EDIT & EXPORT",
       tools: [
         pdfTools.find(t => t.id === "add-page-number"),
         pdfTools.find(t => t.id === "watermark-pdf"),
         pdfTools.find(t => t.id === "crop-pdf"),
         pdfTools.find(t => t.id === "sign-pdf"),
         pdfTools.find(t => t.id === "redact-pdf"),
-        pdfTools.find(t => t.id === "heic-to-pdf"),
-        pdfTools.find(t => t.id === "svg-to-pdf"),
-        pdfTools.find(t => t.id === "tiff-to-pdf"),
-        pdfTools.find(t => t.id === "avif-to-pdf")
+        pdfTools.find(t => t.id === "pdf-to-word"),
+        pdfTools.find(t => t.id === "pdf-to-excel"),
+        pdfTools.find(t => t.id === "pdf-to-powerpoint"),
+        pdfTools.find(t => t.id === "pdf-to-html"),
+        pdfTools.find(t => t.id === "extract-text") ? {...pdfTools.find(t => t.id === "extract-text")!, title: "Extract Text (OCR)"} as NavTool : undefined
       ].filter(Boolean) as NavTool[]
     }
   ];
