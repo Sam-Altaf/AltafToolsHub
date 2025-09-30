@@ -23,12 +23,12 @@ interface CustomTool {
 
 type NavTool = Tool | CustomTool;
 
-// Helper component for navigation items - compact layout without descriptions
+// Helper component for navigation items - fixed size buttons
 const ToolNavItem = ({ tool, onClick }: { tool: NavTool; onClick?: () => void }) => {
   const Icon = tool.icon;
   
   const content = (
-    <div className="group flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+    <div className="group flex items-center gap-2 px-3 py-2.5 rounded-md hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors h-[44px]">
       <div className={cn(
         "w-6 h-6 rounded flex items-center justify-center flex-shrink-0",
         "bg-gradient-to-br shadow-sm", tool.color
@@ -79,16 +79,17 @@ const ToolNavItem = ({ tool, onClick }: { tool: NavTool; onClick?: () => void })
   );
 };
 
-// Get organized PDF tools - curated list of most popular tools
+// Get organized PDF tools - tools that OUTPUT PDFs
 const getPdfToolsSections = () => {
   const pdfTools = allTools.filter(tool => 
     tool.category === "pdf-management" || 
     tool.category === "document-conversion" || 
     tool.category === "ebook-conversion" ||
-    tool.category === "image-conversion" ||
     tool.category === "security" ||
     tool.id === "extract-text" ||
-    tool.id === "pdf-to-zip"
+    tool.id === "pdf-to-zip" ||
+    // Include all *-to-pdf tools from image-conversion category
+    (tool.category === "image-conversion" && tool.id.includes("-to-pdf"))
   );
 
   return [
@@ -112,38 +113,38 @@ const getPdfToolsSections = () => {
         pdfTools.find(t => t.id === "jpg-to-pdf"),
         pdfTools.find(t => t.id === "images-to-pdf"),
         pdfTools.find(t => t.id === "png-to-pdf"),
+        pdfTools.find(t => t.id === "webp-to-pdf"),
         pdfTools.find(t => t.id === "word-to-pdf"),
         pdfTools.find(t => t.id === "excel-to-pdf"),
         pdfTools.find(t => t.id === "powerpoint-to-pdf"),
         pdfTools.find(t => t.id === "html-to-pdf"),
-        pdfTools.find(t => t.id === "txt-to-pdf"),
         pdfTools.find(t => t.id === "epub-to-pdf")
       ].filter(Boolean) as NavTool[]
     },
     {
-      title: "EDIT & EXPORT",
+      title: "EDIT & SECURE",
       tools: [
         pdfTools.find(t => t.id === "add-page-number"),
         pdfTools.find(t => t.id === "watermark-pdf"),
-        pdfTools.find(t => t.id === "extract-text") ? {...pdfTools.find(t => t.id === "extract-text")!, title: "Extract Text (OCR)"} as NavTool : undefined,
-        pdfTools.find(t => t.id === "extract-images"),
-        pdfTools.find(t => t.id === "pdf-to-word"),
-        pdfTools.find(t => t.id === "pdf-to-excel"),
-        pdfTools.find(t => t.id === "pdf-to-images"),
-        pdfTools.find(t => t.id === "pdf-to-jpg"),
-        pdfTools.find(t => t.id === "sign-pdf")
+        pdfTools.find(t => t.id === "crop-pdf"),
+        pdfTools.find(t => t.id === "sign-pdf"),
+        pdfTools.find(t => t.id === "redact-pdf"),
+        pdfTools.find(t => t.id === "heic-to-pdf"),
+        pdfTools.find(t => t.id === "svg-to-pdf"),
+        pdfTools.find(t => t.id === "tiff-to-pdf"),
+        pdfTools.find(t => t.id === "avif-to-pdf")
       ].filter(Boolean) as NavTool[]
     }
   ];
 };
 
-// Get organized Image tools - balanced distribution
+// Get organized Image tools - tools that OUTPUT images only
 const getImageToolsSections = () => {
   const imageOutputTools = allTools.filter(tool => 
     tool.id === "pdf-to-images" ||
     tool.id === "pdf-to-jpg" ||
-    tool.id === "extract-images" ||
-    tool.category === "image-conversion"
+    tool.id === "pdf-to-png" ||
+    tool.id === "extract-images"
   );
 
   return [
@@ -152,32 +153,8 @@ const getImageToolsSections = () => {
       tools: [
         imageOutputTools.find(t => t.id === "pdf-to-images"),
         imageOutputTools.find(t => t.id === "pdf-to-jpg"),
-        imageOutputTools.find(t => t.id === "extract-images"),
-        imageOutputTools.find(t => t.id === "jpg-to-pdf"),
-        imageOutputTools.find(t => t.id === "images-to-pdf"),
-        imageOutputTools.find(t => t.id === "png-to-pdf")
-      ].filter(Boolean) as NavTool[]
-    },
-    {
-      title: "IMAGE FORMATS",
-      tools: [
-        imageOutputTools.find(t => t.id === "webp-to-pdf"),
-        imageOutputTools.find(t => t.id === "svg-to-pdf"),
-        imageOutputTools.find(t => t.id === "heic-to-pdf"),
-        imageOutputTools.find(t => t.id === "tiff-to-pdf"),
-        imageOutputTools.find(t => t.id === "avif-to-pdf"),
-        imageOutputTools.find(t => t.id === "bmp-to-pdf")
-      ].filter(Boolean) as NavTool[]
-    },
-    {
-      title: "MORE CONVERSIONS",
-      tools: [
-        imageOutputTools.find(t => t.id === "gif-to-pdf"),
-        imageOutputTools.find(t => t.id === "ico-to-pdf"),
-        imageOutputTools.find(t => t.id === "psd-to-pdf"),
-        imageOutputTools.find(t => t.id === "raw-to-pdf"),
-        imageOutputTools.find(t => t.id === "eps-to-pdf"),
-        imageOutputTools.find(t => t.id === "ai-to-pdf")
+        imageOutputTools.find(t => t.id === "pdf-to-png"),
+        imageOutputTools.find(t => t.id === "extract-images")
       ].filter(Boolean) as NavTool[]
     }
   ];
@@ -351,11 +328,14 @@ export function MultiDropdownNav() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -5, scale: 0.95 }}
               transition={{ duration: 0.15, ease: "easeOut" }}
-              className="absolute -left-32 top-full mt-4 bg-white dark:bg-gray-900 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden"
+              className={cn(
+                "absolute top-full mt-4 bg-white dark:bg-gray-900 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden",
+                menuItems.find(m => m.id === openMenu)?.type === 'image' ? '-left-16' : '-left-32'
+              )}
               style={{ 
                 zIndex: 10000,
-                minWidth: '800px',
-                maxWidth: '1000px',
+                minWidth: menuItems.find(m => m.id === openMenu)?.type === 'image' ? '320px' : '800px',
+                maxWidth: menuItems.find(m => m.id === openMenu)?.type === 'image' ? '400px' : '1000px',
                 width: 'max-content',
                 maxHeight: 'calc(100vh - 120px)',
                 overflowY: 'auto'
@@ -364,7 +344,10 @@ export function MultiDropdownNav() {
               onMouseLeave={handleMouseLeave}
             >
               {/* Arrow pointing up to show which menu */}
-              <div className="absolute -top-2 left-80 w-4 h-4 bg-white dark:bg-gray-900 border-l border-t border-gray-200 dark:border-gray-700 transform rotate-45 shadow-lg"></div>
+              <div className={cn(
+                "absolute -top-2 w-4 h-4 bg-white dark:bg-gray-900 border-l border-t border-gray-200 dark:border-gray-700 transform rotate-45 shadow-lg",
+                menuItems.find(m => m.id === openMenu)?.type === 'image' ? 'left-32' : 'left-80'
+              )}></div>
               <div className="p-4">
                 {/* Header links for all dropdowns */}
                 {menuItems.find(m => m.id === openMenu)?.type === 'pdf' && (
@@ -409,17 +392,17 @@ export function MultiDropdownNav() {
                 
                 {/* Sections displayed in optimized grid layout */}
                 <div className={cn(
-                  "grid gap-4",
+                  "grid gap-6",
                   menuItems.find(m => m.id === openMenu)?.type === 'pdf' && "grid-cols-3", 
-                  menuItems.find(m => m.id === openMenu)?.type === 'image' && "grid-cols-3",
+                  menuItems.find(m => m.id === openMenu)?.type === 'image' && "grid-cols-1",
                   menuItems.find(m => m.id === openMenu)?.type === 'all' && "grid-cols-3"
                 )}>
                   {getDropdownContent(menuItems.find(m => m.id === openMenu)?.type || '').map((section, sectionIdx) => (
-                    <div key={sectionIdx} className="flex flex-col space-y-1">
-                      <h3 className="text-xs font-bold text-gray-500 dark:text-gray-400 mb-2 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700 pb-1">
+                    <div key={sectionIdx} className="flex flex-col">
+                      <h3 className="text-xs font-bold text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider border-b border-gray-200 dark:border-gray-700 pb-2">
                         {section.title}
                       </h3>
-                      <div className="space-y-0.5">
+                      <div className="space-y-1">
                         {section.tools.map((tool) => tool && (
                           <ToolNavItem 
                             key={tool.id} 
