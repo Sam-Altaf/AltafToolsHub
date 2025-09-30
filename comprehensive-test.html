@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Testing Report - AltafToolsHub</title>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; }
+        h1 { color: #1a1a1a; border-bottom: 3px solid #3b82f6; padding-bottom: 10px; }
+        h2 { color: #3b82f6; margin-top: 30px; }
+        h3 { color: #666; margin-left: 20px; }
+        .test-section { background: #f5f5f5; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .success { color: #22c55e; font-weight: bold; }
+        .failure { color: #ef4444; font-weight: bold; }
+        .warning { color: #f59e0b; font-weight: bold; }
+        .test-result { margin: 10px 0; padding: 10px; background: white; border-radius: 4px; }
+        .test-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        iframe { width: 100%; height: 600px; border: 2px solid #ccc; border-radius: 8px; margin: 10px 0; }
+        .console-output { background: #1a1a1a; color: #22c55e; padding: 15px; border-radius: 8px; font-family: monospace; white-space: pre-wrap; }
+        button { background: #3b82f6; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        button:hover { background: #2563eb; }
+        .timestamp { color: #999; font-size: 12px; }
+        .test-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; margin: 0 5px; }
+        .test-badge.pass { background: #dcfce7; color: #22c55e; }
+        .test-badge.fail { background: #fee2e2; color: #ef4444; }
+        .test-badge.pending { background: #fef3c7; color: #f59e0b; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Comprehensive Testing Report - AltafToolsHub</h1>
+    <div class="timestamp">Test Started: <span id="test-start"></span></div>
+    
+    <div class="test-section">
+        <h2>📊 Test Summary</h2>
+        <div id="summary" class="test-grid">
+            <div class="test-result">
+                <strong>Total Tests:</strong> <span id="total-tests">0</span>
+            </div>
+            <div class="test-result">
+                <strong>Passed:</strong> <span id="passed-tests" class="success">0</span>
+            </div>
+            <div class="test-result">
+                <strong>Failed:</strong> <span id="failed-tests" class="failure">0</span>
+            </div>
+            <div class="test-result">
+                <strong>Warnings:</strong> <span id="warning-tests" class="warning">0</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>1️⃣ Blog Page Testing</h2>
+        <button onclick="testBlogPage()">Run Blog Page Tests</button>
+        <button onclick="window.open('http://localhost:5000/blog', '_blank')">Open Blog Page</button>
+        <div id="blog-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2️⃣ Blog Post Testing</h2>
+        <button onclick="testBlogPosts()">Run Blog Post Tests</button>
+        <button onclick="window.open('http://localhost:5000/blog/compress-pdf-without-losing-quality', '_blank')">Open Sample Blog Post</button>
+        <div id="blog-post-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3️⃣ Tool Functionality Testing</h2>
+        <button onclick="testTools()">Run Tool Tests</button>
+        <div id="tool-results"></div>
+        <div class="test-grid" style="margin-top: 20px;">
+            <button onclick="window.open('http://localhost:5000/compress-pdf', '_blank')">Open Compress PDF</button>
+            <button onclick="window.open('http://localhost:5000/jpg-to-pdf', '_blank')">Open JPG to PDF</button>
+            <button onclick="window.open('http://localhost:5000/qr-generator', '_blank')">Open QR Generator</button>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>4️⃣ Performance & Responsiveness</h2>
+        <button onclick="testPerformance()">Run Performance Tests</button>
+        <div id="performance-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>5️⃣ Navigation Flow Testing</h2>
+        <button onclick="testNavigation()">Run Navigation Tests</button>
+        <div id="navigation-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>📝 Console Output</h2>
+        <div id="console-log" class="console-output">Waiting for tests to run...</div>
+    </div>
+
+    <script>
+        let testResults = {
+            total: 0,
+            passed: 0,
+            failed: 0,
+            warnings: 0
+        };
+
+        document.getElementById('test-start').textContent = new Date().toLocaleString();
+
+        function updateSummary() {
+            document.getElementById('total-tests').textContent = testResults.total;
+            document.getElementById('passed-tests').textContent = testResults.passed;
+            document.getElementById('failed-tests').textContent = testResults.failed;
+            document.getElementById('warning-tests').textContent = testResults.warnings;
+        }
+
+        function logTest(message, status = 'info') {
+            const consoleLog = document.getElementById('console-log');
+            const timestamp = new Date().toLocaleTimeString();
+            let badge = '';
+            
+            if (status === 'success') {
+                badge = '<span class="test-badge pass">✓ PASS</span>';
+                testResults.passed++;
+            } else if (status === 'error') {
+                badge = '<span class="test-badge fail">✗ FAIL</span>';
+                testResults.failed++;
+            } else if (status === 'warning') {
+                badge = '<span class="test-badge pending">⚠ WARN</span>';
+                testResults.warnings++;
+            }
+            
+            if (status !== 'info') testResults.total++;
+            
+            consoleLog.innerHTML += `[${timestamp}] ${badge} ${message}\n`;
+            updateSummary();
+        }
+
+        async function testBlogPage() {
+            logTest('Starting Blog Page Tests...', 'info');
+            const results = document.getElementById('blog-results');
+            results.innerHTML = '<p>Testing in progress...</p>';
+            
+            try {
+                const response = await fetch('http://localhost:5000/blog');
+                const html = await response.text();
+                
+                // Test 1: Check for blog cards
+                const hasCards = html.includes('blog-card') || html.includes('Card');
+                logTest(`Blog cards present: ${hasCards}`, hasCards ? 'success' : 'error');
+                
+                // Test 2: Check for thumbnail images
+                const hasThumbnails = html.includes('thumb.png') || html.includes('thumbnail');
+                logTest(`Thumbnail images found: ${hasThumbnails}`, hasThumbnails ? 'success' : 'error');
+                
+                // Test 3: Check for search functionality
+                const hasSearch = html.includes('input-blog-search') || html.includes('Search articles');
+                logTest(`Search functionality present: ${hasSearch}`, hasSearch ? 'success' : 'error');
+                
+                // Test 4: Check for category filters
+                const hasCategories = html.includes('blog-category') || html.includes('Category');
+                logTest(`Category filters present: ${hasCategories}`, hasCategories ? 'success' : 'error');
+                
+                // Test 5: Check for hover effects CSS
+                const hasHoverEffects = html.includes('hover:') || html.includes(':hover');
+                logTest(`Hover effects CSS present: ${hasHoverEffects}`, hasHoverEffects ? 'success' : 'warning');
+                
+                results.innerHTML = `
+                    <h3>✅ Blog Page Test Results</h3>
+                    <ul>
+                        <li class="${hasCards ? 'success' : 'failure'}">Blog cards: ${hasCards ? 'Present' : 'Missing'}</li>
+                        <li class="${hasThumbnails ? 'success' : 'failure'}">Thumbnails: ${hasThumbnails ? 'Found' : 'Missing'}</li>
+                        <li class="${hasSearch ? 'success' : 'failure'}">Search: ${hasSearch ? 'Present' : 'Missing'}</li>
+                        <li class="${hasCategories ? 'success' : 'failure'}">Categories: ${hasCategories ? 'Present' : 'Missing'}</li>
+                        <li class="${hasHoverEffects ? 'success' : 'warning'}">Hover Effects: ${hasHoverEffects ? 'Present' : 'Check Manually'}</li>
+                    </ul>
+                `;
+            } catch (error) {
+                logTest(`Blog page test error: ${error.message}`, 'error');
+                results.innerHTML = `<p class="failure">Error testing blog page: ${error.message}</p>`;
+            }
+        }
+
+        async function testBlogPosts() {
+            logTest('Starting Blog Post Tests...', 'info');
+            const results = document.getElementById('blog-post-results');
+            results.innerHTML = '<p>Testing in progress...</p>';
+            
+            try {
+                // Test a specific blog post
+                const response = await fetch('http://localhost:5000/blog/compress-pdf-without-losing-quality');
+                const html = await response.text();
+                
+                // Test 1: Hero image
+                const hasHeroImage = html.includes('hero.png') || html.includes('hero-image');
+                logTest(`Hero image present: ${hasHeroImage}`, hasHeroImage ? 'success' : 'error');
+                
+                // Test 2: Table of Contents
+                const hasTOC = html.includes('table-of-contents') || html.includes('Table of Contents') || html.includes('toc');
+                logTest(`Table of Contents present: ${hasTOC}`, hasTOC ? 'success' : 'error');
+                
+                // Test 3: Reading progress bar
+                const hasProgressBar = html.includes('reading-progress') || html.includes('readingProgress');
+                logTest(`Reading progress bar present: ${hasProgressBar}`, hasProgressBar ? 'success' : 'error');
+                
+                // Test 4: Social share buttons
+                const hasShareButtons = html.includes('share') && (html.includes('twitter') || html.includes('linkedin') || html.includes('facebook'));
+                logTest(`Social share buttons present: ${hasShareButtons}`, hasShareButtons ? 'success' : 'error');
+                
+                // Test 5: Related Tools CTA
+                const hasRelatedTools = html.includes('Related Tools') || html.includes('related-tools');
+                logTest(`Related Tools section present: ${hasRelatedTools}`, hasRelatedTools ? 'success' : 'error');
+                
+                // Test 6: Supporting images
+                const hasSupportingImages = html.includes('support1.png') || html.includes('support2.png');
+                logTest(`Supporting images present: ${hasSupportingImages}`, hasSupportingImages ? 'success' : 'warning');
+                
+                results.innerHTML = `
+                    <h3>✅ Blog Post Test Results</h3>
+                    <ul>
+                        <li class="${hasHeroImage ? 'success' : 'failure'}">Hero Image: ${hasHeroImage ? 'Present' : 'Missing'}</li>
+                        <li class="${hasTOC ? 'success' : 'failure'}">Table of Contents: ${hasTOC ? 'Present' : 'Missing'}</li>
+                        <li class="${hasProgressBar ? 'success' : 'failure'}">Progress Bar: ${hasProgressBar ? 'Present' : 'Missing'}</li>
+                        <li class="${hasShareButtons ? 'success' : 'failure'}">Share Buttons: ${hasShareButtons ? 'Present' : 'Missing'}</li>
+                        <li class="${hasRelatedTools ? 'success' : 'failure'}">Related Tools: ${hasRelatedTools ? 'Present' : 'Missing'}</li>
+                        <li class="${hasSupportingImages ? 'success' : 'warning'}">Supporting Images: ${hasSupportingImages ? 'Found' : 'Check Manually'}</li>
+                    </ul>
+                `;
+            } catch (error) {
+                logTest(`Blog post test error: ${error.message}`, 'error');
+                results.innerHTML = `<p class="failure">Error testing blog posts: ${error.message}</p>`;
+            }
+        }
+
+        async function testTools() {
+            logTest('Starting Tool Functionality Tests...', 'info');
+            const results = document.getElementById('tool-results');
+            results.innerHTML = '<p>Testing in progress...</p>';
+            
+            const tools = [
+                { name: 'Compress PDF', url: '/compress-pdf', testFor: ['file-upload', 'compress-button', 'Compress PDF'] },
+                { name: 'JPG to PDF', url: '/jpg-to-pdf', testFor: ['file-upload', 'Convert to PDF', 'jpg-input'] },
+                { name: 'QR Generator', url: '/qr-generator', testFor: ['qr-input', 'Generate QR', 'download-button'] }
+            ];
+            
+            let toolResults = [];
+            
+            for (const tool of tools) {
+                try {
+                    const response = await fetch(`http://localhost:5000${tool.url}`);
+                    const html = await response.text();
+                    
+                    const hasUpload = tool.testFor.some(test => html.toLowerCase().includes(test.toLowerCase()));
+                    const hasButton = html.includes('button') && html.includes(tool.name.split(' ')[0]);
+                    const noErrors = !html.includes('Error loading') && !html.includes('Failed to load');
+                    
+                    const isWorking = hasUpload && hasButton && noErrors;
+                    logTest(`${tool.name} functionality: ${isWorking ? 'Working' : 'Issues detected'}`, isWorking ? 'success' : 'error');
+                    
+                    toolResults.push({
+                        name: tool.name,
+                        status: isWorking ? 'Working' : 'Has Issues',
+                        hasUpload,
+                        hasButton,
+                        noErrors
+                    });
+                } catch (error) {
+                    logTest(`${tool.name} test error: ${error.message}`, 'error');
+                    toolResults.push({
+                        name: tool.name,
+                        status: 'Error',
+                        error: error.message
+                    });
+                }
+            }
+            
+            results.innerHTML = `
+                <h3>✅ Tool Functionality Test Results</h3>
+                <ul>
+                    ${toolResults.map(tool => `
+                        <li class="${tool.status === 'Working' ? 'success' : 'failure'}">
+                            <strong>${tool.name}:</strong> ${tool.status}
+                            ${tool.error ? `<br>Error: ${tool.error}` : ''}
+                            ${tool.hasUpload !== undefined ? `<br>Upload: ${tool.hasUpload ? '✓' : '✗'}, Button: ${tool.hasButton ? '✓' : '✗'}, No Errors: ${tool.noErrors ? '✓' : '✗'}` : ''}
+                        </li>
+                    `).join('')}
+                </ul>
+            `;
+        }
+
+        async function testPerformance() {
+            logTest('Starting Performance Tests...', 'info');
+            const results = document.getElementById('performance-results');
+            results.innerHTML = '<p>Testing in progress...</p>';
+            
+            const pages = [
+                { name: 'Homepage', url: '/' },
+                { name: 'Blog', url: '/blog' },
+                { name: 'Compress PDF', url: '/compress-pdf' }
+            ];
+            
+            let performanceResults = [];
+            
+            for (const page of pages) {
+                const startTime = performance.now();
+                try {
+                    const response = await fetch(`http://localhost:5000${page.url}`);
+                    const html = await response.text();
+                    const endTime = performance.now();
+                    const loadTime = (endTime - startTime).toFixed(2);
+                    
+                    const isGood = loadTime < 1000;
+                    logTest(`${page.name} load time: ${loadTime}ms`, isGood ? 'success' : 'warning');
+                    
+                    performanceResults.push({
+                        name: page.name,
+                        loadTime: loadTime + 'ms',
+                        status: isGood ? 'Good' : 'Slow'
+                    });
+                } catch (error) {
+                    logTest(`${page.name} performance test error: ${error.message}`, 'error');
+                    performanceResults.push({
+                        name: page.name,
+                        loadTime: 'Error',
+                        status: 'Failed'
+                    });
+                }
+            }
+            
+            results.innerHTML = `
+                <h3>✅ Performance Test Results</h3>
+                <ul>
+                    ${performanceResults.map(page => `
+                        <li class="${page.status === 'Good' ? 'success' : page.status === 'Slow' ? 'warning' : 'failure'}">
+                            <strong>${page.name}:</strong> ${page.loadTime} - ${page.status}
+                        </li>
+                    `).join('')}
+                </ul>
+                <p class="warning">Note: Test on actual mobile device for complete responsiveness check</p>
+            `;
+        }
+
+        async function testNavigation() {
+            logTest('Starting Navigation Tests...', 'info');
+            const results = document.getElementById('navigation-results');
+            results.innerHTML = '<p>Testing in progress...</p>';
+            
+            const navigationPaths = [
+                { from: 'Homepage', to: 'Blog', url: '/blog' },
+                { from: 'Blog', to: 'Blog Post', url: '/blog/compress-pdf-without-losing-quality' },
+                { from: 'Blog Post', to: 'Tool', url: '/compress-pdf' },
+                { from: 'Homepage', to: 'All Tools', url: '/all-tools' }
+            ];
+            
+            let navResults = [];
+            
+            for (const nav of navigationPaths) {
+                try {
+                    const response = await fetch(`http://localhost:5000${nav.url}`);
+                    const isOk = response.ok && response.status === 200;
+                    
+                    logTest(`Navigation ${nav.from} → ${nav.to}: ${isOk ? 'Working' : 'Failed'}`, isOk ? 'success' : 'error');
+                    
+                    navResults.push({
+                        path: `${nav.from} → ${nav.to}`,
+                        status: isOk ? 'Working' : 'Failed',
+                        statusCode: response.status
+                    });
+                } catch (error) {
+                    logTest(`Navigation test error: ${error.message}`, 'error');
+                    navResults.push({
+                        path: `${nav.from} → ${nav.to}`,
+                        status: 'Error',
+                        error: error.message
+                    });
+                }
+            }
+            
+            results.innerHTML = `
+                <h3>✅ Navigation Test Results</h3>
+                <ul>
+                    ${navResults.map(nav => `
+                        <li class="${nav.status === 'Working' ? 'success' : 'failure'}">
+                            <strong>${nav.path}:</strong> ${nav.status}
+                            ${nav.statusCode ? ` (${nav.statusCode})` : ''}
+                            ${nav.error ? `<br>Error: ${nav.error}` : ''}
+                        </li>
+                    `).join('')}
+                </ul>
+            `;
+        }
+
+        // Auto-run all tests after page load
+        window.addEventListener('load', async () => {
+            logTest('🚀 Starting Comprehensive Testing Suite', 'info');
+            logTest('Testing environment: http://localhost:5000', 'info');
+            
+            // Run tests sequentially with delays
+            setTimeout(() => testBlogPage(), 1000);
+            setTimeout(() => testBlogPosts(), 3000);
+            setTimeout(() => testTools(), 5000);
+            setTimeout(() => testPerformance(), 8000);
+            setTimeout(() => testNavigation(), 10000);
+            
+            setTimeout(() => {
+                logTest('✨ All tests completed!', 'info');
+                logTest(`Final Results - Passed: ${testResults.passed}, Failed: ${testResults.failed}, Warnings: ${testResults.warnings}`, 'info');
+            }, 12000);
+        });
+    </script>
+</body>
+</html>

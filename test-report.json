@@ -1,0 +1,149 @@
+{
+  "blog": {
+    "Page loads successfully": true,
+    "Blog cards present": false,
+    "Thumbnail images": false,
+    "Search functionality": false,
+    "Category filters": false,
+    "Hover effects CSS": false,
+    "Featured posts section": false,
+    "Load more button": false,
+    "Blog post links": false
+  },
+  "blogPosts": {
+    "/blog/compress-pdf-without-losing-quality": {
+      "Post loads successfully": true,
+      "Hero image present": false,
+      "Table of Contents": true,
+      "Reading progress bar": false,
+      "Social share buttons": false,
+      "Related Tools section": false,
+      "Author information": false,
+      "Publishing date": true,
+      "Back to blog link": false,
+      "Alt text for images": false
+    },
+    "/blog/jpg-to-pdf-best-practices": {
+      "Post loads successfully": true,
+      "Hero image present": false,
+      "Table of Contents": true,
+      "Reading progress bar": false,
+      "Social share buttons": false,
+      "Related Tools section": false,
+      "Author information": false,
+      "Publishing date": true,
+      "Back to blog link": false,
+      "Alt text for images": false
+    },
+    "/blog/merge-pdf-files-guide": {
+      "Post loads successfully": true,
+      "Hero image present": false,
+      "Table of Contents": true,
+      "Reading progress bar": false,
+      "Social share buttons": false,
+      "Related Tools section": false,
+      "Author information": false,
+      "Publishing date": true,
+      "Back to blog link": false,
+      "Alt text for images": false
+    }
+  },
+  "tools": {
+    "Compress PDF": {
+      "Tool page loads": true,
+      "No JavaScript errors in HTML": true,
+      "Upload/Input component": true,
+      "Action buttons present": true,
+      "Instructions present": false,
+      "Privacy notice": true,
+      "Breadcrumbs navigation": false,
+      "Tool features section": false
+    },
+    "JPG to PDF": {
+      "Tool page loads": true,
+      "No JavaScript errors in HTML": true,
+      "Upload/Input component": false,
+      "Action buttons present": true,
+      "Instructions present": false,
+      "Privacy notice": true,
+      "Breadcrumbs navigation": false,
+      "Tool features section": false
+    },
+    "QR Generator": {
+      "Tool page loads": true,
+      "No JavaScript errors in HTML": true,
+      "Upload/Input component": true,
+      "Action buttons present": true,
+      "Instructions present": false,
+      "Privacy notice": true,
+      "Breadcrumbs navigation": false,
+      "Tool features section": false
+    }
+  },
+  "performance": {
+    "Homepage": {
+      "loadTime": 18,
+      "Page loads under 2s": true,
+      "Status code 200": true,
+      "No console errors in HTML": false,
+      "Mobile viewport meta tag": true,
+      "No horizontal scroll CSS": true
+    },
+    "Blog": {
+      "loadTime": 11,
+      "Page loads under 2s": true,
+      "Status code 200": true,
+      "No console errors in HTML": false,
+      "Mobile viewport meta tag": true,
+      "No horizontal scroll CSS": true
+    },
+    "All Tools": {
+      "loadTime": 17,
+      "Page loads under 2s": true,
+      "Status code 200": true,
+      "No console errors in HTML": false,
+      "Mobile viewport meta tag": true,
+      "No horizontal scroll CSS": true
+    },
+    "Compress PDF": {
+      "loadTime": 18,
+      "Page loads under 2s": true,
+      "Status code 200": true,
+      "No console errors in HTML": false,
+      "Mobile viewport meta tag": true,
+      "No horizontal scroll CSS": true
+    }
+  },
+  "navigation": {
+    "Homepage → Blog": {
+      "fromStatus": 200,
+      "toStatus": 200,
+      "passed": true
+    },
+    "Blog → Blog Post": {
+      "fromStatus": 200,
+      "toStatus": 200,
+      "passed": true
+    },
+    "Blog Post → Tool": {
+      "fromStatus": 200,
+      "toStatus": 200,
+      "passed": true
+    },
+    "Homepage → All Tools": {
+      "fromStatus": 200,
+      "toStatus": 200,
+      "passed": true
+    },
+    "All Tools → Specific Tool": {
+      "fromStatus": 200,
+      "toStatus": 200,
+      "passed": true
+    }
+  },
+  "overall": {
+    "passed": 45,
+    "failed": 43,
+    "warnings": 0
+  }
+}
