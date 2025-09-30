@@ -74,6 +74,7 @@ export default function BlogPostPage() {
   const [post, setPost] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const contentRef = useRef<HTMLElement>(null);
+  const shareMenuRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
 
   // Load blog post async for better performance
@@ -193,6 +194,25 @@ export default function BlogPostPage() {
     };
   }, [post, handleScroll]);
 
+  // Close share menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (shareMenuOpen && shareMenuRef.current && !shareMenuRef.current.contains(event.target as Node)) {
+        setShareMenuOpen(false);
+      }
+    };
+
+    if (shareMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside as any);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside as any);
+    };
+  }, [shareMenuOpen]);
+
   // Show loading skeleton while fetching content
   if (loading) {
     return (
@@ -306,11 +326,12 @@ export default function BlogPostPage() {
         data-testid="reading-progress-bar"
       />
 
-      {/* Floating Share Button - Collapsible Design - Works on All Devices */}
+      {/* Floating Share Button - LEFT SIDE for Blog Content - Collapsible Design */}
       <AnimatePresence>
         {readingProgress > 30 && shareBarVisible && (
           <motion.div
-            className="fixed bottom-6 right-4 sm:right-6 z-40"
+            ref={shareMenuRef}
+            className="fixed bottom-6 left-4 sm:left-6 z-40"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
