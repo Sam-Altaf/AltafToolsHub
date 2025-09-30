@@ -38,7 +38,7 @@ const HowItWorks = () => {
     {
       number: "01",
       title: "Select Your Tool",
-      description: "Choose from our 60+ tools for PDF, image, text, and QR code processing.",
+      description: "Choose from our 49+ tools for PDF, image, text, and QR code processing.",
       icon: FileCheck,
       color: "from-blue-500 to-cyan-500"
     },

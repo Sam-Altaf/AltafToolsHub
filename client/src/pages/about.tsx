@@ -43,7 +43,7 @@ const sections = [
       "**50,000+ Active Users**: Our growing community includes professionals, students, businesses, and organizations who trust us with their document processing needs.",
       "**99.9% Success Rate**: Our tools maintain an exceptional success rate, with robust error handling and browser compatibility across all modern browsers.",
       "**5-Star User Satisfaction**: Based on user feedback, we maintain a 4.9/5 star rating for tool reliability, ease of use, and privacy protection.",
-      "**16+ Professional Tools**: We offer a comprehensive suite of PDF and utility tools, from compression and merging to password protection and OCR text extraction.",
+      "**17 Professional Tools**: We offer a comprehensive suite of PDF and utility tools, from compression and merging to password protection and OCR text extraction.",
       "**Zero Security Incidents**: Since our inception, we've had zero security breaches or data incidents—because there's no data to breach when everything stays on your device."
     ]
   },
@@ -84,7 +84,7 @@ const sections = [
     icon: TrendingUp,
     title: "Future Vision",
     content: [
-      "**Expanding Tool Suite**: We're actively developing 50+ additional tools based on user requests, including advanced PDF editing, form filling, digital signatures, and batch processing capabilities.",
+      "**Expanding Tool Suite**: We're actively developing 32 additional tools based on user requests, including advanced PDF editing, form filling, digital signatures, and batch processing capabilities.",
       "**AI Integration**: We're exploring privacy-preserving AI features that run entirely in your browser, bringing intelligent document processing without compromising privacy.",
       "**Offline Capabilities**: We're working on Progressive Web App (PWA) features that will allow our tools to work completely offline, ensuring availability even without internet connection.",
       "**Enterprise Solutions**: While maintaining our free tools, we're developing enterprise features like team collaboration, API access, and advanced security options for businesses.",

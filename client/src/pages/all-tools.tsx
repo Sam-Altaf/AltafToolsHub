@@ -464,7 +464,7 @@ export default function AllToolsPage() {
           {
             number: 1,
             title: "Browse Tools",
-            description: "Explore our collection of 60+ tools organized by category",
+            description: "Explore our collection of 49+ tools organized by category",
             icon: Search
           },
           {

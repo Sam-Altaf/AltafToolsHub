@@ -131,7 +131,7 @@ const faqCategories: FAQCategory[] = [
       },
       {
         question: "How many tools are available?",
-        answer: "We currently offer 60+ tools and are constantly adding more. Our tools cover PDF processing, image conversion, QR code generation, text utilities, calculators, and many other categories."
+        answer: "We currently offer 49 tools (17 available, 32 coming soon) and are constantly adding more. Our tools cover PDF processing, image conversion, QR code generation, text utilities, calculators, and many other categories."
       },
       {
         question: "Can I suggest new tools or features?",

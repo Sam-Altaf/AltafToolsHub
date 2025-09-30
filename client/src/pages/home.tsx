@@ -57,7 +57,7 @@ const features = [
 ];
 
 const stats = [
-  { value: "60+", label: "Total Tools", description: "All file types covered", icon: FileText },
+  { value: "49+", label: "Total Tools", description: "All file types covered", icon: FileText },
   { value: platformStats.availableTools.toString(), label: "Available Now", description: "Ready to use", icon: Check },
   { value: "100%", label: "Privacy", description: "Browser-based", icon: Shield },
   { value: "Free", label: "Forever", description: "No hidden costs", icon: Star }
@@ -293,7 +293,7 @@ export default function Home() {
     generateOrganizationSchema(),
     generateWebApplicationSchema({
       name: "AltafToolsHub - Free Privacy-First Online Tools",
-      description: "Complete suite of 60+ privacy-first online tools for PDF compression, image conversion, document processing, and more. All processing happens directly in your browser - no uploads, no server storage, 100% private.",
+      description: "Complete suite of 49+ privacy-first online tools for PDF compression, image conversion, document processing, and more. All processing happens directly in your browser - no uploads, no server storage, 100% private.",
       applicationCategory: "UtilitiesApplication",
       aggregateRating: {
         ratingValue: 4.9,
@@ -317,7 +317,7 @@ export default function Home() {
   ];
 
   useSEO({
-    title: "AltafToolsHub - 60+ Free Privacy-First PDF & File Tools",
+    title: "AltafToolsHub - 49+ Free Privacy-First PDF & File Tools",
     description: "Free online PDF tools with 100% privacy. Compress PDFs to exact sizes, unlock password-protected files, convert JPG to PDF, QR generator & more. All processing in your browser - no uploads, no data storage, complete security. Trusted by 50K+ users.",
     path: "/",
     keywords: "free pdf tools, online pdf compressor, pdf unlocker, jpg to pdf converter, privacy-first tools, client-side processing, browser-based pdf editor, free file converter, secure pdf tools, no upload pdf tools, qr code generator, password generator 2025, pdf merger, pdf splitter, watermark pdf, extract text from pdf",
@@ -831,7 +831,7 @@ export default function Home() {
         <div className="container-section">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              Complete Suite of <span className="gradient-text">60+ Tools</span>
+              Complete Suite of <span className="gradient-text">49+ Tools</span>
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
               Professional file processing tools for every need. New tools added regularly.
