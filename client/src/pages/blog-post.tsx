@@ -265,7 +265,8 @@ export default function BlogPostPage() {
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8">
               {/* Article Content */}
               <motion.article
-                className="prose prose-lg dark:prose-invert max-w-none"
+                className="prose prose-lg dark:prose-invert prose-p:text-base prose-li:text-base prose-table:text-base max-w-full prose-img:max-w-full prose-img:h-auto"
+                style={{ maxWidth: 'min(100%, 75ch)' }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
@@ -348,15 +349,21 @@ export default function BlogPostPage() {
                       );
                     },
                     table: ({ children }) => (
-                      <div className="overflow-x-auto mb-4">
-                        <table className="min-w-full divide-y divide-border">{children}</table>
+                      <div className="my-6 w-full overflow-hidden">
+                        <div className="overflow-x-auto -mx-4 sm:-mx-6 lg:mx-0">
+                          <div className="inline-block min-w-full align-middle px-4 sm:px-6 lg:px-0">
+                            <div className="overflow-hidden shadow-sm ring-1 ring-border rounded-lg">
+                              <table className="min-w-full divide-y divide-border">{children}</table>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     ),
                     th: ({ children }) => (
-                      <th className="px-4 py-2 text-left font-semibold bg-muted">{children}</th>
+                      <th className="px-3 py-3 text-left text-xs font-medium uppercase tracking-wider bg-muted text-foreground sm:px-4">{children}</th>
                     ),
                     td: ({ children }) => (
-                      <td className="px-4 py-2 border-t">{children}</td>
+                      <td className="px-3 py-2 text-sm border-t whitespace-normal break-words sm:px-4">{children}</td>
                     )
                   }}
                 >
