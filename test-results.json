@@ -1,0 +1,57 @@
+{
+  "timestamp": "2025-09-30T14:32:19.516Z",
+  "url": "http://localhost:5000",
+  "results": {
+    "performance": {
+      "Homepage": {
+        "loadTime": 77,
+        "status": 200,
+        "size": 45869,
+        "passed": true
+      },
+      "Blog Page": {
+        "loadTime": 30,
+        "status": 200,
+        "size": 45869,
+        "passed": true
+      },
+      "Blog Post": {
+        "loadTime": 18,
+        "status": 200,
+        "size": 45869,
+        "passed": true
+      },
+      "Compress PDF": {
+        "loadTime": 12,
+        "status": 200,
+        "size": 45869,
+        "passed": true
+      },
+      "QR Generator": {
+        "loadTime": 20,
+        "status": 200,
+        "size": 45869,
+        "passed": true
+      }
+    },
+    "images": {
+      "passed": 10,
+      "failed": 0,
+      "total": 10
+    },
+    "features": {
+      "reactLoads": true,
+      "socialSharePageLoads": true
+    },
+    "tools": {
+      "Compress PDF": {
+        "passed": true,
+        "status": 200
+      },
+      "QR Generator": {
+        "passed": true,
+        "status": 200
+      }
+    }
+  }
+}

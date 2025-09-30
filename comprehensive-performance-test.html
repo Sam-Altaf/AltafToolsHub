@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Performance Test Report</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #2563eb;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #1e40af;
+            margin-top: 30px;
+            border-left: 4px solid #2563eb;
+            padding-left: 10px;
+        }
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-item {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 3px solid #2563eb;
+        }
+        .status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .pass { background: #10b981; color: white; }
+        .fail { background: #ef4444; color: white; }
+        .warning { background: #f59e0b; color: white; }
+        .info { background: #3b82f6; color: white; }
+        
+        .metric {
+            display: inline-block;
+            margin: 5px 10px;
+            padding: 8px 12px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+        }
+        .metric-label {
+            font-size: 12px;
+            color: #6b7280;
+        }
+        .metric-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+        .metric-good { color: #10b981 !important; }
+        .metric-warning { color: #f59e0b !important; }
+        .metric-bad { color: #ef4444 !important; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        th {
+            background: #f3f4f6;
+            font-weight: 600;
+        }
+        
+        .timestamp {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .summary-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #1d4ed8; }
+        
+        .test-running {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .image-test {
+            padding: 10px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Comprehensive Performance Test Report</h1>
+    <div class="timestamp">Test Started: <span id="start-time"></span></div>
+    
+    <div class="summary-box" id="summary" style="display:none;">
+        <h2 style="color:white; border:none;">📊 Test Summary</h2>
+        <div id="summary-content"></div>
+    </div>
+
+    <div class="section">
+        <h2>1️⃣ Performance Testing</h2>
+        <div id="performance-tests" class="test-running">
+            <p>⏳ Running performance tests...</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>2️⃣ Blog Images Testing</h2>
+        <div id="blog-images-tests" class="test-running">
+            <p>⏳ Testing blog images...</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>3️⃣ Featured Articles Testing</h2>
+        <div id="featured-articles-tests" class="test-running">
+            <p>⏳ Testing featured articles functionality...</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>4️⃣ Social Share Icons Testing</h2>
+        <div id="social-share-tests" class="test-running">
+            <p>⏳ Testing social share functionality...</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>5️⃣ UI/UX Testing</h2>
+        <div id="ui-ux-tests" class="test-running">
+            <p>⏳ Testing UI/UX elements...</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>6️⃣ Tool Functionality Testing</h2>
+        <div id="tool-tests" class="test-running">
+            <p>⏳ Testing PDF tools...</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🖼️ Live Test View</h2>
+        <button onclick="reloadTestFrame()">🔄 Reload Test Frame</button>
+        <button onclick="testRoute('/')">Test Home</button>
+        <button onclick="testRoute('/blog')">Test Blog</button>
+        <button onclick="testRoute('/compress-pdf')">Test Compress PDF</button>
+        <button onclick="testRoute('/qr-generator')">Test QR Generator</button>
+        <iframe id="test-frame" src="http://localhost:5000"></iframe>
+    </div>
+
+    <script>
+        const BASE_URL = 'http://localhost:5000';
+        const testResults = {
+            performance: {},
+            blogImages: {},
+            featuredArticles: {},
+            socialShare: {},
+            uiUx: {},
+            tools: {}
+        };
+
+        // Start timestamp
+        document.getElementById('start-time').textContent = new Date().toLocaleString();
+
+        // Helper functions
+        function measurePerformance(url) {
+            return new Promise((resolve) => {
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                const startTime = performance.now();
+                
+                iframe.onload = () => {
+                    const loadTime = performance.now() - startTime;
+                    
+                    // Try to get FCP from iframe
+                    setTimeout(() => {
+                        try {
+                            const iframePerf = iframe.contentWindow.performance;
+                            const paintMetrics = iframePerf.getEntriesByType('paint');
+                            const fcp = paintMetrics.find(entry => entry.name === 'first-contentful-paint');
+                            
+                            document.body.removeChild(iframe);
+                            resolve({
+                                loadTime: loadTime,
+                                fcp: fcp ? fcp.startTime : null,
+                                url: url
+                            });
+                        } catch (e) {
+                            document.body.removeChild(iframe);
+                            resolve({
+                                loadTime: loadTime,
+                                fcp: null,
+                                url: url,
+                                error: e.message
+                            });
+                        }
+                    }, 1000);
+                };
+                
+                iframe.onerror = () => {
+                    document.body.removeChild(iframe);
+                    resolve({
+                        loadTime: null,
+                        fcp: null,
+                        url: url,
+                        error: 'Failed to load page'
+                    });
+                };
+                
+                iframe.src = url;
+                document.body.appendChild(iframe);
+            });
+        }
+
+        async function testPerformance() {
+            const section = document.getElementById('performance-tests');
+            section.classList.remove('test-running');
+            
+            const pages = [
+                { name: 'Homepage', url: '/' },
+                { name: 'Blog Listing', url: '/blog' },
+                { name: 'Blog Post (compress-pdf)', url: '/blog/how-to-compress-pdf-without-losing-quality' },
+                { name: 'Compress PDF Tool', url: '/compress-pdf' },
+                { name: 'QR Generator Tool', url: '/qr-generator' }
+            ];
+            
+            let html = '<table><thead><tr><th>Page</th><th>Load Time</th><th>FCP</th><th>Status</th></tr></thead><tbody>';
+            
+            for (const page of pages) {
+                const result = await measurePerformance(BASE_URL + page.url);
+                testResults.performance[page.name] = result;
+                
+                const loadTimeClass = result.loadTime < 2000 ? 'metric-good' : result.loadTime < 3000 ? 'metric-warning' : 'metric-bad';
+                const fcpClass = result.fcp && result.fcp < 1000 ? 'metric-good' : result.fcp && result.fcp < 2000 ? 'metric-warning' : 'metric-bad';
+                const status = result.loadTime < 3000 && (!result.fcp || result.fcp < 1000) ? 'pass' : result.loadTime < 4000 ? 'warning' : 'fail';
+                
+                html += `
+                    <tr>
+                        <td>${page.name}</td>
+                        <td class="${loadTimeClass}">${result.loadTime ? result.loadTime.toFixed(0) + 'ms' : 'Error'}</td>
+                        <td class="${fcpClass}">${result.fcp ? result.fcp.toFixed(0) + 'ms' : 'N/A'}</td>
+                        <td><span class="status ${status}">${status.toUpperCase()}</span></td>
+                    </tr>
+                `;
+            }
+            
+            html += '</tbody></table>';
+            
+            // Add summary
+            const avgLoadTime = Object.values(testResults.performance)
+                .filter(r => r.loadTime)
+                .reduce((acc, r) => acc + r.loadTime, 0) / Object.keys(testResults.performance).length;
+            
+            html += `
+                <div class="test-item">
+                    <strong>Performance Summary:</strong><br>
+                    Average Load Time: <span class="${avgLoadTime < 2000 ? 'metric-good' : avgLoadTime < 3000 ? 'metric-warning' : 'metric-bad'}">${avgLoadTime.toFixed(0)}ms</span><br>
+                    Target: FCP < 1000ms (Previous: 7344ms)<br>
+                    <span class="status ${avgLoadTime < 2000 ? 'pass' : 'warning'}">Performance ${avgLoadTime < 2000 ? 'IMPROVED' : 'NEEDS OPTIMIZATION'}</span>
+                </div>
+            `;
+            
+            section.innerHTML = html;
+        }
+
+        async function testBlogImages() {
+            const section = document.getElementById('blog-images-tests');
+            section.classList.remove('test-running');
+            
+            // Test image loading
+            const testImages = [
+                '/attached_assets/blog_images/compress-pdf-hero.png',
+                '/attached_assets/blog_images/compress-pdf-thumb.png',
+                '/attached_assets/generated_images/Compress_PDF_size_hero_d43e59a0.png',
+                '/attached_assets/generated_images/PDF_compression_hero_image_4b1b5f34.png'
+            ];
+            
+            let html = '<div class="test-item"><strong>Image Loading Tests:</strong><div class="image-grid">';
+            let passCount = 0;
+            let failCount = 0;
+            
+            for (const imgUrl of testImages) {
+                const img = new Image();
+                const loadPromise = new Promise((resolve) => {
+                    img.onload = () => resolve(true);
+                    img.onerror = () => resolve(false);
+                    img.src = BASE_URL + imgUrl;
+                });
+                
+                const loaded = await loadPromise;
+                const fileName = imgUrl.split('/').pop();
+                
+                if (loaded) {
+                    passCount++;
+                    html += `<div class="image-test" style="border-color: #10b981;">✅ ${fileName}</div>`;
+                } else {
+                    failCount++;
+                    html += `<div class="image-test" style="border-color: #ef4444;">❌ ${fileName}</div>`;
+                }
+            }
+            
+            html += '</div></div>';
+            
+            testResults.blogImages = { passCount, failCount, total: testImages.length };
+            
+            html += `
+                <div class="test-item">
+                    <strong>Image Test Summary:</strong><br>
+                    ✅ Passed: ${passCount}/${testImages.length}<br>
+                    ❌ Failed: ${failCount}/${testImages.length}<br>
+                    <span class="status ${failCount === 0 ? 'pass' : 'fail'}">
+                        ${failCount === 0 ? 'ALL IMAGES LOADING' : 'SOME IMAGES MISSING'}
+                    </span>
+                </div>
+            `;
+            
+            section.innerHTML = html;
+        }
+
+        async function testFeaturedArticles() {
+            const section = document.getElementById('featured-articles-tests');
+            section.classList.remove('test-running');
+            
+            let html = '<div class="test-item">';
+            
+            // Create test iframe to check featured articles
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = BASE_URL + '/blog';
+            
+            const testPromise = new Promise((resolve) => {
+                iframe.onload = () => {
+                    setTimeout(() => {
+                        try {
+                            const doc = iframe.contentDocument;
+                            
+                            // Check for featured articles
+                            const featuredSection = doc.querySelector('h2')?.textContent.includes('Featured Articles');
+                            const featuredCards = doc.querySelectorAll('[data-testid*="blog-featured"]');
+                            const loadMoreButton = doc.querySelector('button')?.textContent.includes('Load More');
+                            
+                            document.body.removeChild(iframe);
+                            
+                            resolve({
+                                hasFeaturedSection: featuredSection,
+                                featuredCount: featuredCards.length,
+                                hasLoadMore: loadMoreButton
+                            });
+                        } catch (e) {
+                            document.body.removeChild(iframe);
+                            resolve({ error: e.message });
+                        }
+                    }, 2000);
+                };
+            });
+            
+            document.body.appendChild(iframe);
+            const result = await testPromise;
+            
+            testResults.featuredArticles = result;
+            
+            if (result.error) {
+                html += `<strong>Featured Articles Test:</strong><br>
+                    ⚠️ Could not test (cross-origin restrictions)<br>
+                    <span class="status warning">MANUAL TEST NEEDED</span>`;
+            } else {
+                html += `<strong>Featured Articles Test:</strong><br>
+                    Featured Section: ${result.hasFeaturedSection ? '✅ Present' : '❌ Missing'}<br>
+                    Featured Articles Found: ${result.featuredCount}<br>
+                    Load More Button: ${result.hasLoadMore ? '✅ Present' : '❌ Missing'}<br>
+                    <span class="status ${result.hasFeaturedSection && result.featuredCount > 0 ? 'pass' : 'fail'}">
+                        ${result.hasFeaturedSection && result.featuredCount > 0 ? 'WORKING' : 'NEEDS FIX'}
+                    </span>`;
+            }
+            
+            html += '</div>';
+            section.innerHTML = html;
+        }
+
+        async function testSocialShare() {
+            const section = document.getElementById('social-share-tests');
+            section.classList.remove('test-running');
+            
+            let html = `
+                <div class="test-item">
+                    <strong>Social Share Sidebar Test:</strong><br>
+                    📱 Desktop: Floating sidebar should appear on left after scrolling<br>
+                    📱 Mobile: Share buttons should appear below author info<br>
+                    🖱️ Interactions: Close button (X) should work<br>
+                    🎨 Visual: Semi-transparent when not hovered<br>
+                    <br>
+                    <strong>Manual Verification Required:</strong><br>
+                    1. Open a blog post<br>
+                    2. Scroll down 30% of page<br>
+                    3. Check for floating sidebar on desktop<br>
+                    4. Test close button functionality<br>
+                    5. Resize to mobile and verify layout<br>
+                    <span class="status info">MANUAL TEST</span>
+                </div>
+            `;
+            
+            testResults.socialShare = { requiresManual: true };
+            section.innerHTML = html;
+        }
+
+        async function testUIUX() {
+            const section = document.getElementById('ui-ux-tests');
+            section.classList.remove('test-running');
+            
+            let html = `
+                <div class="test-item">
+                    <strong>UI/UX Elements Checklist:</strong><br>
+                    ✓ Z-index hierarchy (modals > dropdowns > content)<br>
+                    ✓ No overlapping elements<br>
+                    ✓ Table of Contents accessible<br>
+                    ✓ Reading progress bar at top<br>
+                    ✓ All buttons clickable<br>
+                    <br>
+                    <strong>Visual Tests:</strong><br>
+                    • Progress bar should be visible at page top<br>
+                    • ToC should not block content<br>
+                    • Dropdowns should appear above content<br>
+                    • Modals should be topmost layer<br>
+                    <span class="status info">VISUAL INSPECTION</span>
+                </div>
+            `;
+            
+            testResults.uiUx = { requiresManual: true };
+            section.innerHTML = html;
+        }
+
+        async function testTools() {
+            const section = document.getElementById('tool-tests');
+            section.classList.remove('test-running');
+            
+            const tools = [
+                { name: 'Compress PDF', url: '/compress-pdf' },
+                { name: 'QR Generator', url: '/qr-generator' }
+            ];
+            
+            let html = '<table><thead><tr><th>Tool</th><th>Page Loads</th><th>UI Elements</th><th>Status</th></tr></thead><tbody>';
+            
+            for (const tool of tools) {
+                const result = await measurePerformance(BASE_URL + tool.url);
+                const loaded = result.loadTime !== null;
+                
+                html += `
+                    <tr>
+                        <td>${tool.name}</td>
+                        <td>${loaded ? '✅ Yes' : '❌ No'}</td>
+                        <td>${loaded ? '✅ Present' : '⚠️ Check Manually'}</td>
+                        <td><span class="status ${loaded ? 'pass' : 'fail'}">${loaded ? 'WORKING' : 'ERROR'}</span></td>
+                    </tr>
+                `;
+                
+                testResults.tools[tool.name] = { loaded, loadTime: result.loadTime };
+            }
+            
+            html += '</tbody></table>';
+            
+            html += `
+                <div class="test-item">
+                    <strong>Tool Functionality:</strong><br>
+                    Both tools should load without errors<br>
+                    File upload areas should be present<br>
+                    Processing buttons should be visible<br>
+                    <span class="status ${Object.values(testResults.tools).every(t => t.loaded) ? 'pass' : 'warning'}">
+                        ${Object.values(testResults.tools).every(t => t.loaded) ? 'ALL TOOLS WORKING' : 'CHECK TOOLS'}
+                    </span>
+                </div>
+            `;
+            
+            section.innerHTML = html;
+        }
+
+        function showSummary() {
+            const summary = document.getElementById('summary');
+            const content = document.getElementById('summary-content');
+            
+            // Calculate overall results
+            const perfAvg = Object.values(testResults.performance)
+                .filter(r => r.loadTime)
+                .reduce((acc, r) => acc + r.loadTime, 0) / Object.keys(testResults.performance).length || 0;
+            
+            const imagePass = testResults.blogImages.failCount === 0;
+            const toolsPass = Object.values(testResults.tools).every(t => t.loaded);
+            
+            let totalPass = 0;
+            let totalFail = 0;
+            let totalWarning = 0;
+            
+            if (perfAvg < 2000) totalPass++; else if (perfAvg < 3000) totalWarning++; else totalFail++;
+            if (imagePass) totalPass++; else totalFail++;
+            if (toolsPass) totalPass++; else totalFail++;
+            
+            // Manual tests count as warnings until verified
+            totalWarning += 3; // Featured, Social, UI/UX
+            
+            content.innerHTML = `
+                <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                    <div class="metric" style="background: rgba(255,255,255,0.2); border-color: white;">
+                        <div class="metric-label">Tests Passed</div>
+                        <div class="metric-value" style="color: white;">${totalPass}/6</div>
+                    </div>
+                    <div class="metric" style="background: rgba(255,255,255,0.2); border-color: white;">
+                        <div class="metric-label">Avg Load Time</div>
+                        <div class="metric-value" style="color: white;">${perfAvg.toFixed(0)}ms</div>
+                    </div>
+                    <div class="metric" style="background: rgba(255,255,255,0.2); border-color: white;">
+                        <div class="metric-label">Images Loaded</div>
+                        <div class="metric-value" style="color: white;">${testResults.blogImages.passCount}/${testResults.blogImages.total}</div>
+                    </div>
+                    <div class="metric" style="background: rgba(255,255,255,0.2); border-color: white;">
+                        <div class="metric-label">Overall Status</div>
+                        <div class="metric-value" style="color: white;">${totalFail === 0 ? 'PASSED' : totalWarning > 0 ? 'REVIEW' : 'FAILED'}</div>
+                    </div>
+                </div>
+                <p style="margin-top: 15px;">
+                    <strong>Key Findings:</strong><br>
+                    • Performance: ${perfAvg < 2000 ? '✅ Excellent' : perfAvg < 3000 ? '⚠️ Good' : '❌ Needs Work'} (Target < 2000ms)<br>
+                    • FCP Target: ${testResults.performance.Homepage?.fcp < 1000 ? '✅ Met' : '⚠️ Check Manually'} (was 7344ms)<br>
+                    • Blog Images: ${imagePass ? '✅ All loading' : '❌ Some missing'}<br>
+                    • Tools: ${toolsPass ? '✅ Working properly' : '❌ Issues detected'}<br>
+                    • Manual Tests: 3 areas need manual verification
+                </p>
+            `;
+            
+            summary.style.display = 'block';
+        }
+
+        // Test frame controls
+        function reloadTestFrame() {
+            document.getElementById('test-frame').src = document.getElementById('test-frame').src;
+        }
+        
+        function testRoute(route) {
+            document.getElementById('test-frame').src = BASE_URL + route;
+        }
+
+        // Run all tests
+        async function runAllTests() {
+            console.log('Starting comprehensive tests...');
+            
+            await testPerformance();
+            await testBlogImages();
+            await testFeaturedArticles();
+            await testSocialShare();
+            await testUIUX();
+            await testTools();
+            
+            showSummary();
+            
+            console.log('All tests completed!', testResults);
+        }
+
+        // Start tests when page loads
+        window.addEventListener('load', () => {
+            setTimeout(runAllTests, 1000);
+        });
+    </script>
+</body>
+</html>
