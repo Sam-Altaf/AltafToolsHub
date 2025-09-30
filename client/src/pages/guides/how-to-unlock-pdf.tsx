@@ -38,7 +38,7 @@ export default function HowToUnlockPDF() {
     "@type": "HowTo",
     name: "How to Unlock Password-Protected PDF Files",
     description: "Learn how to remove password protection from PDF files safely and securely using our free online tool",
-    image: "https://altaftoolshub.com/images/unlock-pdf-guide.png",
+    image: "https://altaftoolshub.app/images/unlock-pdf-guide.png",
     totalTime: "PT1M",
     estimatedCost: {
       "@type": "MonetaryAmount",
@@ -55,25 +55,25 @@ export default function HowToUnlockPDF() {
         "@type": "HowToStep",
         name: "Upload protected PDF",
         text: "Upload your password-protected PDF file to the tool",
-        image: "https://altaftoolshub.com/images/unlock-step1.png"
+        image: "https://altaftoolshub.app/images/unlock-step1.png"
       },
       {
         "@type": "HowToStep",
         name: "Enter password",
         text: "Enter the password for the PDF file",
-        image: "https://altaftoolshub.com/images/unlock-step2.png"
+        image: "https://altaftoolshub.app/images/unlock-step2.png"
       },
       {
         "@type": "HowToStep",
         name: "Unlock PDF",
         text: "Click the Unlock button to remove protection",
-        image: "https://altaftoolshub.com/images/unlock-step3.png"
+        image: "https://altaftoolshub.app/images/unlock-step3.png"
       },
       {
         "@type": "HowToStep",
         name: "Download unlocked file",
         text: "Download your unlocked PDF file",
-        image: "https://altaftoolshub.com/images/unlock-step4.png"
+        image: "https://altaftoolshub.app/images/unlock-step4.png"
       }
     ]
   };

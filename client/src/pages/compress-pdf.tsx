@@ -78,22 +78,22 @@ export default function CompressPDF() {
       { 
         name: "Upload PDF", 
         text: "Click the upload area or drag and drop your PDF file",
-        image: "https://altaftoolshub.com/images/step1-upload.png"
+        image: "https://altaftoolshub.app/images/step1-upload.png"
       },
       { 
         name: "Select Target Size", 
         text: "Choose your desired file size from 10KB to 5MB",
-        image: "https://altaftoolshub.com/images/step2-select-size.png"
+        image: "https://altaftoolshub.app/images/step2-select-size.png"
       },
       { 
         name: "Compress File", 
         text: "Click 'Compress PDF' and wait a few seconds",
-        image: "https://altaftoolshub.com/images/step3-compress.png"
+        image: "https://altaftoolshub.app/images/step3-compress.png"
       },
       { 
         name: "Download Result", 
         text: "Download your compressed PDF instantly",
-        image: "https://altaftoolshub.com/images/step4-download.png"
+        image: "https://altaftoolshub.app/images/step4-download.png"
       }
     ]
   });
@@ -122,11 +122,11 @@ export default function CompressPDF() {
     "@type": "VideoObject",
     "name": "How to Compress PDF Files - Video Tutorial",
     "description": "Watch our step-by-step video guide on compressing PDF files to specific target sizes using AltafToolsHub",
-    "thumbnailUrl": "https://altaftoolshub.com/images/video-thumbnail-compress-pdf.jpg",
+    "thumbnailUrl": "https://altaftoolshub.app/images/video-thumbnail-compress-pdf.jpg",
     "uploadDate": "2025-01-15T10:00:00Z",
     "duration": "PT2M30S",
-    "contentUrl": "https://altaftoolshub.com/videos/compress-pdf-tutorial.mp4",
-    "embedUrl": "https://altaftoolshub.com/embed/compress-pdf-tutorial",
+    "contentUrl": "https://altaftoolshub.app/videos/compress-pdf-tutorial.mp4",
+    "embedUrl": "https://altaftoolshub.app/embed/compress-pdf-tutorial",
     "interactionStatistic": {
       "@type": "InteractionCounter",
       "interactionType": { "@type": "WatchAction" },
@@ -193,7 +193,7 @@ export default function CompressPDF() {
     description: "Free online PDF compressor with precise size targeting from 10KB to 5MB. Reduce PDF file size by up to 95% while maintaining quality. 100% secure browser-based processing - no uploads required. Compress PDFs for email, WhatsApp, and web instantly.",
     path: "/compress-pdf",
     keywords: "compress pdf, reduce pdf size, pdf compressor online free, compress pdf to 100kb, compress pdf to 200kb, shrink pdf file size, pdf compression tool, optimize pdf size, make pdf smaller, pdf size reducer 2025, compress pdf for email, compress pdf for whatsapp",
-    ogImage: "https://altaftoolshub.com/og-compress-pdf.png",
+    ogImage: "https://altaftoolshub.app/og-compress-pdf.png",
     structuredData: [howToSchema, softwareSchema, videoSchema, reviewSchema],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Compressor - AltafToolsHub" },

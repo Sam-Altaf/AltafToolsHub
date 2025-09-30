@@ -42,7 +42,7 @@ export default function HowToGenerateQRCode() {
     "@type": "HowTo",
     name: "How to Generate QR Codes for Free",
     description: "Learn how to create custom QR codes for URLs, text, WiFi, email, and more using our free online QR code generator",
-    image: "https://altaftoolshub.com/images/qr-code-guide.png",
+    image: "https://altaftoolshub.app/images/qr-code-guide.png",
     totalTime: "PT3M",
     estimatedCost: {
       "@type": "MonetaryAmount",
@@ -59,25 +59,25 @@ export default function HowToGenerateQRCode() {
         "@type": "HowToStep",
         name: "Choose QR code type",
         text: "Select what type of QR code you want to create",
-        image: "https://altaftoolshub.com/images/qr-step1.png"
+        image: "https://altaftoolshub.app/images/qr-step1.png"
       },
       {
         "@type": "HowToStep",
         name: "Enter your content",
         text: "Input the URL, text, or information for your QR code",
-        image: "https://altaftoolshub.com/images/qr-step2.png"
+        image: "https://altaftoolshub.app/images/qr-step2.png"
       },
       {
         "@type": "HowToStep",
         name: "Customize design",
         text: "Choose colors and size for your QR code",
-        image: "https://altaftoolshub.com/images/qr-step3.png"
+        image: "https://altaftoolshub.app/images/qr-step3.png"
       },
       {
         "@type": "HowToStep",
         name: "Download QR code",
         text: "Generate and download your QR code in PNG or SVG format",
-        image: "https://altaftoolshub.com/images/qr-step4.png"
+        image: "https://altaftoolshub.app/images/qr-step4.png"
       }
     ]
   };

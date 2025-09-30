@@ -234,7 +234,7 @@ export default function GuidesPage() {
     "@type": "CollectionPage",
     name: "How-To Guides - AltafToolsHub",
     description: "Comprehensive guides and tutorials for using free online PDF tools and utilities",
-    url: "https://altaftoolshub.com/guides",
+    url: "https://altaftoolshub.app/guides",
     mainEntity: {
       "@type": "ItemList",
       numberOfItems: guides.length,
@@ -243,7 +243,7 @@ export default function GuidesPage() {
         position: index + 1,
         name: guide.title,
         description: guide.description,
-        url: `https://altaftoolshub.com${guide.href}`
+        url: `https://altaftoolshub.app${guide.href}`
       }))
     }
   };

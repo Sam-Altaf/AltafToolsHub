@@ -28,6 +28,7 @@ import {
   Hash,
   X
 } from "lucide-react";
+import { SiWhatsapp, SiInstagram } from "react-icons/si";
 import { useSEO, generateArticleSchema, generateBreadcrumbSchema } from "@/hooks/use-seo";
 import { getBlogPostBySlugAsync, getRelatedPosts } from "@/lib/blog-data-optimized";
 import { ContactSupportSection } from "@/components/contact-support";
@@ -69,6 +70,7 @@ export default function BlogPostPage() {
   const [readingProgress, setReadingProgress] = useState(0);
   const [tocOpen, setTocOpen] = useState(false);
   const [shareBarVisible, setShareBarVisible] = useState(true);
+  const [shareMenuOpen, setShareMenuOpen] = useState(false);
   const [post, setPost] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const contentRef = useRef<HTMLElement>(null);
@@ -105,7 +107,7 @@ export default function BlogPostPage() {
   // Compute safe values even when post is null/loading
   const relatedPosts = post ? getRelatedPosts(post.slug, 3) : [];
   const Icon = post?.icon;
-  const postUrl = `https://altaftoolshub.com/blog/${slug || ''}`;
+  const postUrl = `https://altaftoolshub.app/blog/${slug || ''}`;
 
   // Generate breadcrumb items with safe fallbacks
   const breadcrumbItems = [
@@ -118,7 +120,7 @@ export default function BlogPostPage() {
   const articleSchema = generateArticleSchema({
     headline: post?.seoTitle || "AltafToolsHub Blog",
     description: post?.seoDescription || "Privacy-first file processing tools",
-    image: "https://altaftoolshub.com/og-image.png",
+    image: "https://altaftoolshub.app/og-image.png",
     datePublished: "2025-01-28",
     dateModified: "2025-01-28",
     author: {
@@ -240,6 +242,21 @@ export default function BlogPostPage() {
     window.open(url, 'share-facebook', 'width=550,height=450,menubar=no,toolbar=no,resizable=yes,scrollbars=yes');
   };
 
+  const shareOnWhatsApp = () => {
+    const url = `https://wa.me/?text=${encodeURIComponent(post.title + ' ' + postUrl)}`;
+    window.open(url, 'share-whatsapp', 'width=550,height=450,menubar=no,toolbar=no,resizable=yes,scrollbars=yes');
+  };
+
+  const shareOnInstagram = () => {
+    // Instagram doesn't have direct web share API, so we copy link and show a toast
+    navigator.clipboard.writeText(postUrl).then(() => {
+      toast({
+        title: "Link copied for Instagram!",
+        description: "Paste this link in your Instagram story or bio.",
+      });
+    });
+  };
+
   // Extract headings for table of contents
   const extractHeadings = (content: string) => {
     const headingRegex = /^(#{2,3})\s+(.+)$/gm;
@@ -289,76 +306,144 @@ export default function BlogPostPage() {
         data-testid="reading-progress-bar"
       />
 
-      {/* Floating Share Sidebar - Desktop Only */}
-      {!isMobile && (
-        <AnimatePresence>
-          {readingProgress > 30 && shareBarVisible && (
-            <motion.div
-              className="fixed left-5 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col gap-3"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="bg-background/90 backdrop-blur-sm border rounded-lg p-2 shadow-lg flex flex-col gap-2 opacity-70 hover:opacity-100 transition-opacity duration-200">
-                {/* Close/Minimize Button */}
+      {/* Floating Share Button - Collapsible Design - Works on All Devices */}
+      <AnimatePresence>
+        {readingProgress > 30 && shareBarVisible && (
+          <motion.div
+            className="fixed bottom-6 right-4 sm:right-6 z-40"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.3 }}
+          >
+            {!shareMenuOpen ? (
+              // Minimized: Single Share Icon Button
+              <motion.div
+                initial={{ scale: 0.9 }}
+                animate={{ scale: 1 }}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-full h-6 p-0 hover:bg-destructive/10 mb-1"
-                  onClick={() => setShareBarVisible(false)}
-                  data-testid="button-close-share-sidebar"
+                  onClick={() => setShareMenuOpen(true)}
+                  className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-r from-primary to-blue-600 text-white shadow-xl hover:shadow-2xl transition-all duration-300 border-2 border-white dark:border-gray-800"
+                  data-testid="button-open-share-menu"
                 >
-                  <X className="w-3 h-3" />
-                  <span className="sr-only">Close share sidebar</span>
+                  <Share2 className="w-5 h-5 sm:w-6 sm:h-6" />
+                  <span className="sr-only">Open share menu</span>
                 </Button>
-                <span className="text-xs text-muted-foreground text-center mb-1">Share</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-10 h-10 p-0 hover:bg-primary/10"
-                  onClick={shareOnTwitter}
-                  data-testid="button-share-twitter-floating"
-                >
-                  <Twitter className="w-4 h-4" />
-                  <span className="sr-only">Share on Twitter</span>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-10 h-10 p-0 hover:bg-primary/10"
-                  onClick={shareOnLinkedIn}
-                  data-testid="button-share-linkedin-floating"
-                >
-                  <Linkedin className="w-4 h-4" />
-                  <span className="sr-only">Share on LinkedIn</span>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-10 h-10 p-0 hover:bg-primary/10"
-                  onClick={shareOnFacebook}
-                  data-testid="button-share-facebook-floating"
-                >
-                  <Facebook className="w-4 h-4" />
-                  <span className="sr-only">Share on Facebook</span>
-                </Button>
-                <Separator className="my-1" />
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-10 h-10 p-0 hover:bg-primary/10"
-                  onClick={copyLink}
-                  data-testid="button-copy-link-floating"
-                >
-                  {copied ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
-                  <span className="sr-only">Copy link</span>
-                </Button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      )}
+              </motion.div>
+            ) : (
+              // Expanded: Show All Share Options
+              <motion.div
+                className="bg-background/95 backdrop-blur-md border-2 rounded-2xl p-3 shadow-2xl w-[260px] sm:min-w-[240px]"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {/* Header with Close Button */}
+                <div className="flex items-center justify-between mb-3 pb-2 border-b">
+                  <span className="text-sm font-semibold text-foreground">Share Article</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 hover:bg-destructive/10"
+                    onClick={() => setShareMenuOpen(false)}
+                    data-testid="button-close-share-menu"
+                  >
+                    <X className="w-4 h-4" />
+                    <span className="sr-only">Close share menu</span>
+                  </Button>
+                </div>
+
+                {/* Share Options Grid */}
+                <div className="grid grid-cols-3 gap-2">
+                  {/* WhatsApp */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex flex-col items-center gap-1 h-auto py-3 hover:bg-green-500/10 hover:border-green-500"
+                    onClick={shareOnWhatsApp}
+                    data-testid="button-share-whatsapp"
+                  >
+                    <SiWhatsapp className="w-5 h-5 text-green-600" />
+                    <span className="text-[10px]">WhatsApp</span>
+                  </Button>
+
+                  {/* Instagram */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex flex-col items-center gap-1 h-auto py-3 hover:bg-pink-500/10 hover:border-pink-500"
+                    onClick={shareOnInstagram}
+                    data-testid="button-share-instagram"
+                  >
+                    <SiInstagram className="w-5 h-5 text-pink-600" />
+                    <span className="text-[10px]">Instagram</span>
+                  </Button>
+
+                  {/* Facebook */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex flex-col items-center gap-1 h-auto py-3 hover:bg-blue-500/10 hover:border-blue-500"
+                    onClick={shareOnFacebook}
+                    data-testid="button-share-facebook"
+                  >
+                    <Facebook className="w-5 h-5 text-blue-600" />
+                    <span className="text-[10px]">Facebook</span>
+                  </Button>
+
+                  {/* LinkedIn */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex flex-col items-center gap-1 h-auto py-3 hover:bg-blue-700/10 hover:border-blue-700"
+                    onClick={shareOnLinkedIn}
+                    data-testid="button-share-linkedin"
+                  >
+                    <Linkedin className="w-5 h-5 text-blue-700" />
+                    <span className="text-[10px]">LinkedIn</span>
+                  </Button>
+
+                  {/* Twitter */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex flex-col items-center gap-1 h-auto py-3 hover:bg-sky-500/10 hover:border-sky-500"
+                    onClick={shareOnTwitter}
+                    data-testid="button-share-twitter"
+                  >
+                    <Twitter className="w-5 h-5 text-sky-500" />
+                    <span className="text-[10px]">Twitter</span>
+                  </Button>
+
+                  {/* Copy Link */}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex flex-col items-center gap-1 h-auto py-3 hover:bg-primary/10 hover:border-primary"
+                    onClick={copyLink}
+                    data-testid="button-copy-link"
+                  >
+                    {copied ? (
+                      <>
+                        <Check className="w-5 h-5 text-green-600" />
+                        <span className="text-[10px]">Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-5 h-5" />
+                        <span className="text-[10px]">Copy</span>
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </motion.div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Breadcrumbs */}
       <section className="py-3 sm:py-4 border-b">

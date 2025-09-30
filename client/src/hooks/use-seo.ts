@@ -19,7 +19,7 @@ export function useSEO({
   title, 
   description, 
   path, 
-  ogImage = "https://altaftoolshub.com/og-image.png",
+  ogImage = "https://altaftoolshub.app/og-image.png",
   keywords,
   author = "AltafToolsHub",
   structuredData,
@@ -71,7 +71,7 @@ export function useSEO({
     updateMetaTag('meta[name="robots"]', 'content', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
 
     // Canonical URL
-    updateMetaTag('link[rel="canonical"]', 'href', `https://altaftoolshub.com${path}`);
+    updateMetaTag('link[rel="canonical"]', 'href', `https://altaftoolshub.app${path}`);
     
     // Theme color
     updateMetaTag('meta[name="theme-color"]', 'content', '#0080ff');
@@ -88,7 +88,7 @@ export function useSEO({
     const ogTags = [
       { property: 'og:title', content: formattedTitle },
       { property: 'og:description', content: description },
-      { property: 'og:url', content: `https://altaftoolshub.com${path}` },
+      { property: 'og:url', content: `https://altaftoolshub.app${path}` },
       { property: 'og:type', content: articlePublishedTime ? 'article' : 'website' },
       { property: 'og:site_name', content: 'AltafToolsHub' },
       { property: 'og:locale', content: 'en_US' },
@@ -130,7 +130,7 @@ export function useSEO({
       { name: 'twitter:creator', content: twitterHandle },
       { name: 'twitter:image', content: ogImage },
       { name: 'twitter:image:alt', content: formattedTitle },
-      { name: 'twitter:url', content: `https://altaftoolshub.com${path}` }
+      { name: 'twitter:url', content: `https://altaftoolshub.app${path}` }
     ];
 
     twitterTags.forEach(({ name, content }) => {
@@ -458,7 +458,7 @@ export function generateSoftwareApplicationSchema(app: {
       "url": "https://www.altaftoolshub.app",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://www.altaftoolshub.com/logo.png"
+        "url": "https://www.altaftoolshub.app/logo.png"
       }
     },
     "author": {
@@ -609,7 +609,7 @@ export function generateArticleSchema(article: {
       "name": "AltafToolsHub",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://www.altaftoolshub.com/logo.png"
+        "url": "https://www.altaftoolshub.app/logo.png"
       }
     }
   };
@@ -797,7 +797,7 @@ export function generateVideoSchema(video: {
       "name": "AltafToolsHub",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://www.altaftoolshub.com/logo.png"
+        "url": "https://www.altaftoolshub.app/logo.png"
       }
     }
   };

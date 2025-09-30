@@ -78,7 +78,7 @@ export default function JpgToPDF() {
     description: "Free JPG to PDF converter online. Convert multiple images (JPG, PNG, WebP, GIF) to PDF with custom layouts and page sizes. 100% secure browser-based processing - your images never leave your device. Batch convert photos to PDF instantly.",
     path: "/jpg-to-pdf",
     keywords: "jpg to pdf converter, convert jpg to pdf online, image to pdf converter, png to pdf free, photo to pdf online, jpeg to pdf converter, batch image to pdf, multiple images to pdf, pictures to pdf converter 2025, convert photos to pdf document",
-    ogImage: "https://altaftoolshub.com/og-jpg-to-pdf.png",
+    ogImage: "https://altaftoolshub.app/og-jpg-to-pdf.png",
     structuredData: [howToSchema, softwareSchema],
     additionalMetaTags: [
       { name: "application-name", content: "JPG to PDF Converter - AltafToolsHub" },

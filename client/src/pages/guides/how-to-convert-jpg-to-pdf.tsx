@@ -39,7 +39,7 @@ export default function HowToConvertJpgToPdf() {
     "@type": "HowTo",
     name: "How to Convert JPG Images to PDF Documents",
     description: "Learn how to convert JPG, PNG, and other image formats to PDF documents online for free",
-    image: "https://altaftoolshub.com/images/jpg-to-pdf-guide.png",
+    image: "https://altaftoolshub.app/images/jpg-to-pdf-guide.png",
     totalTime: "PT2M",
     estimatedCost: {
       "@type": "MonetaryAmount",
@@ -56,25 +56,25 @@ export default function HowToConvertJpgToPdf() {
         "@type": "HowToStep",
         name: "Select images",
         text: "Upload one or more JPG or PNG images",
-        image: "https://altaftoolshub.com/images/jpg-step1.png"
+        image: "https://altaftoolshub.app/images/jpg-step1.png"
       },
       {
         "@type": "HowToStep",
         name: "Arrange order",
         text: "Drag and drop to arrange image order in the PDF",
-        image: "https://altaftoolshub.com/images/jpg-step2.png"
+        image: "https://altaftoolshub.app/images/jpg-step2.png"
       },
       {
         "@type": "HowToStep",
         name: "Configure settings",
         text: "Choose page size, orientation, and margins",
-        image: "https://altaftoolshub.com/images/jpg-step3.png"
+        image: "https://altaftoolshub.app/images/jpg-step3.png"
       },
       {
         "@type": "HowToStep",
         name: "Convert to PDF",
         text: "Click convert and download your PDF",
-        image: "https://altaftoolshub.com/images/jpg-step4.png"
+        image: "https://altaftoolshub.app/images/jpg-step4.png"
       }
     ]
   };

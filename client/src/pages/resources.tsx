@@ -240,7 +240,7 @@ export default function ResourcesPage() {
     "@type": "LearningResource",
     name: "PDF Tools Learning Center",
     description: "Comprehensive resource center for PDF tools, security, and best practices",
-    url: "https://altaftoolshub.com/resources",
+    url: "https://altaftoolshub.app/resources",
     educationalLevel: "Beginner to Advanced",
     learningResourceType: "Guide",
     teaches: [

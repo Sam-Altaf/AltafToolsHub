@@ -154,7 +154,7 @@ export default function Testimonials() {
   const reviewSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
-    "@id": "https://altaftoolshub.com/#product",
+    "@id": "https://altaftoolshub.app/#product",
     "name": "AltafToolsHub - Online PDF Tools",
     "description": "Free online tools for PDF processing with 100% privacy",
     "brand": {

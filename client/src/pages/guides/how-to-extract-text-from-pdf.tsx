@@ -41,7 +41,7 @@ export default function HowToExtractTextFromPDF() {
     "@type": "HowTo",
     name: "How to Extract Text from PDF Files with OCR",
     description: "Learn how to extract and convert text from PDF documents, including scanned PDFs, using our free OCR tool",
-    image: "https://altaftoolshub.com/images/extract-text-guide.png",
+    image: "https://altaftoolshub.app/images/extract-text-guide.png",
     totalTime: "PT3M",
     estimatedCost: {
       "@type": "MonetaryAmount",
@@ -58,25 +58,25 @@ export default function HowToExtractTextFromPDF() {
         "@type": "HowToStep",
         name: "Upload PDF file",
         text: "Upload your PDF document to the text extractor",
-        image: "https://altaftoolshub.com/images/extract-step1.png"
+        image: "https://altaftoolshub.app/images/extract-step1.png"
       },
       {
         "@type": "HowToStep",
         name: "Select extraction mode",
         text: "Choose between text extraction or OCR for scanned documents",
-        image: "https://altaftoolshub.com/images/extract-step2.png"
+        image: "https://altaftoolshub.app/images/extract-step2.png"
       },
       {
         "@type": "HowToStep",
         name: "Process the document",
         text: "Click Extract Text to process your PDF",
-        image: "https://altaftoolshub.com/images/extract-step3.png"
+        image: "https://altaftoolshub.app/images/extract-step3.png"
       },
       {
         "@type": "HowToStep",
         name: "Copy or download text",
         text: "Copy the extracted text or download as a text file",
-        image: "https://altaftoolshub.com/images/extract-step4.png"
+        image: "https://altaftoolshub.app/images/extract-step4.png"
       }
     ]
   };

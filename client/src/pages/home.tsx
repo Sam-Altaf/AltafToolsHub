@@ -321,7 +321,7 @@ export default function Home() {
     description: "Free online PDF tools with 100% privacy. Compress PDFs to exact sizes, unlock password-protected files, convert JPG to PDF, QR generator & more. All processing in your browser - no uploads, no data storage, complete security. Trusted by 50K+ users.",
     path: "/",
     keywords: "free pdf tools, online pdf compressor, pdf unlocker, jpg to pdf converter, privacy-first tools, client-side processing, browser-based pdf editor, free file converter, secure pdf tools, no upload pdf tools, qr code generator, password generator 2025, pdf merger, pdf splitter, watermark pdf, extract text from pdf",
-    ogImage: "https://altaftoolshub.com/og-image.png",
+    ogImage: "https://altaftoolshub.app/og-image.png",
     structuredData,
     additionalMetaTags: [
       { name: "application-name", content: "AltafToolsHub" },

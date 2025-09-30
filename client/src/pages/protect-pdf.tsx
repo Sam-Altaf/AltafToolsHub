@@ -96,22 +96,22 @@ export default function ProtectPDF() {
       { 
         name: "Upload PDF", 
         text: "Select or drag your PDF file to the upload area",
-        image: "https://altaftoolshub.com/images/protect-step1-upload.png"
+        image: "https://altaftoolshub.app/images/protect-step1-upload.png"
       },
       { 
         name: "Set Password", 
         text: "Enter a strong password and confirm it",
-        image: "https://altaftoolshub.com/images/protect-step2-password.png"
+        image: "https://altaftoolshub.app/images/protect-step2-password.png"
       },
       { 
         name: "Configure Security", 
         text: "Choose encryption level and set permissions",
-        image: "https://altaftoolshub.com/images/protect-step3-configure.png"
+        image: "https://altaftoolshub.app/images/protect-step3-configure.png"
       },
       { 
         name: "Download Protected PDF", 
         text: "Download your password-protected PDF instantly",
-        image: "https://altaftoolshub.com/images/protect-step4-download.png"
+        image: "https://altaftoolshub.app/images/protect-step4-download.png"
       }
     ]
   });

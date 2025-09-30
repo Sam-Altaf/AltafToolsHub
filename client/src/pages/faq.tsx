@@ -164,7 +164,7 @@ export default function FAQPage() {
     description: "Find answers to all your questions about AltafToolsHub's free PDF tools. Learn about file safety, 100% privacy guarantee, browser-based processing, supported formats, and technical requirements. Get help with PDF compression, conversion, and more.",
     path: "/faq",
     keywords: "altaftoolshub faq, pdf tools help, frequently asked questions, file safety questions, browser-based tools support, privacy tools faq, pdf compression help, file conversion support, online tools help 2025",
-    ogImage: "https://altaftoolshub.com/og-faq.png",
+    ogImage: "https://altaftoolshub.app/og-faq.png",
     structuredData: faqSchema,
     additionalMetaTags: [
       { name: "application-name", content: "FAQ - AltafToolsHub" },

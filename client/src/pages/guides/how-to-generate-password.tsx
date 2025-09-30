@@ -40,7 +40,7 @@ export default function HowToGeneratePassword() {
     "@type": "HowTo",
     name: "How to Generate Secure Passwords",
     description: "Learn how to create strong, unique passwords using our free password generator with customizable security options",
-    image: "https://altaftoolshub.com/images/password-generator-guide.png",
+    image: "https://altaftoolshub.app/images/password-generator-guide.png",
     totalTime: "PT2M",
     estimatedCost: {
       "@type": "MonetaryAmount",
@@ -57,25 +57,25 @@ export default function HowToGeneratePassword() {
         "@type": "HowToStep",
         name: "Set password length",
         text: "Choose the desired length for your password (8-128 characters)",
-        image: "https://altaftoolshub.com/images/password-step1.png"
+        image: "https://altaftoolshub.app/images/password-step1.png"
       },
       {
         "@type": "HowToStep",
         name: "Select character types",
         text: "Choose which character types to include: uppercase, lowercase, numbers, symbols",
-        image: "https://altaftoolshub.com/images/password-step2.png"
+        image: "https://altaftoolshub.app/images/password-step2.png"
       },
       {
         "@type": "HowToStep",
         name: "Generate password",
         text: "Click Generate to create your secure password",
-        image: "https://altaftoolshub.com/images/password-step3.png"
+        image: "https://altaftoolshub.app/images/password-step3.png"
       },
       {
         "@type": "HowToStep",
         name: "Copy password",
         text: "Copy the generated password to your clipboard",
-        image: "https://altaftoolshub.com/images/password-step4.png"
+        image: "https://altaftoolshub.app/images/password-step4.png"
       }
     ]
   };

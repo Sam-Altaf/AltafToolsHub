@@ -37,7 +37,7 @@ export default function HowToCompressPDF() {
     "@type": "HowTo",
     name: "How to Compress PDF Files Without Losing Quality",
     description: "Learn how to reduce PDF file size while maintaining quality using our free online PDF compressor tool",
-    image: "https://altaftoolshub.com/images/compress-pdf-guide.png",
+    image: "https://altaftoolshub.app/images/compress-pdf-guide.png",
     totalTime: "PT2M",
     estimatedCost: {
       "@type": "MonetaryAmount",
@@ -54,25 +54,25 @@ export default function HowToCompressPDF() {
         "@type": "HowToStep",
         name: "Upload your PDF",
         text: "Click the upload button or drag and drop your PDF file into the tool",
-        image: "https://altaftoolshub.com/images/step1.png"
+        image: "https://altaftoolshub.app/images/step1.png"
       },
       {
         "@type": "HowToStep",
         name: "Select compression level",
         text: "Choose from High, Medium, or Low compression based on your needs",
-        image: "https://altaftoolshub.com/images/step2.png"
+        image: "https://altaftoolshub.app/images/step2.png"
       },
       {
         "@type": "HowToStep",
         name: "Compress the PDF",
         text: "Click the Compress button and wait for processing",
-        image: "https://altaftoolshub.com/images/step3.png"
+        image: "https://altaftoolshub.app/images/step3.png"
       },
       {
         "@type": "HowToStep",
         name: "Download compressed file",
         text: "Download your compressed PDF file",
-        image: "https://altaftoolshub.com/images/step4.png"
+        image: "https://altaftoolshub.app/images/step4.png"
       }
     ]
   };
