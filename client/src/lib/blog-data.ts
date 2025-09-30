@@ -1,4 +1,4 @@
-import { FileText, Settings, Mail, Globe, Package, Shield, Zap, Users, TrendingUp, BookOpen, Award, Clock } from "lucide-react";
+import { FileText, Settings, Mail, Globe, Package, Shield, Zap, Users, TrendingUp, BookOpen, Award, Clock, QrCode, Key, Type, Unlock, Image } from "lucide-react";
 
 export interface BlogPost {
   id: string;
