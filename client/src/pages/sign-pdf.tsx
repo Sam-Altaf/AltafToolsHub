@@ -8,17 +8,24 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { useSEO } from "@/hooks/use-seo";
 import ToolSEO from "@/components/seo/tool-seo";
-import { toolFAQs } from "@/components/seo/tool-seo";
 import FileUpload from "@/components/ui/file-upload";
 import PrivacyNotice from "@/components/privacy-notice";
 import Breadcrumbs from "@/components/seo/breadcrumbs";
 import { 
   Download, Trash2, PenTool, Type as TypeIcon, 
-  Image as ImageIcon, Calendar, ZoomIn, ZoomOut, FileCheck
+  Image as ImageIcon, Calendar, ZoomIn, ZoomOut, FileCheck,
+  Settings, Upload, FileDown, Check, Info, Shield, Sparkles,
+  Mail, Briefcase, School, Users, Globe2, FileText
 } from "lucide-react";
+import { WhyUseSection, UseCasesSection, ComparisonSection, HowItWorksSection, commonFeatures } from "@/components/seo/tool-features";
+import { ToolFAQ, generateSignPDFFAQs } from "@/components/seo/tool-faq";
+import { cn } from "@/lib/utils";
 
 // Configure PDF.js worker - use local worker from node_modules
 if (typeof window !== 'undefined') {
@@ -40,6 +47,8 @@ interface SignatureConfig {
   height: number;
   page: number;
   addDate?: boolean;
+  applyToPages?: 'current' | 'all' | 'custom';
+  customPages?: number[];
 }
 
 interface PageDimensions {
@@ -52,8 +61,8 @@ interface PageDimensions {
 export default function SignPDFPage() {
   useSEO({
     title: "Sign PDF Online - Add Digital Signatures to Documents | AltafToolsHub",
-    description: "Add digital signatures to your PDF documents online. Draw, type, or upload signatures with date stamps. Free, secure, and browser-based PDF signing tool.",
-    keywords: "sign pdf, digital signature, pdf signature, e-signature, sign documents online, add signature to pdf",
+    description: "Add digital signatures to your PDF documents online. Draw, type, or upload signatures with date stamps. Free, secure, and browser-based PDF signing tool with multi-page support.",
+    keywords: "sign pdf, digital signature, pdf signature, e-signature, sign documents online, add signature to pdf, pdf signer",
     path: "/sign-pdf"
   });
 
@@ -68,8 +77,10 @@ export default function SignPDFPage() {
     width: 200,
     height: 80,
     page: 0,
-    addDate: true
+    addDate: true,
+    applyToPages: 'current'
   });
+  const [customPageInput, setCustomPageInput] = useState("");
   const [isDrawing, setIsDrawing] = useState(false);
   const [signatureFont, setSignatureFont] = useState<'cursive' | 'script' | 'elegant'>('cursive');
   const [typedSignature, setTypedSignature] = useState("");
@@ -84,6 +95,8 @@ export default function SignPDFPage() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const settingsSectionRef = useRef<HTMLDivElement>(null);
+  const processingSectionRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -105,6 +118,14 @@ export default function SignPDFPage() {
     }
   }, [currentSignature.type]);
 
+  const scrollToSettings = () => {
+    settingsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const scrollToProcessing = () => {
+    processingSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
   const renderPage = async (pageNum: number) => {
     if (!pdfJsDoc || !pdfDoc || !previewCanvasRef.current) return;
 
@@ -123,385 +144,344 @@ export default function SignPDFPage() {
       
       setPageDimensions({ 
         widthPts, 
-        heightPts,
+        heightPts, 
         widthPx: viewport.width, 
         heightPx: viewport.height 
       });
-
-      await page.render({
-        canvasContext: context,
-        viewport: viewport
-      }).promise;
-
+      
       if (context) {
-        signatures
-          .filter(sig => sig.page === pageNum)
-          .forEach(sig => {
-            const x = (sig.x / widthPts) * viewport.width;
-            const y = viewport.height - ((sig.y + sig.height) / heightPts) * viewport.height;
-            const w = (sig.width / widthPts) * viewport.width;
-            const h = (sig.height / heightPts) * viewport.height;
-
-            context.strokeStyle = '#6366f1';
-            context.lineWidth = 2;
-            context.setLineDash([5, 5]);
-            context.strokeRect(x, y, w, h);
-            context.setLineDash([]);
-
-            if (sig.type === 'draw' || sig.type === 'image') {
-              const img = new Image();
-              img.onload = () => {
-                context.drawImage(img, x, y, w, h);
-              };
-              img.src = sig.data;
-            } else if (sig.type === 'type') {
-              context.font = `${h * 0.6}px ${getFontFamily(sig.font || 'cursive')}`;
-              context.fillStyle = '#000';
-              context.fillText(sig.text || '', x + 5, y + h * 0.7);
-            }
-
-            const handleSize = 10;
-            context.fillStyle = '#6366f1';
-            context.fillRect(x - handleSize / 2, y - handleSize / 2, handleSize, handleSize);
-            context.fillRect(x + w - handleSize / 2, y - handleSize / 2, handleSize, handleSize);
-            context.fillRect(x - handleSize / 2, y + h - handleSize / 2, handleSize, handleSize);
-            context.fillRect(x + w - handleSize / 2, y + h - handleSize / 2, handleSize, handleSize);
-          });
+        await page.render({ canvasContext: context, viewport }).promise;
+        
+        // Draw existing signatures for this page
+        signatures.filter(sig => sig.page === pageNum).forEach(sig => {
+          drawSignatureOnCanvas(context, sig, viewport.width, viewport.height, widthPts, heightPts);
+        });
       }
     } catch (error) {
       console.error('Error rendering page:', error);
-      toast({
-        title: "Error rendering preview",
-        description: "Failed to render PDF page. Please try again.",
-        variant: "destructive"
-      });
     }
+  };
+
+  const drawSignatureOnCanvas = (
+    context: CanvasRenderingContext2D,
+    sig: SignatureConfig,
+    canvasWidth: number,
+    canvasHeight: number,
+    pdfWidth: number,
+    pdfHeight: number
+  ) => {
+    const scaleX = canvasWidth / pdfWidth;
+    const scaleY = canvasHeight / pdfHeight;
+    
+    const canvasX = sig.x * scaleX;
+    const canvasY = sig.y * scaleY;
+    const canvasW = sig.width * scaleX;
+    const canvasH = sig.height * scaleY;
+    
+    // Draw signature with border
+    if (sig.type === 'image' || sig.type === 'draw') {
+      const img = new Image();
+      img.src = sig.data;
+      img.onload = () => {
+        context.save();
+        context.strokeStyle = draggingSignature === sig.id ? '#8b5cf6' : '#e5e7eb';
+        context.lineWidth = 2;
+        context.strokeRect(canvasX, canvasY, canvasW, canvasH);
+        context.drawImage(img, canvasX, canvasY, canvasW, canvasH);
+        
+        // Draw resize handles
+        if (draggingSignature === sig.id || resizingSignature?.id === sig.id) {
+          drawResizeHandles(context, canvasX, canvasY, canvasW, canvasH);
+        }
+        context.restore();
+      };
+    } else if (sig.type === 'type') {
+      context.save();
+      context.strokeStyle = draggingSignature === sig.id ? '#8b5cf6' : '#e5e7eb';
+      context.lineWidth = 2;
+      context.strokeRect(canvasX, canvasY, canvasW, canvasH);
+      context.fillStyle = '#000';
+      context.font = `${canvasH * 0.5}px ${getFontFamily(sig.font as any)}`;
+      context.textAlign = 'center';
+      context.textBaseline = 'middle';
+      context.fillText(sig.text || '', canvasX + canvasW / 2, canvasY + canvasH / 2);
+      
+      if (draggingSignature === sig.id || resizingSignature?.id === sig.id) {
+        drawResizeHandles(context, canvasX, canvasY, canvasW, canvasH);
+      }
+      context.restore();
+    }
+  };
+
+  const drawResizeHandles = (ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number) => {
+    const handleSize = 8;
+    ctx.fillStyle = '#8b5cf6';
+    
+    // Top-left
+    ctx.fillRect(x - handleSize / 2, y - handleSize / 2, handleSize, handleSize);
+    // Top-right
+    ctx.fillRect(x + w - handleSize / 2, y - handleSize / 2, handleSize, handleSize);
+    // Bottom-left
+    ctx.fillRect(x - handleSize / 2, y + h - handleSize / 2, handleSize, handleSize);
+    // Bottom-right
+    ctx.fillRect(x + w - handleSize / 2, y + h - handleSize / 2, handleSize, handleSize);
   };
 
   const handleFileSelect = async (selectedFile: File) => {
-    setFile(selectedFile);
-    setProgress(10);
+    if (!selectedFile.type.includes('pdf')) {
+      toast({
+        title: "Invalid file type",
+        description: "Please upload a PDF file",
+        variant: "destructive"
+      });
+      return;
+    }
 
     try {
+      setFile(selectedFile);
       const arrayBuffer = await selectedFile.arrayBuffer();
       
-      const pdf = await PDFDocument.load(arrayBuffer);
-      setPdfDoc(pdf);
-      const count = pdf.getPageCount();
-      setPageCount(count);
+      const pdfLibDocument = await PDFDocument.load(arrayBuffer);
+      const pdfJsDocument = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
       
-      setProgress(50);
-      
-      const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
-      const pdfJs = await loadingTask.promise;
-      setPdfJsDoc(pdfJs);
-      
+      setPdfDoc(pdfLibDocument);
+      setPdfJsDoc(pdfJsDocument);
+      setPageCount(pdfLibDocument.getPageCount());
       setCurrentPage(0);
-      setProgress(100);
       
       toast({
         title: "PDF loaded successfully",
-        description: `Ready to sign ${count} page(s)`
+        description: `${pdfLibDocument.getPageCount()} pages loaded. Add your signatures below.`
       });
+
+      setTimeout(scrollToSettings, 300);
     } catch (error) {
-      console.error('Error loading PDF:', error);
       toast({
         title: "Error loading PDF",
-        description: "Failed to load the PDF file. Please try another file.",
+        description: "Could not load the PDF file. Please try again.",
         variant: "destructive"
       });
-      setFile(null);
-      setPdfDoc(null);
-      setPdfJsDoc(null);
     }
   };
 
-  const getHandleAt = (sig: SignatureConfig, x: number, y: number): string | null => {
-    const { widthPts, heightPts, widthPx, heightPx } = pageDimensions;
-    const sigX = (sig.x / widthPts) * widthPx;
-    const sigY = heightPx - ((sig.y + sig.height) / heightPts) * heightPx;
-    const sigW = (sig.width / widthPts) * widthPx;
-    const sigH = (sig.height / heightPts) * heightPx;
-    
-    const handleSize = 10;
-    const tolerance = 5;
-    
-    if (Math.abs(x - sigX) < handleSize + tolerance && Math.abs(y - sigY) < handleSize + tolerance) {
-      return 'tl';
-    }
-    if (Math.abs(x - (sigX + sigW)) < handleSize + tolerance && Math.abs(y - sigY) < handleSize + tolerance) {
-      return 'tr';
-    }
-    if (Math.abs(x - sigX) < handleSize + tolerance && Math.abs(y - (sigY + sigH)) < handleSize + tolerance) {
-      return 'bl';
-    }
-    if (Math.abs(x - (sigX + sigW)) < handleSize + tolerance && Math.abs(y - (sigY + sigH)) < handleSize + tolerance) {
-      return 'br';
-    }
-    
-    return null;
-  };
-
-  const handlePreviewPointerDown = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-    const canvas = previewCanvasRef.current;
-    if (!canvas) return;
-
-    const rect = canvas.getBoundingClientRect();
-    let clientX, clientY;
-    
-    if ('touches' in e) {
-      if (e.touches.length === 0) return;
-      clientX = e.touches[0].clientX;
-      clientY = e.touches[0].clientY;
-    } else {
-      clientX = e.clientX;
-      clientY = e.clientY;
-    }
-
-    const x = clientX - rect.left;
-    const y = clientY - rect.top;
-
-    const clickedSig = signatures.find(sig => {
-      if (sig.page !== currentPage) return false;
-      
-      const { widthPts, heightPts, widthPx, heightPx } = pageDimensions;
-      const sigX = (sig.x / widthPts) * widthPx;
-      const sigY = heightPx - ((sig.y + sig.height) / heightPts) * heightPx;
-      const sigW = (sig.width / widthPts) * widthPx;
-      const sigH = (sig.height / heightPts) * heightPx;
-
-      return x >= sigX && x <= sigX + sigW && y >= sigY && y <= sigY + sigH;
-    });
-
-    if (clickedSig) {
-      const handle = getHandleAt(clickedSig, x, y);
-      
-      if (handle) {
-        setResizingSignature({ id: clickedSig.id, corner: handle });
-        setDragOffset({ x, y });
-      } else {
-        const { widthPts, heightPts, widthPx, heightPx } = pageDimensions;
-        const sigX = (clickedSig.x / widthPts) * widthPx;
-        const sigY = heightPx - ((clickedSig.y + clickedSig.height) / heightPts) * heightPx;
-        
-        setDraggingSignature(clickedSig.id);
-        setDragOffset({ x: x - sigX, y: y - sigY });
-      }
+  const getFontFamily = (font: 'cursive' | 'script' | 'elegant') => {
+    switch (font) {
+      case 'cursive': return '"Dancing Script", cursive';
+      case 'script': return '"Great Vibes", cursive';
+      case 'elegant': return '"Pinyon Script", cursive';
+      default: return '"Dancing Script", cursive';
     }
   };
 
-  const handlePreviewPointerMove = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-    if (!draggingSignature && !resizingSignature) return;
-
-    const canvas = previewCanvasRef.current;
-    if (!canvas) return;
-
-    const rect = canvas.getBoundingClientRect();
-    let clientX, clientY;
-    
-    if ('touches' in e) {
-      if (e.touches.length === 0) return;
-      clientX = e.touches[0].clientX;
-      clientY = e.touches[0].clientY;
-      e.preventDefault();
-    } else {
-      clientX = e.clientX;
-      clientY = e.clientY;
-    }
-
-    const x = clientX - rect.left;
-    const y = clientY - rect.top;
-
-    const { widthPts, heightPts, widthPx, heightPx } = pageDimensions;
-
-    if (draggingSignature) {
-      setSignatures(prev => prev.map(sig => {
-        if (sig.id === draggingSignature) {
-          const newPxX = x - dragOffset.x;
-          const newPxY = y - dragOffset.y;
-          
-          const newX = Math.max(0, Math.min(widthPts - sig.width, (newPxX / widthPx) * widthPts));
-          const newY = Math.max(0, Math.min(heightPts - sig.height, ((heightPx - newPxY - ((sig.height / heightPts) * heightPx)) / heightPx) * heightPts));
-          
-          return { ...sig, x: newX, y: newY };
-        }
-        return sig;
-      }));
-    } else if (resizingSignature) {
-      setSignatures(prev => prev.map(sig => {
-        if (sig.id === resizingSignature.id) {
-          const corner = resizingSignature.corner;
-          
-          const currentPxX = (sig.x / widthPts) * widthPx;
-          const currentPxY = heightPx - ((sig.y + sig.height) / heightPts) * heightPx;
-          const currentPxW = (sig.width / widthPts) * widthPx;
-          const currentPxH = (sig.height / heightPts) * heightPx;
-          
-          let newPxX = currentPxX;
-          let newPxY = currentPxY;
-          let newPxW = currentPxW;
-          let newPxH = currentPxH;
-          
-          if (corner === 'br') {
-            newPxW = x - currentPxX;
-            newPxH = y - currentPxY;
-          } else if (corner === 'tr') {
-            newPxW = x - currentPxX;
-            newPxH = currentPxH + (currentPxY - y);
-            newPxY = y;
-          } else if (corner === 'bl') {
-            newPxW = currentPxW + (currentPxX - x);
-            newPxX = x;
-            newPxH = y - currentPxY;
-          } else if (corner === 'tl') {
-            newPxW = currentPxW + (currentPxX - x);
-            newPxH = currentPxH + (currentPxY - y);
-            newPxX = x;
-            newPxY = y;
-          }
-          
-          const minW = 50;
-          const minH = 20;
-          if (newPxW < minW) newPxW = minW;
-          if (newPxH < minH) newPxH = minH;
-          
-          const newX = (newPxX / widthPx) * widthPts;
-          const newY = ((heightPx - newPxY - newPxH) / heightPx) * heightPts;
-          const newWidth = (newPxW / widthPx) * widthPts;
-          const newHeight = (newPxH / heightPx) * heightPts;
-          
-          const clampedX = Math.max(0, Math.min(widthPts - newWidth, newX));
-          const clampedY = Math.max(0, Math.min(heightPts - newHeight, newY));
-          const clampedWidth = Math.max(30, Math.min(widthPts - clampedX, newWidth));
-          const clampedHeight = Math.max(15, Math.min(heightPts - clampedY, newHeight));
-          
-          return { ...sig, x: clampedX, y: clampedY, width: clampedWidth, height: clampedHeight };
-        }
-        return sig;
-      }));
-    }
-  };
-
-  const handlePreviewPointerUp = () => {
-    setDraggingSignature(null);
-    setResizingSignature(null);
-  };
-
-  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+  const startDrawing = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!canvasRef.current) return;
     setIsDrawing(true);
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    
-    const rect = canvas.getBoundingClientRect();
-    let clientX, clientY;
-    
-    if ('touches' in e) {
-      if (e.touches.length === 0) return;
-      clientX = e.touches[0].clientX;
-      clientY = e.touches[0].clientY;
-      e.preventDefault();
-    } else {
-      clientX = e.clientX;
-      clientY = e.clientY;
-    }
-    
-    const x = clientX - rect.left;
-    const y = clientY - rect.top;
-    
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-    }
+    const ctx = canvasRef.current.getContext('2d');
+    if (!ctx) return;
+
+    const rect = canvasRef.current.getBoundingClientRect();
+    const x = 'touches' in e ? e.touches[0].clientX - rect.left : e.clientX - rect.left;
+    const y = 'touches' in e ? e.touches[0].clientY - rect.top : e.clientY - rect.top;
+
+    ctx.beginPath();
+    ctx.moveTo(x, y);
   };
 
-  const draw = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-    if (!isDrawing) return;
-    
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    
-    const rect = canvas.getBoundingClientRect();
-    let clientX, clientY;
-    
-    if ('touches' in e) {
-      if (e.touches.length === 0) return;
-      clientX = e.touches[0].clientX;
-      clientY = e.touches[0].clientY;
-      e.preventDefault();
-    } else {
-      clientX = e.clientX;
-      clientY = e.clientY;
-    }
-    
-    const x = clientX - rect.left;
-    const y = clientY - rect.top;
-    
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      ctx.lineTo(x, y);
-      ctx.stroke();
-    }
+  const draw = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!isDrawing || !canvasRef.current) return;
+    const ctx = canvasRef.current.getContext('2d');
+    if (!ctx) return;
+
+    const rect = canvasRef.current.getBoundingClientRect();
+    const x = 'touches' in e ? e.touches[0].clientX - rect.left : e.clientX - rect.left;
+    const y = 'touches' in e ? e.touches[0].clientY - rect.top : e.clientY - rect.top;
+
+    ctx.lineTo(x, y);
+    ctx.stroke();
   };
 
   const stopDrawing = () => {
-    setIsDrawing(false);
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const dataUrl = canvas.toDataURL('image/png');
+    if (isDrawing && canvasRef.current) {
+      const dataUrl = canvasRef.current.toDataURL();
       setCurrentSignature(prev => ({ ...prev, data: dataUrl }));
     }
+    setIsDrawing(false);
   };
 
   const clearCanvas = () => {
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const ctx = canvas.getContext('2d');
+    if (canvasRef.current) {
+      const ctx = canvasRef.current.getContext('2d');
       if (ctx) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+        setCurrentSignature(prev => ({ ...prev, data: undefined }));
       }
     }
-    setCurrentSignature(prev => ({ ...prev, data: '' }));
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (!file.type.startsWith('image/')) {
-      toast({
-        title: "Invalid file type",
-        description: "Please select an image file",
-        variant: "destructive"
-      });
-      return;
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setCurrentSignature(prev => ({ ...prev, data: event.target?.result as string }));
+      };
+      reader.readAsDataURL(file);
     }
+  };
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const dataUrl = event.target?.result as string;
-      setCurrentSignature(prev => ({ ...prev, type: 'image', data: dataUrl }));
-      toast({
-        title: "Signature image uploaded",
-        description: "You can now add it to your PDF"
+  const handleCanvasMouseDown = (e: React.MouseEvent) => {
+    if (!previewCanvasRef.current) return;
+    const rect = previewCanvasRef.current.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const clickY = e.clientY - rect.top;
+
+    const scaleX = pageDimensions.widthPx / pageDimensions.widthPts;
+    const scaleY = pageDimensions.heightPx / pageDimensions.heightPts;
+
+    const clickedSig = signatures
+      .filter(sig => sig.page === currentPage)
+      .reverse()
+      .find(sig => {
+        const x = sig.x * scaleX;
+        const y = sig.y * scaleY;
+        const w = sig.width * scaleX;
+        const h = sig.height * scaleY;
+
+        // Check resize handles first
+        const handleSize = 8;
+        if (
+          Math.abs(clickX - x) < handleSize && Math.abs(clickY - y) < handleSize ||
+          Math.abs(clickX - (x + w)) < handleSize && Math.abs(clickY - y) < handleSize ||
+          Math.abs(clickX - x) < handleSize && Math.abs(clickY - (y + h)) < handleSize ||
+          Math.abs(clickX - (x + w)) < handleSize && Math.abs(clickY - (y + h)) < handleSize
+        ) {
+          let corner = '';
+          if (Math.abs(clickX - x) < handleSize && Math.abs(clickY - y) < handleSize) corner = 'tl';
+          else if (Math.abs(clickX - (x + w)) < handleSize && Math.abs(clickY - y) < handleSize) corner = 'tr';
+          else if (Math.abs(clickX - x) < handleSize && Math.abs(clickY - (y + h)) < handleSize) corner = 'bl';
+          else if (Math.abs(clickX - (x + w)) < handleSize && Math.abs(clickY - (y + h)) < handleSize) corner = 'br';
+          
+          setResizingSignature({ id: sig.id, corner });
+          return true;
+        }
+
+        return clickX >= x && clickX <= x + w && clickY >= y && clickY <= y + h;
       });
-    };
-    reader.readAsDataURL(file);
+
+    if (clickedSig) {
+      const x = clickedSig.x * scaleX;
+      const y = clickedSig.y * scaleY;
+      setDragOffset({ x: clickX - x, y: clickY - y });
+      setDraggingSignature(clickedSig.id);
+    }
+  };
+
+  const handleCanvasMouseMove = (e: React.MouseEvent) => {
+    if (!previewCanvasRef.current) return;
+    const rect = previewCanvasRef.current.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    const scaleX = pageDimensions.widthPx / pageDimensions.widthPts;
+    const scaleY = pageDimensions.heightPx / pageDimensions.heightPts;
+
+    if (resizingSignature) {
+      const sig = signatures.find(s => s.id === resizingSignature.id);
+      if (!sig) return;
+
+      const newSig = { ...sig };
+      const corner = resizingSignature.corner;
+
+      if (corner === 'br') {
+        newSig.width = Math.max(30, (mouseX / scaleX) - sig.x);
+        newSig.height = Math.max(15, (mouseY / scaleY) - sig.y);
+      } else if (corner === 'bl') {
+        const newWidth = Math.max(30, (sig.x + sig.width) - (mouseX / scaleX));
+        newSig.x = (sig.x + sig.width) - newWidth;
+        newSig.width = newWidth;
+        newSig.height = Math.max(15, (mouseY / scaleY) - sig.y);
+      } else if (corner === 'tr') {
+        newSig.width = Math.max(30, (mouseX / scaleX) - sig.x);
+        const newHeight = Math.max(15, (sig.y + sig.height) - (mouseY / scaleY));
+        newSig.y = (sig.y + sig.height) - newHeight;
+        newSig.height = newHeight;
+      } else if (corner === 'tl') {
+        const newWidth = Math.max(30, (sig.x + sig.width) - (mouseX / scaleX));
+        const newHeight = Math.max(15, (sig.y + sig.height) - (mouseY / scaleY));
+        newSig.x = (sig.x + sig.width) - newWidth;
+        newSig.y = (sig.y + sig.height) - newHeight;
+        newSig.width = newWidth;
+        newSig.height = newHeight;
+      }
+
+      // Keep within bounds
+      newSig.x = Math.max(0, Math.min(newSig.x, pageDimensions.widthPts - newSig.width));
+      newSig.y = Math.max(0, Math.min(newSig.y, pageDimensions.heightPts - newSig.height));
+
+      setSignatures(signatures.map(s => s.id === newSig.id ? newSig : s));
+    } else if (draggingSignature) {
+      const sig = signatures.find(s => s.id === draggingSignature);
+      if (!sig) return;
+
+      const newX = (mouseX - dragOffset.x) / scaleX;
+      const newY = (mouseY - dragOffset.y) / scaleY;
+
+      // Keep within bounds
+      const boundedX = Math.max(0, Math.min(newX, pageDimensions.widthPts - sig.width));
+      const boundedY = Math.max(0, Math.min(newY, pageDimensions.heightPts - sig.height));
+
+      setSignatures(signatures.map(s => 
+        s.id === draggingSignature 
+          ? { ...s, x: boundedX, y: boundedY } 
+          : s
+      ));
+    }
+  };
+
+  const handleCanvasMouseUp = () => {
+    setDraggingSignature(null);
+    setResizingSignature(null);
+  };
+
+  const parseCustomPages = (input: string): number[] | null => {
+    try {
+      const pages: number[] = [];
+      const parts = input.split(',').map(p => p.trim());
+      
+      for (const part of parts) {
+        if (part.includes('-')) {
+          const [start, end] = part.split('-').map(n => parseInt(n.trim()));
+          if (isNaN(start) || isNaN(end) || start < 1 || end > pageCount || start > end) {
+            return null;
+          }
+          for (let i = start; i <= end; i++) {
+            pages.push(i - 1); // Convert to 0-indexed
+          }
+        } else {
+          const pageNum = parseInt(part);
+          if (isNaN(pageNum) || pageNum < 1 || pageNum > pageCount) {
+            return null;
+          }
+          pages.push(pageNum - 1); // Convert to 0-indexed
+        }
+      }
+      return [...new Set(pages)]; // Remove duplicates
+    } catch {
+      return null;
+    }
   };
 
   const addSignatureToPDF = () => {
-    if (!pdfDoc) return;
-
-    if (currentSignature.type === 'draw' && !currentSignature.data) {
+    if (!currentSignature.data && currentSignature.type !== 'type') {
       toast({
-        title: "No signature drawn",
-        description: "Please draw your signature first",
+        title: "No signature",
+        description: "Please create a signature first",
         variant: "destructive"
       });
       return;
     }
 
-    if (currentSignature.type === 'type' && !typedSignature.trim()) {
+    if (currentSignature.type === 'type' && !typedSignature) {
       toast({
         title: "No signature text",
         description: "Please enter your signature text",
@@ -510,257 +490,190 @@ export default function SignPDFPage() {
       return;
     }
 
-    if (currentSignature.type === 'image' && !currentSignature.data) {
-      toast({
-        title: "No signature image",
-        description: "Please upload a signature image",
-        variant: "destructive"
-      });
-      return;
+    const applyToPages = currentSignature.applyToPages || 'current';
+    let pagesToApply: number[] = [currentPage];
+
+    if (applyToPages === 'all') {
+      pagesToApply = Array.from({ length: pageCount }, (_, i) => i);
+    } else if (applyToPages === 'custom') {
+      const parsed = parseCustomPages(customPageInput);
+      if (!parsed || parsed.length === 0) {
+        toast({
+          title: "Invalid page range",
+          description: "Please enter valid page numbers (e.g., 1, 3-5, 7)",
+          variant: "destructive"
+        });
+        return;
+      }
+      pagesToApply = parsed;
     }
 
-    const signature: SignatureConfig = {
-      id: `sig-${Date.now()}-${Math.random()}`,
-      type: currentSignature.type as 'draw' | 'type' | 'image',
-      data: currentSignature.data || '',
-      text: typedSignature,
-      font: signatureFont,
+    const newSignatures: SignatureConfig[] = pagesToApply.map(pageNum => ({
+      id: `${Date.now()}-${Math.random()}-${pageNum}`,
+      type: currentSignature.type!,
+      data: currentSignature.type === 'type' 
+        ? '' 
+        : currentSignature.data!,
+      text: currentSignature.type === 'type' ? typedSignature : undefined,
+      font: currentSignature.type === 'type' ? signatureFont : undefined,
       x: 50,
-      y: 100,
+      y: 50,
       width: currentSignature.width || 200,
       height: currentSignature.height || 80,
-      page: currentPage,
-      addDate: currentSignature.addDate
-    };
+      page: pageNum,
+      addDate: currentSignature.addDate,
+      applyToPages: currentSignature.applyToPages,
+      customPages: applyToPages === 'custom' ? pagesToApply : undefined
+    }));
 
-    setSignatures([...signatures, signature]);
+    setSignatures([...signatures, ...newSignatures]);
+    
     toast({
       title: "Signature added",
-      description: `Signature added to page ${currentPage + 1}. Drag to reposition or resize.`
+      description: applyToPages === 'all' 
+        ? `Signature added to all ${pageCount} pages`
+        : applyToPages === 'custom'
+        ? `Signature added to ${pagesToApply.length} page(s)`
+        : `Signature added to page ${currentPage + 1}`
     });
   };
 
   const removeSignature = (id: string) => {
     setSignatures(signatures.filter(sig => sig.id !== id));
-    toast({
-      title: "Signature removed",
-      description: "Signature has been removed from the document"
-    });
   };
 
   const updateSignatureSize = (id: string, width: number, height: number) => {
-    setSignatures(prev => prev.map(sig => 
+    setSignatures(signatures.map(sig => 
       sig.id === id ? { ...sig, width: Math.max(30, width), height: Math.max(15, height) } : sig
     ));
   };
 
   const applySignatures = async () => {
-    if (!pdfDoc || signatures.length === 0) {
-      toast({
-        title: "No signatures to apply",
-        description: "Please add at least one signature",
-        variant: "destructive"
-      });
-      return;
-    }
+    if (!pdfDoc || signatures.length === 0) return;
 
     setProcessing(true);
     setProgress(0);
+    scrollToProcessing();
 
     try {
-      const pdfCopy = await PDFDocument.load(await pdfDoc.save());
-      const pages = pdfCopy.getPages();
+      const pdfDocCopy = await PDFDocument.load(await pdfDoc.save());
+      const font = await pdfDocCopy.embedFont(StandardFonts.Helvetica);
 
       for (let i = 0; i < signatures.length; i++) {
         const sig = signatures[i];
-        setProgress(((i + 1) / signatures.length) * 90);
-
-        if (sig.page >= pages.length) continue;
-        const page = pages[sig.page];
+        const page = pdfDocCopy.getPage(sig.page);
         const { height: pageHeight } = page.getSize();
 
-        if (sig.type === 'type') {
-          const font = await pdfCopy.embedFont(StandardFonts.TimesRomanItalic);
-          const fontSize = sig.height * 0.6;
-          
-          page.drawText(sig.text || '', {
-            x: sig.x,
-            y: pageHeight - sig.y - fontSize,
-            size: fontSize,
-            font,
-            color: rgb(0, 0, 0)
-          });
+        if (sig.type === 'draw' || sig.type === 'image') {
+          const imageBytes = await fetch(sig.data).then(res => res.arrayBuffer());
+          const image = sig.data.includes('png') 
+            ? await pdfDocCopy.embedPng(imageBytes)
+            : await pdfDocCopy.embedJpg(imageBytes);
 
-          if (sig.addDate) {
-            const dateFont = await pdfCopy.embedFont(StandardFonts.Helvetica);
-            const dateText = `Signed: ${new Date().toLocaleDateString()}`;
-            page.drawText(dateText, {
-              x: sig.x,
-              y: pageHeight - sig.y - fontSize - 20,
-              size: 10,
-              font: dateFont,
-              color: rgb(0.3, 0.3, 0.3)
-            });
-          }
-        } else if (sig.type === 'draw' || sig.type === 'image') {
-          const response = await fetch(sig.data);
-          const imageBytes = await response.arrayBuffer();
-          
-          let image;
-          if (sig.data.includes('image/png') || sig.data.includes('data:image/png')) {
-            image = await pdfCopy.embedPng(imageBytes);
-          } else {
-            image = await pdfCopy.embedJpg(imageBytes);
-          }
-          
           page.drawImage(image, {
             x: sig.x,
             y: pageHeight - sig.y - sig.height,
             width: sig.width,
-            height: sig.height
+            height: sig.height,
           });
-
-          if (sig.addDate) {
-            const dateFont = await pdfCopy.embedFont(StandardFonts.Helvetica);
-            const dateText = `Signed: ${new Date().toLocaleDateString()}`;
-            page.drawText(dateText, {
-              x: sig.x,
-              y: pageHeight - sig.y - sig.height - 15,
-              size: 10,
-              font: dateFont,
-              color: rgb(0.3, 0.3, 0.3)
-            });
-          }
+        } else if (sig.type === 'type' && sig.text) {
+          const fontSize = sig.height * 0.5;
+          page.drawText(sig.text, {
+            x: sig.x,
+            y: pageHeight - sig.y - sig.height / 2,
+            size: fontSize,
+            font,
+            color: rgb(0, 0, 0),
+          });
         }
+
+        if (sig.addDate) {
+          const dateText = new Date().toLocaleDateString();
+          page.drawText(dateText, {
+            x: sig.x,
+            y: pageHeight - sig.y - sig.height - 15,
+            size: 8,
+            font,
+            color: rgb(0, 0, 0),
+          });
+        }
+
+        setProgress(((i + 1) / signatures.length) * 100);
       }
 
-      setProgress(95);
-      const pdfBytes = await pdfCopy.save();
-      setProgress(100);
-
+      const pdfBytes = await pdfDocCopy.save();
       const blob = new Blob([pdfBytes], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = file ? file.name.replace('.pdf', '_signed.pdf') : 'signed_document.pdf';
-      document.body.appendChild(a);
+      a.download = file?.name.replace('.pdf', '_signed.pdf') || 'signed.pdf';
       a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
 
       toast({
-        title: "PDF signed successfully",
-        description: `Your signed PDF has been downloaded`
+        title: "Success!",
+        description: `PDF signed with ${signatures.length} signature(s) and downloaded successfully`
       });
 
       setProcessing(false);
-      setProgress(0);
+      setProgress(100);
     } catch (error) {
-      console.error('Error signing PDF:', error);
       toast({
         title: "Error signing PDF",
-        description: "Failed to apply signatures. Please try again.",
+        description: "Could not apply signatures. Please try again.",
         variant: "destructive"
       });
       setProcessing(false);
-      setProgress(0);
-    }
-  };
-
-  const getFontFamily = (fontType?: string) => {
-    switch (fontType) {
-      case 'cursive':
-        return 'Brush Script MT, cursive';
-      case 'script':
-        return 'Lucida Handwriting, cursive';
-      case 'elegant':
-        return 'Edwardian Script ITC, cursive';
-      default:
-        return 'cursive';
     }
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-7xl">
-      <ToolSEO 
-        toolName="Sign PDF - Add Digital Signatures"
-        description="Add digital signatures to your PDF documents with draw, type, or upload options."
-        category="SecurityApplication"
-        faqs={toolFAQs['sign-pdf']}
-      />
-      
-      <Breadcrumbs 
-        items={[
-          { name: "PDF Tools", url: "/all-tools?category=pdf" },
-          { name: "Sign PDF", url: "/sign-pdf" }
-        ]}
-      />
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-950 dark:to-gray-900">
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        <Breadcrumbs
+          items={[
+            { name: "Home", url: "/" },
+            { name: "PDF Tools", url: "/all-tools#pdf" },
+            { name: "Sign PDF", url: "/sign-pdf" }
+          ]}
+        />
 
-      <div className="text-center mb-8 mt-6">
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full mb-4">
-          <PenTool className="h-5 w-5 text-white" />
-          <span className="text-white font-medium text-sm">Advanced Signature Placement</span>
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 text-white text-sm font-medium mb-4">
+            <PenTool className="h-4 w-4" />
+            Advanced Digital Signatures
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 bg-clip-text text-transparent">
+            Sign PDF Online
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+            Add digital signatures to your PDF documents with visual placement, drag-and-drop positioning, and customizable sizes. Apply signatures to single pages, all pages, or custom page ranges. Works on desktop and mobile devices.
+          </p>
         </div>
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-          Sign PDF Online
-        </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Add digital signatures to your PDF documents with visual placement, drag-and-drop positioning, and customizable sizes. Works on desktop and mobile devices.
-        </p>
-      </div>
 
-      <PrivacyNotice 
-        message="100% Private: All signatures are created and applied in your browser. Your documents never leave your device. Visual e-signatures for easy document signing."
-      />
+        <PrivacyNotice message="100% Private: All signatures are created and applied in your browser. Your documents never leave your device. Visual e-signatures for easy document signing." />
 
-      <div className="grid gap-6">
-        {!file ? (
+        <div className="mb-8">
           <FileUpload
-            accept="application/pdf"
-            title="Upload PDF to Sign"
-            description="Select a PDF document to add your digital signature"
             onFileSelect={handleFileSelect}
-            data-testid="upload-pdf"
+            accept=".pdf"
+            maxSize={100}
+            title="Upload PDF to Sign"
+            description="Select or drag a PDF document to add your digital signature"
           />
-        ) : (
-          <>
-            <Card className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <FileCheck className="h-8 w-8 text-indigo-600" />
-                  <div>
-                    <h3 className="font-semibold" data-testid="text-filename">{file.name}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {pageCount} page{pageCount !== 1 ? 's' : ''} • {signatures.length} signature{signatures.length !== 1 ? 's' : ''} added
-                    </p>
-                  </div>
-                </div>
-                <Button 
-                  variant="outline" 
-                  onClick={() => {
-                    setFile(null);
-                    setPdfDoc(null);
-                    setPdfJsDoc(null);
-                    setSignatures([]);
-                    setProgress(0);
-                  }}
-                  data-testid="button-remove-pdf"
-                >
-                  <Trash2 className="h-4 w-4 mr-2" />
-                  Remove
-                </Button>
-              </div>
-            </Card>
+        </div>
 
-            <div className="grid lg:grid-cols-2 gap-6">
+        {file && pdfDoc && (
+          <>
+            <div ref={settingsSectionRef} className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+              {/* PDF Preview */}
               <Card className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold">PDF Preview</h3>
                   <div className="flex items-center gap-2">
                     <Button 
                       variant="outline" 
-                      size="sm"
-                      onClick={() => setPageScale(s => Math.max(0.5, s - 0.1))}
+                      size="sm" 
+                      onClick={() => setPageScale(Math.max(0.5, pageScale - 0.1))}
                       data-testid="button-zoom-out"
                     >
                       <ZoomOut className="h-4 w-4" />
@@ -768,8 +681,8 @@ export default function SignPDFPage() {
                     <span className="text-sm text-muted-foreground">{Math.round(pageScale * 100)}%</span>
                     <Button 
                       variant="outline" 
-                      size="sm"
-                      onClick={() => setPageScale(s => Math.min(2, s + 0.1))}
+                      size="sm" 
+                      onClick={() => setPageScale(Math.min(2, pageScale + 0.1))}
                       data-testid="button-zoom-in"
                     >
                       <ZoomIn className="h-4 w-4" />
@@ -777,18 +690,14 @@ export default function SignPDFPage() {
                   </div>
                 </div>
 
-                <div className="border rounded-lg overflow-auto max-h-[600px] bg-gray-100 dark:bg-gray-900">
+                <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-2 bg-gray-50 dark:bg-gray-900 overflow-auto max-h-[600px]">
                   <canvas
                     ref={previewCanvasRef}
-                    className="mx-auto cursor-move"
-                    style={{ touchAction: 'none' }}
-                    onMouseDown={handlePreviewPointerDown}
-                    onMouseMove={handlePreviewPointerMove}
-                    onMouseUp={handlePreviewPointerUp}
-                    onMouseLeave={handlePreviewPointerUp}
-                    onTouchStart={handlePreviewPointerDown}
-                    onTouchMove={handlePreviewPointerMove}
-                    onTouchEnd={handlePreviewPointerUp}
+                    className="mx-auto cursor-move shadow-lg"
+                    onMouseDown={handleCanvasMouseDown}
+                    onMouseMove={handleCanvasMouseMove}
+                    onMouseUp={handleCanvasMouseUp}
+                    onMouseLeave={handleCanvasMouseUp}
                     data-testid="canvas-pdf-preview"
                   />
                 </div>
@@ -796,7 +705,7 @@ export default function SignPDFPage() {
                 <div className="flex items-center justify-between mt-4">
                   <Button
                     variant="outline"
-                    onClick={() => setCurrentPage(p => Math.max(0, p - 1))}
+                    onClick={() => setCurrentPage(Math.max(0, currentPage - 1))}
                     disabled={currentPage === 0}
                     data-testid="button-prev-page"
                   >
@@ -807,7 +716,7 @@ export default function SignPDFPage() {
                   </span>
                   <Button
                     variant="outline"
-                    onClick={() => setCurrentPage(p => Math.min(pageCount - 1, p + 1))}
+                    onClick={() => setCurrentPage(Math.min(pageCount - 1, currentPage + 1))}
                     disabled={currentPage === pageCount - 1}
                     data-testid="button-next-page"
                   >
@@ -815,11 +724,15 @@ export default function SignPDFPage() {
                   </Button>
                 </div>
 
-                <p className="text-xs text-muted-foreground mt-4 text-center">
-                  💡 Tip: Drag signatures to reposition, resize using corner handles
-                </p>
+                <Alert className="mt-4">
+                  <Info className="h-4 w-4" />
+                  <AlertDescription>
+                    Click and drag signatures to reposition. Click corner handles to resize. Signatures stay within page boundaries.
+                  </AlertDescription>
+                </Alert>
               </Card>
 
+              {/* Signature Creation */}
               <Card className="p-6">
                 <h3 className="text-lg font-semibold mb-4">Create Signature</h3>
                 
@@ -928,6 +841,50 @@ export default function SignPDFPage() {
                 </Tabs>
 
                 <div className="space-y-4 mt-6">
+                  {/* Apply to Pages */}
+                  <div>
+                    <Label className="mb-3 block">Apply Signature To</Label>
+                    <RadioGroup 
+                      value={currentSignature.applyToPages} 
+                      onValueChange={(value: 'current' | 'all' | 'custom') => setCurrentSignature(prev => ({ ...prev, applyToPages: value }))}
+                      className="space-y-2"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="current" id="current" data-testid="radio-current-page" />
+                        <Label htmlFor="current" className="font-normal cursor-pointer">
+                          Current page only (Page {currentPage + 1})
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="all" id="all" data-testid="radio-all-pages" />
+                        <Label htmlFor="all" className="font-normal cursor-pointer">
+                          All pages ({pageCount} pages)
+                        </Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="custom" id="custom" data-testid="radio-custom-pages" />
+                        <Label htmlFor="custom" className="font-normal cursor-pointer">
+                          Custom pages
+                        </Label>
+                      </div>
+                    </RadioGroup>
+
+                    {currentSignature.applyToPages === 'custom' && (
+                      <div className="mt-3">
+                        <Input
+                          value={customPageInput}
+                          onChange={(e) => setCustomPageInput(e.target.value)}
+                          placeholder="e.g., 1, 3-5, 7"
+                          className="w-full"
+                          data-testid="input-custom-pages"
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Enter page numbers or ranges (e.g., 1, 3-5, 7)
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label>Width (pts)</Label>
@@ -968,11 +925,13 @@ export default function SignPDFPage() {
                     </Label>
                   </div>
 
-                  <Button onClick={addSignatureToPDF} className="w-full" data-testid="button-add-signature">
-                    Add to Page {currentPage + 1}
+                  <Button onClick={addSignatureToPDF} className="w-full" size="lg" data-testid="button-add-signature">
+                    <Check className="h-5 w-5 mr-2" />
+                    Add Signature
                   </Button>
                 </div>
 
+                {/* Signatures List */}
                 <div className="mt-6">
                   <h4 className="font-semibold mb-2">Signatures on This Page</h4>
                   {signatures.filter(sig => sig.page === currentPage).length === 0 ? (
@@ -980,44 +939,23 @@ export default function SignPDFPage() {
                   ) : (
                     <div className="space-y-2 max-h-40 overflow-y-auto">
                       {signatures.filter(sig => sig.page === currentPage).map((sig) => (
-                        <div key={sig.id} className="flex items-center justify-between p-2 border rounded" data-testid={`signature-item-${sig.id}`}>
-                          <div className="flex items-center gap-2">
-                            {sig.type === 'draw' && <PenTool className="h-4 w-4" />}
-                            {sig.type === 'type' && <TypeIcon className="h-4 w-4" />}
-                            {sig.type === 'image' && <ImageIcon className="h-4 w-4" />}
-                            <span className="text-sm truncate max-w-32">
+                        <div key={sig.id} className="flex items-center justify-between p-3 border rounded-lg bg-gray-50 dark:bg-gray-800/50" data-testid={`signature-item-${sig.id}`}>
+                          <div className="flex items-center gap-2 flex-1 min-w-0">
+                            {sig.type === 'draw' && <PenTool className="h-4 w-4 flex-shrink-0" />}
+                            {sig.type === 'type' && <TypeIcon className="h-4 w-4 flex-shrink-0" />}
+                            {sig.type === 'image' && <ImageIcon className="h-4 w-4 flex-shrink-0" />}
+                            <span className="text-sm truncate">
                               {sig.type === 'type' ? sig.text : `${sig.type} signature`}
                             </span>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <Input
-                              type="number"
-                              min={30}
-                              max={500}
-                              value={Math.round(sig.width)}
-                              onChange={(e) => updateSignatureSize(sig.id, parseInt(e.target.value), sig.height)}
-                              className="w-16 h-8 text-xs"
-                              data-testid={`input-width-${sig.id}`}
-                            />
-                            <span className="text-xs">×</span>
-                            <Input
-                              type="number"
-                              min={15}
-                              max={300}
-                              value={Math.round(sig.height)}
-                              onChange={(e) => updateSignatureSize(sig.id, sig.width, parseInt(e.target.value))}
-                              className="w-16 h-8 text-xs"
-                              data-testid={`input-height-${sig.id}`}
-                            />
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              onClick={() => removeSignature(sig.id)}
-                              data-testid={`button-remove-signature-${sig.id}`}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={() => removeSignature(sig.id)}
+                            data-testid={`button-remove-signature-${sig.id}`}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </div>
                       ))}
                     </div>
@@ -1026,8 +964,9 @@ export default function SignPDFPage() {
               </Card>
             </div>
 
+            {/* Download Section */}
             {signatures.length > 0 && (
-              <Card className="p-6">
+              <Card className="p-6" ref={processingSectionRef}>
                 <div className="space-y-4">
                   {processing && (
                     <div>
@@ -1048,12 +987,145 @@ export default function SignPDFPage() {
                     <Download className="h-5 w-5 mr-2" />
                     {processing ? 'Signing PDF...' : `Download Signed PDF (${signatures.length} signature${signatures.length !== 1 ? 's' : ''})`}
                   </Button>
+
+                  {!processing && signatures.length > 0 && (
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                      <div className="text-center p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                        <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">{signatures.length}</p>
+                        <p className="text-xs text-muted-foreground">Total Signatures</p>
+                      </div>
+                      <div className="text-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                        <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{new Set(signatures.map(s => s.page)).size}</p>
+                        <p className="text-xs text-muted-foreground">Pages Signed</p>
+                      </div>
+                      <div className="text-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                        <p className="text-2xl font-bold text-green-600 dark:text-green-400">{pageCount}</p>
+                        <p className="text-xs text-muted-foreground">Total Pages</p>
+                      </div>
+                      <div className="text-center p-3 bg-cyan-50 dark:bg-cyan-900/20 rounded-lg">
+                        <p className="text-2xl font-bold text-cyan-600 dark:text-cyan-400">100%</p>
+                        <p className="text-xs text-muted-foreground">Privacy</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </Card>
             )}
           </>
         )}
       </div>
+
+      {/* SEO Content Sections */}
+      <HowItWorksSection
+        toolName="PDF Signer"
+        steps={[
+          {
+            number: 1,
+            title: "Upload Your PDF",
+            description: "Select or drag your PDF document into the upload area. Files are processed locally in your browser.",
+            icon: Upload
+          },
+          {
+            number: 2,
+            title: "Create & Position Signature",
+            description: "Draw, type, or upload your signature. Drag to position and resize directly on the PDF preview. Choose to apply to current page, all pages, or custom page ranges.",
+            icon: PenTool
+          },
+          {
+            number: 3,
+            title: "Download Signed PDF",
+            description: "Get your signed PDF instantly. All signatures are embedded with optional date stamps.",
+            icon: FileDown
+          }
+        ]}
+      />
+
+      <WhyUseSection
+        toolName="PDF Signer"
+        benefits={[
+          "Create signatures by drawing, typing, or uploading images",
+          "Visual drag-and-drop positioning with live PDF preview",
+          "Interactive resizing with corner handles",
+          "Apply signatures to single pages, all pages, or custom page ranges",
+          "Add automatic date stamps to signatures",
+          "Files never leave your device - 100% browser-based processing",
+          "No registration, watermarks, or file limits",
+          "Works on both desktop and mobile devices"
+        ]}
+        features={[
+          commonFeatures.privacy,
+          commonFeatures.speed,
+          commonFeatures.free,
+          {
+            icon: Sparkles,
+            title: "Multi-Page Support",
+            description: "Apply signatures to multiple pages with custom page range selection."
+          }
+        ]}
+      />
+
+      <UseCasesSection
+        useCases={[
+          {
+            title: "Business Contracts",
+            description: "Sign business agreements, contracts, and legal documents digitally without printing.",
+            icon: Briefcase,
+            example: "Sign employment contracts, NDAs, and partnership agreements"
+          },
+          {
+            title: "Academic Documents",
+            description: "Sign student forms, recommendation letters, and academic submissions.",
+            icon: School,
+            example: "Sign permission forms, thesis submissions, and applications"
+          },
+          {
+            title: "Email Attachments",
+            description: "Quickly sign and return documents received via email.",
+            icon: Mail,
+            example: "Sign rental agreements, service contracts, and forms"
+          },
+          {
+            title: "Government Forms",
+            description: "Add digital signatures to tax forms, visa applications, and official documents.",
+            icon: FileText,
+            example: "Sign tax returns, permit applications, and declarations"
+          },
+          {
+            title: "Team Approvals",
+            description: "Sign project proposals, budget approvals, and team documents.",
+            icon: Users,
+            example: "Sign project charters, approval forms, and timesheets"
+          },
+          {
+            title: "Remote Work",
+            description: "Sign documents from anywhere without scanners or printers.",
+            icon: Globe2,
+            example: "Sign remote work agreements, expense reports, and policies"
+          }
+        ]}
+      />
+
+      <ComparisonSection
+        toolName="PDF Signer"
+        comparisons={[
+          { feature: "File Privacy", ourTool: "Never leaves browser", others: "Uploaded to servers", highlight: true },
+          { feature: "Signature Types", ourTool: "Draw, Type, Upload", others: "Type only", highlight: true },
+          { feature: "Visual Positioning", ourTool: "Drag & drop with preview", others: "Fixed positions" },
+          { feature: "Multi-Page Support", ourTool: "Single, All, Custom ranges", others: "All pages only", highlight: true },
+          { feature: "Interactive Resize", ourTool: "Corner handles", others: "Fixed sizes" },
+          { feature: "File Limits", ourTool: "Unlimited", others: "3-5 files/day" },
+          { feature: "Registration Required", ourTool: false, others: true },
+          { feature: "Watermarks", ourTool: false, others: "Free tier adds watermarks" },
+          { feature: "Date Stamps", ourTool: true, others: "Premium only" },
+          { feature: "Cost", ourTool: "Free forever", others: "$15-40/month" }
+        ]}
+      />
+
+      <ToolFAQ 
+        faqs={generateSignPDFFAQs()}
+        toolName="PDF Signer"
+        toolPath="/sign-pdf"
+      />
     </div>
   );
 }

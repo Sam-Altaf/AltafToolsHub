@@ -712,3 +712,90 @@ export function generateWordCounterFAQs(): FAQ[] {
     commonFAQs.dataStorage
   ];
 }
+
+export function generateSignPDFFAQs(): FAQ[] {
+  return [
+    {
+      question: "How do I add a signature to my PDF?",
+      answer: "Upload your PDF, then choose one of three signature methods: Draw directly on a canvas, Type your name with elegant fonts, or Upload an existing signature image. Position the signature on your PDF preview using drag-and-drop, then download your signed document.",
+      category: "Getting Started"
+    },
+    {
+      question: "Can I sign multiple pages at once?",
+      answer: "Yes! You can apply your signature to the current page, all pages, or custom page ranges. For custom ranges, enter pages like '1, 3-5, 7' to sign specific pages only.",
+      category: "Features"
+    },
+    {
+      question: "How do I resize and position signatures?",
+      answer: "After adding a signature, click and drag it to reposition on the PDF preview. Use the corner handles to resize interactively. You can also set exact width and height values in points before adding the signature.",
+      category: "Features"
+    },
+    {
+      question: "Can I add a date stamp with my signature?",
+      answer: "Yes, check the 'Add date stamp' option when creating your signature. The current date will be automatically added below your signature in the final PDF.",
+      category: "Features"
+    },
+    {
+      question: "What signature types are supported?",
+      answer: "We support three signature types: 1) Draw - Create handwritten signatures using mouse or touch, 2) Type - Generate elegant text signatures with custom fonts, 3) Upload - Use existing signature images (PNG, JPG, etc.).",
+      category: "Features"
+    },
+    {
+      question: "How do I sign a contract or legal document?",
+      answer: "Upload your contract PDF, create your signature using any method (drawn signatures look most authentic), position it in the signature field, optionally add a date stamp, and download the signed document. All processing happens in your browser for maximum security.",
+      category: "Use Cases"
+    },
+    {
+      question: "Can I add multiple signatures to one PDF?",
+      answer: "Yes, you can add unlimited signatures. Create different signatures for different purposes (initials, full signature, witness signatures) and place them anywhere on your PDF pages.",
+      category: "Features"
+    },
+    {
+      question: "Is the signature legally binding?",
+      answer: "Digital signatures created with our tool are visual signatures (like signing with a pen on paper). They are widely accepted for most business and personal documents. For advanced legal signatures with encryption and certificates, consult a legal advisor.",
+      category: "Legal"
+    },
+    {
+      question: "Can I use this on my phone or tablet?",
+      answer: "Absolutely! The tool works on all devices. On touch devices, you can draw signatures with your finger or stylus. The drag-and-drop positioning works with touch gestures as well.",
+      category: "Mobile"
+    },
+    {
+      question: "How do I create an elegant typed signature?",
+      answer: "Choose the 'Type' tab, enter your name, then select from Cursive, Script, or Elegant font styles. Adjust the width and height for the perfect look, then add it to your PDF.",
+      category: "How To"
+    },
+    {
+      question: "What if I make a mistake with signature placement?",
+      answer: "You can remove any signature before finalizing by clicking the trash icon. Signatures can be repositioned by dragging and resized using corner handles. Only the final download applies signatures permanently.",
+      category: "Editing"
+    },
+    {
+      question: "How do I sign the same spot on all pages?",
+      answer: "Create your signature, set the position and size, then select 'All pages' option. The signature will be applied to the same position on every page when you download.",
+      category: "How To"
+    },
+    {
+      question: "Can I save my signature for reuse?",
+      answer: "While we don't store signatures for privacy reasons, you can save your drawn or typed signature as an image on your device and upload it next time using the 'Upload' tab.",
+      category: "Tips"
+    },
+    {
+      question: "What's the best signature size for documents?",
+      answer: "For standard documents, 150-250 pts width and 60-100 pts height works well. For initials, use smaller sizes (80-120 pts width). You can always resize using corner handles or by entering exact dimensions.",
+      category: "Tips"
+    },
+    {
+      question: "How is this different from DocuSign or Adobe Sign?",
+      answer: "Our tool is 100% browser-based with no uploads to servers, completely free with unlimited use, requires no registration, and processes everything locally for privacy. It's perfect for quick signatures without enterprise workflow features.",
+      category: "Comparison"
+    },
+    commonFAQs.privacy,
+    commonFAQs.dataStorage,
+    commonFAQs.free,
+    commonFAQs.browsers,
+    commonFAQs.offline,
+    commonFAQs.speed,
+    commonFAQs.mobileSupport
+  ];
+}
