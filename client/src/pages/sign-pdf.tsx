@@ -12,15 +12,21 @@ import { useToast } from "@/hooks/use-toast";
 import { useSEO } from "@/hooks/use-seo";
 import ToolSEO from "@/components/seo/tool-seo";
 import { toolFAQs } from "@/components/seo/tool-seo";
+import FileUpload from "@/components/ui/file-upload";
+import PrivacyNotice from "@/components/privacy-notice";
+import Breadcrumbs from "@/components/seo/breadcrumbs";
 import { 
-  Upload, FileText, Download, Trash2, PenTool, Type as TypeIcon, 
-  Image as ImageIcon, Calendar, AlertCircle, CheckCircle2, ArrowLeft,
-  ZoomIn, ZoomOut, Move, Maximize2
+  Download, Trash2, PenTool, Type as TypeIcon, 
+  Image as ImageIcon, Calendar, ZoomIn, ZoomOut, FileCheck
 } from "lucide-react";
-import { Link } from "wouter";
 
-// Configure PDF.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+// Configure PDF.js worker - use local worker from node_modules
+if (typeof window !== 'undefined') {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+    'pdfjs-dist/build/pdf.worker.min.mjs',
+    import.meta.url
+  ).toString();
+}
 
 interface SignatureConfig {
   id: string;
@@ -77,7 +83,6 @@ export default function SignPDFPage() {
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -104,11 +109,9 @@ export default function SignPDFPage() {
     if (!pdfJsDoc || !pdfDoc || !previewCanvasRef.current) return;
 
     try {
-      // Get actual page dimensions from pdf-lib
       const pdfLibPage = pdfDoc.getPage(pageNum);
       const { width: widthPts, height: heightPts } = pdfLibPage.getSize();
       
-      // Render with pdf.js
       const page = await pdfJsDoc.getPage(pageNum + 1);
       const viewport = page.getViewport({ scale: pageScale });
       
@@ -130,25 +133,21 @@ export default function SignPDFPage() {
         viewport: viewport
       }).promise;
 
-      // Draw signature boxes on preview
       if (context) {
         signatures
           .filter(sig => sig.page === pageNum)
           .forEach(sig => {
-            // Convert PDF points to canvas pixels using actual page dimensions
             const x = (sig.x / widthPts) * viewport.width;
             const y = viewport.height - ((sig.y + sig.height) / heightPts) * viewport.height;
             const w = (sig.width / widthPts) * viewport.width;
             const h = (sig.height / heightPts) * viewport.height;
 
-            // Draw box
             context.strokeStyle = '#6366f1';
             context.lineWidth = 2;
             context.setLineDash([5, 5]);
             context.strokeRect(x, y, w, h);
             context.setLineDash([]);
 
-            // Draw signature preview
             if (sig.type === 'draw' || sig.type === 'image') {
               const img = new Image();
               img.onload = () => {
@@ -161,16 +160,11 @@ export default function SignPDFPage() {
               context.fillText(sig.text || '', x + 5, y + h * 0.7);
             }
 
-            // Draw corner handles
             const handleSize = 10;
             context.fillStyle = '#6366f1';
-            // Top-left
             context.fillRect(x - handleSize / 2, y - handleSize / 2, handleSize, handleSize);
-            // Top-right
             context.fillRect(x + w - handleSize / 2, y - handleSize / 2, handleSize, handleSize);
-            // Bottom-left
             context.fillRect(x - handleSize / 2, y + h - handleSize / 2, handleSize, handleSize);
-            // Bottom-right
             context.fillRect(x + w - handleSize / 2, y + h - handleSize / 2, handleSize, handleSize);
           });
       }
@@ -184,26 +178,13 @@ export default function SignPDFPage() {
     }
   };
 
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-    if (!selectedFile) return;
-
-    if (selectedFile.type !== 'application/pdf') {
-      toast({
-        title: "Invalid file type",
-        description: "Please select a PDF file",
-        variant: "destructive"
-      });
-      return;
-    }
-
+  const handleFileSelect = async (selectedFile: File) => {
     setFile(selectedFile);
     setProgress(10);
 
     try {
       const arrayBuffer = await selectedFile.arrayBuffer();
       
-      // Load with pdf-lib for signing
       const pdf = await PDFDocument.load(arrayBuffer);
       setPdfDoc(pdf);
       const count = pdf.getPageCount();
@@ -211,7 +192,6 @@ export default function SignPDFPage() {
       
       setProgress(50);
       
-      // Load with pdf.js for preview
       const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
       const pdfJs = await loadingTask.promise;
       setPdfJsDoc(pdfJs);
@@ -246,18 +226,17 @@ export default function SignPDFPage() {
     const handleSize = 10;
     const tolerance = 5;
     
-    // Check each corner
     if (Math.abs(x - sigX) < handleSize + tolerance && Math.abs(y - sigY) < handleSize + tolerance) {
-      return 'tl'; // top-left
+      return 'tl';
     }
     if (Math.abs(x - (sigX + sigW)) < handleSize + tolerance && Math.abs(y - sigY) < handleSize + tolerance) {
-      return 'tr'; // top-right
+      return 'tr';
     }
     if (Math.abs(x - sigX) < handleSize + tolerance && Math.abs(y - (sigY + sigH)) < handleSize + tolerance) {
-      return 'bl'; // bottom-left
+      return 'bl';
     }
     if (Math.abs(x - (sigX + sigW)) < handleSize + tolerance && Math.abs(y - (sigY + sigH)) < handleSize + tolerance) {
-      return 'br'; // bottom-right
+      return 'br';
     }
     
     return null;
@@ -282,7 +261,6 @@ export default function SignPDFPage() {
     const x = clientX - rect.left;
     const y = clientY - rect.top;
 
-    // Check if clicking on existing signature
     const clickedSig = signatures.find(sig => {
       if (sig.page !== currentPage) return false;
       
@@ -296,14 +274,12 @@ export default function SignPDFPage() {
     });
 
     if (clickedSig) {
-      // Check if clicking on a resize handle
       const handle = getHandleAt(clickedSig, x, y);
       
       if (handle) {
         setResizingSignature({ id: clickedSig.id, corner: handle });
         setDragOffset({ x, y });
       } else {
-        // Start dragging
         const { widthPts, heightPts, widthPx, heightPx } = pageDimensions;
         const sigX = (clickedSig.x / widthPts) * widthPx;
         const sigY = heightPx - ((clickedSig.y + clickedSig.height) / heightPts) * heightPx;
@@ -341,11 +317,9 @@ export default function SignPDFPage() {
     if (draggingSignature) {
       setSignatures(prev => prev.map(sig => {
         if (sig.id === draggingSignature) {
-          // Calculate new position in pixels
           const newPxX = x - dragOffset.x;
           const newPxY = y - dragOffset.y;
           
-          // Convert to PDF points and clamp
           const newX = Math.max(0, Math.min(widthPts - sig.width, (newPxX / widthPx) * widthPts));
           const newY = Math.max(0, Math.min(heightPts - sig.height, ((heightPx - newPxY - ((sig.height / heightPts) * heightPx)) / heightPx) * heightPts));
           
@@ -358,7 +332,6 @@ export default function SignPDFPage() {
         if (sig.id === resizingSignature.id) {
           const corner = resizingSignature.corner;
           
-          // Get current position in pixels
           const currentPxX = (sig.x / widthPts) * widthPx;
           const currentPxY = heightPx - ((sig.y + sig.height) / heightPts) * heightPx;
           const currentPxW = (sig.width / widthPts) * widthPx;
@@ -370,40 +343,33 @@ export default function SignPDFPage() {
           let newPxH = currentPxH;
           
           if (corner === 'br') {
-            // Bottom-right: resize width and height
             newPxW = x - currentPxX;
             newPxH = y - currentPxY;
           } else if (corner === 'tr') {
-            // Top-right: resize width, adjust y and height
             newPxW = x - currentPxX;
             newPxH = currentPxH + (currentPxY - y);
             newPxY = y;
           } else if (corner === 'bl') {
-            // Bottom-left: adjust x and width, resize height
             newPxW = currentPxW + (currentPxX - x);
             newPxX = x;
             newPxH = y - currentPxY;
           } else if (corner === 'tl') {
-            // Top-left: adjust both x and y, resize both dimensions
             newPxW = currentPxW + (currentPxX - x);
             newPxH = currentPxH + (currentPxY - y);
             newPxX = x;
             newPxY = y;
           }
           
-          // Enforce minimum size (in pixels)
           const minW = 50;
           const minH = 20;
           if (newPxW < minW) newPxW = minW;
           if (newPxH < minH) newPxH = minH;
           
-          // Convert back to PDF points
           const newX = (newPxX / widthPx) * widthPts;
           const newY = ((heightPx - newPxY - newPxH) / heightPx) * heightPts;
           const newWidth = (newPxW / widthPx) * widthPts;
           const newHeight = (newPxH / heightPx) * heightPts;
           
-          // Clamp to page bounds
           const clampedX = Math.max(0, Math.min(widthPts - newWidth, newX));
           const clampedY = Math.max(0, Math.min(heightPts - newHeight, newY));
           const clampedWidth = Math.max(30, Math.min(widthPts - clampedX, newWidth));
@@ -614,14 +580,7 @@ export default function SignPDFPage() {
         const { height: pageHeight } = page.getSize();
 
         if (sig.type === 'type') {
-          // Use the selected font style
-          let font;
-          if (sig.font === 'script' || sig.font === 'elegant') {
-            font = await pdfCopy.embedFont(StandardFonts.TimesRomanItalic);
-          } else {
-            font = await pdfCopy.embedFont(StandardFonts.TimesRomanItalic);
-          }
-          
+          const font = await pdfCopy.embedFont(StandardFonts.TimesRomanItalic);
           const fontSize = sig.height * 0.6;
           
           page.drawText(sig.text || '', {
@@ -730,16 +689,15 @@ export default function SignPDFPage() {
         faqs={toolFAQs['sign-pdf']}
       />
       
-      <div className="mb-6">
-        <Link href="/" data-testid="link-home">
-          <Button variant="ghost" size="sm" className="mb-2">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Tools
-          </Button>
-        </Link>
-      </div>
+      <Breadcrumbs 
+        items={[
+          { label: "Home", href: "/" },
+          { label: "PDF Tools", href: "/all-tools?category=pdf" },
+          { label: "Sign PDF", href: "/sign-pdf" }
+        ]}
+      />
 
-      <div className="text-center mb-8">
+      <div className="text-center mb-8 mt-6">
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full mb-4">
           <PenTool className="h-5 w-5 text-white" />
           <span className="text-white font-medium text-sm">Advanced Signature Placement</span>
@@ -752,49 +710,25 @@ export default function SignPDFPage() {
         </p>
       </div>
 
-      <Card className="p-6 mb-6 bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-800">
-        <div className="flex items-start gap-3">
-          <AlertCircle className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
-          <p className="text-sm text-blue-900 dark:text-blue-100">
-            <strong>100% Private:</strong> All signatures are created and applied in your browser. Your documents never leave your device. Visual e-signatures for easy document signing.
-          </p>
-        </div>
-      </Card>
+      <PrivacyNotice 
+        message="100% Private: All signatures are created and applied in your browser. Your documents never leave your device. Visual e-signatures for easy document signing."
+      />
 
       <div className="grid gap-6">
         {!file ? (
-          <Card className="p-8">
-            <div className="text-center">
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="application/pdf"
-                onChange={handleFileSelect}
-                className="hidden"
-                data-testid="input-pdf-file"
-              />
-              <div 
-                className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-12 hover:border-indigo-500 dark:hover:border-indigo-400 transition-colors cursor-pointer"
-                onClick={() => fileInputRef.current?.click()}
-                data-testid="dropzone-upload"
-              >
-                <Upload className="h-16 w-16 mx-auto mb-4 text-gray-400" />
-                <h3 className="text-xl font-semibold mb-2">Upload PDF to Sign</h3>
-                <p className="text-muted-foreground mb-4">
-                  Click to select a PDF document
-                </p>
-                <Button variant="outline" data-testid="button-select-pdf">
-                  Select PDF File
-                </Button>
-              </div>
-            </div>
-          </Card>
+          <FileUpload
+            accept="application/pdf"
+            title="Upload PDF to Sign"
+            description="Select a PDF document to add your digital signature"
+            onFileSelect={handleFileSelect}
+            data-testid="upload-pdf"
+          />
         ) : (
           <>
             <Card className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <FileText className="h-8 w-8 text-indigo-600" />
+                  <FileCheck className="h-8 w-8 text-indigo-600" />
                   <div>
                     <h3 className="font-semibold" data-testid="text-filename">{file.name}</h3>
                     <p className="text-sm text-muted-foreground">
@@ -820,7 +754,6 @@ export default function SignPDFPage() {
             </Card>
 
             <div className="grid lg:grid-cols-2 gap-6">
-              {/* PDF Preview */}
               <Card className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold">PDF Preview</h3>
@@ -888,7 +821,6 @@ export default function SignPDFPage() {
                 </p>
               </Card>
 
-              {/* Signature Creation */}
               <Card className="p-6">
                 <h3 className="text-lg font-semibold mb-4">Create Signature</h3>
                 
@@ -985,7 +917,7 @@ export default function SignPDFPage() {
                       className="w-full"
                       data-testid="button-upload-signature"
                     >
-                      <Upload className="h-4 w-4 mr-2" />
+                      <ImageIcon className="h-4 w-4 mr-2" />
                       Upload Signature Image
                     </Button>
                     {currentSignature.data && currentSignature.type === 'image' && (
@@ -1038,7 +970,6 @@ export default function SignPDFPage() {
                   </div>
 
                   <Button onClick={addSignatureToPDF} className="w-full" data-testid="button-add-signature">
-                    <CheckCircle2 className="h-4 w-4 mr-2" />
                     Add to Page {currentPage + 1}
                   </Button>
                 </div>
@@ -1123,48 +1054,6 @@ export default function SignPDFPage() {
             )}
           </>
         )}
-      </div>
-
-      <div className="mt-12 grid md:grid-cols-4 gap-6">
-        <Card className="p-6 text-center">
-          <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center mx-auto mb-4">
-            <Move className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
-          </div>
-          <h3 className="font-semibold mb-2">Drag & Drop</h3>
-          <p className="text-sm text-muted-foreground">
-            Visually position signatures with drag and drop
-          </p>
-        </Card>
-        
-        <Card className="p-6 text-center">
-          <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center mx-auto mb-4">
-            <Maximize2 className="h-6 w-6 text-purple-600 dark:text-purple-400" />
-          </div>
-          <h3 className="font-semibold mb-2">Resize Handles</h3>
-          <p className="text-sm text-muted-foreground">
-            Interactive corner handles for precise sizing
-          </p>
-        </Card>
-        
-        <Card className="p-6 text-center">
-          <div className="w-12 h-12 bg-pink-100 dark:bg-pink-900/30 rounded-lg flex items-center justify-center mx-auto mb-4">
-            <Calendar className="h-6 w-6 text-pink-600 dark:text-pink-400" />
-          </div>
-          <h3 className="font-semibold mb-2">Date Stamps</h3>
-          <p className="text-sm text-muted-foreground">
-            Automatically add signing date and time
-          </p>
-        </Card>
-        
-        <Card className="p-6 text-center">
-          <div className="w-12 h-12 bg-cyan-100 dark:bg-cyan-900/30 rounded-lg flex items-center justify-center mx-auto mb-4">
-            <PenTool className="h-6 w-6 text-cyan-600 dark:text-cyan-400" />
-          </div>
-          <h3 className="font-semibold mb-2">Touch Support</h3>
-          <p className="text-sm text-muted-foreground">
-            Works seamlessly on mobile and tablet devices
-          </p>
-        </Card>
       </div>
     </div>
   );
