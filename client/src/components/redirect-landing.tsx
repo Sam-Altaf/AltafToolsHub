@@ -29,9 +29,6 @@ export default function RedirectLanding({
   heading,
   subheading,
 }: RedirectLandingProps) {
-  const [, setLocation] = useLocation();
-  const [countdown, setCountdown] = useState(2);
-
   // Prefetch target route
   useEffect(() => {
     // Prefetch by creating a link element
@@ -46,23 +43,6 @@ export default function RedirectLanding({
       }
     };
   }, [targetPath]);
-
-  // Auto-redirect after countdown
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          // Use replace to avoid back-button trap
-          window.location.replace(targetPath);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, [targetPath, setLocation]);
 
   // Generate FAQ structured data if provided
   const faqSchema = seo.faq
@@ -166,7 +146,7 @@ export default function RedirectLanding({
             </Button>
 
             <p className="text-sm text-muted-foreground">
-              Redirecting in {countdown} second{countdown !== 1 ? 's' : ''}...
+              Click the button above to access the tool
             </p>
           </div>
 
