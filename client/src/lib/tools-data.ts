@@ -60,6 +60,18 @@ export const allTools: Tool[] = [
     extendedDescription: "Seamlessly merge multiple PDF files into a single document. Perfect for combining reports, contracts, or chapters into one comprehensive file while preserving formatting and quality."
   },
   {
+    id: "combine-pdf",
+    title: "Combine PDF",
+    description: "Join multiple PDF documents into one unified file",
+    icon: FilePlus,
+    href: "/combine-pdf",
+    color: "from-green-600 to-teal-500",
+    available: true,
+    category: "pdf-management",
+    features: ["Intuitive ordering", "Unite documents", "No file limits", "Maintain quality"],
+    extendedDescription: "Effortlessly combine multiple PDF documents into a single unified file. Ideal for joining reports, proposals, or documentation into one cohesive document with drag-and-drop simplicity."
+  },
+  {
     id: "split-pdf",
     title: "Split PDF",
     description: "Divide PDF files into separate documents by page ranges",

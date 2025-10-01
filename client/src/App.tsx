@@ -31,6 +31,7 @@ const ExtractText = lazy(() => import("@/pages/extract-text"));
 const PDFToZIP = lazy(() => import("@/pages/pdf-to-zip"));
 const ZIPToPDF = lazy(() => import("@/pages/zip-to-pdf"));
 const MergePDF = lazy(() => import("@/pages/merge-pdf"));
+const CombinePDF = lazy(() => import("@/pages/combine-pdf"));
 const SplitPDF = lazy(() => import("@/pages/split-pdf"));
 const RotatePDF = lazy(() => import("@/pages/rotate-pdf"));
 const OrganizePDF = lazy(() => import("@/pages/organize-pdf"));
@@ -150,6 +151,11 @@ function Router() {
           <Route path="/merge-pdf">
             <Suspense fallback={<PageLoader />}>
               <MergePDF />
+            </Suspense>
+          </Route>
+          <Route path="/combine-pdf">
+            <Suspense fallback={<PageLoader />}>
+              <CombinePDF />
             </Suspense>
           </Route>
           <Route path="/split-pdf">
