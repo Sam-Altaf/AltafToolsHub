@@ -573,6 +573,73 @@ export async function compressToTargetSize(
   let bestUnderTarget: { blob: Blob; quality: number; scale: number; size: number } | null = null;
   let bestOverTarget: { blob: Blob; quality: number; scale: number; size: number } | null = null;
   
+  // CRITICAL FIX: Test at maximum quality first to see if we can even reach the target
+  // This handles cases where the PDF compresses too much (e.g., 8MB → 1.7MB when target is 5MB)
+  console.log('Testing at maximum quality and scale to establish baseline...');
+  attempts++;
+  const maxTestParams: CompressionParams = {
+    jpegQuality: 0.99, // Maximum quality
+    scale: 1.0,        // Maximum scale
+    mode: mode,
+    onProgress: (progress, message) => {
+      if (onProgress && progress < 80) {
+        onProgress(5, 'Testing maximum quality baseline...');
+      }
+    }
+  };
+  
+  const maxTestResult = await compressPDFSimple(pdfBytesCopy, maxTestParams);
+  const maxTestSize = maxTestResult.blob.size;
+  console.log(`Maximum quality test: ${maxTestSize} bytes (quality 0.99, scale 1.0)`);
+  
+  // If even at max quality we're under target, we can't reach it by compressing less
+  // Use this as our best result and try to get closer by reducing quality slightly
+  if (maxTestSize <= targetSize) {
+    const fillRatio = maxTestSize / targetSize;
+    console.log(`Natural compression (${maxTestSize} bytes) is already below target (${targetSize} bytes) at max quality.`);
+    console.log(`Fill ratio: ${(fillRatio * 100).toFixed(1)}% - Using maximum quality result.`);
+    
+    bestUnderTarget = {
+      blob: maxTestResult.blob,
+      quality: 0.99,
+      scale: 1.0,
+      size: maxTestSize
+    };
+    
+    // If we're close enough (≥95% of target), return immediately
+    if (fillRatio >= 0.95) {
+      console.log(`Already at ${(fillRatio * 100).toFixed(1)}% of target with max quality. Returning result.`);
+      return {
+        blob: maxTestResult.blob,
+        quality: 0.99,
+        scale: 1.0,
+        attempts: 1,
+        mode
+      };
+    }
+    
+    // For cases where we're far below target (<95%), we can't do much
+    // The PDF simply doesn't have enough content to reach the target size
+    // Return the best quality we can
+    console.warn(`Cannot reach target size. PDF compresses to ${maxTestSize} bytes even at maximum quality (${(fillRatio * 100).toFixed(1)}% of ${targetSize} bytes target).`);
+    return {
+      blob: maxTestResult.blob,
+      quality: 0.99,
+      scale: 1.0,
+      attempts: 1,
+      mode
+    };
+  }
+  
+  // If max quality result is over target, proceed with normal binary search
+  console.log(`Maximum quality result (${maxTestSize} bytes) exceeds target (${targetSize} bytes). Proceeding with compression optimization...`);
+  bestOverTarget = {
+    blob: maxTestResult.blob,
+    quality: 0.99,
+    scale: 1.0,
+    size: maxTestSize
+  };
+  
   // Test different scale values to find optimal combination
   // SPEED OPTIMIZATION: Test only 2-3 scales for faster results
   const scaleRange = maxScale - minScale;
