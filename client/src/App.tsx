@@ -2,6 +2,7 @@ import { Switch, Route } from "wouter";
 import { lazy, Suspense } from "react";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
+import { HelmetProvider } from "react-helmet-async";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/contexts/theme-context";
@@ -15,6 +16,8 @@ import Footer from "@/components/layout/footer";
 import CookieConsent from "@/components/cookie-consent";
 import BlogRouter from "@/components/blog-router";
 import { Loader2 } from "lucide-react";
+import RedirectLanding from "@/components/redirect-landing";
+import { seoAliases } from "@/lib/seo-aliases";
 
 // Critical imports - Load immediately for core functionality
 import Home from "@/pages/home";
@@ -166,6 +169,19 @@ function Router() {
               <CompressPDF />
             </Suspense>
           </Route>
+
+          {/* SEO-friendly alias routes - Keyword-optimized URLs that redirect to main tools */}
+          {seoAliases.map((alias) => (
+            <Route key={alias.path} path={alias.path}>
+              <RedirectLanding
+                targetPath={alias.targetPath}
+                heading={alias.heading}
+                subheading={alias.subheading}
+                seo={alias.seo}
+              />
+            </Route>
+          ))}
+          
           <Route path="/reduce-pdf">
             <Suspense fallback={<PageLoader />}>
               <ReducePDF />
@@ -419,18 +435,20 @@ function Router() {
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <ReducedMotionProvider>
-          <TooltipProvider>
-            <Toaster />
-            <CookieConsent />
-            <ScrollToTopButton />
-            <Router />
-          </TooltipProvider>
-        </ReducedMotionProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <ReducedMotionProvider>
+            <TooltipProvider>
+              <Toaster />
+              <CookieConsent />
+              <ScrollToTopButton />
+              <Router />
+            </TooltipProvider>
+          </ReducedMotionProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
   );
 }
 
