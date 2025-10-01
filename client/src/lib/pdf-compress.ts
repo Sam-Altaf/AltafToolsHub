@@ -424,7 +424,8 @@ export async function compressToTargetSize(
   let maxScale: number;
   
   if (mode === 'highest' || mode === 'hd') {
-    // Highest Quality Mode: Best quality FOR THE TARGET SIZE
+    // Highest Quality Mode: PRIORITIZE RESOLUTION (scale) over JPEG quality
+    // Strategy: Keep scale high (0.85-1.0), reduce quality instead
     if (compressionRatio >= 0.7) {
       minQuality = 0.94;
       maxQuality = 0.99;
@@ -436,69 +437,83 @@ export async function compressToTargetSize(
       minScale = 0.94;
       maxScale = 1.0;
     } else if (compressionRatio >= 0.2) {
-      minQuality = 0.70;
-      maxQuality = 0.97;
-      minScale = 0.50;  // More aggressive for 20-40% compression
+      // 20-40%: Reduce quality significantly, keep resolution high
+      minQuality = 0.40;
+      maxQuality = 0.85;
+      minScale = 0.88;
       maxScale = 1.0;
     } else if (compressionRatio >= 0.1) {
-      minQuality = 0.50;
-      maxQuality = 0.90;
-      minScale = 0.30;  // Much more aggressive for 10-20% compression
-      maxScale = 0.90;
+      // 10-20%: Very low quality, still maintain good resolution
+      minQuality = 0.25;
+      maxQuality = 0.65;
+      minScale = 0.85;
+      maxScale = 0.95;
     } else if (compressionRatio >= 0.05) {
-      minQuality = 0.30;
-      maxQuality = 0.75;
-      minScale = 0.20;  // Very aggressive for 5-10% compression
-      maxScale = 0.70;
-    } else if (compressionRatio >= 0.01) {
-      // Extreme compression (1-5%): Very low quality to hit target
-      minQuality = 0.05;
+      // 5-10%: Ultra-low quality first, only reduce scale as last resort
+      minQuality = 0.15;
       maxQuality = 0.50;
-      minScale = 0.10;
-      maxScale = 0.50;
+      minScale = 0.82;
+      maxScale = 0.92;
+    } else if (compressionRatio >= 0.02) {
+      // 2-5%: Minimum quality, moderate scale reduction
+      minQuality = 0.08;
+      maxQuality = 0.35;
+      minScale = 0.70;
+      maxScale = 0.85;
+    } else if (compressionRatio >= 0.01) {
+      // 1-2%: Extreme compression - scale becomes necessary
+      minQuality = 0.05;
+      maxQuality = 0.25;
+      minScale = 0.50;
+      maxScale = 0.70;
     } else {
-      // Ultra-extreme compression (< 1%): Absolute minimum to hit target
+      // < 1%: Ultra-extreme compression
       minQuality = 0.01;
-      maxQuality = 0.30;
-      minScale = 0.05;
-      maxScale = 0.35;
+      maxQuality = 0.20;
+      minScale = 0.30;
+      maxScale = 0.50;
     }
   } else if (mode === 'fast') {
-    // Fast Mode: Prioritize speed with reasonable quality
+    // Fast Mode: PRIORITIZE RESOLUTION, fewer attempts for speed
     if (compressionRatio >= 0.5) {
       minQuality = 0.70;
       maxQuality = 0.85;
-      minScale = 0.85;
+      minScale = 0.88;
       maxScale = 0.95;
     } else if (compressionRatio >= 0.2) {
-      minQuality = 0.50;
+      minQuality = 0.45;
       maxQuality = 0.75;
-      minScale = 0.60;
-      maxScale = 0.90;
+      minScale = 0.85;
+      maxScale = 0.95;
     } else if (compressionRatio >= 0.1) {
-      minQuality = 0.30;
-      maxQuality = 0.65;
-      minScale = 0.35;
-      maxScale = 0.75;
+      minQuality = 0.25;
+      maxQuality = 0.60;
+      minScale = 0.82;
+      maxScale = 0.92;
     } else if (compressionRatio >= 0.05) {
-      minQuality = 0.20;
-      maxQuality = 0.55;
-      minScale = 0.25;
-      maxScale = 0.60;
-    } else if (compressionRatio >= 0.01) {
+      minQuality = 0.15;
+      maxQuality = 0.50;
+      minScale = 0.78;
+      maxScale = 0.88;
+    } else if (compressionRatio >= 0.02) {
       minQuality = 0.10;
-      maxQuality = 0.45;
-      minScale = 0.15;
-      maxScale = 0.50;
+      maxQuality = 0.40;
+      minScale = 0.65;
+      maxScale = 0.80;
+    } else if (compressionRatio >= 0.01) {
+      minQuality = 0.05;
+      maxQuality = 0.30;
+      minScale = 0.45;
+      maxScale = 0.65;
     } else {
       // Ultra-extreme compression (< 1%)
       minQuality = 0.01;
-      maxQuality = 0.30;
-      minScale = 0.05;
-      maxScale = 0.35;
+      maxQuality = 0.20;
+      minScale = 0.25;
+      maxScale = 0.45;
     }
   } else {
-    // Balanced Mode: Balance quality and size
+    // Balanced Mode: PRIORITIZE RESOLUTION with balanced quality/scale trade-offs
     if (compressionRatio >= 0.7) {
       minQuality = 0.85;
       maxQuality = 0.99;
@@ -510,32 +525,41 @@ export async function compressToTargetSize(
       minScale = 0.90;
       maxScale = 1.0;
     } else if (compressionRatio >= 0.2) {
-      minQuality = 0.60;
-      maxQuality = 0.95;
-      minScale = 0.60;
-      maxScale = 1.0;
+      // 20-40%: Reduce quality more, keep scale high
+      minQuality = 0.45;
+      maxQuality = 0.80;
+      minScale = 0.86;
+      maxScale = 0.98;
     } else if (compressionRatio >= 0.1) {
-      minQuality = 0.40;
-      maxQuality = 0.85;
-      minScale = 0.40;
-      maxScale = 0.90;
+      // 10-20%: Low quality, good resolution
+      minQuality = 0.30;
+      maxQuality = 0.65;
+      minScale = 0.83;
+      maxScale = 0.93;
     } else if (compressionRatio >= 0.05) {
-      minQuality = 0.25;
-      maxQuality = 0.70;
-      minScale = 0.25;
-      maxScale = 0.70;
-    } else if (compressionRatio >= 0.01) {
-      // Extreme compression (1-5%): Very low quality allowed
+      // 5-10%: Very low quality, maintain resolution
+      minQuality = 0.18;
+      maxQuality = 0.50;
+      minScale = 0.80;
+      maxScale = 0.90;
+    } else if (compressionRatio >= 0.02) {
+      // 2-5%: Minimum quality, slight scale reduction
       minQuality = 0.10;
-      maxQuality = 0.55;
-      minScale = 0.12;
-      maxScale = 0.55;
+      maxQuality = 0.38;
+      minScale = 0.68;
+      maxScale = 0.82;
+    } else if (compressionRatio >= 0.01) {
+      // 1-2%: Extreme - need more scale reduction
+      minQuality = 0.05;
+      maxQuality = 0.28;
+      minScale = 0.48;
+      maxScale = 0.68;
     } else {
-      // Ultra-extreme compression (< 1%)
+      // < 1%: Ultra-extreme compression
       minQuality = 0.01;
-      maxQuality = 0.35;
-      minScale = 0.05;
-      maxScale = 0.40;
+      maxQuality = 0.20;
+      minScale = 0.28;
+      maxScale = 0.48;
     }
   }
   
