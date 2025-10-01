@@ -73,15 +73,20 @@ async function upscalePDFToTarget(pdfBytes: Uint8Array, currentSize: number, tar
     // Non-compressible ASCII pattern for padding
     const paddingPattern = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=!@#$%^&*()_';
     
-    // Binary search for exact padding size needed
-    let minPadding = Math.floor(paddingNeeded * 0.8); // Start conservative
-    let maxPadding = Math.ceil(paddingNeeded * 1.5); // Allow overshoot room
+    // CRITICAL FIX: PDF metadata encoding causes ~4-8x size inflation
+    // Account for this when calculating padding estimates
+    const pdfEncodingOverhead = 6; // Conservative estimate (each char takes ~6x space in PDF)
+    const estimatedRawPadding = paddingNeeded / pdfEncodingOverhead;
+    
+    // Binary search for exact padding size needed - use MUCH smaller initial range
+    let minPadding = Math.floor(estimatedRawPadding * 0.5); // Start very conservative
+    let maxPadding = Math.ceil(estimatedRawPadding * 2.0); // Allow some overshoot room
     let bestBytes: Uint8Array | null = null;
     let bestSize = currentSize;
     let attempts = 0;
     const maxAttempts = 15;
     
-    console.log(`Binary search for padding: range ${minPadding} to ${maxPadding} bytes`);
+    console.log(`Binary search for padding: range ${minPadding} to ${maxPadding} bytes (accounting for ${pdfEncodingOverhead}x PDF encoding overhead)`);
     
     while (attempts < maxAttempts && maxPadding - minPadding > 1000) { // 1KB precision
       attempts++;
