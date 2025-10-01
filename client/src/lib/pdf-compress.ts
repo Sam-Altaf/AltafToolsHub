@@ -840,6 +840,7 @@ export async function compressToTargetSize(
   const fallbackParams: CompressionParams = {
     jpegQuality: (minQuality + maxQuality) / 2,
     scale: (minScale + maxScale) / 2,
+    mode: mode,
     onProgress
   };
   
