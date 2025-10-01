@@ -110,6 +110,19 @@
     </image:image>
   </url>
   
+  <url>
+    <loc>https://altaftoolshub.app/png-to-pdf</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile/>
+    <image:image>
+      <image:loc>https://altaftoolshub.app/og-png-to-pdf.png</image:loc>
+      <image:title>PNG to PDF Converter</image:title>
+      <image:caption>Convert PNG images to PDF with transparency support</image:caption>
+    </image:image>
+  </url>
+  
   <!-- Utility Tools (High Priority) -->
   <url>
     <loc>https://altaftoolshub.app/qr-generator</loc>
