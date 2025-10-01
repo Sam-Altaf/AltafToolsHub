@@ -667,7 +667,7 @@ export default function SignPDFPage() {
 
         <PrivacyNotice message="100% Private: All signatures are created and applied in your browser. Your documents never leave your device. Visual e-signatures for easy document signing." />
 
-        <div className="mb-8">
+        <div className="mb-8 max-w-4xl mx-auto">
           <FileUpload
             onFileSelect={handleFileSelect}
             accept=".pdf"
