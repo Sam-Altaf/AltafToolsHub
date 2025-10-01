@@ -88,6 +88,7 @@ export default function SignPDFPage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [pageScale, setPageScale] = useState(1);
   const [pageDimensions, setPageDimensions] = useState<PageDimensions>({ widthPts: 612, heightPts: 792, widthPx: 0, heightPx: 0 });
+  const [selectedSignatureId, setSelectedSignatureId] = useState<string | null>(null);
   const [draggingSignature, setDraggingSignature] = useState<string | null>(null);
   const [resizingSignature, setResizingSignature] = useState<{ id: string; corner: string } | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
@@ -103,7 +104,7 @@ export default function SignPDFPage() {
     if (pdfJsDoc && pdfDoc && previewCanvasRef.current) {
       renderPage(currentPage);
     }
-  }, [pdfJsDoc, pdfDoc, currentPage, pageScale, signatures]);
+  }, [pdfJsDoc, pdfDoc, currentPage, pageScale, signatures, selectedSignatureId]);
 
   useEffect(() => {
     if (canvasRef.current && currentSignature.type === 'draw') {
@@ -178,26 +179,28 @@ export default function SignPDFPage() {
     const canvasW = sig.width * scaleX;
     const canvasH = sig.height * scaleY;
     
+    const isSelected = selectedSignatureId === sig.id || draggingSignature === sig.id || resizingSignature?.id === sig.id;
+    
     // Draw signature with border
     if (sig.type === 'image' || sig.type === 'draw') {
       const img = new Image();
       img.src = sig.data;
       img.onload = () => {
         context.save();
-        context.strokeStyle = draggingSignature === sig.id ? '#8b5cf6' : '#e5e7eb';
+        context.strokeStyle = isSelected ? '#8b5cf6' : '#e5e7eb';
         context.lineWidth = 2;
         context.strokeRect(canvasX, canvasY, canvasW, canvasH);
         context.drawImage(img, canvasX, canvasY, canvasW, canvasH);
         
         // Draw resize handles
-        if (draggingSignature === sig.id || resizingSignature?.id === sig.id) {
+        if (isSelected) {
           drawResizeHandles(context, canvasX, canvasY, canvasW, canvasH);
         }
         context.restore();
       };
     } else if (sig.type === 'type') {
       context.save();
-      context.strokeStyle = draggingSignature === sig.id ? '#8b5cf6' : '#e5e7eb';
+      context.strokeStyle = isSelected ? '#8b5cf6' : '#e5e7eb';
       context.lineWidth = 2;
       context.strokeRect(canvasX, canvasY, canvasW, canvasH);
       context.fillStyle = '#000';
@@ -206,7 +209,7 @@ export default function SignPDFPage() {
       context.textBaseline = 'middle';
       context.fillText(sig.text || '', canvasX + canvasW / 2, canvasY + canvasH / 2);
       
-      if (draggingSignature === sig.id || resizingSignature?.id === sig.id) {
+      if (isSelected) {
         drawResizeHandles(context, canvasX, canvasY, canvasW, canvasH);
       }
       context.restore();
@@ -329,11 +332,21 @@ export default function SignPDFPage() {
     }
   };
 
-  const handleCanvasMouseDown = (e: React.MouseEvent) => {
-    if (!previewCanvasRef.current) return;
+  const getEventCoordinates = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!previewCanvasRef.current) return null;
     const rect = previewCanvasRef.current.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const clickY = e.clientY - rect.top;
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    return {
+      x: clientX - rect.left,
+      y: clientY - rect.top
+    };
+  };
+
+  const handleCanvasMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
+    const coords = getEventCoordinates(e);
+    if (!coords) return;
+    const { x: clickX, y: clickY } = coords;
 
     const scaleX = pageDimensions.widthPx / pageDimensions.widthPts;
     const scaleY = pageDimensions.heightPx / pageDimensions.heightPts;
@@ -373,14 +386,17 @@ export default function SignPDFPage() {
       const y = clickedSig.y * scaleY;
       setDragOffset({ x: clickX - x, y: clickY - y });
       setDraggingSignature(clickedSig.id);
+      setSelectedSignatureId(clickedSig.id);
+    } else {
+      // Clicked on empty space, deselect
+      setSelectedSignatureId(null);
     }
   };
 
-  const handleCanvasMouseMove = (e: React.MouseEvent) => {
-    if (!previewCanvasRef.current) return;
-    const rect = previewCanvasRef.current.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
+  const handleCanvasMouseMove = (e: React.MouseEvent | React.TouchEvent) => {
+    const coords = getEventCoordinates(e);
+    if (!coords) return;
+    const { x: mouseX, y: mouseY } = coords;
 
     const scaleX = pageDimensions.widthPx / pageDimensions.widthPts;
     const scaleY = pageDimensions.heightPx / pageDimensions.heightPts;
@@ -692,11 +708,15 @@ export default function SignPDFPage() {
                 <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-2 bg-gray-50 dark:bg-gray-900 overflow-auto max-h-[600px]">
                   <canvas
                     ref={previewCanvasRef}
-                    className="mx-auto cursor-move shadow-lg"
+                    className="mx-auto cursor-move shadow-lg touch-none"
+                    style={{ touchAction: 'none' }}
                     onMouseDown={handleCanvasMouseDown}
                     onMouseMove={handleCanvasMouseMove}
                     onMouseUp={handleCanvasMouseUp}
                     onMouseLeave={handleCanvasMouseUp}
+                    onTouchStart={handleCanvasMouseDown}
+                    onTouchMove={handleCanvasMouseMove}
+                    onTouchEnd={handleCanvasMouseUp}
                     data-testid="canvas-pdf-preview"
                   />
                 </div>
