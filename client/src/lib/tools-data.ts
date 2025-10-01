@@ -337,8 +337,8 @@ export const allTools: Tool[] = [
     available: true,
     category: "document-conversion",
     popular: true,
-    features: ["Browser-based conversion", "Preserve formatting", "No file uploads", "Supports .docx and .doc"],
-    extendedDescription: "Convert Microsoft Word documents (.docx, .doc) to PDF format directly in your browser. Maintains formatting, fonts, and document structure while ensuring complete privacy."
+    features: ["Browser-based conversion", "Basic formatting support", "No file uploads", "English/Latin text"],
+    extendedDescription: "Convert Microsoft Word documents (.docx) to PDF format directly in your browser. Text-focused conversion with basic formatting support (headings, bold text). Best for English/Latin text documents."
   },
   {
     id: "pdf-to-word",

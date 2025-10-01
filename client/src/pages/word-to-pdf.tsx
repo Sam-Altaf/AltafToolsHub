@@ -25,8 +25,8 @@ export default function WordToPDF() {
 
   useSEO({
     title: "Word to PDF Converter - Convert DOCX to PDF Online Free | AltafToolsHub",
-    description: "Convert Microsoft Word documents (.docx, .doc) to PDF format online. 100% free, secure, and works directly in your browser. Preserve formatting, fonts, and images.",
-    keywords: "word to pdf, docx to pdf, convert word to pdf, doc to pdf converter, word document to pdf",
+    description: "Convert Microsoft Word documents (.docx) to PDF format online. 100% free, secure, and works directly in your browser. Text-focused conversion with basic formatting support.",
+    keywords: "word to pdf, docx to pdf, convert word to pdf, word document to pdf converter, docx converter",
     path: "/word-to-pdf"
   });
 
@@ -38,6 +38,26 @@ export default function WordToPDF() {
 
   const convertWordToPdf = async () => {
     if (!file) return;
+
+    // Defensive checks before processing
+    const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
+    if (file.size > MAX_FILE_SIZE) {
+      toast({
+        title: "File too large",
+        description: "Please select a file smaller than 100MB.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!file.name.toLowerCase().endsWith('.docx')) {
+      toast({
+        title: "Invalid file type",
+        description: "Please select a .docx file. Legacy .doc files are not supported.",
+        variant: "destructive"
+      });
+      return;
+    }
 
     setIsProcessing(true);
     setProgress(10);
@@ -59,33 +79,102 @@ export default function WordToPDF() {
       
       setProgress(60);
 
-      // Parse HTML and extract text content
+      // Parse HTML and extract text content with structure preservation
       const parser = new DOMParser();
       const doc = parser.parseFromString(htmlContent, 'text/html');
       
-      // Extract text with basic formatting
-      const textContent: Array<{ text: string; bold: boolean; fontSize: number }> = [];
+      // Extract text paragraphs with basic formatting
+      interface TextParagraph {
+        text: string;
+        bold: boolean;
+        fontSize: number;
+        isBlock: boolean;
+      }
+      const textContent: TextParagraph[] = [];
       
-      const processNode = (node: Node) => {
-        if (node.nodeType === Node.TEXT_NODE) {
-          const text = node.textContent?.trim();
-          if (text) {
-            const parentTag = (node.parentElement?.tagName || '').toLowerCase();
-            const isBold = ['strong', 'b', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(parentTag);
-            let fontSize = 12;
-            
-            if (parentTag === 'h1') fontSize = 24;
-            else if (parentTag === 'h2') fontSize = 20;
-            else if (parentTag === 'h3') fontSize = 16;
-            else if (parentTag === 'h4') fontSize = 14;
-            
-            textContent.push({ text, bold: isBold, fontSize });
+      // Block elements that should create paragraph boundaries
+      const blockElements = new Set(['p', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'ul', 'ol']);
+      
+      interface FormatContext {
+        bold: boolean;
+        fontSize: number;
+      }
+      
+      const processElement = (element: Element, parentContext: FormatContext = { bold: false, fontSize: 12 }): void => {
+        const tagName = element.tagName.toLowerCase();
+        
+        // Handle <br> as line break
+        if (tagName === 'br') {
+          textContent.push({ text: '\n', bold: false, fontSize: 12, isBlock: false });
+          return;
+        }
+        
+        // Check if this is a block element
+        const isBlock = blockElements.has(tagName);
+        
+        // Get formatting context - inherit from parent unless overridden
+        const isBoldElement = ['strong', 'b', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(tagName);
+        const currentBold = parentContext.bold || isBoldElement;
+        
+        // Font size: headings override parent, others inherit
+        let currentFontSize = parentContext.fontSize;
+        if (tagName === 'h1') currentFontSize = 24;
+        else if (tagName === 'h2') currentFontSize = 20;
+        else if (tagName === 'h3') currentFontSize = 16;
+        else if (tagName === 'h4') currentFontSize = 14;
+        
+        const currentContext: FormatContext = {
+          bold: currentBold,
+          fontSize: currentFontSize
+        };
+        
+        // Process children
+        let textBuffer = '';
+        for (const child of Array.from(element.childNodes)) {
+          if (child.nodeType === Node.TEXT_NODE) {
+            // Preserve text but normalize excessive whitespace
+            const text = child.textContent || '';
+            textBuffer += text.replace(/\s+/g, ' ');
+          } else if (child.nodeType === Node.ELEMENT_NODE) {
+            // Flush current buffer before processing child element
+            if (textBuffer.trim()) {
+              textContent.push({ 
+                text: textBuffer, 
+                bold: currentContext.bold, 
+                fontSize: currentContext.fontSize, 
+                isBlock: false 
+              });
+              textBuffer = '';
+            }
+            processElement(child as Element, currentContext);
           }
         }
-        node.childNodes.forEach(processNode);
+        
+        // Flush remaining buffer
+        if (textBuffer.trim()) {
+          textContent.push({ 
+            text: textBuffer.trim(), 
+            bold: currentContext.bold, 
+            fontSize: currentContext.fontSize, 
+            isBlock: false 
+          });
+        }
+        
+        // Add paragraph break after block elements
+        if (isBlock && textContent.length > 0) {
+          textContent.push({ 
+            text: '\n\n', 
+            bold: false, 
+            fontSize: 12, 
+            isBlock: true 
+          });
+        }
       };
       
-      doc.body.childNodes.forEach(processNode);
+      // Process document body
+      for (const child of Array.from(doc.body.children)) {
+        processElement(child as Element);
+      }
       setProgress(70);
 
       // Add pages and render text
@@ -155,7 +244,10 @@ export default function WordToPDF() {
           }
         }
         
-        yPosition -= item.fontSize * 0.3; // Paragraph spacing
+        // Only add extra paragraph spacing for non-block items (block items already have \n\n spacing)
+        if (!item.isBlock) {
+          yPosition -= item.fontSize * 0.3; // Paragraph spacing
+        }
       }
 
       setProgress(90);
@@ -232,7 +324,7 @@ export default function WordToPDF() {
             Word to PDF Converter
           </h1>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            Convert Microsoft Word documents (.docx) to PDF format instantly. Preserve your document's formatting, fonts, and structure with our secure browser-based converter.
+            Convert Microsoft Word documents (.docx) to PDF format instantly with text-focused conversion and basic formatting support (headings, bold text). Best for English/Latin text documents. All processing happens in your browser for complete privacy.
           </p>
         </div>
 
@@ -249,7 +341,7 @@ export default function WordToPDF() {
           </Card>
           <Card className="glass p-4 text-center">
             <FileCheck className="w-8 h-8 text-primary mx-auto mb-2" />
-            <p className="text-sm font-medium">Keep Formatting</p>
+            <p className="text-sm font-medium">Basic Formatting</p>
           </Card>
         </div>
 
@@ -257,10 +349,10 @@ export default function WordToPDF() {
           <div className="mb-8 max-w-4xl mx-auto">
             <FileUpload
               onFileSelect={handleFileSelect}
-              accept=".docx,.doc,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/msword"
+              accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
               maxSize={100 * 1024 * 1024}
               title="Upload Word Document"
-              description="Select or drag a Word file (.docx, .doc) to convert to PDF"
+              description="Select or drag a .docx file to convert to PDF. Best for English/Latin text. Legacy .doc files not supported."
             />
           </div>
         ) : (
@@ -371,19 +463,19 @@ export default function WordToPDF() {
               {
                 number: 1,
                 title: "Upload Word Document",
-                description: "Select your .docx or .doc file from your computer. Files are processed locally in your browser for complete privacy.",
+                description: "Select your .docx file from your computer (legacy .doc files not supported). Files are processed locally in your browser for complete privacy.",
                 icon: Upload
               },
               {
                 number: 2,
                 title: "Automatic Conversion",
-                description: "Our advanced conversion engine processes your document, preserving formatting, fonts, and structure while converting to PDF format.",
+                description: "Our conversion engine processes your document with text-focused conversion and basic formatting support (headings, bold text) while converting to PDF format.",
                 icon: Zap
               },
               {
                 number: 3,
                 title: "Download PDF",
-                description: "Download your converted PDF file instantly. The original formatting and content are preserved in a universally compatible format.",
+                description: "Download your converted PDF file instantly. The text content and basic formatting are preserved in a universally compatible format.",
                 icon: Download
               }
             ]}
@@ -394,12 +486,12 @@ export default function WordToPDF() {
             benefits={[
               "All conversions happen in your browser - documents never leave your device",
               "No subscriptions, no hidden fees - convert unlimited Word documents for free",
-              "Maintains fonts, styles, headings, and document structure during conversion",
+              "Text-focused conversion with basic formatting support (headings, bold text)",
               "PDF files work on any device, operating system, or PDF reader",
               "Works directly in your browser - no software downloads or installations required",
               "Instant conversion powered by modern browser technology",
               "Client-side processing ensures your sensitive documents remain completely private",
-              "Convert documents up to 100MB without restrictions or premium upgrades"
+              "Convert .docx documents up to 100MB without restrictions or premium upgrades"
             ]}
             features={[
               commonFeatures.privacy,
@@ -407,8 +499,8 @@ export default function WordToPDF() {
               commonFeatures.free,
               {
                 icon: FileCheck,
-                title: "Format Preservation",
-                description: "Maintains text formatting, fonts, and document structure in the converted PDF."
+                title: "Basic Formatting",
+                description: "Text-focused conversion with support for headings and bold text in the converted PDF."
               }
             ]}
           />
@@ -465,7 +557,7 @@ export default function WordToPDF() {
               { feature: "Internet Required", ourTool: "Only to load page", others: "Required for every conversion" },
               { feature: "Watermarks", ourTool: false, others: "Often added to free conversions" },
               { feature: "Installation", ourTool: false, others: "May require desktop software" },
-              { feature: "Format Support", ourTool: ".docx, .doc", others: "Varies by service" },
+              { feature: "Format Support", ourTool: ".docx only", others: "Varies by service" },
               { feature: "Batch Conversion", ourTool: "Coming soon", others: "Usually premium only" }
             ]}
           />
@@ -485,7 +577,7 @@ function generateWordToPDFFAQs() {
   return [
     {
       question: "How do I convert a Word document to PDF?",
-      answer: "Simply upload your Word document (.docx or .doc file), click 'Convert to PDF', and download your converted file. The entire process happens in your browser for complete privacy."
+      answer: "Simply upload your .docx Word document, click 'Convert to PDF', and download your converted file. The entire process happens in your browser for complete privacy. Note: Legacy .doc files are not supported."
     },
     {
       question: "Is it free to convert Word to PDF?",
@@ -497,7 +589,7 @@ function generateWordToPDFFAQs() {
     },
     {
       question: "Will my document formatting be preserved?",
-      answer: "Yes, our converter preserves text formatting, fonts, headings, and document structure during conversion. Your PDF will maintain the same layout as your Word document."
+      answer: "Our converter provides text-focused conversion with basic formatting support including headings and bold text. Please note that advanced formatting like italics, tables, images, lists, and complex layouts are not preserved. Best for simple text documents."
     },
     {
       question: "Are my files safe and private?",
@@ -505,7 +597,7 @@ function generateWordToPDFFAQs() {
     },
     {
       question: "What Word formats are supported?",
-      answer: "We support modern .docx files (Word 2007 and newer) and legacy .doc files (Word 97-2003). Most Word documents will convert without issues."
+      answer: "We support modern .docx files (Word 2007 and newer) only. Legacy .doc files (Word 97-2003) are not supported. Please save your document as .docx format in Word before converting."
     },
     {
       question: "Is there a file size limit?",
@@ -525,11 +617,15 @@ function generateWordToPDFFAQs() {
     },
     {
       question: "Will images in my Word document be included in the PDF?",
-      answer: "Yes, images embedded in your Word document will be included in the converted PDF while maintaining their quality and positioning."
+      answer: "No, images are not currently supported. Our converter focuses on text content with basic formatting (headings, bold text). If your document contains important images, consider using Microsoft Word's built-in 'Save as PDF' feature instead."
     },
     {
       question: "Do you add watermarks to the converted PDF?",
       answer: "No watermarks! Your converted PDFs are clean and professional with no branding, logos, or advertisements added."
+    },
+    {
+      question: "What languages and character sets are supported?",
+      answer: "Our converter works best with English and other Latin-script languages (Spanish, French, German, etc.). Documents with CJK characters (Chinese, Japanese, Korean), Arabic, Cyrillic, or special symbols may not render correctly. For full Unicode support, consider using Microsoft Word's built-in 'Save as PDF' feature."
     },
     {
       question: "Can I convert password-protected Word documents?",
@@ -537,7 +633,7 @@ function generateWordToPDFFAQs() {
     },
     {
       question: "What if my conversion fails?",
-      answer: "If conversion fails, ensure your file is a valid Word document (.docx or .doc), not corrupted, and under 100MB. Try reopening and resaving the document in Word before converting."
+      answer: "If conversion fails, ensure your file is a valid .docx Word document (not .doc), not corrupted, and under 100MB. Try reopening and resaving the document in Word as .docx format before converting."
     },
     {
       question: "How long does conversion take?",
