@@ -295,12 +295,15 @@ export const allTools: Tool[] = [
   {
     id: "png-to-pdf",
     title: "PNG to PDF",
-    description: "Convert PNG images to PDF documents",
+    description: "Convert PNG images to PDF documents with quality preservation",
     icon: Image,
     href: "/png-to-pdf",
     color: "from-blue-500 to-indigo-500",
-    available: false,
-    category: "image-conversion"
+    available: true,
+    category: "image-conversion",
+    popular: true,
+    features: ["Transparency support", "Batch conversion", "Reorder pages", "Quality preservation"],
+    extendedDescription: "Convert single or multiple PNG images into professional PDF documents. Preserves transparency and image quality. Perfect for screenshots, graphics, and digitizing documents with lossless quality."
   },
   {
     id: "webp-to-pdf",
