@@ -41,6 +41,7 @@ const ExtractImages = lazy(() => import("@/pages/extract-images"));
 const AddPageNumber = lazy(() => import("@/pages/add-page-number"));
 const WatermarkPDF = lazy(() => import("@/pages/watermark-pdf"));
 const PDFToJPG = lazy(() => import("@/pages/pdf-to-jpg"));
+const PDFToPNG = lazy(() => import("@/pages/pdf-to-png"));
 
 // Lazy loaded components - Non-critical pages
 const NotFound = lazy(() => import("@/pages/not-found"));
@@ -198,6 +199,11 @@ function Router() {
           <Route path="/pdf-to-jpg">
             <Suspense fallback={<PageLoader />}>
               <PDFToJPG />
+            </Suspense>
+          </Route>
+          <Route path="/pdf-to-png">
+            <Suspense fallback={<PageLoader />}>
+              <PDFToPNG />
             </Suspense>
           </Route>
           
