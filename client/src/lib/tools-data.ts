@@ -48,6 +48,18 @@ export const allTools: Tool[] = [
     extendedDescription: "Advanced PDF compression with target sizes from 10KB to 5MB. Perfect for email attachments, web uploads, and storage optimization. Maintains text clarity and image quality."
   },
   {
+    id: "reduce-pdf",
+    title: "Reduce PDF Size",
+    description: "Shrink PDF files to exact target sizes",
+    icon: FileDown,
+    href: "/reduce-pdf",
+    color: "from-purple-600 to-indigo-500",
+    available: true,
+    category: "pdf-management",
+    features: ["Size reduction", "Precise targeting", "Quality preservation", "Fast processing"],
+    extendedDescription: "Powerful PDF size reduction with exact targeting from 10KB to 5MB. Ideal for email size limits, cloud storage optimization, and faster file sharing. Intelligent algorithms preserve document quality."
+  },
+  {
     id: "merge-pdf",
     title: "Merge PDF",
     description: "Combine multiple PDF files into one seamless document",
