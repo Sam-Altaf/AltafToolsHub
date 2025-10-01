@@ -37,11 +37,13 @@ export function useNavigationMemory() {
   const hasRestoredRef = useRef(false);
 
   // On initial load, check if we should restore to a different page
+  // Only restore if user lands on homepage ("/"), never override deep links
   useEffect(() => {
     if (!hasRestoredRef.current) {
       hasRestoredRef.current = true;
       const savedPage = localStorage.getItem(CURRENT_PAGE_KEY);
-      if (savedPage && savedPage !== location && savedPage !== '/') {
+      // Only restore navigation if currently on root path
+      if (savedPage && savedPage !== location && location === '/') {
         // Navigate to the saved page
         navigate(savedPage);
       }

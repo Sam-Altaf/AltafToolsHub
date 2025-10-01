@@ -174,6 +174,7 @@ function Router() {
           {seoAliases.map((alias) => (
             <Route key={alias.path} path={alias.path}>
               <RedirectLanding
+                key={alias.path}
                 targetPath={alias.targetPath}
                 heading={alias.heading}
                 subheading={alias.subheading}
