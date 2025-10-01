@@ -33,7 +33,6 @@
     
     <!-- Preload Critical Assets for LCP -->
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
-    <link rel="preload" as="image" href="/attached_assets/hero-bg.webp" fetchpriority="high">
     
     <!-- Critical CSS Inline for faster FCP -->
     <style>
@@ -65,21 +64,6 @@
       </div>
     </div>
     <script type="module" src="/src/main.tsx" fetchpriority="high"></script>
-    
-    <!-- Conditional Service Worker Registration -->
-    <script>
-      // Only register service worker in production
-      if ('serviceWorker' in navigator && !window.location.hostname.includes('replit')) {
-        window.addEventListener('load', () => {
-          // Delay registration to not interfere with initial load
-          setTimeout(() => {
-            navigator.serviceWorker.register('/service-worker.js')
-              .then(reg => console.log('SW registered'))
-              .catch(err => console.log('SW registration failed'));
-          }, 5000);
-        });
-      }
-    </script>
     
     <!-- Google Analytics - Delayed Load for Performance -->
     <script>

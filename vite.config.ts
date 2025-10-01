@@ -10,8 +10,10 @@ export default defineConfig({
     runtimeErrorOverlay(),
     VitePWA({
       registerType: 'autoUpdate',
+      injectRegister: 'auto',
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,jpg,jpeg,woff,woff2}'],
+        globPatterns: ['**/*.{js,css,html,woff,woff2}'],
+        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
@@ -45,6 +47,20 @@ export default defineConfig({
             urlPattern: /\/attached_assets\/.*/i,
             handler: 'StaleWhileRevalidate',
             options: {
+              cacheName: 'attached-assets-cache',
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24 * 30 // 30 days
+              },
+              cacheableResponse: {
+                statuses: [0, 200]
+              }
+            }
+          },
+          {
+            urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp|ico)$/,
+            handler: 'StaleWhileRevalidate',
+            options: {
               cacheName: 'images-cache',
               expiration: {
                 maxEntries: 100,
@@ -65,9 +81,9 @@ export default defineConfig({
           }
         ]
       },
-      manifest: false, // We don't need PWA manifest for now, just service worker
+      manifest: false,
       devOptions: {
-        enabled: false // Disable in development
+        enabled: false
       }
     }),
     ...(process.env.NODE_ENV !== "production" &&
