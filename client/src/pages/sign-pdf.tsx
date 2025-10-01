@@ -691,9 +691,8 @@ export default function SignPDFPage() {
       
       <Breadcrumbs 
         items={[
-          { label: "Home", href: "/" },
-          { label: "PDF Tools", href: "/all-tools?category=pdf" },
-          { label: "Sign PDF", href: "/sign-pdf" }
+          { name: "PDF Tools", url: "/all-tools?category=pdf" },
+          { name: "Sign PDF", url: "/sign-pdf" }
         ]}
       />
 
