@@ -221,6 +221,20 @@ export const allTools: Tool[] = [
     extendedDescription: "Transform PDF pages into JPG images with adjustable quality. Perfect for creating image galleries, social media posts, or web-ready graphics from PDFs."
   },
   {
+    id: "pdf-to-png",
+    title: "PDF to PNG",
+    description: "Convert PDF pages to lossless PNG images with transparency",
+    icon: Image,
+    href: "/pdf-to-png",
+    color: "from-blue-500 to-purple-500",
+    available: true,
+    category: "image-conversion",
+    popular: true,
+    new: true,
+    features: ["Lossless quality", "Transparency support", "High resolution", "Perfect for graphics"],
+    extendedDescription: "Extract PDF pages as lossless PNG images with transparency support. Ideal for logos, diagrams, screenshots, and graphics requiring perfect quality preservation."
+  },
+  {
     id: "heic-to-pdf",
     title: "HEIC/HEIF to PDF",
     description: "Convert iPhone/iPad photos to universally compatible PDFs",

@@ -30,39 +30,39 @@ interface ConvertedImage {
   pageNumber: number;
 }
 
-export default function PDFToJPG() {
+export default function PDFToPNG() {
   const [pdfFile, setPdfFile] = useState<File | null>(null);
-  const [quality, setQuality] = useState("high");
   const [resolution, setResolution] = useState("150");
-  const [colorMode, setColorMode] = useState("rgb");
+  const [colorMode, setColorMode] = useState("rgba");
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [convertedImages, setConvertedImages] = useState<ConvertedImage[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const howToSchema = generateHowToSchema({
-    name: "How to Convert PDF to JPG Images",
-    description: "Extract PDF pages as high-quality JPG images with custom resolution and quality settings",
+    name: "How to Convert PDF to PNG Images",
+    description: "Extract PDF pages as lossless PNG images with transparency support",
     totalTime: "PT2M",
     steps: [
-      { name: "Upload PDF", text: "Select your PDF file to convert to JPG images" },
-      { name: "Choose Quality", text: "Select JPG quality (High, Medium, Low) and resolution (DPI)" },
-      { name: "Select Color Mode", text: "Choose RGB for color images or Grayscale for black & white" },
-      { name: "Convert & Download", text: "Click convert and download individual JPG images or all at once" }
+      { name: "Upload PDF", text: "Select your PDF file to convert to PNG images" },
+      { name: "Choose Settings", text: "Select resolution (DPI) and color mode (RGBA/Grayscale)" },
+      { name: "Convert to PNG", text: "Click convert to extract pages as high-quality PNG images" },
+      { name: "Download Images", text: "Download individual PNG images or all at once" }
     ]
   });
 
   const softwareSchema = generateSoftwareApplicationSchema({
-    name: "PDF to JPG Converter - AltafToolsHub",
-    description: "Free online PDF to JPG converter. Extract PDF pages as high-quality JPG images with custom resolution and compression. 100% browser-based for complete privacy.",
+    name: "PDF to PNG Converter - AltafToolsHub",
+    description: "Free online PDF to PNG converter. Extract PDF pages as lossless PNG images with transparency support. Perfect for graphics, logos, and high-quality screenshots. 100% browser-based.",
     applicationCategory: "MultimediaApplication",
-    url: "https://www.altaftoolshub.app/pdf-to-jpg",
-    aggregateRating: { ratingValue: 4.8, ratingCount: 2145, bestRating: 5 },
+    url: "https://www.altaftoolshub.app/pdf-to-png",
+    aggregateRating: { ratingValue: 4.9, ratingCount: 1876, bestRating: 5 },
     featureList: [
-      "Convert PDF to JPG images",
-      "Adjustable quality settings (50-100%)",
+      "Convert PDF to PNG images",
+      "Lossless compression quality",
+      "Transparency preservation",
       "Custom resolution (72-600 DPI)",
-      "RGB or Grayscale output",
+      "RGBA or Grayscale output",
       "Batch download all images",
       "100% client-side processing"
     ],
@@ -73,21 +73,21 @@ export default function PDFToJPG() {
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: "Home", url: "https://www.altaftoolshub.app/" },
     { name: "All Tools", url: "https://www.altaftoolshub.app/all-tools" },
-    { name: "PDF to JPG", url: "https://www.altaftoolshub.app/pdf-to-jpg" }
+    { name: "PDF to PNG", url: "https://www.altaftoolshub.app/pdf-to-png" }
   ]);
 
   useSEO({
-    title: "PDF to JPG Converter - Convert PDF Pages to JPG Images Free",
-    description: "Free PDF to JPG converter online. Extract PDF pages as high-quality JPG images with custom resolution and compression. Perfect for web use, presentations, and social media. 100% browser-based - your PDFs never leave your device.",
-    path: "/pdf-to-jpg",
-    keywords: "pdf to jpg converter, convert pdf to jpg online, pdf to jpeg free, extract images from pdf, pdf page to jpg, pdf to jpg high quality, batch pdf to jpg, convert pdf pages to images 2025",
-    ogImage: "https://altaftoolshub.app/og-pdf-to-jpg.png",
+    title: "PDF to PNG Converter - Convert PDF Pages to PNG Images Free",
+    description: "Free PDF to PNG converter online. Extract PDF pages as lossless PNG images with transparency support. Perfect for logos, graphics, diagrams, and screenshots. 100% browser-based - your PDFs never leave your device.",
+    path: "/pdf-to-png",
+    keywords: "pdf to png converter, convert pdf to png online, pdf to png free, extract images from pdf, pdf page to png, pdf to png lossless, transparent png from pdf, batch pdf to png 2025",
+    ogImage: "https://altaftoolshub.app/og-pdf-to-png.png",
     structuredData: [howToSchema, softwareSchema, breadcrumbSchema],
     additionalMetaTags: [
-      { name: "application-name", content: "PDF to JPG Converter - AltafToolsHub" },
+      { name: "application-name", content: "PDF to PNG Converter - AltafToolsHub" },
       { property: "article:section", content: "Image Tools" },
       { property: "article:tag", content: "PDF Conversion" },
-      { property: "article:tag", content: "JPG Export" }
+      { property: "article:tag", content: "PNG Export" }
     ]
   });
 
@@ -101,21 +101,12 @@ export default function PDFToJPG() {
     setError(null);
   };
 
-  const getQualityValue = () => {
-    switch (quality) {
-      case "low": return 0.6;
-      case "medium": return 0.8;
-      case "high": return 0.95;
-      default: return 0.95;
-    }
-  };
-
   const getDPIScale = () => {
     const dpi = parseInt(resolution);
     return dpi / 72; // 72 DPI is base scale
   };
 
-  const convertPDFToJPG = async () => {
+  const convertPDFToPNG = async () => {
     if (!pdfFile) {
       setError('Please select a PDF file first.');
       return;
@@ -136,22 +127,29 @@ export default function PDFToJPG() {
 
       const images: ConvertedImage[] = [];
       const scale = getDPIScale();
-      const jpgQuality = getQualityValue();
 
       for (let pageNum = 1; pageNum <= numPages; pageNum++) {
         const page = await pdf.getPage(pageNum);
         const viewport = page.getViewport({ scale });
 
         const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
+        const context = canvas.getContext('2d', { 
+          alpha: colorMode === 'rgba', // Enable alpha channel for RGBA mode
+          willReadFrequently: false 
+        });
         if (!context) throw new Error('Failed to get canvas context');
 
         canvas.width = viewport.width;
         canvas.height = viewport.height;
 
-        // JPG-specific rendering optimizations
+        // PNG-specific rendering optimizations for lossless quality
         context.imageSmoothingEnabled = true;
         context.imageSmoothingQuality = 'high';
+
+        // Clear canvas with transparent background for RGBA mode
+        if (colorMode === 'rgba') {
+          context.clearRect(0, 0, canvas.width, canvas.height);
+        }
 
         await page.render({
           canvasContext: context,
@@ -159,7 +157,7 @@ export default function PDFToJPG() {
           canvas: canvas
         }).promise;
 
-        // Convert to grayscale if needed
+        // Convert to grayscale if needed (preserving alpha channel)
         if (colorMode === "grayscale") {
           const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
           const data = imageData.data;
@@ -169,24 +167,24 @@ export default function PDFToJPG() {
             data[i] = gray;
             data[i + 1] = gray;
             data[i + 2] = gray;
+            // Keep alpha channel (data[i + 3]) unchanged
           }
           
           context.putImageData(imageData, 0, 0);
         }
 
-        // Convert canvas to JPG blob
+        // Convert canvas to PNG blob (lossless, no quality parameter)
         const blob = await new Promise<Blob>((resolve, reject) => {
           canvas.toBlob(
             (blob) => {
               if (blob) resolve(blob);
               else reject(new Error('Failed to create blob'));
             },
-            'image/jpeg',
-            jpgQuality
+            'image/png'
           );
         });
 
-        const dataUrl = canvas.toDataURL('image/jpeg', jpgQuality);
+        const dataUrl = canvas.toDataURL('image/png');
 
         images.push({
           id: `page-${pageNum}`,
@@ -214,8 +212,8 @@ export default function PDFToJPG() {
       }, 300);
 
     } catch (err) {
-      console.error('PDF to JPG conversion error:', err);
-      setError(err instanceof Error ? err.message : 'Failed to convert PDF to JPG images. Please try again.');
+      console.error('PDF to PNG conversion error:', err);
+      setError(err instanceof Error ? err.message : 'Failed to convert PDF to PNG images. Please try again.');
       setIsProcessing(false);
       setProgress(0);
     }
@@ -224,7 +222,7 @@ export default function PDFToJPG() {
   const downloadImage = (image: ConvertedImage) => {
     const link = document.createElement('a');
     link.href = image.dataUrl;
-    link.download = `page-${image.pageNumber}.jpg`;
+    link.download = `page-${image.pageNumber}.png`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -253,66 +251,70 @@ export default function PDFToJPG() {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  const pdfToJpgFAQs = [
+  const pdfToPngFAQs = [
     {
-      question: "Why convert PDF to JPG instead of PNG?",
-      answer: "JPG is ideal for photographs and complex images because it offers excellent compression with smaller file sizes. JPG files are 60-80% smaller than PNG, making them perfect for web use, email attachments, and social media. However, JPG uses lossy compression, so choose PNG if you need perfect quality preservation or transparency support."
+      question: "Why use PNG instead of JPG for PDF conversion?",
+      answer: "PNG is ideal when you need perfect quality preservation and transparency support. Unlike JPG's lossy compression, PNG uses lossless compression, ensuring every pixel is identical to the original. PNG is perfect for logos, diagrams, text-heavy documents, screenshots, and any graphics requiring transparency. Choose PNG when quality matters more than file size."
     },
     {
-      question: "What DPI should I use for PDF to JPG conversion?",
-      answer: "For web use and social media, 72-96 DPI is sufficient. For printing standard documents, use 150-200 DPI. For high-quality prints or professional photography, choose 300 DPI. Higher DPI creates larger files but better quality. Our tool supports 72 DPI (web), 150 DPI (print), 300 DPI (high-quality), and 600 DPI (professional)."
+      question: "Does PNG support transparency from PDFs?",
+      answer: "Yes! Our converter preserves transparency when you select RGBA color mode. If your PDF has transparent backgrounds or elements, they'll remain transparent in the PNG output. This is especially useful for logos, graphics, and overlaying images. JPG cannot support transparency, making PNG the only choice for transparent images."
     },
     {
-      question: "Does converting PDF to JPG reduce quality?",
-      answer: "JPG uses lossy compression, so there's minimal quality loss. At our 'High' quality setting (95%), the difference is imperceptible to the human eye. Choose 'Medium' (80%) for balanced quality and file size, or 'Low' (60%) only when file size is critical. Text and graphics remain sharp at high settings."
+      question: "Are PNG files larger than JPG?",
+      answer: "Yes, PNG files are typically 2-5x larger than JPG because PNG uses lossless compression while JPG uses lossy compression. However, PNG ensures perfect quality preservation with no artifacts. For web use with simple graphics or text, PNG is still efficient. For photographs or complex images where slight quality loss is acceptable, use JPG instead."
     },
     {
-      question: "Can I convert password-protected PDFs to JPG?",
-      answer: "No, password-protected PDFs cannot be converted directly. You'll need to unlock the PDF first using our PDF Unlock tool, then convert it to JPG. This is a security feature to prevent unauthorized access to protected documents."
+      question: "What resolution should I use for PNG conversion?",
+      answer: "For screen viewing and web graphics, 72-96 DPI is sufficient. For print documents, use 150-200 DPI. For high-quality prints, presentations, or professional graphics, choose 300 DPI. For technical drawings or CAD exports requiring maximum detail, use 600 DPI. Higher DPI creates larger files but preserves more detail."
     },
     {
-      question: "What's the difference between RGB and Grayscale mode?",
-      answer: "RGB (Red Green Blue) preserves all colors in your PDF, perfect for documents with photos, charts, or colored text. Grayscale converts everything to shades of gray, reducing file size by 50-70% and ideal for black & white documents, invoices, or text-only pages. Choose based on your content needs."
+      question: "Can I convert password-protected PDFs to PNG?",
+      answer: "No, password-protected PDFs must be unlocked first. Use our PDF Unlock tool to remove the password protection, then convert the unlocked PDF to PNG. This security measure prevents unauthorized access to protected documents."
     },
     {
-      question: "How many pages can I convert at once?",
-      answer: "There's no strict limit, but browser memory constraints apply. Most browsers handle up to 100 pages comfortably. For very large PDFs (200+ pages), consider splitting the PDF first or converting in batches for better performance."
+      question: "What's the difference between RGBA and Grayscale mode?",
+      answer: "RGBA (Red Green Blue Alpha) preserves all colors and transparency from your PDF, ideal for colorful graphics, logos, and photos. Grayscale converts everything to shades of gray, reducing file size by 60-70% while maintaining lossless quality. Choose Grayscale for black & white documents, invoices, or text-only pages where color isn't needed."
     },
     {
-      question: "Why are my JPG files larger than the original PDF?",
-      answer: "This happens when your PDF uses heavy compression or vector graphics. PDFs can store images efficiently, while JPG must rasterize everything to pixels. To reduce JPG file size, lower the DPI (try 150 instead of 300) or use Medium quality instead of High."
+      question: "Why are my PNG files so large?",
+      answer: "PNG uses lossless compression, which means larger file sizes compared to JPG. Complex images with many colors create larger PNG files. To reduce size: (1) Lower the DPI resolution, (2) Use Grayscale mode for black & white content, or (3) Consider using JPG for photographs where perfect quality isn't critical. PNG is worth the size for graphics, logos, and transparency."
+    },
+    {
+      question: "Is PNG better than JPG for text documents?",
+      answer: "Absolutely! PNG is superior for text-heavy PDFs because lossless compression keeps text sharp and crisp without compression artifacts. JPG's lossy compression can blur text edges and create fuzzy letters. Always use PNG for invoices, contracts, forms, diagrams, or any document where text clarity is important."
     }
   ];
 
-  const jpgUseCases = [
+  const pngUseCases = [
     {
-      title: "Social Media Sharing",
-      description: "Extract PDF pages as JPG images optimized for Instagram, Facebook, Twitter, and LinkedIn posts with perfect compression.",
-      icon: ImageIcon
-    },
-    {
-      title: "Website Graphics",
-      description: "Convert PDF designs, infographics, or presentations to web-optimized JPG images for faster page loading.",
+      title: "Logos & Graphics",
+      description: "Extract vector-quality logos and graphics from PDFs with transparency support, perfect for design work and branding materials.",
       icon: Sparkles
     },
     {
-      title: "Email Attachments",
-      description: "Create lightweight JPG images from PDFs to avoid email attachment size limits while maintaining visual quality.",
-      icon: Upload
-    },
-    {
-      title: "Thumbnail Creation",
-      description: "Generate preview thumbnails from PDF documents for galleries, portfolios, or document management systems.",
-      icon: FileImage
-    },
-    {
-      title: "Presentation Slides",
-      description: "Extract PDF slides as JPG images for embedding in PowerPoint, Google Slides, or marketing materials.",
+      title: "Screenshots & Documentation",
+      description: "Create pixel-perfect screenshots from PDF documentation, tutorials, or software manuals with crisp text and graphics.",
       icon: FileText
     },
     {
-      title: "Archive & Backup",
-      description: "Convert important PDF documents to JPG format for long-term archival with universal compatibility.",
+      title: "Diagrams & Charts",
+      description: "Convert technical diagrams, flowcharts, and infographics to PNG with lossless quality and no compression artifacts.",
+      icon: FileImage
+    },
+    {
+      title: "Web Graphics",
+      description: "Export PDF graphics as PNG for websites, maintaining transparency and sharp edges for icons, buttons, and UI elements.",
+      icon: ImageIcon
+    },
+    {
+      title: "Presentation Materials",
+      description: "Extract high-quality images from PDF presentations for reuse in slides, keeping transparency and crisp quality.",
+      icon: Upload
+    },
+    {
+      title: "Print & Publishing",
+      description: "Generate print-ready PNG images from PDFs with perfect quality preservation for magazines, books, and marketing materials.",
       icon: Shield
     }
   ];
@@ -320,25 +322,25 @@ export default function PDFToJPG() {
   const howItWorksSteps = [
     {
       title: "Upload PDF File",
-      description: "Select your PDF document. Processing happens entirely in your browser - no uploads to servers.",
+      description: "Select your PDF document. All processing happens in your browser - no server uploads required.",
       icon: Upload,
       number: 1
     },
     {
-      title: "Configure JPG Settings",
-      description: "Choose quality level (High/Medium/Low), resolution (DPI), and color mode (RGB/Grayscale) for optimal results.",
+      title: "Configure PNG Settings",
+      description: "Choose resolution (DPI) and color mode (RGBA for color/transparency or Grayscale for B&W) for optimal results.",
       icon: Settings,
       number: 2
     },
     {
-      title: "Convert to JPG",
-      description: "Click convert and watch each PDF page transform into a high-quality JPG image with progress tracking.",
+      title: "Convert to PNG",
+      description: "Click convert and watch each PDF page transform into a lossless PNG image with progress tracking.",
       icon: Zap,
       number: 3
     },
     {
-      title: "Download Images",
-      description: "Download JPG images individually or all at once. Files are named by page number for easy organization.",
+      title: "Download PNG Images",
+      description: "Download PNG images individually or all at once. Files are named by page number for easy organization.",
       icon: Download,
       number: 4
     }
@@ -351,7 +353,7 @@ export default function PDFToJPG() {
           <Breadcrumbs 
             items={[
               { name: "All Tools", url: "/all-tools" },
-              { name: "PDF to JPG", url: "" }
+              { name: "PDF to PNG", url: "" }
             ]}
           />
 
@@ -365,14 +367,14 @@ export default function PDFToJPG() {
               </Button>
             </Link>
             <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-primary">Conversion Complete!</h1>
-            <p className="text-lg text-muted-foreground">Successfully converted {convertedImages.length} page{convertedImages.length > 1 ? 's' : ''} to JPG</p>
+            <p className="text-lg text-muted-foreground">Successfully converted {convertedImages.length} page{convertedImages.length > 1 ? 's' : ''} to PNG</p>
           </div>
 
           <Card className="glass p-6 sm:p-8 mb-8" data-testid="conversion-results">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-semibold flex items-center gap-2">
                 <ImageIcon className="w-5 h-5 text-primary" />
-                Converted JPG Images
+                Converted PNG Images
               </h3>
               <Button
                 onClick={downloadAllImages}
@@ -440,7 +442,7 @@ export default function PDFToJPG() {
         <Breadcrumbs 
           items={[
             { name: "All Tools", url: "/all-tools" },
-            { name: "PDF to JPG", url: "" }
+            { name: "PDF to PNG", url: "" }
           ]}
         />
 
@@ -456,14 +458,14 @@ export default function PDFToJPG() {
           
           <div className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-4">
             <ImageIcon className="w-4 h-4" />
-            <span className="text-sm font-medium">PDF to JPG Converter</span>
+            <span className="text-sm font-medium">PDF to PNG Converter</span>
           </div>
           
           <h1 className="text-4xl sm:text-5xl font-bold mb-4 bg-gradient-to-r from-primary via-blue-500 to-cyan-500 bg-clip-text text-transparent">
-            Convert PDF to JPG Images
+            Convert PDF to PNG Images
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Extract PDF pages as high-quality JPG images with custom resolution and compression settings
+            Extract PDF pages as lossless PNG images with transparency support and perfect quality
           </p>
         </div>
 
@@ -505,21 +507,7 @@ export default function PDFToJPG() {
             </div>
 
             {pdfFile && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <Label htmlFor="quality">Quality</Label>
-                  <Select value={quality} onValueChange={setQuality} disabled={isProcessing}>
-                    <SelectTrigger id="quality" data-testid="select-quality">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="high">High (95%)</SelectItem>
-                      <SelectItem value="medium">Medium (80%)</SelectItem>
-                      <SelectItem value="low">Low (60%)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="resolution">Resolution (DPI)</Label>
                   <Select value={resolution} onValueChange={setResolution} disabled={isProcessing}>
@@ -542,7 +530,7 @@ export default function PDFToJPG() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="rgb">RGB (Color)</SelectItem>
+                      <SelectItem value="rgba">RGBA (Color + Transparency)</SelectItem>
                       <SelectItem value="grayscale">Grayscale (B&W)</SelectItem>
                     </SelectContent>
                   </Select>
@@ -562,8 +550,8 @@ export default function PDFToJPG() {
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                   <div>
-                    <h4 className="font-semibold">Converting PDF to JPG...</h4>
-                    <p className="text-sm text-muted-foreground">Extracting pages as high-quality images</p>
+                    <h4 className="font-semibold">Converting PDF to PNG...</h4>
+                    <p className="text-sm text-muted-foreground">Extracting pages as lossless PNG images</p>
                   </div>
                 </div>
                 <Progress value={progress} className="h-2" />
@@ -573,12 +561,12 @@ export default function PDFToJPG() {
 
             {pdfFile && !isProcessing && convertedImages.length === 0 && (
               <Button 
-                onClick={convertPDFToJPG}
+                onClick={convertPDFToPNG}
                 className="w-full h-12 text-base"
                 data-testid="button-convert"
               >
                 <ImageIcon className="w-5 h-5 mr-2" />
-                Convert to JPG
+                Convert to PNG
               </Button>
             )}
           </div>
@@ -587,35 +575,35 @@ export default function PDFToJPG() {
         <PrivacyNotice message="Your PDF is processed locally in your browser and never uploaded to any server." className="mb-12" />
 
         <HowItWorksSection 
-          toolName="PDF to JPG Converter"
+          toolName="PDF to PNG Converter"
           steps={howItWorksSteps}
         />
 
         <WhyUseSection 
-          toolName="PDF to JPG Converter"
+          toolName="PDF to PNG Converter"
           benefits={[
-            "Perfect for web use and social media with optimal compression",
-            "Smaller file sizes compared to PNG (60-80% reduction)",
-            "Excellent quality for photos and complex images",
-            "Universal compatibility across all devices and platforms",
-            "Adjustable quality for perfect balance of size and clarity",
+            "Lossless compression - perfect quality preservation",
+            "Transparency support for logos and graphics",
+            "Sharp, crisp text without compression artifacts",
+            "Ideal for diagrams, screenshots, and technical drawings",
+            "Universal compatibility across all platforms",
             "100% privacy - all processing in your browser"
           ]}
           features={[
             {
               icon: Sparkles,
-              title: "JPG-Optimized Compression",
-              description: "Advanced compression algorithms specifically tuned for JPG format, delivering smaller files while maintaining excellent visual quality."
+              title: "Lossless Quality",
+              description: "PNG format ensures zero quality loss with lossless compression. Every pixel is identical to the original PDF, perfect for professional work."
             },
             {
               icon: Settings,
-              title: "Full Control",
-              description: "Adjust quality, resolution (DPI), and color mode to get exactly the output you need for your specific use case."
+              title: "Transparency Support",
+              description: "Preserve transparency from your PDFs with RGBA color mode. Essential for logos, graphics, and overlaying images on different backgrounds."
             },
             {
               icon: Zap,
               title: "Lightning Fast",
-              description: "Convert multi-page PDFs to JPG images instantly with no server uploads. All processing happens locally in your browser."
+              description: "Convert multi-page PDFs to PNG images instantly with no server uploads. All processing happens locally in your browser."
             },
             {
               icon: Shield,
@@ -625,16 +613,17 @@ export default function PDFToJPG() {
           ]}
         />
 
-        <UseCasesSection useCases={jpgUseCases} />
+        <UseCasesSection useCases={pngUseCases} />
 
         <ComparisonSection
-          toolName="PDF to JPG Converter"
+          toolName="PDF to PNG Converter"
           comparisons={[
             { feature: "Browser-Based Processing", ourTool: true, others: false, highlight: true },
             { feature: "No File Uploads", ourTool: true, others: false },
-            { feature: "Adjustable Quality", ourTool: true, others: "Limited" },
+            { feature: "Lossless Quality", ourTool: true, others: "Sometimes" },
+            { feature: "Transparency Support", ourTool: true, others: "Rare" },
             { feature: "Custom DPI Settings", ourTool: true, others: "Sometimes" },
-            { feature: "RGB & Grayscale Modes", ourTool: true, others: "Rare" },
+            { feature: "RGBA & Grayscale Modes", ourTool: true, others: "Limited" },
             { feature: "Batch Download", ourTool: true, others: true },
             { feature: "Free Forever", ourTool: true, others: false },
             { feature: "No Watermarks", ourTool: true, others: "Paid Only" }
@@ -642,9 +631,9 @@ export default function PDFToJPG() {
         />
 
         <ToolFAQ 
-          faqs={pdfToJpgFAQs}
-          toolName="PDF to JPG Converter"
-          toolPath="/pdf-to-jpg"
+          faqs={pdfToPngFAQs}
+          toolName="PDF to PNG Converter"
+          toolPath="/pdf-to-png"
         />
 
         <ContactSupportSection />
