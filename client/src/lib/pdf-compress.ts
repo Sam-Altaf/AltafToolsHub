@@ -405,6 +405,18 @@ export async function compressToTargetSize(
   
   console.log(`Starting ${mode.toUpperCase()} compression: Original ${originalSize} bytes, Target ${targetSize} bytes, Ratio ${(compressionRatio * 100).toFixed(1)}%`);
   
+  // Early exit: If target is >= original, just return the original (no point compressing)
+  if (targetSize >= originalSize) {
+    console.warn(`Target size (${targetSize} bytes) is >= original size (${originalSize} bytes). Returning original file.`);
+    return {
+      blob: new Blob([pdfBytes], { type: 'application/pdf' }),
+      quality: 1.0,
+      scale: 1.0,
+      attempts: 0,
+      mode
+    };
+  }
+  
   // HD Quality ranges with mode-specific adjustments
   let minQuality: number;
   let maxQuality: number;
@@ -438,12 +450,18 @@ export async function compressToTargetSize(
       maxQuality = 0.85;
       minScale = 0.60;
       maxScale = 0.90;
-    } else {
-      // Extreme compression (< 5%): Allow very low quality to hit target
+    } else if (compressionRatio >= 0.01) {
+      // Extreme compression (1-5%): Very low quality to hit target
       minQuality = 0.05;
       maxQuality = 0.60;
       minScale = 0.15;
       maxScale = 0.70;
+    } else {
+      // Ultra-extreme compression (< 1%): Absolute minimum to hit target
+      minQuality = 0.01;
+      maxQuality = 0.40;
+      minScale = 0.08;
+      maxScale = 0.50;
     }
   } else if (mode === 'fast') {
     // Fast Mode: Prioritize speed with reasonable quality
@@ -457,11 +475,17 @@ export async function compressToTargetSize(
       maxQuality = 0.75;
       minScale = 0.70;
       maxScale = 0.90;
-    } else {
+    } else if (compressionRatio >= 0.01) {
       minQuality = 0.10;
       maxQuality = 0.60;
       minScale = 0.20;
       maxScale = 0.75;
+    } else {
+      // Ultra-extreme compression (< 1%)
+      minQuality = 0.01;
+      maxQuality = 0.40;
+      minScale = 0.08;
+      maxScale = 0.50;
     }
   } else {
     // Balanced Mode: Balance quality and size
@@ -490,12 +514,18 @@ export async function compressToTargetSize(
       maxQuality = 0.80;
       minScale = 0.50;
       maxScale = 0.85;
-    } else {
-      // Extreme compression (< 5%): Very low quality allowed
+    } else if (compressionRatio >= 0.01) {
+      // Extreme compression (1-5%): Very low quality allowed
       minQuality = 0.05;
       maxQuality = 0.60;
       minScale = 0.15;
       maxScale = 0.70;
+    } else {
+      // Ultra-extreme compression (< 1%)
+      minQuality = 0.01;
+      maxQuality = 0.40;
+      minScale = 0.08;
+      maxScale = 0.50;
     }
   }
   
@@ -585,6 +615,19 @@ export async function compressToTargetSize(
       const difference = Math.abs(currentSize - targetSize);
       if (difference <= targetSize * tolerance) {
         console.log(`Target achieved! Target: ${targetSize}, Achieved: ${currentSize}, Difference: ${difference} bytes (${(difference/targetSize*100).toFixed(1)}%)`);
+        
+        // CRITICAL SAFEGUARD: Never return a file larger than the original
+        if (currentSize >= originalSize) {
+          console.warn(`Result (${currentSize} bytes) is >= original (${originalSize} bytes). Returning original instead.`);
+          return { 
+            blob: new Blob([pdfBytes], { type: 'application/pdf' }), 
+            quality: 1.0, 
+            scale: 1.0, 
+            attempts,
+            mode 
+          };
+        }
+        
         return { 
           blob: result.blob, 
           quality: testQuality, 
@@ -642,6 +685,19 @@ export async function compressToTargetSize(
         // Check if we're close enough (within 0.5% tolerance)
         if (currentSize >= targetSize * 0.995) {
           console.log(`Optimal result achieved with adjacent scale: ${currentSize} bytes`);
+          
+          // CRITICAL SAFEGUARD: Never return a file larger than the original
+          if (currentSize >= originalSize) {
+            console.warn(`Result (${currentSize} bytes) is >= original (${originalSize} bytes). Returning original instead.`);
+            return { 
+              blob: new Blob([pdfBytes], { type: 'application/pdf' }), 
+              quality: 1.0, 
+              scale: 1.0, 
+              attempts,
+              mode 
+            };
+          }
+          
           return { 
             blob: result.blob, 
             quality: testQuality, 
@@ -705,6 +761,19 @@ export async function compressToTargetSize(
           // Check if we're close enough (within 0.5% tolerance)
           if (currentSize >= targetSize * 0.995) {
             console.log(`Optimal result achieved: ${currentSize} bytes (${(currentSize/targetSize*100).toFixed(1)}% of target)`);
+            
+            // CRITICAL SAFEGUARD: Never return a file larger than the original
+            if (currentSize >= originalSize) {
+              console.warn(`Result (${currentSize} bytes) is >= original (${originalSize} bytes). Returning original instead.`);
+              return {
+                blob: new Blob([pdfBytes], { type: 'application/pdf' }),
+                quality: 1.0,
+                scale: 1.0,
+                attempts,
+                mode
+              };
+            }
+            
             return {
               blob: result.blob,
               quality: fineQuality,
@@ -756,6 +825,19 @@ export async function compressToTargetSize(
             
             if (currentSize >= targetSize * 0.995) {
               console.log(`Target achieved with micro-adjustment: ${currentSize} bytes`);
+              
+              // CRITICAL SAFEGUARD: Never return a file larger than the original
+              if (currentSize >= originalSize) {
+                console.warn(`Result (${currentSize} bytes) is >= original (${originalSize} bytes). Returning original instead.`);
+                return {
+                  blob: new Blob([pdfBytes], { type: 'application/pdf' }),
+                  quality: 1.0,
+                  scale: 1.0,
+                  attempts,
+                  mode
+                };
+              }
+              
               return {
                 blob: result.blob,
                 quality: microQuality,
@@ -777,6 +859,18 @@ export async function compressToTargetSize(
     // Always return the best result we have, even if not perfect
     console.log(`Final result: ${bestUnderTarget.size} bytes (${(bestUnderTarget.size/targetSize*100).toFixed(1)}% of target), Quality: ${bestUnderTarget.quality.toFixed(3)}, Scale: ${bestUnderTarget.scale.toFixed(2)}`);
     
+    // CRITICAL SAFEGUARD: Never return a file larger than the original
+    if (bestUnderTarget.size >= originalSize) {
+      console.warn(`Compressed result (${bestUnderTarget.size} bytes) is larger than original (${originalSize} bytes). Returning original file instead.`);
+      return { 
+        blob: new Blob([pdfBytes], { type: 'application/pdf' }), 
+        quality: 1.0, 
+        scale: 1.0, 
+        attempts,
+        mode 
+      };
+    }
+    
     // Log a warning if we couldn't get close, but still return the result
     if (bestUnderTarget.size < targetSize * 0.98) {
       console.warn(`Note: Could not achieve exact target. Best achieved: ${bestUnderTarget.size} bytes (${(bestUnderTarget.size/targetSize*100).toFixed(1)}% of target)`);
@@ -793,6 +887,18 @@ export async function compressToTargetSize(
   
   // If no under-target result, return the best over-target result
   if (bestOverTarget) {
+    // CRITICAL SAFEGUARD: Never return a file larger than the original
+    if (bestOverTarget.size >= originalSize) {
+      console.warn(`Smallest possible result (${bestOverTarget.size} bytes) is larger than original (${originalSize} bytes). Returning original file instead.`);
+      return { 
+        blob: new Blob([pdfBytes], { type: 'application/pdf' }), 
+        quality: 1.0, 
+        scale: 1.0, 
+        attempts,
+        mode 
+      };
+    }
+    
     console.warn(`Target size too ambitious. Returning smallest possible: ${bestOverTarget.size} bytes (${(bestOverTarget.size/targetSize*100).toFixed(1)}% of target)`);
     return { 
       blob: bestOverTarget.blob, 
@@ -813,6 +919,19 @@ export async function compressToTargetSize(
   };
   
   const fallbackResult = await compressPDFSimple(pdfBytes, fallbackParams);
+  
+  // CRITICAL SAFEGUARD: Never return a file larger than the original
+  if (fallbackResult.blob.size >= originalSize) {
+    console.warn(`Fallback result (${fallbackResult.blob.size} bytes) is larger than original (${originalSize} bytes). Returning original file instead.`);
+    return { 
+      blob: new Blob([pdfBytes], { type: 'application/pdf' }), 
+      quality: 1.0, 
+      scale: 1.0, 
+      attempts: attempts + 1,
+      mode 
+    };
+  }
+  
   return { 
     blob: fallbackResult.blob, 
     quality: fallbackParams.jpegQuality, 
