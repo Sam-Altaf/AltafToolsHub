@@ -35,7 +35,7 @@ export default function SignPDFPage() {
     title: "Sign PDF Online - Add Digital Signatures to Documents | AltafToolsHub",
     description: "Add digital signatures to your PDF documents online. Draw, type, or upload signatures with date stamps. Free, secure, and browser-based PDF signing tool.",
     keywords: "sign pdf, digital signature, pdf signature, e-signature, sign documents online, add signature to pdf",
-    canonicalUrl: "https://altaftoolshub.app/sign-pdf"
+    path: "/sign-pdf"
   });
 
   const [file, setFile] = useState<File | null>(null);
@@ -380,7 +380,11 @@ export default function SignPDFPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <ToolSEO toolId="sign-pdf" />
+      <ToolSEO 
+        toolName="Sign PDF - Add Digital Signatures"
+        description="Add digital signatures to your PDF documents with draw, type, or upload options."
+        category="SecurityApplication"
+      />
       
       <div className="mb-6">
         <Link href="/" data-testid="link-home">

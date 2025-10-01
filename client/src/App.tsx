@@ -28,6 +28,7 @@ const CompressPDF = lazy(() => import("@/pages/compress-pdf"));
 const ReducePDF = lazy(() => import("@/pages/reduce-pdf"));
 const UnlockPDF = lazy(() => import("@/pages/unlock-pdf"));
 const ProtectPDF = lazy(() => import("@/pages/protect-pdf"));
+const SignPDF = lazy(() => import("@/pages/sign-pdf"));
 const JpgToPDF = lazy(() => import("@/pages/jpg-to-pdf"));
 const PngToPDF = lazy(() => import("@/pages/png-to-pdf"));
 const QRGenerator = lazy(() => import("@/pages/qr-generator"));
@@ -197,6 +198,11 @@ function Router() {
           <Route path="/protect-pdf">
             <Suspense fallback={<PageLoader />}>
               <ProtectPDF />
+            </Suspense>
+          </Route>
+          <Route path="/sign-pdf">
+            <Suspense fallback={<PageLoader />}>
+              <SignPDF />
             </Suspense>
           </Route>
           <Route path="/jpg-to-pdf">
