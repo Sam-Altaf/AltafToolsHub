@@ -543,6 +543,9 @@ export async function compressToTargetSize(
   const maxAttempts = 50; // Increased for better accuracy with more scale tests
   const tolerance = 0.005; // 0.5% tolerance (±25KB for 5MB, ±5KB for 1MB targets)
   
+  // Track last progress to ensure monotonic progress bar
+  let lastReportedProgress = 0;
+  
   let bestUnderTarget: { blob: Blob; quality: number; scale: number; size: number } | null = null;
   let bestOverTarget: { blob: Blob; quality: number; scale: number; size: number } | null = null;
   
@@ -572,7 +575,10 @@ export async function compressToTargetSize(
       const testQuality = (searchMinQ + searchMaxQ) / 2;
       
       if (onProgress) {
-        const progress = Math.round((attempts / maxAttempts) * 80);
+        const calculatedProgress = Math.round((attempts / maxAttempts) * 80);
+        // Ensure progress only increases (monotonic)
+        const progress = Math.max(calculatedProgress, lastReportedProgress);
+        lastReportedProgress = progress;
         onProgress(progress, `Optimizing compression... Attempt ${attempts}/${maxAttempts}`);
       }
       
@@ -582,8 +588,10 @@ export async function compressToTargetSize(
         mode: mode,
         onProgress: (progress, message) => {
           if (onProgress && progress < 80) {
-            const attemptProgress = Math.round((attempts - 1) / maxAttempts * 80);
-            onProgress(attemptProgress, message);
+            const calculatedProgress = Math.round((attempts - 1) / maxAttempts * 80);
+            const monotonic = Math.max(calculatedProgress, lastReportedProgress);
+            lastReportedProgress = monotonic;
+            onProgress(monotonic, message);
           }
         }
       };
@@ -657,9 +665,9 @@ export async function compressToTargetSize(
     }
   }
   
-  // Test adjacent scales for better targeting
-  if (bestUnderTarget && bestUnderTarget.size < targetSize * 0.90 && attempts < maxAttempts - 5) {
-    console.log('Testing adjacent scales for better targeting...');
+  // Test adjacent scales for better targeting - aim for 95-100% of target
+  if (bestUnderTarget && bestUnderTarget.size < targetSize * 0.95 && attempts < maxAttempts - 5) {
+    console.log('Testing adjacent scales for better targeting (aiming for 95-100% of target)...');
     
     const adjacentScales = [
       bestScale + 0.02,
@@ -680,8 +688,10 @@ export async function compressToTargetSize(
         mode: mode,
         onProgress: (progress, message) => {
           if (onProgress) {
-            const attemptProgress = Math.round((attempts / maxAttempts) * 80);
-            onProgress(attemptProgress, message);
+            const calculatedProgress = Math.round((attempts / maxAttempts) * 80);
+            const monotonic = Math.max(calculatedProgress, lastReportedProgress);
+            lastReportedProgress = monotonic;
+            onProgress(monotonic, message);
           }
         }
       };
@@ -733,12 +743,12 @@ export async function compressToTargetSize(
     const fillRatio = bestUnderTarget.size / targetSize;
     console.log(`Best under target: ${bestUnderTarget.size} bytes (${(fillRatio * 100).toFixed(1)}% of target)`);
     
-    // Try to get closer to target by fine-tuning quality upward
-    if (fillRatio < 0.995 && attempts < maxAttempts) {
-      console.log('Fine-tuning quality to get closer to target...');
+    // Try to get closer to target by fine-tuning quality upward - aim for 95-100% of target
+    if (fillRatio < 0.98 && attempts < maxAttempts) {
+      console.log(`Fine-tuning quality to get closer to target (currently at ${(fillRatio*100).toFixed(1)}%, aiming for 95-100%)...`);
       
       let fineQuality = bestUnderTarget.quality;
-      const maxFineQuality = Math.min(bestUnderTarget.quality + 0.25, 0.99);  // Allow up to 0.99 quality
+      const maxFineQuality = Math.min(bestUnderTarget.quality + 0.30, 0.99);  // Allow up to 0.99 quality
       
       // Binary search for optimal quality at best scale
       let minQ = fineQuality;
@@ -754,8 +764,10 @@ export async function compressToTargetSize(
           mode: mode,
           onProgress: (progress, message) => {
             if (onProgress) {
-              const attemptProgress = Math.round(80 + (attempts / maxAttempts) * 20);
-              onProgress(attemptProgress, message);
+              const calculatedProgress = Math.round(80 + (attempts / maxAttempts) * 20);
+              const monotonic = Math.max(calculatedProgress, lastReportedProgress);
+              lastReportedProgress = monotonic;
+              onProgress(monotonic, message);
             }
           }
         };
@@ -805,9 +817,9 @@ export async function compressToTargetSize(
         }
       }
       
-      // Final micro-adjustments with very small steps
-      if (bestUnderTarget.size < targetSize * 0.995 && attempts < maxAttempts) {
-        console.log('Attempting micro-adjustments...');
+      // Final micro-adjustments with very small steps - aim for 95-100% of target
+      if (bestUnderTarget.size < targetSize * 0.98 && attempts < maxAttempts) {
+        console.log(`Attempting micro-adjustments (currently at ${(bestUnderTarget.size/targetSize*100).toFixed(1)}%, aiming for 95-100%)...`);
         
         const microStep = 0.002;
         let microQuality = bestUnderTarget.quality;
@@ -822,8 +834,10 @@ export async function compressToTargetSize(
             mode: mode,
             onProgress: (progress, message) => {
               if (onProgress) {
-                const attemptProgress = Math.round(90 + (attempts / maxAttempts) * 10);
-                onProgress(attemptProgress, message);
+                const calculatedProgress = Math.round(90 + (attempts / maxAttempts) * 10);
+                const monotonic = Math.max(calculatedProgress, lastReportedProgress);
+                lastReportedProgress = monotonic;
+                onProgress(monotonic, message);
               }
             }
           };
