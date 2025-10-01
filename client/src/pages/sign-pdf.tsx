@@ -19,7 +19,8 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+// Configure PDF.js worker
+pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 interface SignatureConfig {
   id: string;
@@ -33,6 +34,13 @@ interface SignatureConfig {
   height: number;
   page: number;
   addDate?: boolean;
+}
+
+interface PageDimensions {
+  widthPts: number;
+  heightPts: number;
+  widthPx: number;
+  heightPx: number;
 }
 
 export default function SignPDFPage() {
@@ -62,10 +70,10 @@ export default function SignPDFPage() {
   const [pageCount, setPageCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [pageScale, setPageScale] = useState(1);
-  const [pageDimensions, setPageDimensions] = useState({ width: 0, height: 0 });
+  const [pageDimensions, setPageDimensions] = useState<PageDimensions>({ widthPts: 612, heightPts: 792, widthPx: 0, heightPx: 0 });
   const [draggingSignature, setDraggingSignature] = useState<string | null>(null);
-  const [resizingSignature, setResizingSignature] = useState<string | null>(null);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [resizingSignature, setResizingSignature] = useState<{ id: string; corner: string } | null>(null);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -74,10 +82,10 @@ export default function SignPDFPage() {
   const { toast } = useToast();
 
   useEffect(() => {
-    if (pdfJsDoc && previewCanvasRef.current) {
+    if (pdfJsDoc && pdfDoc && previewCanvasRef.current) {
       renderPage(currentPage);
     }
-  }, [pdfJsDoc, currentPage, pageScale, signatures]);
+  }, [pdfJsDoc, pdfDoc, currentPage, pageScale, signatures]);
 
   useEffect(() => {
     if (canvasRef.current && currentSignature.type === 'draw') {
@@ -93,9 +101,14 @@ export default function SignPDFPage() {
   }, [currentSignature.type]);
 
   const renderPage = async (pageNum: number) => {
-    if (!pdfJsDoc || !previewCanvasRef.current) return;
+    if (!pdfJsDoc || !pdfDoc || !previewCanvasRef.current) return;
 
     try {
+      // Get actual page dimensions from pdf-lib
+      const pdfLibPage = pdfDoc.getPage(pageNum);
+      const { width: widthPts, height: heightPts } = pdfLibPage.getSize();
+      
+      // Render with pdf.js
       const page = await pdfJsDoc.getPage(pageNum + 1);
       const viewport = page.getViewport({ scale: pageScale });
       
@@ -105,7 +118,12 @@ export default function SignPDFPage() {
       canvas.width = viewport.width;
       canvas.height = viewport.height;
       
-      setPageDimensions({ width: viewport.width, height: viewport.height });
+      setPageDimensions({ 
+        widthPts, 
+        heightPts,
+        widthPx: viewport.width, 
+        heightPx: viewport.height 
+      });
 
       await page.render({
         canvasContext: context,
@@ -117,11 +135,13 @@ export default function SignPDFPage() {
         signatures
           .filter(sig => sig.page === pageNum)
           .forEach(sig => {
-            const x = (sig.x / 612) * viewport.width;
-            const y = viewport.height - ((sig.y / 792) * viewport.height) - ((sig.height / 792) * viewport.height);
-            const w = (sig.width / 612) * viewport.width;
-            const h = (sig.height / 792) * viewport.height;
+            // Convert PDF points to canvas pixels using actual page dimensions
+            const x = (sig.x / widthPts) * viewport.width;
+            const y = viewport.height - ((sig.y + sig.height) / heightPts) * viewport.height;
+            const w = (sig.width / widthPts) * viewport.width;
+            const h = (sig.height / heightPts) * viewport.height;
 
+            // Draw box
             context.strokeStyle = '#6366f1';
             context.lineWidth = 2;
             context.setLineDash([5, 5]);
@@ -142,16 +162,25 @@ export default function SignPDFPage() {
             }
 
             // Draw corner handles
-            const handleSize = 8;
+            const handleSize = 10;
             context.fillStyle = '#6366f1';
+            // Top-left
             context.fillRect(x - handleSize / 2, y - handleSize / 2, handleSize, handleSize);
+            // Top-right
             context.fillRect(x + w - handleSize / 2, y - handleSize / 2, handleSize, handleSize);
+            // Bottom-left
             context.fillRect(x - handleSize / 2, y + h - handleSize / 2, handleSize, handleSize);
+            // Bottom-right
             context.fillRect(x + w - handleSize / 2, y + h - handleSize / 2, handleSize, handleSize);
           });
       }
     } catch (error) {
       console.error('Error rendering page:', error);
+      toast({
+        title: "Error rendering preview",
+        description: "Failed to render PDF page. Please try again.",
+        variant: "destructive"
+      });
     }
   };
 
@@ -180,6 +209,8 @@ export default function SignPDFPage() {
       const count = pdf.getPageCount();
       setPageCount(count);
       
+      setProgress(50);
+      
       // Load with pdf.js for preview
       const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
       const pdfJs = await loadingTask.promise;
@@ -205,7 +236,34 @@ export default function SignPDFPage() {
     }
   };
 
-  const handlePreviewClick = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+  const getHandleAt = (sig: SignatureConfig, x: number, y: number): string | null => {
+    const { widthPts, heightPts, widthPx, heightPx } = pageDimensions;
+    const sigX = (sig.x / widthPts) * widthPx;
+    const sigY = heightPx - ((sig.y + sig.height) / heightPts) * heightPx;
+    const sigW = (sig.width / widthPts) * widthPx;
+    const sigH = (sig.height / heightPts) * heightPx;
+    
+    const handleSize = 10;
+    const tolerance = 5;
+    
+    // Check each corner
+    if (Math.abs(x - sigX) < handleSize + tolerance && Math.abs(y - sigY) < handleSize + tolerance) {
+      return 'tl'; // top-left
+    }
+    if (Math.abs(x - (sigX + sigW)) < handleSize + tolerance && Math.abs(y - sigY) < handleSize + tolerance) {
+      return 'tr'; // top-right
+    }
+    if (Math.abs(x - sigX) < handleSize + tolerance && Math.abs(y - (sigY + sigH)) < handleSize + tolerance) {
+      return 'bl'; // bottom-left
+    }
+    if (Math.abs(x - (sigX + sigW)) < handleSize + tolerance && Math.abs(y - (sigY + sigH)) < handleSize + tolerance) {
+      return 'br'; // bottom-right
+    }
+    
+    return null;
+  };
+
+  const handlePreviewPointerDown = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     const canvas = previewCanvasRef.current;
     if (!canvas) return;
 
@@ -228,22 +286,36 @@ export default function SignPDFPage() {
     const clickedSig = signatures.find(sig => {
       if (sig.page !== currentPage) return false;
       
-      const sigX = (sig.x / 612) * pageDimensions.width;
-      const sigY = pageDimensions.height - ((sig.y / 792) * pageDimensions.height) - ((sig.height / 792) * pageDimensions.height);
-      const sigW = (sig.width / 612) * pageDimensions.width;
-      const sigH = (sig.height / 792) * pageDimensions.height;
+      const { widthPts, heightPts, widthPx, heightPx } = pageDimensions;
+      const sigX = (sig.x / widthPts) * widthPx;
+      const sigY = heightPx - ((sig.y + sig.height) / heightPts) * heightPx;
+      const sigW = (sig.width / widthPts) * widthPx;
+      const sigH = (sig.height / heightPts) * heightPx;
 
       return x >= sigX && x <= sigX + sigW && y >= sigY && y <= sigY + sigH;
     });
 
     if (clickedSig) {
-      setDraggingSignature(clickedSig.id);
-      setDragStart({ x: x - (clickedSig.x / 612) * pageDimensions.width, y });
+      // Check if clicking on a resize handle
+      const handle = getHandleAt(clickedSig, x, y);
+      
+      if (handle) {
+        setResizingSignature({ id: clickedSig.id, corner: handle });
+        setDragOffset({ x, y });
+      } else {
+        // Start dragging
+        const { widthPts, heightPts, widthPx, heightPx } = pageDimensions;
+        const sigX = (clickedSig.x / widthPts) * widthPx;
+        const sigY = heightPx - ((clickedSig.y + clickedSig.height) / heightPts) * heightPx;
+        
+        setDraggingSignature(clickedSig.id);
+        setDragOffset({ x: x - sigX, y: y - sigY });
+      }
     }
   };
 
-  const handlePreviewMove = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-    if (!draggingSignature) return;
+  const handlePreviewPointerMove = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+    if (!draggingSignature && !resizingSignature) return;
 
     const canvas = previewCanvasRef.current;
     if (!canvas) return;
@@ -255,6 +327,7 @@ export default function SignPDFPage() {
       if (e.touches.length === 0) return;
       clientX = e.touches[0].clientX;
       clientY = e.touches[0].clientY;
+      e.preventDefault();
     } else {
       clientX = e.clientX;
       clientY = e.clientY;
@@ -263,17 +336,87 @@ export default function SignPDFPage() {
     const x = clientX - rect.left;
     const y = clientY - rect.top;
 
-    setSignatures(prev => prev.map(sig => {
-      if (sig.id === draggingSignature) {
-        const newX = Math.max(0, Math.min(612, ((x - dragStart.x) / pageDimensions.width) * 612));
-        const newY = Math.max(0, Math.min(792 - sig.height, ((pageDimensions.height - y) / pageDimensions.height) * 792));
-        return { ...sig, x: newX, y: newY };
-      }
-      return sig;
-    }));
+    const { widthPts, heightPts, widthPx, heightPx } = pageDimensions;
+
+    if (draggingSignature) {
+      setSignatures(prev => prev.map(sig => {
+        if (sig.id === draggingSignature) {
+          // Calculate new position in pixels
+          const newPxX = x - dragOffset.x;
+          const newPxY = y - dragOffset.y;
+          
+          // Convert to PDF points and clamp
+          const newX = Math.max(0, Math.min(widthPts - sig.width, (newPxX / widthPx) * widthPts));
+          const newY = Math.max(0, Math.min(heightPts - sig.height, ((heightPx - newPxY - ((sig.height / heightPts) * heightPx)) / heightPx) * heightPts));
+          
+          return { ...sig, x: newX, y: newY };
+        }
+        return sig;
+      }));
+    } else if (resizingSignature) {
+      setSignatures(prev => prev.map(sig => {
+        if (sig.id === resizingSignature.id) {
+          const corner = resizingSignature.corner;
+          
+          // Get current position in pixels
+          const currentPxX = (sig.x / widthPts) * widthPx;
+          const currentPxY = heightPx - ((sig.y + sig.height) / heightPts) * heightPx;
+          const currentPxW = (sig.width / widthPts) * widthPx;
+          const currentPxH = (sig.height / heightPts) * heightPx;
+          
+          let newPxX = currentPxX;
+          let newPxY = currentPxY;
+          let newPxW = currentPxW;
+          let newPxH = currentPxH;
+          
+          if (corner === 'br') {
+            // Bottom-right: resize width and height
+            newPxW = x - currentPxX;
+            newPxH = y - currentPxY;
+          } else if (corner === 'tr') {
+            // Top-right: resize width, adjust y and height
+            newPxW = x - currentPxX;
+            newPxH = currentPxH + (currentPxY - y);
+            newPxY = y;
+          } else if (corner === 'bl') {
+            // Bottom-left: adjust x and width, resize height
+            newPxW = currentPxW + (currentPxX - x);
+            newPxX = x;
+            newPxH = y - currentPxY;
+          } else if (corner === 'tl') {
+            // Top-left: adjust both x and y, resize both dimensions
+            newPxW = currentPxW + (currentPxX - x);
+            newPxH = currentPxH + (currentPxY - y);
+            newPxX = x;
+            newPxY = y;
+          }
+          
+          // Enforce minimum size (in pixels)
+          const minW = 50;
+          const minH = 20;
+          if (newPxW < minW) newPxW = minW;
+          if (newPxH < minH) newPxH = minH;
+          
+          // Convert back to PDF points
+          const newX = (newPxX / widthPx) * widthPts;
+          const newY = ((heightPx - newPxY - newPxH) / heightPx) * heightPts;
+          const newWidth = (newPxW / widthPx) * widthPts;
+          const newHeight = (newPxH / heightPx) * heightPts;
+          
+          // Clamp to page bounds
+          const clampedX = Math.max(0, Math.min(widthPts - newWidth, newX));
+          const clampedY = Math.max(0, Math.min(heightPts - newHeight, newY));
+          const clampedWidth = Math.max(30, Math.min(widthPts - clampedX, newWidth));
+          const clampedHeight = Math.max(15, Math.min(heightPts - clampedY, newHeight));
+          
+          return { ...sig, x: clampedX, y: clampedY, width: clampedWidth, height: clampedHeight };
+        }
+        return sig;
+      }));
+    }
   };
 
-  const handlePreviewEnd = () => {
+  const handlePreviewPointerUp = () => {
     setDraggingSignature(null);
     setResizingSignature(null);
   };
@@ -427,7 +570,7 @@ export default function SignPDFPage() {
     setSignatures([...signatures, signature]);
     toast({
       title: "Signature added",
-      description: `Signature added to page ${currentPage + 1}. Drag to reposition.`
+      description: `Signature added to page ${currentPage + 1}. Drag to reposition or resize.`
     });
   };
 
@@ -441,7 +584,7 @@ export default function SignPDFPage() {
 
   const updateSignatureSize = (id: string, width: number, height: number) => {
     setSignatures(prev => prev.map(sig => 
-      sig.id === id ? { ...sig, width: Math.max(50, width), height: Math.max(20, height) } : sig
+      sig.id === id ? { ...sig, width: Math.max(30, width), height: Math.max(15, height) } : sig
     ));
   };
 
@@ -471,7 +614,14 @@ export default function SignPDFPage() {
         const { height: pageHeight } = page.getSize();
 
         if (sig.type === 'type') {
-          const font = await pdfCopy.embedFont(StandardFonts.TimesRomanItalic);
+          // Use the selected font style
+          let font;
+          if (sig.font === 'script' || sig.font === 'elegant') {
+            font = await pdfCopy.embedFont(StandardFonts.TimesRomanItalic);
+          } else {
+            font = await pdfCopy.embedFont(StandardFonts.TimesRomanItalic);
+          }
+          
           const fontSize = sig.height * 0.6;
           
           page.drawText(sig.text || '', {
@@ -498,7 +648,7 @@ export default function SignPDFPage() {
           const imageBytes = await response.arrayBuffer();
           
           let image;
-          if (sig.data.includes('image/png')) {
+          if (sig.data.includes('image/png') || sig.data.includes('data:image/png')) {
             image = await pdfCopy.embedPng(imageBytes);
           } else {
             image = await pdfCopy.embedJpg(imageBytes);
@@ -699,13 +849,14 @@ export default function SignPDFPage() {
                   <canvas
                     ref={previewCanvasRef}
                     className="mx-auto cursor-move"
-                    onMouseDown={handlePreviewClick}
-                    onMouseMove={handlePreviewMove}
-                    onMouseUp={handlePreviewEnd}
-                    onMouseLeave={handlePreviewEnd}
-                    onTouchStart={handlePreviewClick}
-                    onTouchMove={handlePreviewMove}
-                    onTouchEnd={handlePreviewEnd}
+                    style={{ touchAction: 'none' }}
+                    onMouseDown={handlePreviewPointerDown}
+                    onMouseMove={handlePreviewPointerMove}
+                    onMouseUp={handlePreviewPointerUp}
+                    onMouseLeave={handlePreviewPointerUp}
+                    onTouchStart={handlePreviewPointerDown}
+                    onTouchMove={handlePreviewPointerMove}
+                    onTouchEnd={handlePreviewPointerUp}
                     data-testid="canvas-pdf-preview"
                   />
                 </div>
@@ -733,7 +884,7 @@ export default function SignPDFPage() {
                 </div>
 
                 <p className="text-xs text-muted-foreground mt-4 text-center">
-                  💡 Tip: Drag signatures to reposition them on the page
+                  💡 Tip: Drag signatures to reposition, resize using corner handles
                 </p>
               </Card>
 
@@ -764,6 +915,7 @@ export default function SignPDFPage() {
                         width={400}
                         height={200}
                         className="w-full bg-white touch-none cursor-crosshair"
+                        style={{ touchAction: 'none' }}
                         onMouseDown={startDrawing}
                         onMouseMove={draw}
                         onMouseUp={stopDrawing}
@@ -847,22 +999,22 @@ export default function SignPDFPage() {
                 <div className="space-y-4 mt-6">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label>Width (px)</Label>
+                      <Label>Width (pts)</Label>
                       <Input
                         type="number"
-                        min={50}
-                        max={400}
+                        min={30}
+                        max={500}
                         value={currentSignature.width || 200}
                         onChange={(e) => setCurrentSignature(prev => ({ ...prev, width: parseInt(e.target.value) }))}
                         data-testid="input-signature-width"
                       />
                     </div>
                     <div>
-                      <Label>Height (px)</Label>
+                      <Label>Height (pts)</Label>
                       <Input
                         type="number"
-                        min={20}
-                        max={200}
+                        min={15}
+                        max={300}
                         value={currentSignature.height || 80}
                         onChange={(e) => setCurrentSignature(prev => ({ ...prev, height: parseInt(e.target.value) }))}
                         data-testid="input-signature-height"
@@ -896,23 +1048,23 @@ export default function SignPDFPage() {
                   {signatures.filter(sig => sig.page === currentPage).length === 0 ? (
                     <p className="text-sm text-muted-foreground text-center py-4">No signatures on this page</p>
                   ) : (
-                    <div className="space-y-2">
+                    <div className="space-y-2 max-h-40 overflow-y-auto">
                       {signatures.filter(sig => sig.page === currentPage).map((sig) => (
                         <div key={sig.id} className="flex items-center justify-between p-2 border rounded" data-testid={`signature-item-${sig.id}`}>
                           <div className="flex items-center gap-2">
                             {sig.type === 'draw' && <PenTool className="h-4 w-4" />}
                             {sig.type === 'type' && <TypeIcon className="h-4 w-4" />}
                             {sig.type === 'image' && <ImageIcon className="h-4 w-4" />}
-                            <span className="text-sm">
+                            <span className="text-sm truncate max-w-32">
                               {sig.type === 'type' ? sig.text : `${sig.type} signature`}
                             </span>
                           </div>
                           <div className="flex items-center gap-2">
                             <Input
                               type="number"
-                              min={50}
-                              max={400}
-                              value={sig.width}
+                              min={30}
+                              max={500}
+                              value={Math.round(sig.width)}
                               onChange={(e) => updateSignatureSize(sig.id, parseInt(e.target.value), sig.height)}
                               className="w-16 h-8 text-xs"
                               data-testid={`input-width-${sig.id}`}
@@ -920,9 +1072,9 @@ export default function SignPDFPage() {
                             <span className="text-xs">×</span>
                             <Input
                               type="number"
-                              min={20}
-                              max={200}
-                              value={sig.height}
+                              min={15}
+                              max={300}
+                              value={Math.round(sig.height)}
                               onChange={(e) => updateSignatureSize(sig.id, sig.width, parseInt(e.target.value))}
                               className="w-16 h-8 text-xs"
                               data-testid={`input-height-${sig.id}`}
@@ -988,9 +1140,9 @@ export default function SignPDFPage() {
           <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center mx-auto mb-4">
             <Maximize2 className="h-6 w-6 text-purple-600 dark:text-purple-400" />
           </div>
-          <h3 className="font-semibold mb-2">Custom Sizes</h3>
+          <h3 className="font-semibold mb-2">Resize Handles</h3>
           <p className="text-sm text-muted-foreground">
-            Adjust signature dimensions for perfect fit
+            Interactive corner handles for precise sizing
           </p>
         </Card>
         
