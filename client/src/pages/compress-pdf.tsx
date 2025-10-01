@@ -760,7 +760,7 @@ export default function CompressPDF() {
           </Link>
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary to-blue-600 text-white mb-6 shadow-md">
             <Sparkles className="w-4 h-4" />
-            <span className="text-sm font-medium">AI-Powered Compression</span>
+            <span className="text-sm font-medium">Smart Compression Engine</span>
           </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-primary">
             Smart PDF Compressor
