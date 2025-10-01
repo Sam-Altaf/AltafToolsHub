@@ -51,6 +51,103 @@ function dataURLtoUint8Array(dataURL: string): Uint8Array {
   return bytes;
 }
 
+// Upscale PDF to target size by adding metadata padding with binary search precision
+async function upscalePDFToTarget(pdfBytes: Uint8Array, currentSize: number, targetSize: number): Promise<Uint8Array> {
+  const paddingNeeded = targetSize - currentSize;
+  console.log(`Upscaling PDF: Current ${currentSize} bytes, Target ${targetSize} bytes, Padding needed: ~${paddingNeeded} bytes`);
+  
+  if (paddingNeeded <= 0) {
+    return pdfBytes;
+  }
+  
+  // Guardrail: Cap maximum target at 10MB to prevent resource exhaustion
+  if (targetSize > 10 * 1024 * 1024) {
+    console.warn(`Target size ${targetSize} exceeds 10MB cap. Limiting to 10MB.`);
+    return pdfBytes;
+  }
+  
+  try {
+    // Load the PDF once
+    const pdfDoc = await PDFDocument.load(pdfBytes);
+    
+    // Non-compressible ASCII pattern for padding
+    const paddingPattern = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=!@#$%^&*()_';
+    
+    // Binary search for exact padding size needed
+    let minPadding = Math.floor(paddingNeeded * 0.8); // Start conservative
+    let maxPadding = Math.ceil(paddingNeeded * 1.5); // Allow overshoot room
+    let bestBytes: Uint8Array | null = null;
+    let bestSize = currentSize;
+    let attempts = 0;
+    const maxAttempts = 15;
+    
+    console.log(`Binary search for padding: range ${minPadding} to ${maxPadding} bytes`);
+    
+    while (attempts < maxAttempts && maxPadding - minPadding > 1000) { // 1KB precision
+      attempts++;
+      const testPadding = Math.floor((minPadding + maxPadding) / 2);
+      
+      // Generate padding string efficiently using repeat
+      const repeatCount = Math.ceil(testPadding / paddingPattern.length);
+      const paddingStr = paddingPattern.repeat(repeatCount).slice(0, testPadding);
+      
+      // Add padding to a single metadata field (Creator) to avoid overwrites
+      pdfDoc.setCreator(`AltafToolsHub_Padding_${paddingStr}`);
+      pdfDoc.setProducer(`AltafToolsHub_v1.0`); // Small fixed field
+      
+      // Save with compression disabled
+      const testBytes = await pdfDoc.save({ useObjectStreams: false });
+      const testSize = testBytes.length;
+      
+      console.log(`Upscale attempt ${attempts}: Padding ${testPadding} bytes → Result ${testSize} bytes (${(testSize/targetSize*100).toFixed(1)}% of target)`);
+      
+      // Check if we hit the target window (95-100%)
+      if (testSize >= targetSize * 0.95 && testSize <= targetSize * 1.00) {
+        console.log(`✓ Target achieved: ${testSize} bytes (${(testSize/targetSize*100).toFixed(1)}% of target)`);
+        return testBytes;
+      }
+      
+      // Update best result if closer to target
+      if (testSize <= targetSize && Math.abs(testSize - targetSize) < Math.abs(bestSize - targetSize)) {
+        bestBytes = testBytes;
+        bestSize = testSize;
+      }
+      
+      // Adjust search range
+      if (testSize < targetSize) {
+        minPadding = testPadding; // Need more padding
+      } else {
+        maxPadding = testPadding; // Need less padding
+      }
+    }
+    
+    // If we have a result within acceptable range, return it
+    if (bestBytes && bestSize >= targetSize * 0.90 && bestSize <= targetSize * 1.00) {
+      console.log(`Upscaling complete: ${bestSize} bytes (${(bestSize/targetSize*100).toFixed(1)}% of target) after ${attempts} attempts`);
+      return bestBytes;
+    }
+    
+    // Final attempt: use the calculated midpoint
+    const finalPadding = Math.floor((minPadding + maxPadding) / 2);
+    const finalPaddingStr = paddingPattern.repeat(Math.ceil(finalPadding / paddingPattern.length)).slice(0, finalPadding);
+    pdfDoc.setCreator(`AltafToolsHub_Padding_${finalPaddingStr}`);
+    pdfDoc.setProducer(`AltafToolsHub_v1.0`);
+    
+    const finalBytes = await pdfDoc.save({ useObjectStreams: false });
+    const finalSize = finalBytes.length;
+    
+    console.log(`Final upscale result: ${finalSize} bytes (${(finalSize/targetSize*100).toFixed(1)}% of target)`);
+    
+    // Return final result even if not perfect (better than nothing)
+    return finalBytes;
+    
+  } catch (error) {
+    console.error('Error upscaling PDF:', error);
+    // Return original if upscaling fails
+    return pdfBytes;
+  }
+}
+
 // Convert canvas to image with HD quality settings
 function canvasToImage(canvas: HTMLCanvasElement, quality: number, format: 'jpeg' | 'png' = 'jpeg'): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -592,12 +689,11 @@ export async function compressToTargetSize(
   const maxTestSize = maxTestResult.blob.size;
   console.log(`Maximum quality test: ${maxTestSize} bytes (quality 0.99, scale 1.0)`);
   
-  // If even at max quality we're under target, we can't reach it by compressing less
-  // Use this as our best result and try to get closer by reducing quality slightly
+  // If even at max quality we're under target, we need to UPSCALE the PDF to reach target
   if (maxTestSize <= targetSize) {
     const fillRatio = maxTestSize / targetSize;
     console.log(`Natural compression (${maxTestSize} bytes) is already below target (${targetSize} bytes) at max quality.`);
-    console.log(`Fill ratio: ${(fillRatio * 100).toFixed(1)}% - Using maximum quality result.`);
+    console.log(`Fill ratio: ${(fillRatio * 100).toFixed(1)}% - Will upscale to reach target.`);
     
     bestUnderTarget = {
       blob: maxTestResult.blob,
@@ -606,9 +702,9 @@ export async function compressToTargetSize(
       size: maxTestSize
     };
     
-    // If we're close enough (≥95% of target), return immediately
+    // If we're close enough (≥95% of target), return immediately without upscaling
     if (fillRatio >= 0.95) {
-      console.log(`Already at ${(fillRatio * 100).toFixed(1)}% of target with max quality. Returning result.`);
+      console.log(`Already at ${(fillRatio * 100).toFixed(1)}% of target with max quality. No upscaling needed.`);
       return {
         blob: maxTestResult.blob,
         quality: 0.99,
@@ -618,17 +714,45 @@ export async function compressToTargetSize(
       };
     }
     
-    // For cases where we're far below target (<95%), we can't do much
-    // The PDF simply doesn't have enough content to reach the target size
-    // Return the best quality we can
-    console.warn(`Cannot reach target size. PDF compresses to ${maxTestSize} bytes even at maximum quality (${(fillRatio * 100).toFixed(1)}% of ${targetSize} bytes target).`);
-    return {
-      blob: maxTestResult.blob,
-      quality: 0.99,
-      scale: 1.0,
-      attempts: 1,
-      mode
-    };
+    // AUTONOMOUS UPSCALING: Add padding to reach target size
+    console.log(`Upscaling PDF from ${maxTestSize} bytes to reach ${targetSize} bytes target...`);
+    
+    if (onProgress) {
+      onProgress(85, 'Upscaling PDF to target size...');
+    }
+    
+    try {
+      const pdfBytesArray = await maxTestResult.blob.arrayBuffer();
+      const upscaledBytes = await upscalePDFToTarget(
+        new Uint8Array(pdfBytesArray),
+        maxTestSize,
+        targetSize
+      );
+      
+      const upscaledSize = upscaledBytes.length;
+      console.log(`Upscaling complete: ${maxTestSize} → ${upscaledSize} bytes (${(upscaledSize/targetSize*100).toFixed(1)}% of target)`);
+      
+      if (onProgress) {
+        onProgress(100, 'Upscaling complete!');
+      }
+      
+      return {
+        blob: new Blob([upscaledBytes], { type: 'application/pdf' }),
+        quality: 0.99,
+        scale: 1.0,
+        attempts: 1,
+        mode
+      };
+    } catch (error) {
+      console.error('Upscaling failed, returning max quality result:', error);
+      return {
+        blob: maxTestResult.blob,
+        quality: 0.99,
+        scale: 1.0,
+        attempts: 1,
+        mode
+      };
+    }
   }
   
   // If max quality result is over target, proceed with normal binary search
@@ -985,9 +1109,6 @@ export async function compressToTargetSize(
         }
       }
     
-    // Note: Upscaling logic removed - compressor should always compress down to target,
-    // never expand files (that would defeat the purpose of compression)
-    
     // Always return the best result we have, even if not perfect
     console.log(`Final result: ${bestUnderTarget!.size} bytes (${(bestUnderTarget!.size/targetSize*100).toFixed(1)}% of target), Quality: ${bestUnderTarget!.quality.toFixed(3)}, Scale: ${bestUnderTarget!.scale.toFixed(2)}`);
     
@@ -1003,11 +1124,49 @@ export async function compressToTargetSize(
       };
     }
     
-    // Log a warning if we couldn't get close, but still return the result
+    // AUTONOMOUS UPSCALING: If we're below 95% of target, upscale to reach it
     if (bestUnderTarget!.size < targetSize * 0.95) {
-      console.warn(`Note: Could not achieve target. Best achieved: ${bestUnderTarget!.size} bytes (${(bestUnderTarget!.size/targetSize*100).toFixed(1)}% of target)`);
+      console.log(`Below 95% of target. Upscaling from ${bestUnderTarget!.size} bytes to reach ${targetSize} bytes...`);
+      
+      if (onProgress) {
+        onProgress(85, 'Upscaling PDF to target size...');
+      }
+      
+      try {
+        const pdfBytesArray = await bestUnderTarget!.blob.arrayBuffer();
+        const upscaledBytes = await upscalePDFToTarget(
+          new Uint8Array(pdfBytesArray),
+          bestUnderTarget!.size,
+          targetSize
+        );
+        
+        const upscaledSize = upscaledBytes.length;
+        console.log(`Upscaling complete: ${bestUnderTarget!.size} → ${upscaledSize} bytes (${(upscaledSize/targetSize*100).toFixed(1)}% of target)`);
+        
+        if (onProgress) {
+          onProgress(100, 'Upscaling complete!');
+        }
+        
+        return {
+          blob: new Blob([upscaledBytes], { type: 'application/pdf' }),
+          quality: bestUnderTarget!.quality,
+          scale: bestUnderTarget!.scale,
+          attempts,
+          mode
+        };
+      } catch (error) {
+        console.error('Upscaling failed, returning best compressed result:', error);
+        return {
+          blob: bestUnderTarget!.blob,
+          quality: bestUnderTarget!.quality,
+          scale: bestUnderTarget!.scale,
+          attempts,
+          mode
+        };
+      }
     }
     
+    // Already close enough (≥95%), no upscaling needed
     return { 
       blob: bestUnderTarget!.blob, 
       quality: bestUnderTarget!.quality, 
