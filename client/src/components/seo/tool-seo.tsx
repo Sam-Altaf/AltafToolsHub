@@ -116,6 +116,24 @@ export const toolFAQs = {
       answer: "100% secure! All conversion happens in your browser. Your images are never uploaded to any server, ensuring complete privacy."
     }
   ],
+  "png-to-pdf": [
+    {
+      question: "Does PNG to PDF preserve transparency?",
+      answer: "Yes! Our PNG to PDF converter fully preserves the alpha channel (transparency) of your PNG images. Transparent areas remain transparent in the resulting PDF."
+    },
+    {
+      question: "What's the difference between PNG and JPG conversion?",
+      answer: "PNG conversion uses lossless compression and supports transparency, making it ideal for graphics, screenshots, and images with transparent backgrounds. JPG is better for photographs."
+    },
+    {
+      question: "Can I convert multiple PNG files at once?",
+      answer: "Absolutely! You can convert unlimited PNG images to a single PDF. Simply drag and drop all your PNG files, arrange them as needed, and convert them all at once."
+    },
+    {
+      question: "Will my PNG quality be reduced?",
+      answer: "No! PNG to PDF conversion uses lossless compression by default. Your images maintain their original quality with no degradation, especially useful for graphics and screenshots."
+    }
+  ],
   "qr-generator": [
     {
       question: "What can I encode in a QR code?",
