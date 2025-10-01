@@ -609,6 +609,7 @@ export async function compressToTargetSize(
       const params: CompressionParams = {
         jpegQuality: testQuality,
         scale: adjacentScale,
+        mode: mode,
         onProgress: (progress, message) => {
           if (onProgress) {
             const attemptProgress = Math.round((attempts / maxAttempts) * 80);
@@ -669,6 +670,7 @@ export async function compressToTargetSize(
         const params: CompressionParams = {
           jpegQuality: fineQuality,
           scale: bestUnderTarget.scale,
+          mode: mode,
           onProgress: (progress, message) => {
             if (onProgress) {
               const attemptProgress = Math.round(80 + (attempts / maxAttempts) * 20);
@@ -723,6 +725,7 @@ export async function compressToTargetSize(
           const params: CompressionParams = {
             jpegQuality: microQuality,
             scale: bestUnderTarget.scale,
+            mode: mode,
             onProgress: (progress, message) => {
               if (onProgress) {
                 const attemptProgress = Math.round(90 + (attempts / maxAttempts) * 10);
@@ -771,6 +774,7 @@ export async function compressToTargetSize(
         const params: CompressionParams = {
           jpegQuality: q,
           scale: bestUnderTarget.scale,
+          mode: mode,
           onProgress: (progress, message) => {
             if (onProgress) {
               onProgress(95, `Fine-tuning to reach target...`);
