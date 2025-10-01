@@ -536,8 +536,9 @@ export const allTools: Tool[] = [
     icon: PenTool,
     href: "/sign-pdf",
     color: "from-indigo-500 to-purple-500",
-    available: false,
+    available: true,
     category: "security",
+    popular: true,
     features: ["Draw signature", "Type signature", "Upload signature", "Date & time stamps"],
     extendedDescription: "Create and apply digital signatures to PDFs for contracts and agreements. Draw, type, or upload your signature with automatic timestamp verification."
   },
