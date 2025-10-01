@@ -158,8 +158,9 @@ export default function PDFToImages() {
         const viewport = page.getViewport({ scale });
 
         const canvas = document.createElement('canvas');
+        const enableAlpha = (format === 'png' || format === 'webp') && colorMode === 'rgba';
         const context = canvas.getContext('2d', { 
-          alpha: format === 'png' && colorMode === 'rgba',
+          alpha: enableAlpha,
           willReadFrequently: false 
         });
         if (!context) throw new Error('Failed to get canvas context');
@@ -171,9 +172,14 @@ export default function PDFToImages() {
         context.imageSmoothingEnabled = true;
         context.imageSmoothingQuality = 'high';
 
-        // Clear with transparent background for PNG RGBA mode
-        if (format === 'png' && colorMode === 'rgba') {
+        // Handle background based on format
+        if (enableAlpha) {
+          // Clear with transparent background for PNG/WEBP RGBA mode
           context.clearRect(0, 0, canvas.width, canvas.height);
+        } else if (format === 'jpg') {
+          // JPG doesn't support transparency - fill with white background
+          context.fillStyle = '#ffffff';
+          context.fillRect(0, 0, canvas.width, canvas.height);
         }
 
         await page.render({
