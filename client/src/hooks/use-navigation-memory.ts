@@ -36,17 +36,19 @@ export function useNavigationMemory() {
   const restoringScrollRef = useRef(false);
   const hasRestoredRef = useRef(false);
 
-  // On initial load, check if we should restore to a different page
-  // Only restore if user lands on homepage ("/"), never override deep links
+  // Navigation restoration disabled to prevent unwanted redirects
+  // Only scroll position is preserved between page visits
   useEffect(() => {
-    if (!hasRestoredRef.current) {
-      hasRestoredRef.current = true;
-      const savedPage = localStorage.getItem(CURRENT_PAGE_KEY);
-      // Only restore navigation if currently on root path
-      if (savedPage && savedPage !== location && location === '/') {
-        // Navigate to the saved page
-        navigate(savedPage);
-      }
+    hasRestoredRef.current = true;
+    // Clear old navigation data on first load
+    const VERSION_KEY = 'altaftoolshub_version';
+    const CURRENT_VERSION = '2.0';
+    const savedVersion = localStorage.getItem(VERSION_KEY);
+    
+    if (savedVersion !== CURRENT_VERSION) {
+      // Clear old navigation data
+      localStorage.removeItem(CURRENT_PAGE_KEY);
+      localStorage.setItem(VERSION_KEY, CURRENT_VERSION);
     }
   }, []);
 
