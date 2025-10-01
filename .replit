@@ -15,8 +15,8 @@ localPort = 5000
 externalPort = 80
 
 [[ports]]
-localPort = 32869
-externalPort = 8008
+localPort = 34727
+externalPort = 8000
 
 [[ports]]
 localPort = 37303
@@ -75,7 +75,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npm run build && npm run start"
+args = "npm run start"
 waitForPort = 5000
 
 [workflows.workflow.metadata]
