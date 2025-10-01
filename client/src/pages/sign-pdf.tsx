@@ -631,7 +631,6 @@ export default function SignPDFPage() {
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         <Breadcrumbs
           items={[
-            { name: "Home", url: "/" },
             { name: "PDF Tools", url: "/all-tools#pdf" },
             { name: "Sign PDF", url: "/sign-pdf" }
           ]}
