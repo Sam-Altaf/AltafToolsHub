@@ -334,9 +334,11 @@ export const allTools: Tool[] = [
     icon: FileText,
     href: "/word-to-pdf",
     color: "from-blue-600 to-blue-500",
-    available: false,
+    available: true,
     category: "document-conversion",
-    popular: true
+    popular: true,
+    features: ["Browser-based conversion", "Preserve formatting", "No file uploads", "Supports .docx and .doc"],
+    extendedDescription: "Convert Microsoft Word documents (.docx, .doc) to PDF format directly in your browser. Maintains formatting, fonts, and document structure while ensuring complete privacy."
   },
   {
     id: "pdf-to-word",
