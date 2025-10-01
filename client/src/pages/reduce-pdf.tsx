@@ -50,8 +50,8 @@ export default function ReducePDF() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [targetSize, setTargetSize] = useState<TargetSize>("500KB");
   const [compressionLevel, setCompressionLevel] = useState(60); // Default 60% like BigPDF
-  const [useAdvancedMode, setUseAdvancedMode] = useState(false); // Toggle between slider and target size
-  const [compressionMode, setCompressionMode] = useState<'highest' | 'hd' | 'balanced' | 'fast'>('highest'); // Default to HD mode
+  const [useAdvancedMode, setUseAdvancedMode] = useState(true); // Default to Advanced Mode (target size selection)
+  const [compressionMode, setCompressionMode] = useState<'highest' | 'hd' | 'balanced' | 'fast'>('highest'); // Default to Highest Quality mode
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [progressMessage, setProgressMessage] = useState<string>("");

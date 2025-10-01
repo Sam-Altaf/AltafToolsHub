@@ -109,6 +109,63 @@ function Router() {
               <CompressPDF />
             </Suspense>
           </Route>
+          
+          {/* SEO-friendly compression target routes - All use CompressPDF */}
+          <Route path="/compress-pdf-to-10kb">
+            <Suspense fallback={<PageLoader />}>
+              <CompressPDF />
+            </Suspense>
+          </Route>
+          <Route path="/compress-pdf-to-20kb">
+            <Suspense fallback={<PageLoader />}>
+              <CompressPDF />
+            </Suspense>
+          </Route>
+          <Route path="/compress-pdf-to-50kb">
+            <Suspense fallback={<PageLoader />}>
+              <CompressPDF />
+            </Suspense>
+          </Route>
+          <Route path="/compress-pdf-to-100kb">
+            <Suspense fallback={<PageLoader />}>
+              <CompressPDF />
+            </Suspense>
+          </Route>
+          <Route path="/compress-pdf-to-150kb">
+            <Suspense fallback={<PageLoader />}>
+              <CompressPDF />
+            </Suspense>
+          </Route>
+          <Route path="/compress-pdf-to-200kb">
+            <Suspense fallback={<PageLoader />}>
+              <CompressPDF />
+            </Suspense>
+          </Route>
+          <Route path="/compress-pdf-to-300kb">
+            <Suspense fallback={<PageLoader />}>
+              <CompressPDF />
+            </Suspense>
+          </Route>
+          <Route path="/compress-pdf-to-500kb">
+            <Suspense fallback={<PageLoader />}>
+              <CompressPDF />
+            </Suspense>
+          </Route>
+          <Route path="/compress-pdf-to-1mb">
+            <Suspense fallback={<PageLoader />}>
+              <CompressPDF />
+            </Suspense>
+          </Route>
+          <Route path="/compress-pdf-to-2mb">
+            <Suspense fallback={<PageLoader />}>
+              <CompressPDF />
+            </Suspense>
+          </Route>
+          <Route path="/compress-pdf-to-5mb">
+            <Suspense fallback={<PageLoader />}>
+              <CompressPDF />
+            </Suspense>
+          </Route>
           <Route path="/reduce-pdf">
             <Suspense fallback={<PageLoader />}>
               <ReducePDF />

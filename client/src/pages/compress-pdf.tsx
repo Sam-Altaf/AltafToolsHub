@@ -7,7 +7,7 @@ import {
   Check, AlertCircle, FileDown, Target, Info, TrendingDown, 
   Gauge, ArrowLeft, FileText, Sparkles, Zap, Shield, Settings2, Book 
 } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
 import { useSEO, generateHowToSchema, generateSoftwareApplicationSchema } from "@/hooks/use-seo";
 import { PDFDocument } from "pdf-lib";
@@ -47,11 +47,30 @@ interface CompressionParams {
 }
 
 export default function CompressPDF() {
+  // Get URL path to extract target size from SEO-friendly URLs
+  const [location] = useLocation();
+  
+  // Extract target size from URL (e.g., /compress-pdf-to-500kb → 500KB)
+  const extractTargetFromURL = (): TargetSize => {
+    const match = location.match(/compress-pdf-to-(\d+)(kb|mb)/i);
+    if (match) {
+      const size = match[1];
+      const unit = match[2].toUpperCase();
+      const targetString = `${size}${unit}` as TargetSize;
+      // Validate it's a valid target size
+      const validSizes: TargetSize[] = ["10KB", "20KB", "50KB", "100KB", "150KB", "200KB", "300KB", "500KB", "1MB", "2MB", "5MB"];
+      if (validSizes.includes(targetString)) {
+        return targetString;
+      }
+    }
+    return "500KB"; // Default
+  };
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [targetSize, setTargetSize] = useState<TargetSize>("500KB");
+  const [targetSize, setTargetSize] = useState<TargetSize>(extractTargetFromURL());
   const [compressionLevel, setCompressionLevel] = useState(60); // Default 60% like BigPDF
-  const [useAdvancedMode, setUseAdvancedMode] = useState(false); // Toggle between slider and target size
-  const [compressionMode, setCompressionMode] = useState<'highest' | 'hd' | 'balanced' | 'fast'>('highest'); // Default to HD mode
+  const [useAdvancedMode, setUseAdvancedMode] = useState(true); // Default to Advanced Mode (target size selection)
+  const [compressionMode, setCompressionMode] = useState<'highest' | 'hd' | 'balanced' | 'fast'>('highest'); // Default to Highest Quality mode
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [progressMessage, setProgressMessage] = useState<string>("");

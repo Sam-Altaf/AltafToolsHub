@@ -449,11 +449,11 @@ export async function compressToTargetSize(
       minScale = 0.88;
       maxScale = 0.96;
     } else if (compressionRatio >= 0.05) {
-      // 5-10%: Ultra-low quality first, keep scale very high
-      minQuality = 0.10;
-      maxQuality = 0.45;
-      minScale = 0.86;
-      maxScale = 0.94;
+      // 5-10%: Ultra-low quality first, keep scale VERY high for maximum sharpness
+      minQuality = 0.08;
+      maxQuality = 0.42;
+      minScale = 0.88;  // Increased from 0.86 for better quality
+      maxScale = 0.96;  // Increased from 0.94 for better quality
     } else if (compressionRatio >= 0.02) {
       // 2-5%: Minimum quality, moderate scale reduction
       minQuality = 0.08;
@@ -564,8 +564,8 @@ export async function compressToTargetSize(
   }
   
   let attempts = 0;
-  const maxAttempts = 20; // Reduced for speed: prioritize quick results over perfection
-  const tolerance = 0.02; // 2% tolerance for faster convergence (±100KB for 5MB, ±20KB for 1MB targets)
+  const maxAttempts = 24; // Increased from 20 to allow refinement steps (adjacent scales + fine-tuning)
+  const tolerance = 0.05; // 5% tolerance - we'll aim for 95-100% accuracy in practice
   
   // Track last progress to ensure monotonic progress bar
   let lastReportedProgress = 0;
@@ -659,9 +659,9 @@ export async function compressToTargetSize(
         searchMaxQ = testQuality; // Must decrease quality
       }
       
-      // SPEED OPTIMIZATION: Early exit if we're within 5% of target (good enough!)
+      // ACCURACY OPTIMIZATION: Early exit only if we're within 2% of target (97-100%)
       const difference = Math.abs(currentSize - targetSize);
-      if (currentSize <= targetSize && currentSize >= targetSize * 0.95) {
+      if (currentSize <= targetSize && currentSize >= targetSize * 0.97) {
         console.log(`Target achieved! Target: ${targetSize}, Achieved: ${currentSize}, Difference: ${difference} bytes (${(difference/targetSize*100).toFixed(1)}%)`);
         
         // CRITICAL SAFEGUARD: Never return a file larger than the original
@@ -687,19 +687,23 @@ export async function compressToTargetSize(
     }
   }
   
-  // SPEED OPTIMIZATION: Skip adjacent scale testing if we're already at 92%+ of target
-  if (bestUnderTarget && bestUnderTarget.size < targetSize * 0.92 && attempts < maxAttempts - 3) {
-    console.log('Testing adjacent scales for better targeting (aiming for 92-100% of target)...');
+  // ACCURACY OPTIMIZATION: Test adjacent scales if we're below 95% of target
+  if (bestUnderTarget && bestUnderTarget.size < targetSize * 0.95 && attempts <= maxAttempts - 4) {
+    console.log(`Testing adjacent scales for better targeting (aiming for 95-100% of target). Current: ${bestUnderTarget.size} bytes (${(bestUnderTarget.size/targetSize*100).toFixed(1)}%)`);
     
+    // PRIORITY: Test higher scale first for better quality (sharper images)
     const adjacentScales = [
-      bestScale + 0.02,
-      bestScale + 0.05,
+      bestScale + 0.02,  // Try slightly sharper first
+      bestScale + 0.04,  // Even sharper
       bestScale - 0.02,
-      bestScale - 0.05
-    ].filter(s => s >= minScale && s <= maxScale && !scalesToTest.includes(s));
+      bestScale - 0.04
+    ].filter(s => s >= minScale && s <= Math.min(maxScale, 0.98) && !scalesToTest.includes(s));
     
     for (const adjacentScale of adjacentScales) {
-      if (attempts >= maxAttempts - 3) break;
+      if (attempts >= maxAttempts - 4) {
+        console.log(`Skipping remaining adjacent scales (budget: ${attempts}/${maxAttempts})`);
+        break;
+      }
       
       attempts++;
       const testQuality: number = bestUnderTarget.quality;
@@ -732,9 +736,9 @@ export async function compressToTargetSize(
         };
         bestScale = adjacentScale;
         
-        // Check if we're close enough (within 0.5% tolerance)
-        if (currentSize >= targetSize * 0.995) {
-          console.log(`Optimal result achieved with adjacent scale: ${currentSize} bytes`);
+        // Check if we're close enough (within 3% tolerance - 97%+)
+        if (currentSize >= targetSize * 0.97) {
+          console.log(`Optimal result achieved with adjacent scale: ${currentSize} bytes (${(currentSize/targetSize*100).toFixed(1)}%)`);
           
           // CRITICAL SAFEGUARD: Never return a file larger than the original
           if (currentSize >= originalSize) {
@@ -758,6 +762,8 @@ export async function compressToTargetSize(
         }
       }
     }
+  } else if (bestUnderTarget) {
+    console.log(`Skipping adjacent scale testing (attempts budget: ${attempts}/${maxAttempts}, or already at ≥95%)`);
   }
   
   // If we have a result under target that's close enough, use it
@@ -765,9 +771,9 @@ export async function compressToTargetSize(
     const fillRatio = bestUnderTarget.size / targetSize;
     console.log(`Best under target: ${bestUnderTarget.size} bytes (${(fillRatio * 100).toFixed(1)}% of target)`);
     
-    // SPEED OPTIMIZATION: Skip fine-tuning if we're already at 90%+ of target
-    if (fillRatio < 0.90 && attempts < maxAttempts - 2) {
-      console.log(`Fine-tuning quality to get closer to target (currently at ${(fillRatio*100).toFixed(1)}%, aiming for 90-100%)...`);
+    // ACCURACY OPTIMIZATION: Fine-tune if we're below 95% of target
+    if (fillRatio < 0.95 && attempts <= maxAttempts - 3) {
+      console.log(`Fine-tuning quality to get closer to target (currently at ${(fillRatio*100).toFixed(1)}%, aiming for 95-100%)...`);
       
       let fineQuality = bestUnderTarget.quality;
       const maxFineQuality = Math.min(bestUnderTarget.quality + 0.30, 0.99);  // Allow up to 0.99 quality
@@ -776,7 +782,7 @@ export async function compressToTargetSize(
       let minQ = fineQuality;
       let maxQ = maxFineQuality;
       
-      while (maxQ - minQ > 0.02 && attempts < maxAttempts) { // SPEED: Reduced precision from 0.005 to 0.02
+      while (maxQ - minQ > 0.005 && attempts <= maxAttempts - 1) { // ACCURACY: Increased precision to 0.005 for fine-tuning
         attempts++;
         fineQuality = (minQ + maxQ) / 2;
         
@@ -810,9 +816,9 @@ export async function compressToTargetSize(
           }
           minQ = fineQuality; // Can increase quality
           
-          // Check if we're close enough (within 0.5% tolerance)
-          if (currentSize >= targetSize * 0.995) {
-            console.log(`Optimal result achieved: ${currentSize} bytes (${(currentSize/targetSize*100).toFixed(1)}% of target)`);
+          // Check if we're close enough (within 3% tolerance - 97%+)
+          if (currentSize >= targetSize * 0.97) {
+            console.log(`Optimal result achieved after fine-tuning: ${currentSize} bytes (${(currentSize/targetSize*100).toFixed(1)}% of target)`);
             
             // CRITICAL SAFEGUARD: Never return a file larger than the original
             if (currentSize >= originalSize) {
@@ -838,6 +844,11 @@ export async function compressToTargetSize(
           maxQ = fineQuality; // Must decrease quality
         }
       }
+      
+      console.log(`Fine-tuning complete. Final: ${bestUnderTarget!.size} bytes (${(bestUnderTarget!.size/targetSize*100).toFixed(1)}%)`);
+    } else if (fillRatio < 0.95) {
+      console.log(`Skipping fine-tuning (attempts budget: ${attempts}/${maxAttempts})`);
+    }
       
       // SPEED OPTIMIZATION: Skip micro-adjustments entirely for faster results
       // (Micro-adjustments provide < 2% improvement but take 20-30% of total time)
@@ -906,7 +917,6 @@ export async function compressToTargetSize(
           }
         }
       }
-    }
     
     // Note: Upscaling logic removed - compressor should always compress down to target,
     // never expand files (that would defeat the purpose of compression)
@@ -927,7 +937,7 @@ export async function compressToTargetSize(
     }
     
     // Log a warning if we couldn't get close, but still return the result
-    if (bestUnderTarget!.size < targetSize * 0.90) {
+    if (bestUnderTarget!.size < targetSize * 0.95) {
       console.warn(`Note: Could not achieve target. Best achieved: ${bestUnderTarget!.size} bytes (${(bestUnderTarget!.size/targetSize*100).toFixed(1)}% of target)`);
     }
     
