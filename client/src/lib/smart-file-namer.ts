@@ -3,7 +3,7 @@
 
 interface FileNameOptions {
   originalName: string;
-  operation?: 'compress' | 'convert' | 'merge' | 'split' | 'unlock' | 'watermark';
+  operation?: 'compress' | 'reduce' | 'convert' | 'merge' | 'split' | 'unlock' | 'watermark';
   fileType?: string;
   size?: number;
   pageCount?: number;
@@ -20,7 +20,8 @@ interface SmartFileName {
 
 // Common descriptive words for different operations
 const OPERATION_DESCRIPTORS = {
-  compress: ['compressed', 'reduced', 'optimized', 'small', 'compact', 'mini'],
+  compress: ['compressed', 'optimized', 'small', 'compact', 'mini'],
+  reduce: ['reduced', 'shrunk', 'minimized', 'smaller', 'downsized'],
   convert: ['converted', 'transformed', 'changed', 'formatted'],
   merge: ['merged', 'combined', 'joined', 'unified'],
   split: ['split', 'divided', 'separated', 'extracted'],
