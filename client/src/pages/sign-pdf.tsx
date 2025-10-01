@@ -671,7 +671,7 @@ export default function SignPDFPage() {
           <FileUpload
             onFileSelect={handleFileSelect}
             accept=".pdf"
-            maxSize={100}
+            maxSize={100 * 1024 * 1024}
             title="Upload PDF to Sign"
             description="Select or drag a PDF document to add your digital signature"
           />
