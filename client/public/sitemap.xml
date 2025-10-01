@@ -594,5 +594,278 @@
     <priority>0.6</priority>
     <mobile:mobile/>
   </url>
+
+  <!-- SEO Alias URLs - Keyword-optimized redirects to main tools -->
+  <url>
+    <loc>https://altaftoolshub.app/jpg-to-pdf-converter</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/image-to-pdf</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/jpeg-to-pdf</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/pdf-to-jpg-converter</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/convert-pdf-to-jpg</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/pdf-to-jpeg</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/pdf-to-png-converter</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/convert-pdf-to-png</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/merge-pdf-files</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/join-pdf</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/combine-pdf-files</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/split-pdf-pages</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/divide-pdf</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/remove-pdf-password</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/unlock-pdf-password</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/qr-code-generator</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/create-qr-code</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/make-qr-code</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/add-watermark-to-pdf</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/pdf-watermark-maker</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/rotate-pdf-pages</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/rearrange-pdf-pages</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/crop-pdf-pages</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/extract-pdf-pages</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/extract-images-from-pdf</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/delete-pdf-pages</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/add-page-numbers-to-pdf</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/password-protect-pdf</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/secure-password-generator</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/extract-text-from-pdf</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/pdf-to-text</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/convert-pdf-to-zip</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/extract-pdf-from-zip</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
+
+  <url>
+    <loc>https://altaftoolshub.app/convert-pdf-to-images</loc>
+    <lastmod>2025-10-01T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <mobile:mobile/>
+  </url>
   
 </urlset>
