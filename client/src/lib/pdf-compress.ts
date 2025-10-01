@@ -264,8 +264,7 @@ export async function compressPDFSimple(
 ): Promise<{ blob: Blob }> {
   const mode = params.mode || 'balanced';
   
-  // Clear cache for each compression to avoid mixing PDFs
-  clearRenderCache();
+  // Note: Cache clearing is handled in compressToTargetSize to allow render reuse across attempts
   
   // Highest quality mode adjustments for maximum text clarity
   let adjustedParams = { ...params };
@@ -771,7 +770,9 @@ export async function compressToTargetSize(
       // Calculate theoretical scale needed to reach target
       const sizeRatio = bestUnderTarget.size / targetSize;
       const scaleFactor = Math.sqrt(1 / sizeRatio); // Images scale quadratically
-      const targetScale = Math.min(bestUnderTarget.scale * scaleFactor * 1.1, 3.0); // Cap at 3x upscale
+      const estimatedScale = bestUnderTarget.scale * scaleFactor * 1.1;
+      // Safety cap: 3x upscale or 12000px max dimension (whichever is lower)
+      const targetScale = Math.min(estimatedScale, 3.0); // Cap at 3x to prevent memory issues
       
       console.log(`Current: ${bestUnderTarget.size} bytes at scale ${bestUnderTarget.scale.toFixed(2)}, Target: ${targetSize} bytes, Estimated scale needed: ${targetScale.toFixed(2)}`);
       
