@@ -266,18 +266,9 @@ export async function compressPDFSimple(
   
   // Note: Cache clearing is handled in compressToTargetSize to allow render reuse across attempts
   
-  // Highest quality mode adjustments for maximum text clarity
+  // Use params as-is without enforcing minimum quality floors
+  // The binary search algorithm will find the optimal quality/scale for the target size
   let adjustedParams = { ...params };
-  if (mode === 'highest' || mode === 'hd') {
-    // Highest Quality: Maximum quality for text readability
-    adjustedParams.jpegQuality = Math.max(params.jpegQuality, 0.92); // Very high floor for text
-    adjustedParams.scale = Math.max(params.scale, 0.96); // Preserve text resolution
-    console.log('Highest Quality Mode: Maximum quality settings for text clarity');
-  } else if (mode === 'fast') {
-    // Fast mode: Prioritize speed with reasonable quality
-    adjustedParams.jpegQuality = Math.min(params.jpegQuality, 0.75);
-    adjustedParams.scale = Math.min(params.scale, 0.85);
-  }
   
   console.log(`Starting PDF compression in ${mode.toUpperCase()} mode:`, adjustedParams);
   
@@ -421,32 +412,38 @@ export async function compressToTargetSize(
   let maxScale: number;
   
   if (mode === 'highest' || mode === 'hd') {
-    // Highest Quality Mode: Maximum quality for text readability
+    // Highest Quality Mode: Best quality FOR THE TARGET SIZE
     if (compressionRatio >= 0.7) {
-      minQuality = 0.94; // Very high quality floor
+      minQuality = 0.94;
       maxQuality = 0.99;
-      minScale = 0.97;   // Near-original resolution
+      minScale = 0.97;
       maxScale = 1.0;
     } else if (compressionRatio >= 0.4) {
-      minQuality = 0.90; // High quality even for medium compression
+      minQuality = 0.90;
       maxQuality = 0.98;
-      minScale = 0.94;   // Preserve text details
+      minScale = 0.94;
       maxScale = 1.0;
     } else if (compressionRatio >= 0.2) {
-      minQuality = 0.85; // Still high quality for stronger compression
+      minQuality = 0.85;
       maxQuality = 0.97;
-      minScale = 0.90;   // Good text preservation
+      minScale = 0.90;
       maxScale = 1.0;
     } else if (compressionRatio >= 0.1) {
-      minQuality = 0.78; // Decent quality for tight targets
+      minQuality = 0.75;
       maxQuality = 0.95;
-      minScale = 0.85;   // Acceptable text clarity
+      minScale = 0.80;
       maxScale = 0.97;
+    } else if (compressionRatio >= 0.05) {
+      minQuality = 0.50;
+      maxQuality = 0.85;
+      minScale = 0.60;
+      maxScale = 0.90;
     } else {
-      minQuality = 0.70; // Minimum acceptable for text
-      maxQuality = 0.93;
-      minScale = 0.78;   // Still readable text
-      maxScale = 0.92;
+      // Extreme compression (< 5%): Allow very low quality to hit target
+      minQuality = 0.05;
+      maxQuality = 0.60;
+      minScale = 0.15;
+      maxScale = 0.70;
     }
   } else if (mode === 'fast') {
     // Fast Mode: Prioritize speed with reasonable quality
@@ -455,14 +452,19 @@ export async function compressToTargetSize(
       maxQuality = 0.85;
       minScale = 0.85;
       maxScale = 0.95;
-    } else {
+    } else if (compressionRatio >= 0.1) {
       minQuality = 0.50;
       maxQuality = 0.75;
       minScale = 0.70;
       maxScale = 0.90;
+    } else {
+      minQuality = 0.10;
+      maxQuality = 0.60;
+      minScale = 0.20;
+      maxScale = 0.75;
     }
   } else {
-    // Balanced Mode: Original settings
+    // Balanced Mode: Balance quality and size
     if (compressionRatio >= 0.7) {
       minQuality = 0.85;
       maxQuality = 0.99;
@@ -479,15 +481,21 @@ export async function compressToTargetSize(
       minScale = 0.85;
       maxScale = 1.0;
     } else if (compressionRatio >= 0.1) {
-      minQuality = 0.55;
+      minQuality = 0.50;
       maxQuality = 0.90;
-      minScale = 0.75;
+      minScale = 0.70;
       maxScale = 0.95;
-    } else {
-      minQuality = 0.40;
+    } else if (compressionRatio >= 0.05) {
+      minQuality = 0.30;
       maxQuality = 0.80;
-      minScale = 0.60;
-      maxScale = 0.90;
+      minScale = 0.50;
+      maxScale = 0.85;
+    } else {
+      // Extreme compression (< 5%): Very low quality allowed
+      minQuality = 0.05;
+      maxQuality = 0.60;
+      minScale = 0.15;
+      maxScale = 0.70;
     }
   }
   
@@ -763,108 +771,8 @@ export async function compressToTargetSize(
       }
     }
     
-    // If best result is still way below target, try upscaling beyond 100%
-    if (bestUnderTarget.size < targetSize * 0.7 && bestUnderTarget.scale >= 0.98 && attempts < maxAttempts + 15) {
-      console.log('Result too small even at scale 1.0, attempting upscaling to reach target...');
-      
-      // Calculate theoretical scale needed to reach target
-      const sizeRatio = bestUnderTarget.size / targetSize;
-      const scaleFactor = Math.sqrt(1 / sizeRatio); // Images scale quadratically
-      const estimatedScale = bestUnderTarget.scale * scaleFactor * 1.1;
-      // Safety cap: 3x upscale or 12000px max dimension (whichever is lower)
-      const targetScale = Math.min(estimatedScale, 3.0); // Cap at 3x to prevent memory issues
-      
-      console.log(`Current: ${bestUnderTarget.size} bytes at scale ${bestUnderTarget.scale.toFixed(2)}, Target: ${targetSize} bytes, Estimated scale needed: ${targetScale.toFixed(2)}`);
-      
-      // Try progressively larger scales
-      const upscaleSteps = [1.1, 1.2, 1.4, 1.6, 1.8, 2.0, 2.5, 3.0].filter(s => s <= targetScale + 0.2);
-      
-      for (const upscale of upscaleSteps) {
-        if (attempts >= maxAttempts + 15) break;
-        
-        attempts++;
-        const params: CompressionParams = {
-          jpegQuality: 0.95, // High quality for upscaled content
-          scale: upscale,
-          mode: mode,
-          onProgress: (progress, message) => {
-            if (onProgress) {
-              onProgress(95, `Upscaling to ${(upscale * 100).toFixed(0)}% to reach target...`);
-            }
-          }
-        };
-        
-        const result = await compressPDFSimple(pdfBytesCopy, params);
-        const currentSize = result.blob.size;
-        
-        console.log(`Upscale attempt: Scale ${upscale.toFixed(2)} (${(upscale * 100).toFixed(0)}%), Size ${currentSize}`);
-        
-        if (currentSize <= targetSize) {
-          bestUnderTarget = {
-            blob: result.blob,
-            quality: 0.95,
-            scale: upscale,
-            size: currentSize
-          };
-          
-          // If we're within 5% of target, stop
-          if (currentSize >= targetSize * 0.95) {
-            console.log(`Target achieved with upscaling: ${currentSize} bytes at ${(upscale * 100).toFixed(0)}% scale`);
-            break;
-          }
-        } else {
-          // Exceeded target, try to fine-tune
-          console.log(`Upscaling exceeded target, fine-tuning...`);
-          
-          // Binary search between last good scale and this scale
-          const lowScale = bestUnderTarget.scale;
-          const highScale = upscale;
-          let searchLow = lowScale;
-          let searchHigh = highScale;
-          
-          for (let i = 0; i < 5 && attempts < maxAttempts + 15; i++) {
-            attempts++;
-            const midScale = (searchLow + searchHigh) / 2;
-            
-            const fineParams: CompressionParams = {
-              jpegQuality: 0.95,
-              scale: midScale,
-              mode: mode,
-              onProgress
-            };
-            
-            const fineResult = await compressPDFSimple(pdfBytesCopy, fineParams);
-            const fineSize = fineResult.blob.size;
-            
-            console.log(`Upscale fine-tune: Scale ${midScale.toFixed(3)}, Size ${fineSize}`);
-            
-            if (fineSize <= targetSize) {
-              bestUnderTarget = {
-                blob: fineResult.blob,
-                quality: 0.95,
-                scale: midScale,
-                size: fineSize
-              };
-              searchLow = midScale;
-              
-              if (fineSize >= targetSize * 0.995) {
-                console.log(`Exact target achieved with upscale fine-tuning: ${fineSize} bytes`);
-                return {
-                  blob: fineResult.blob,
-                  quality: 0.95,
-                  scale: midScale,
-                  attempts,
-                  mode
-                };
-              }
-            } else {
-              searchHigh = midScale;
-            }
-          }
-          break; // Exit upscale loop after fine-tuning
-        }
-      }
-    }
+    // Note: Upscaling logic removed - compressor should always compress down to target,
+    // never expand files (that would defeat the purpose of compression)
     
     // Always return the best result we have, even if not perfect
     console.log(`Final result: ${bestUnderTarget.size} bytes (${(bestUnderTarget.size/targetSize*100).toFixed(1)}% of target), Quality: ${bestUnderTarget.quality.toFixed(3)}, Scale: ${bestUnderTarget.scale.toFixed(2)}`);
