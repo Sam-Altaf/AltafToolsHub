@@ -1,9 +1,17 @@
 import express, { type Request, Response, NextFunction } from "express";
 import path from "path";
+import compression from "compression";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
+
+// Enable gzip/Brotli compression for all responses
+app.use(compression({
+  threshold: 0, // Compress all responses
+  level: 9 // Maximum compression
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -50,9 +58,16 @@ app.use((req, res, next) => {
 (async () => {
   const server = await registerRoutes(app);
 
-  // Serve attached_assets as static files
+  // Serve attached_assets as static files with proper caching
   // This must be before the Vite middleware to ensure static files are served correctly
-  app.use('/attached_assets', express.static(path.join(import.meta.dirname, '../attached_assets')));
+  app.use('/attached_assets', express.static(path.join(import.meta.dirname, '../attached_assets'), {
+    maxAge: '30d', // Cache for 30 days
+    immutable: true,
+    setHeaders: (res, filePath) => {
+      // Set aggressive caching for images and static assets
+      res.setHeader('Cache-Control', 'public, max-age=2592000, immutable'); // 30 days
+    }
+  }));
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
