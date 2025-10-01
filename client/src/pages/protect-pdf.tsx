@@ -22,7 +22,8 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
-import { useSEO, generateHowToSchema, generateSoftwareApplicationSchema, generateBreadcrumbSchema } from "@/hooks/use-seo";
+import { useSEO } from "@/hooks/use-seo";
+import { generateToolPageSchemas, generateEnhancedHowToSchema } from "@/lib/structured-data";
 import { cn } from "@/lib/utils";
 import Breadcrumbs from "@/components/seo/breadcrumbs";
 import PrivacyNotice from "@/components/privacy-notice";

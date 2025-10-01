@@ -11,7 +11,8 @@ import {
   Clock, ChevronRight, Sparkles, QrCode, Calculator,
   BookOpen, FileCode, Type, PenTool, Book, CloudOff, Gift
 } from "lucide-react";
-import { useSEO, generateOrganizationSchema, generateWebApplicationSchema, generateFAQSchema, generateServiceSchema } from "@/hooks/use-seo";
+import { useSEO } from "@/hooks/use-seo";
+import { generateCompleteOrganizationSchema, generateWebSiteSchema, generateToolCollectionSchema } from "@/lib/structured-data";
 import { motion, AnimatePresence } from "framer-motion";
 import { LogoIcon } from "@/components/logo";
 import { ComparisonTable } from "@/components/comparison-table";
@@ -289,32 +290,76 @@ export default function Home() {
   });
 
   // Comprehensive structured data for homepage
-  const structuredData = [
-    generateOrganizationSchema(),
-    generateWebApplicationSchema({
-      name: "AltafToolsHub - Free Privacy-First Online Tools",
-      description: "Complete suite of 49+ privacy-first online tools for PDF compression, image conversion, document processing, and more. All processing happens directly in your browser - no uploads, no server storage, 100% private.",
-      applicationCategory: "UtilitiesApplication",
-      aggregateRating: {
-        ratingValue: 4.9,
-        ratingCount: 2847
-      }
-    }),
-    generateFAQSchema([
+  const organizationSchema = generateCompleteOrganizationSchema();
+  const websiteSchema = generateWebSiteSchema();
+  
+  // Create tool collection schema for homepage
+  const toolCollectionSchema = generateToolCollectionSchema({
+    name: "PDF & Document Tools",
+    description: "Complete collection of privacy-first online tools for PDF processing, document conversion, and file management",
+    tools: availableTools.map(tool => ({
+      id: tool.id,
+      title: tool.title,
+      description: tool.description,
+      extendedDescription: tool.extendedDescription,
+      features: tool.features,
+      category: tool.category,
+      href: tool.href
+    }))
+  });
+
+  const homeFAQSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": "https://www.altaftoolshub.app/#faq",
+    "url": "https://www.altaftoolshub.app",
+    "headline": "Frequently Asked Questions About AltafToolsHub",
+    "description": "Common questions about our privacy-first online tools platform",
+    "mainEntity": [
       {
-        question: "Are my files safe when using AltafToolsHub?",
-        answer: "Yes, absolutely! All file processing happens directly in your browser. Your files never leave your device and are never uploaded to any server. This ensures 100% privacy and security."
+        "@type": "Question",
+        "name": "Are my files safe when using AltafToolsHub?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, absolutely! All file processing happens directly in your browser. Your files never leave your device and are never uploaded to any server. This ensures 100% privacy and security."
+        }
       },
       {
-        question: "How many tools are available on AltafToolsHub?",
-        answer: `We offer ${platformStats.totalTools}+ tools, with ${platformStats.availableTools} currently available and more being added regularly. All tools are free to use with no limits.`
+        "@type": "Question",
+        "name": "How many tools are available on AltafToolsHub?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": `We offer ${platformStats.totalTools}+ tools, with ${platformStats.availableTools} currently available and more being added regularly. All tools are free to use with no limits.`
+        }
       },
       {
-        question: "Do I need to create an account?",
-        answer: "No account required! All tools are instantly accessible without registration, login, or any personal information."
+        "@type": "Question",
+        "name": "Do I need to create an account?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No account required! All tools are instantly accessible without registration, login, or any personal information."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which browsers support AltafToolsHub?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "AltafToolsHub works on all modern browsers including Chrome, Firefox, Safari, Edge, and Opera. We recommend using the latest version for the best experience."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is AltafToolsHub really free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes! AltafToolsHub is completely free with no hidden charges, subscriptions, or limits on usage. You can process unlimited files without any cost."
+        }
       }
-    ])
-  ];
+    ]
+  };
+  
+  const structuredData = [organizationSchema, websiteSchema, toolCollectionSchema, homeFAQSchema];
 
   useSEO({
     title: "AltafToolsHub - 49+ Free Privacy-First PDF & File Tools",

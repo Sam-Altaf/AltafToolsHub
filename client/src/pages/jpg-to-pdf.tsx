@@ -11,7 +11,8 @@ import {
 } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
-import { useSEO, generateHowToSchema, generateSoftwareApplicationSchema } from "@/hooks/use-seo";
+import { useSEO } from "@/hooks/use-seo";
+import { generateToolPageSchemas, generateEnhancedHowToSchema } from "@/lib/structured-data";
 import { PDFDocument, rgb } from "pdf-lib";
 import { cn } from "@/lib/utils";
 import Breadcrumbs from "@/components/seo/breadcrumbs";
@@ -41,36 +42,69 @@ export default function JpgToPDF() {
   const [result, setResult] = useState<ConversionResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Generate structured data for SEO
-  const howToSchema = generateHowToSchema({
-    name: "How to Convert JPG Images to PDF",
-    description: "Convert multiple images to a single PDF document with custom layouts",
-    totalTime: "PT1M",
-    steps: [
-      { name: "Select Images", text: "Upload one or more JPG, PNG, or WebP images" },
-      { name: "Arrange Order", text: "Drag to reorder images as needed" },
-      { name: "Choose Settings", text: "Select page size, orientation, and quality" },
-      { name: "Convert to PDF", text: "Click 'Convert to PDF' and download your file" }
-    ]
-  });
-
-  const softwareSchema = generateSoftwareApplicationSchema({
-    name: "JPG to PDF Converter - AltafToolsHub",
-    description: "Free image to PDF converter supporting JPG, PNG, WebP. Multiple layouts and custom settings. 100% browser-based.",
-    applicationCategory: "MultimediaApplication",
-    url: "https://www.altaftoolshub.app/jpg-to-pdf",
-    aggregateRating: { ratingValue: 4.7, ratingCount: 1234, bestRating: 5 },
-    featureList: [
+  // Generate comprehensive structured data for SEO
+  const toolData = {
+    id: "jpg-to-pdf",
+    title: "JPG to PDF",
+    description: "Convert JPG images to PDF documents",
+    extendedDescription: "Free image to PDF converter supporting JPG, PNG, WebP, GIF, and BMP formats. Convert multiple images into a single PDF with custom page sizes, orientations, and quality settings. 100% browser-based for complete privacy.",
+    features: [
       "Convert multiple images to PDF",
       "Support for JPG, PNG, WebP, GIF, BMP",
-      "Custom page sizes and orientations",
+      "Custom page sizes (A4, Letter, Legal)",
+      "Portrait and landscape orientations",
       "Multiple images per page layouts",
       "Adjustable quality settings",
       "Drag and drop reordering",
-      "100% client-side processing"
+      "100% client-side processing",
+      "No file size limits",
+      "Batch image processing"
     ],
-    datePublished: "2024-01-01",
-    dateModified: "2025-01-17"
+    category: "pdf-conversion",
+    href: "/jpg-to-pdf"
+  };
+
+  // Generate all schemas for the tool page
+  const schemas = generateToolPageSchemas(toolData);
+  
+  // Add enhanced HowTo schema
+  const howToSchema = generateEnhancedHowToSchema({
+    name: "How to Convert JPG Images to PDF",
+    description: "Learn how to convert multiple images to a single PDF document with custom layouts and settings",
+    totalTime: "PT1M",
+    difficulty: "Easy",
+    category: "Image Conversion",
+    steps: [
+      { 
+        name: "Select Images", 
+        text: "Upload one or more JPG, PNG, or WebP images. You can select multiple files at once or drag them from your folder.",
+        image: "/images/jpg-pdf-step1.png",
+        tip: "Hold Ctrl/Cmd to select multiple images at once"
+      },
+      { 
+        name: "Arrange Order", 
+        text: "Drag to reorder images as needed. The order you set will be the page order in your PDF.",
+        image: "/images/jpg-pdf-step2.png",
+        tip: "Click and drag the grip icon to reorder images"
+      },
+      { 
+        name: "Choose Settings", 
+        text: "Select page size (A4, Letter, etc.), orientation (portrait/landscape), and quality settings for optimal results.",
+        image: "/images/jpg-pdf-step3.png",
+        tip: "Use 'High' quality for print, 'Medium' for web"
+      },
+      { 
+        name: "Convert to PDF", 
+        text: "Click 'Convert to PDF' and download your file instantly. The conversion happens entirely in your browser.",
+        image: "/images/jpg-pdf-step4.png",
+        tip: "File is automatically named based on your first image"
+      }
+    ],
+    video: {
+      url: "/videos/jpg-to-pdf-tutorial.mp4",
+      thumbnail: "/images/video-thumbnail-jpg-pdf.jpg",
+      duration: "PT2M"
+    }
   });
 
   useSEO({
@@ -79,7 +113,7 @@ export default function JpgToPDF() {
     path: "/jpg-to-pdf",
     keywords: "jpg to pdf converter, convert jpg to pdf online, image to pdf converter, png to pdf free, photo to pdf online, jpeg to pdf converter, batch image to pdf, multiple images to pdf, pictures to pdf converter 2025, convert photos to pdf document",
     ogImage: "https://altaftoolshub.app/og-jpg-to-pdf.png",
-    structuredData: [howToSchema, softwareSchema],
+    structuredData: [...schemas, howToSchema],
     additionalMetaTags: [
       { name: "application-name", content: "JPG to PDF Converter - AltafToolsHub" },
       { property: "article:section", content: "Image Tools" },

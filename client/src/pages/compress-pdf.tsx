@@ -9,7 +9,8 @@ import {
 } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
-import { useSEO, generateHowToSchema, generateSoftwareApplicationSchema } from "@/hooks/use-seo";
+import { useSEO } from "@/hooks/use-seo";
+import { generateToolPageSchemas, generateEnhancedHowToSchema, getCommonPDFToolFAQs, getToolSpecificFAQs } from "@/lib/structured-data";
 import { PDFDocument } from "pdf-lib";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
@@ -77,135 +78,71 @@ export default function CompressPDF() {
   const [result, setResult] = useState<CompressionResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Generate structured data for SEO
-  const howToSchema = generateHowToSchema({
-    name: "How to Compress PDF Files Online",
-    description: "Learn how to reduce PDF file size using our free online compressor with specific target sizes",
-    totalTime: "PT1M",
-    estimatedCost: {
-      currency: "USD",
-      value: "0"
-    },
-    supply: [
-      "Web Browser - Any modern web browser (Chrome, Firefox, Safari, Edge)",
-      "PDF File - The PDF file you want to compress"
-    ],
-    tool: [
-      "AltafToolsHub PDF Compressor - Free online PDF compression tool"
-    ],
-    steps: [
-      { 
-        name: "Upload PDF", 
-        text: "Click the upload area or drag and drop your PDF file",
-        image: "https://altaftoolshub.app/images/step1-upload.png"
-      },
-      { 
-        name: "Select Target Size", 
-        text: "Choose your desired file size from 10KB to 5MB",
-        image: "https://altaftoolshub.app/images/step2-select-size.png"
-      },
-      { 
-        name: "Compress File", 
-        text: "Click 'Compress PDF' and wait a few seconds",
-        image: "https://altaftoolshub.app/images/step3-compress.png"
-      },
-      { 
-        name: "Download Result", 
-        text: "Download your compressed PDF instantly",
-        image: "https://altaftoolshub.app/images/step4-download.png"
-      }
-    ]
-  });
-
-  const softwareSchema = generateSoftwareApplicationSchema({
-    name: "PDF Compressor - AltafToolsHub",
-    description: "Free online PDF compression tool with privacy-first approach. Reduce PDF size to specific targets from 10KB to 5MB.",
-    applicationCategory: "UtilitiesApplication",
-    url: "https://www.altaftoolshub.app/compress-pdf",
-    aggregateRating: { ratingValue: 4.9, ratingCount: 1523, bestRating: 5 },
-    featureList: [
+  // Generate comprehensive structured data for SEO
+  const toolData = {
+    id: "compress-pdf",
+    title: "Compress PDF",
+    description: "Reduce PDF file size while maintaining quality",
+    extendedDescription: "Advanced PDF compression with target sizes from 10KB to 5MB. Reduce PDF size by up to 95% while maintaining readability. Perfect for email attachments, web uploads, and storage optimization.",
+    features: [
       "Compress to specific file sizes (10KB-5MB)",
+      "Smart compression algorithms",
+      "Target size options",
+      "Quality control settings",
+      "Batch processing support",
       "100% client-side processing",
       "No file upload required",
       "Image-based compression for maximum reduction",
       "Smart quality optimization",
       "Works offline once loaded"
     ],
-    datePublished: "2024-01-01",
-    dateModified: "2025-01-17"
-  });
-
-  // VideoObject schema placeholder for future video content
-  const videoSchema = {
-    "@context": "https://schema.org",
-    "@type": "VideoObject",
-    "name": "How to Compress PDF Files - Video Tutorial",
-    "description": "Watch our step-by-step video guide on compressing PDF files to specific target sizes using AltafToolsHub",
-    "thumbnailUrl": "https://altaftoolshub.app/images/video-thumbnail-compress-pdf.jpg",
-    "uploadDate": "2025-01-15T10:00:00Z",
-    "duration": "PT2M30S",
-    "contentUrl": "https://altaftoolshub.app/videos/compress-pdf-tutorial.mp4",
-    "embedUrl": "https://altaftoolshub.app/embed/compress-pdf-tutorial",
-    "interactionStatistic": {
-      "@type": "InteractionCounter",
-      "interactionType": { "@type": "WatchAction" },
-      "userInteractionCount": 5243
-    }
+    category: "pdf-management",
+    href: "/compress-pdf"
   };
 
-  // Enhanced Review schema with aggregate ratings
-  const reviewSchema = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    "name": "PDF Compressor Tool",
-    "brand": {
-      "@type": "Brand",
-      "name": "AltafToolsHub"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.9",
-      "reviewCount": "1523",
-      "bestRating": "5",
-      "worstRating": "1"
-    },
-    "review": [
-      {
-        "@type": "Review",
-        "reviewRating": {
-          "@type": "Rating",
-          "ratingValue": "5",
-          "bestRating": "5"
-        },
-        "author": {
-          "@type": "Person",
-          "name": "John Smith"
-        },
-        "datePublished": "2025-01-14",
-        "reviewBody": "Excellent compression tool! Reduced my 20MB PDF to 500KB without noticeable quality loss."
+  // Generate all schemas for the tool page
+  const schemas = generateToolPageSchemas(toolData);
+  
+  // Add enhanced HowTo schema
+  const howToSchema = generateEnhancedHowToSchema({
+    name: "How to Compress PDF Files Online",
+    description: "Learn how to reduce PDF file size using our free online compressor with specific target sizes from 10KB to 5MB",
+    totalTime: "PT1M",
+    difficulty: "Easy",
+    category: "PDF Processing",
+    steps: [
+      { 
+        name: "Upload PDF", 
+        text: "Click the upload area or drag and drop your PDF file. The tool accepts PDFs up to 100MB in size.",
+        image: "/images/step1-upload.png",
+        tip: "You can also paste from clipboard or drag from another browser tab"
       },
-      {
-        "@type": "Review",
-        "reviewRating": {
-          "@type": "Rating",
-          "ratingValue": "5",
-          "bestRating": "5"
-        },
-        "author": {
-          "@type": "Person",
-          "name": "Emma Wilson"
-        },
-        "datePublished": "2025-01-12",
-        "reviewBody": "The target size feature is amazing. I can compress to exactly 100KB for email attachments."
+      { 
+        name: "Select Target Size", 
+        text: "Choose your desired file size from 10KB to 5MB. The tool will automatically optimize compression to meet your target.",
+        image: "/images/step2-select-size.png",
+        tip: "For email attachments, use 100KB-500KB. For web uploads, use 1MB-2MB."
+      },
+      { 
+        name: "Compress File", 
+        text: "Click 'Compress PDF' and wait a few seconds. The tool will process your file entirely in your browser.",
+        image: "/images/step3-compress.png",
+        tip: "Larger files may take up to 30 seconds to process"
+      },
+      { 
+        name: "Download Result", 
+        text: "Download your compressed PDF instantly. The file is ready for immediate use.",
+        image: "/images/step4-download.png",
+        tip: "File names are automatically enhanced with compression details"
       }
     ],
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD",
-      "availability": "https://schema.org/InStock"
+    video: {
+      url: "/videos/compress-pdf-tutorial.mp4",
+      thumbnail: "/images/video-thumbnail-compress-pdf.jpg",
+      duration: "PT2M30S"
     }
-  };
+  });
+
 
   useSEO({
     title: "Compress PDF Online Free - Reduce PDF Size to 10KB-5MB",
@@ -213,7 +150,7 @@ export default function CompressPDF() {
     path: "/compress-pdf",
     keywords: "compress pdf, reduce pdf size, pdf compressor online free, compress pdf to 100kb, compress pdf to 200kb, shrink pdf file size, pdf compression tool, optimize pdf size, make pdf smaller, pdf size reducer 2025, compress pdf for email, compress pdf for whatsapp",
     ogImage: "https://altaftoolshub.app/og-compress-pdf.png",
-    structuredData: [howToSchema, softwareSchema, videoSchema, reviewSchema],
+    structuredData: [...schemas, howToSchema],
     additionalMetaTags: [
       { name: "application-name", content: "PDF Compressor - AltafToolsHub" },
       { property: "article:section", content: "PDF Tools" },
