@@ -494,7 +494,7 @@ export async function compressToTargetSize(
   
   let attempts = 0;
   const maxAttempts = 40; // Increased for better accuracy
-  const tolerance = 0.005; // 0.5% tolerance for precise targeting (±2-3KB per MB)
+  const tolerance = 0.005; // 0.5% tolerance (±25KB for 5MB, ±5KB for 1MB targets)
   
   let bestUnderTarget: { blob: Blob; quality: number; scale: number; size: number } | null = null;
   let bestOverTarget: { blob: Blob; quality: number; scale: number; size: number } | null = null;

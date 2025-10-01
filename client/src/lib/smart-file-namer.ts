@@ -71,8 +71,10 @@ export function generateSmartFileName(options: FileNameOptions): SmartFileName {
   // Generate size descriptor
   const sizeDescriptor = getSizeDescriptor(size);
   
-  // Generate operation descriptor
-  const operationDescriptor = operation ? OPERATION_DESCRIPTORS[operation][0] : '';
+  // Generate operation descriptor with safe lookup
+  const operationDescriptor = operation 
+    ? (OPERATION_DESCRIPTORS[operation as keyof typeof OPERATION_DESCRIPTORS]?.[0] || 'processed')
+    : '';
   
   // Generate quality descriptor
   const qualityDescriptor = quality ? getQualityDescriptor(quality) : '';
