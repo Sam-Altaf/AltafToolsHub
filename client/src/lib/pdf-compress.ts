@@ -764,20 +764,31 @@ export async function compressToTargetSize(
       }
     }
     
-    // If best result is still way below target, try higher qualities
-    if (bestUnderTarget.size < targetSize * 0.5 && attempts < maxAttempts + 10) {
-      console.log('Result too small, trying higher qualities to get closer to target...');
+    // If best result is still way below target, try upscaling beyond 100%
+    if (bestUnderTarget.size < targetSize * 0.7 && bestUnderTarget.scale >= 0.98 && attempts < maxAttempts + 15) {
+      console.log('Result too small even at scale 1.0, attempting upscaling to reach target...');
       
-      // Try qualities up to 0.99
-      for (let q = Math.max(bestUnderTarget.quality, 0.9); q <= 0.99; q += 0.01) {
+      // Calculate theoretical scale needed to reach target
+      const sizeRatio = bestUnderTarget.size / targetSize;
+      const scaleFactor = Math.sqrt(1 / sizeRatio); // Images scale quadratically
+      const targetScale = Math.min(bestUnderTarget.scale * scaleFactor * 1.1, 3.0); // Cap at 3x upscale
+      
+      console.log(`Current: ${bestUnderTarget.size} bytes at scale ${bestUnderTarget.scale.toFixed(2)}, Target: ${targetSize} bytes, Estimated scale needed: ${targetScale.toFixed(2)}`);
+      
+      // Try progressively larger scales
+      const upscaleSteps = [1.1, 1.2, 1.4, 1.6, 1.8, 2.0, 2.5, 3.0].filter(s => s <= targetScale + 0.2);
+      
+      for (const upscale of upscaleSteps) {
+        if (attempts >= maxAttempts + 15) break;
+        
         attempts++;
         const params: CompressionParams = {
-          jpegQuality: q,
-          scale: bestUnderTarget.scale,
+          jpegQuality: 0.95, // High quality for upscaled content
+          scale: upscale,
           mode: mode,
           onProgress: (progress, message) => {
             if (onProgress) {
-              onProgress(95, `Fine-tuning to reach target...`);
+              onProgress(95, `Upscaling to ${(upscale * 100).toFixed(0)}% to reach target...`);
             }
           }
         };
@@ -785,23 +796,71 @@ export async function compressToTargetSize(
         const result = await compressPDFSimple(pdfBytesCopy, params);
         const currentSize = result.blob.size;
         
-        console.log(`High quality attempt: Quality ${q.toFixed(2)}, Size ${currentSize}`);
+        console.log(`Upscale attempt: Scale ${upscale.toFixed(2)} (${(upscale * 100).toFixed(0)}%), Size ${currentSize}`);
         
         if (currentSize <= targetSize) {
           bestUnderTarget = {
             blob: result.blob,
-            quality: q,
-            scale: bestUnderTarget.scale,
+            quality: 0.95,
+            scale: upscale,
             size: currentSize
           };
           
-          // If we're getting close, stop
+          // If we're within 5% of target, stop
           if (currentSize >= targetSize * 0.95) {
-            console.log(`Reached close to target with high quality: ${currentSize} bytes`);
+            console.log(`Target achieved with upscaling: ${currentSize} bytes at ${(upscale * 100).toFixed(0)}% scale`);
             break;
           }
         } else {
-          break; // Exceeded target
+          // Exceeded target, try to fine-tune
+          console.log(`Upscaling exceeded target, fine-tuning...`);
+          
+          // Binary search between last good scale and this scale
+          const lowScale = bestUnderTarget.scale;
+          const highScale = upscale;
+          let searchLow = lowScale;
+          let searchHigh = highScale;
+          
+          for (let i = 0; i < 5 && attempts < maxAttempts + 15; i++) {
+            attempts++;
+            const midScale = (searchLow + searchHigh) / 2;
+            
+            const fineParams: CompressionParams = {
+              jpegQuality: 0.95,
+              scale: midScale,
+              mode: mode,
+              onProgress
+            };
+            
+            const fineResult = await compressPDFSimple(pdfBytesCopy, fineParams);
+            const fineSize = fineResult.blob.size;
+            
+            console.log(`Upscale fine-tune: Scale ${midScale.toFixed(3)}, Size ${fineSize}`);
+            
+            if (fineSize <= targetSize) {
+              bestUnderTarget = {
+                blob: fineResult.blob,
+                quality: 0.95,
+                scale: midScale,
+                size: fineSize
+              };
+              searchLow = midScale;
+              
+              if (fineSize >= targetSize * 0.995) {
+                console.log(`Exact target achieved with upscale fine-tuning: ${fineSize} bytes`);
+                return {
+                  blob: fineResult.blob,
+                  quality: 0.95,
+                  scale: midScale,
+                  attempts,
+                  mode
+                };
+              }
+            } else {
+              searchHigh = midScale;
+            }
+          }
+          break; // Exit upscale loop after fine-tuning
         }
       }
     }
