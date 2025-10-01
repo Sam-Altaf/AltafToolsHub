@@ -493,8 +493,8 @@ export async function compressToTargetSize(
   }
   
   let attempts = 0;
-  const maxAttempts = 25; // Reduced since we're using cached renders
-  const tolerance = 0.02; // 2% tolerance
+  const maxAttempts = 40; // Increased for better accuracy
+  const tolerance = 0.005; // 0.5% tolerance for precise targeting (±2-3KB per MB)
   
   let bestUnderTarget: { blob: Blob; quality: number; scale: number; size: number } | null = null;
   let bestOverTarget: { blob: Blob; quality: number; scale: number; size: number } | null = null;
@@ -631,8 +631,8 @@ export async function compressToTargetSize(
         };
         bestScale = adjacentScale;
         
-        // Check if we're close enough
-        if (currentSize >= targetSize * 0.98) {
+        // Check if we're close enough (within 0.5% tolerance)
+        if (currentSize >= targetSize * 0.995) {
           console.log(`Optimal result achieved with adjacent scale: ${currentSize} bytes`);
           return { 
             blob: result.blob, 
@@ -652,7 +652,7 @@ export async function compressToTargetSize(
     console.log(`Best under target: ${bestUnderTarget.size} bytes (${(fillRatio * 100).toFixed(1)}% of target)`);
     
     // Try to get closer to target by fine-tuning quality upward
-    if (fillRatio < 0.98 && attempts < maxAttempts) {
+    if (fillRatio < 0.995 && attempts < maxAttempts) {
       console.log('Fine-tuning quality to get closer to target...');
       
       let fineQuality = bestUnderTarget.quality;
@@ -693,8 +693,8 @@ export async function compressToTargetSize(
           }
           minQ = fineQuality; // Can increase quality
           
-          // Check if we're close enough
-          if (currentSize >= targetSize * 0.98) {
+          // Check if we're close enough (within 0.5% tolerance)
+          if (currentSize >= targetSize * 0.995) {
             console.log(`Optimal result achieved: ${currentSize} bytes (${(currentSize/targetSize*100).toFixed(1)}% of target)`);
             return {
               blob: result.blob,
@@ -710,7 +710,7 @@ export async function compressToTargetSize(
       }
       
       // Final micro-adjustments with very small steps
-      if (bestUnderTarget.size < targetSize * 0.98 && attempts < maxAttempts) {
+      if (bestUnderTarget.size < targetSize * 0.995 && attempts < maxAttempts) {
         console.log('Attempting micro-adjustments...');
         
         const microStep = 0.002;
@@ -744,7 +744,7 @@ export async function compressToTargetSize(
               size: currentSize
             };
             
-            if (currentSize >= targetSize * 0.98) {
+            if (currentSize >= targetSize * 0.995) {
               console.log(`Target achieved with micro-adjustment: ${currentSize} bytes`);
               return {
                 blob: result.blob,
