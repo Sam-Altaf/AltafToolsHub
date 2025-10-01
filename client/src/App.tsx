@@ -1,5 +1,5 @@
-import { Switch, Route } from "wouter";
-import { lazy, Suspense } from "react";
+import { Switch, Route, useLocation } from "wouter";
+import { lazy, Suspense, useEffect } from "react";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { HelmetProvider } from "react-helmet-async";
@@ -112,7 +112,11 @@ function Router() {
           {/* Redirect /tools to /all-tools */}
           <Route path="/tools">
             {() => {
-              window.location.replace("/all-tools");
+              const [, navigate] = useLocation();
+              // Use useEffect to navigate on mount
+              useEffect(() => {
+                navigate("/all-tools", { replace: true });
+              }, [navigate]);
               return null;
             }}
           </Route>

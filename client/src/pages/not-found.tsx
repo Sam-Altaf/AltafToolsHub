@@ -2,8 +2,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { AlertCircle, Home } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import { useSEO } from "@/hooks/use-seo";
 
 export default function NotFound() {
+  // Set SEO with noindex for 404 page
+  useSEO({
+    title: "404 - Page Not Found",
+    description: "The page you are looking for could not be found. Return to the homepage to continue browsing our free online file tools.",
+    path: "/404",
+    robots: "noindex, nofollow"
+  });
+  
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <Card className="w-full max-w-md mx-4 glass dark:glass-dark">

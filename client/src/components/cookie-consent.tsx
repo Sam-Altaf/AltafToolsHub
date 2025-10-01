@@ -40,6 +40,11 @@ export default function CookieConsent() {
     localStorage.setItem("cookieConsent", JSON.stringify(allPreferences));
     localStorage.setItem("cookieConsentDate", new Date().toISOString());
     setShowBanner(false);
+    
+    // Trigger GA loading if analytics is accepted
+    if (allPreferences.analytics) {
+      window.dispatchEvent(new Event('ga-consent-granted'));
+    }
   };
 
   const handleRejectAll = () => {
@@ -58,6 +63,11 @@ export default function CookieConsent() {
     localStorage.setItem("cookieConsentDate", new Date().toISOString());
     setShowPreferences(false);
     setShowBanner(false);
+    
+    // Trigger GA loading if analytics is accepted
+    if (preferences.analytics) {
+      window.dispatchEvent(new Event('ga-consent-granted'));
+    }
   };
 
   const handleManagePreferences = () => {

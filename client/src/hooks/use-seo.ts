@@ -7,6 +7,7 @@ interface SEOProps {
   ogImage?: string;
   keywords?: string;
   author?: string;
+  robots?: string;
   structuredData?: any;
   alternates?: { lang: string; href: string }[];
   articlePublishedTime?: string;
@@ -22,6 +23,7 @@ export function useSEO({
   ogImage = "https://altaftoolshub.app/og-image.png",
   keywords,
   author = "AltafToolsHub",
+  robots = "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
   structuredData,
   alternates,
   articlePublishedTime,
@@ -67,8 +69,8 @@ export function useSEO({
       updateMetaTag('meta[name="author"]', 'content', author);
     }
 
-    // Robots meta tag - ALWAYS allow indexing for all pages
-    updateMetaTag('meta[name="robots"]', 'content', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1');
+    // Robots meta tag - Use provided value or default
+    updateMetaTag('meta[name="robots"]', 'content', robots);
 
     // Canonical URL
     updateMetaTag('link[rel="canonical"]', 'href', `https://altaftoolshub.app${path}`);
@@ -213,7 +215,8 @@ export function useSEO({
     path, 
     ogImage, 
     keywords, 
-    author, 
+    author,
+    robots, 
     structuredData,
     alternates,
     articlePublishedTime,

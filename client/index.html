@@ -94,23 +94,56 @@
     </div>
     <script type="module" src="/src/main.tsx" fetchpriority="high"></script>
     
-    <!-- Google Analytics - Delayed Load for Performance -->
+    <!-- Google Analytics - Only loads with user consent -->
     <script>
-      // Load Google Analytics after page is interactive
-      window.addEventListener('load', function() {
-        setTimeout(function() {
-          var script = document.createElement('script');
-          script.src = 'https://www.googletagmanager.com/gtag/js?id=G-26X6DS9BXF';
-          script.async = true;
-          document.head.appendChild(script);
+      // Initialize Google Analytics only if user has consented
+      function initializeGA() {
+        var script = document.createElement('script');
+        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-26X6DS9BXF';
+        script.async = true;
+        document.head.appendChild(script);
+        
+        script.onload = function() {
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
           
-          script.onload = function() {
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-26X6DS9BXF');
-          };
-        }, 2000);
+          // Implement Google Consent Mode v2
+          gtag('consent', 'update', {
+            'analytics_storage': 'granted'
+          });
+          
+          gtag('config', 'G-26X6DS9BXF');
+        };
+      }
+
+      // Check for consent on page load
+      window.addEventListener('load', function() {
+        // Default deny for Google Consent Mode v2
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('consent', 'default', {
+          'analytics_storage': 'denied'
+        });
+        
+        // Check localStorage for existing consent
+        var cookieConsent = localStorage.getItem('cookieConsent');
+        if (cookieConsent) {
+          try {
+            var consent = JSON.parse(cookieConsent);
+            if (consent.analytics === true) {
+              // User has already consented to analytics, initialize GA
+              initializeGA();
+            }
+          } catch (e) {
+            console.error('Error parsing cookie consent:', e);
+          }
+        }
+      });
+
+      // Listen for consent updates (will be triggered by cookie-consent component)
+      window.addEventListener('ga-consent-granted', function() {
+        initializeGA();
       });
     </script>
   </body>
