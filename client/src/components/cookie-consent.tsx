@@ -73,59 +73,53 @@ export default function CookieConsent() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ type: "spring", stiffness: 100, damping: 15 }}
-            className="fixed bottom-0 left-0 right-0 z-50 p-4 sm:p-6"
+            className="fixed bottom-4 left-4 z-50 max-w-sm sm:max-w-md"
             data-testid="cookie-consent-banner"
           >
-            <Card className="glass max-w-7xl mx-auto p-6 sm:p-8 shadow-2xl border-2">
+            <Card className="glass p-4 shadow-2xl border-2">
               <button
                 onClick={() => setShowBanner(false)}
-                className="absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                className="absolute top-2 right-2 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 aria-label="Close cookie banner"
                 data-testid="button-close-banner"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
               
-              <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6">
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="p-2 rounded-lg bg-primary/10">
-                      <Cookie className="w-6 h-6 text-primary" />
-                    </div>
-                    <h3 className="text-lg font-semibold">We value your privacy</h3>
-                  </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    We use cookies to enhance your browsing experience and analyze our traffic. 
-                    All file processing happens entirely in your browser - <span className="font-medium">your files never leave your device</span>. 
-                    By clicking "Accept All", you consent to our use of cookies. 
-                    You can manage your preferences or learn more in our privacy policy.
-                  </p>
+              <div className="pr-6">
+                <div className="flex items-center gap-2 mb-2">
+                  <Cookie className="w-5 h-5 text-primary" />
+                  <h3 className="text-sm font-semibold">Cookie Settings</h3>
                 </div>
+                <p className="text-xs text-muted-foreground mb-3">
+                  We use cookies to enhance your experience. All file processing stays in your browser.
+                </p>
                 
-                <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+                <div className="flex flex-wrap gap-2">
                   <Button
                     onClick={handleManagePreferences}
                     variant="outline"
-                    className="w-full sm:w-auto"
+                    size="sm"
                     data-testid="button-manage-cookies"
                   >
-                    <Settings className="w-4 h-4 mr-2" />
+                    <Settings className="w-3 h-3 mr-1" />
                     Manage
                   </Button>
                   <Button
                     onClick={handleRejectAll}
                     variant="outline"
-                    className="w-full sm:w-auto"
+                    size="sm"
                     data-testid="button-reject-cookies"
                   >
-                    Reject All
+                    Reject
                   </Button>
                   <Button
                     onClick={handleAcceptAll}
-                    className="btn-gradient text-white w-full sm:w-auto"
+                    className="btn-gradient text-white"
+                    size="sm"
                     data-testid="button-accept-cookies"
                   >
-                    Accept All
+                    Accept
                   </Button>
                 </div>
               </div>

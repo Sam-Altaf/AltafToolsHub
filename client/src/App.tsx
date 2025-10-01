@@ -109,6 +109,14 @@ function Router() {
           <Route path="/" component={Home} />
           <Route path="/all-tools" component={AllTools} />
           
+          {/* Redirect /tools to /all-tools */}
+          <Route path="/tools">
+            {() => {
+              window.location.replace("/all-tools");
+              return null;
+            }}
+          </Route>
+          
           {/* Tool routes - Lazy loaded with Suspense for performance */}
           <Route path="/compress-pdf">
             <Suspense fallback={<PageLoader />}>

@@ -17,6 +17,16 @@
     <meta property="og:title" content="AltafToolsHub - Free Online File Tools" />
     <meta property="og:description" content="Secure, fast, and completely client-side file processing. Your files never leave your browser." />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://altaftoolshub.app" />
+    <meta property="og:image" content="https://altaftoolshub.app/og-image.png" />
+    <meta property="og:site_name" content="AltafToolsHub" />
+    
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@altaftoolshub" />
+    <meta name="twitter:title" content="AltafToolsHub - Free Online File Tools" />
+    <meta name="twitter:description" content="Secure, fast, and completely client-side file processing. Your files never leave your browser." />
+    <meta name="twitter:image" content="https://altaftoolshub.app/og-image.png" />
     
     <!-- PWA Essentials -->
     <link rel="manifest" href="/manifest.json" />
@@ -46,14 +56,33 @@
     <!-- Optimized font loading with swap -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     
-    <!-- Single structured data for organization -->
+    <!-- Enhanced structured data with searchAction -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "AltafToolsHub",
       "url": "https://altaftoolshub.app",
-      "description": "Free online tools for PDF processing, image conversion, QR generation, and more."
+      "description": "Free online tools for PDF processing, image conversion, QR generation, and more. All processing happens in your browser with 100% privacy.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://altaftoolshub.app/all-tools?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "AltafToolsHub",
+        "url": "https://altaftoolshub.app",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://altaftoolshub.app/favicon.svg",
+          "width": 512,
+          "height": 512
+        }
+      }
     }
     </script>
   </head>

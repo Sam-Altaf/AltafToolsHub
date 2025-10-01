@@ -57,7 +57,7 @@ const features = [
 ];
 
 const stats = [
-  { value: "49+", label: "Total Tools", description: "All file types covered", icon: FileText },
+  { value: "50+", label: "Total Tools", description: "All file types covered", icon: FileText },
   { value: platformStats.availableTools.toString(), label: "Available Now", description: "Ready to use", icon: Check },
   { value: "100%", label: "Privacy", description: "Browser-based", icon: Shield },
   { value: "Free", label: "Forever", description: "No hidden costs", icon: Star }
