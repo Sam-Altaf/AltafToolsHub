@@ -4,6 +4,17 @@
 
 AltafToolsHub is a web application providing privacy-first file processing and utility tools. All file processing occurs client-side, ensuring user privacy as files never leave the browser. Key features include comprehensive PDF tools (compression, size reduction, password unlocking, signing, JPG to PDF conversion, PDF to JPG/PNG/Images conversion with format choice, merging, combining, splitting, rotating, organizing, watermarking, page manipulation, image extraction, ZIP bundling, and PDF extraction from ZIP), document conversion tools (Word to PDF with text-focused basic formatting), and utility tools (QR code generator, password generator, OCR text extraction). Built with React 18 and Express, it offers a modern, responsive interface with dark/light mode, animations, and SEO optimization. The platform currently has 27 functional tools with plans for over 50 more.
 
+## Recent Changes
+
+### PageSpeed Optimization (Oct 1, 2025)
+Implemented production build system targeting 90-96% PageSpeed score (from baseline 29%):
+- **Production Build**: Vite production build with code splitting (3272 modules, ~30s build time)
+- **Compression**: Gzip compression active (73% reduction: 379KB → 100KB for main bundle)
+- **Service Worker**: Workbox-powered PWA service worker with runtime caching (133 precache entries, 4.16MB)
+- **Cache Strategy**: Immutable caching for hashed assets (1 year max-age), StaleWhileRevalidate for images/attached_assets
+- **Code Splitting**: Manual chunks for react-core, ui-components, pdf-processing, animations, utilities
+- **Deployment**: Production workflow configured (`npm run build && npm run start`)
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
@@ -15,14 +26,16 @@ Preferred communication style: Simple, everyday language.
 - **Routing**: Wouter
 - **Styling**: Tailwind CSS, shadcn/ui, Radix UI primitives
 - **State Management**: TanStack Query
-- **Build Tool**: Vite
+- **Build Tool**: Vite with production optimization (code splitting, PWA service worker)
 - **Design System**: Modern gradient theme (Purple to Blue to Cyan), glass morphism, Inter font family, dark/light mode, mobile-first responsive design, custom hexagonal logo.
+- **Performance**: Gzip compression (73% reduction), immutable asset caching, Workbox service worker with runtime caching
 
 ### Backend
 - **Runtime**: Node.js with Express.js
 - **Language**: TypeScript
 - **API Design**: RESTful API
-- **Storage**: In-memory storage (MemStorage) for current file processing.
+- **Storage**: In-memory storage (MemStorage) for current file processing
+- **Optimization**: Gzip compression middleware, aggressive caching headers for static assets (1y immutable for hashed files, 30d for images)
 
 ### Database
 - **ORM**: Drizzle ORM
@@ -67,3 +80,5 @@ Preferred communication style: Simple, everyday language.
 - **jszip** - ZIP archive creation with maximum compression
 - **tesseract.js** - OCR text extraction from images
 - **mammoth** - DOCX to HTML conversion for Word to PDF tool
+- **vite-plugin-pwa** - PWA service worker generation with Workbox
+- **compression** - Express middleware for gzip/deflate compression
