@@ -134,6 +134,24 @@ export const toolFAQs = {
       answer: "No! PNG to PDF conversion uses lossless compression by default. Your images maintain their original quality with no degradation, especially useful for graphics and screenshots."
     }
   ],
+  "sign-pdf": [
+    {
+      question: "Are the signatures legally binding?",
+      answer: "Our tool creates visual signatures that can be legally binding depending on your jurisdiction and the context. For documents requiring cryptographic digital signatures with certificate authorities, consult legal requirements for your specific use case."
+    },
+    {
+      question: "Can I sign multiple pages at once?",
+      answer: "Yes! You can add multiple signatures to any page of your PDF document. Simply create your signature, position it where needed, and add it to different pages as required."
+    },
+    {
+      question: "Are my signatures stored anywhere?",
+      answer: "No, absolutely not! All signature creation and PDF signing happens entirely in your browser. Your signatures and documents never leave your device, ensuring complete privacy."
+    },
+    {
+      question: "What signature methods are available?",
+      answer: "You can draw your signature with a mouse or touch device, type it using stylized fonts, or upload an image of your existing signature. All methods support adding date stamps for verification."
+    }
+  ],
   "qr-generator": [
     {
       question: "What can I encode in a QR code?",
