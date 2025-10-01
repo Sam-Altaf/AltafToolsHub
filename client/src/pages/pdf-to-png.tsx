@@ -395,8 +395,11 @@ export default function PDFToPNG() {
                 >
                   <img 
                     src={image.dataUrl} 
-                    alt={`Page ${image.pageNumber}`}
+                    alt={`PDF page ${image.pageNumber} converted to PNG`}
+                    width="300"
+                    height="192"
                     className="w-full h-48 object-contain mb-3 rounded"
+                    loading="lazy"
                   />
                   <div className="flex items-center justify-between">
                     <div>

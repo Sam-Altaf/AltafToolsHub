@@ -853,7 +853,7 @@ export default function SignPDFPage() {
                     </Button>
                     {currentSignature.data && currentSignature.type === 'image' && (
                       <div className="border-2 border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                        <img src={currentSignature.data} alt="Signature" className="max-w-full h-auto mx-auto" data-testid="img-signature-preview" />
+                        <img src={currentSignature.data} alt="Signature preview" width="400" height="160" className="max-w-full h-auto mx-auto" style={{ maxWidth: '100%', height: 'auto' }} data-testid="img-signature-preview" />
                       </div>
                     )}
                   </TabsContent>

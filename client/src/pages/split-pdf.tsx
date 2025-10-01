@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import { useSEO } from "@/hooks/use-seo";
-import { generateToolPageSchemas, generateEnhancedHowToSchema } from "@/lib/structured-data";
+import { generateToolPageSchemas, generateEnhancedHowToSchema, generateEnhancedBreadcrumbSchema } from "@/lib/structured-data";
 import { Scissors, Upload, Download, FileText, Loader2, ArrowLeft, Shield, FileSearch, Star, Users, Zap, Clock, CheckCircle2, ChevronRight, Info, HelpCircle, ChevronDown, Mail, BookOpen, Book } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
@@ -51,7 +51,7 @@ export default function SplitPDF() {
   const { toast } = useToast();
 
   // Generate structured data for SEO
-  const howToSchema = generateHowToSchema({
+  const howToSchema = generateEnhancedHowToSchema({
     name: "How to Split PDF Files Online",
     description: "Divide PDF documents into separate files by page ranges or fixed sizes",
     totalTime: "PT1M",
@@ -63,13 +63,25 @@ export default function SplitPDF() {
     ]
   });
 
-  const softwareSchema = generateSoftwareApplicationSchema({
-    name: "PDF Splitter - AltafToolsHub",
-    description: "Free online PDF splitter to divide PDF files into separate documents with precision. Extract pages or split by custom ranges. 100% browser-based.",
-    applicationCategory: "BusinessApplication",
-    url: "https://www.altaftoolshub.app/split-pdf",
-    aggregateRating: { ratingValue: 4.9, ratingCount: 2456, bestRating: 5 },
-    featureList: [
+  const softwareSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "PDF Splitter - AltafToolsHub",
+    "description": "Free online PDF splitter to divide PDF files into separate documents with precision. Extract pages or split by custom ranges. 100% browser-based.",
+    "applicationCategory": "BusinessApplication",
+    "url": "https://www.altaftoolshub.app/split-pdf",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": 4.9,
+      "ratingCount": 2456,
+      "bestRating": 5
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
       "Split by page ranges",
       "Extract single pages",
       "Fixed size splitting",
@@ -77,11 +89,11 @@ export default function SplitPDF() {
       "No file upload to servers",
       "Batch download support"
     ],
-    datePublished: "2024-01-01",
-    dateModified: "2025-01-20"
-  });
+    "datePublished": "2024-01-01",
+    "dateModified": "2025-01-20"
+  };
 
-  const breadcrumbSchema = generateBreadcrumbSchema([
+  const breadcrumbSchema = generateEnhancedBreadcrumbSchema([
     { name: "PDF Tools", url: "/all-tools?category=pdf" },
     { name: "Split PDF", url: "/split-pdf" }
   ]);

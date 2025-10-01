@@ -37,7 +37,7 @@ export default function UnlockPDF() {
   const [error, setError] = useState<string | null>(null);
 
   // Generate structured data for SEO
-  const howToSchema = generateHowToSchema({
+  const howToSchema = generateEnhancedHowToSchema({
     name: "How to Unlock Password-Protected PDF Files",
     description: "Remove password protection from PDF files securely in your browser",
     totalTime: "PT30S",
@@ -49,13 +49,25 @@ export default function UnlockPDF() {
     ]
   });
 
-  const softwareSchema = generateSoftwareApplicationSchema({
-    name: "PDF Unlocker - AltafToolsHub",
-    description: "Secure PDF password remover. Unlock password-protected PDFs directly in your browser with complete privacy.",
-    applicationCategory: "SecurityApplication",
-    url: "https://www.altaftoolshub.app/unlock-pdf",
-    aggregateRating: { ratingValue: 4.8, ratingCount: 987, bestRating: 5 },
-    featureList: [
+  const softwareSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "PDF Unlocker - AltafToolsHub",
+    "description": "Secure PDF password remover. Unlock password-protected PDFs directly in your browser with complete privacy.",
+    "applicationCategory": "SecurityApplication",
+    "url": "https://www.altaftoolshub.app/unlock-pdf",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": 4.8,
+      "ratingCount": 987,
+      "bestRating": 5
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
       "Remove PDF password protection",
       "100% client-side processing",
       "No file upload to servers",
@@ -63,9 +75,9 @@ export default function UnlockPDF() {
       "Works with all PDF versions",
       "Instant unlocking process"
     ],
-    datePublished: "2024-01-01",
-    dateModified: "2025-01-17"
-  });
+    "datePublished": "2024-01-01",
+    "dateModified": "2025-01-17"
+  };
 
   useSEO({
     title: "Unlock PDF Files Online - Remove PDF Password Free | AltafToolsHub",

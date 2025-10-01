@@ -23,7 +23,7 @@ import {
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
 import { useSEO } from "@/hooks/use-seo";
-import { generateToolPageSchemas, generateEnhancedHowToSchema } from "@/lib/structured-data";
+import { generateToolPageSchemas, generateEnhancedHowToSchema, generateEnhancedBreadcrumbSchema } from "@/lib/structured-data";
 import { cn } from "@/lib/utils";
 import Breadcrumbs from "@/components/seo/breadcrumbs";
 import PrivacyNotice from "@/components/privacy-notice";
@@ -78,52 +78,48 @@ export default function ProtectPDF() {
   const { toast } = useToast();
 
   // Generate structured data for SEO
-  const howToSchema = generateHowToSchema({
+  const howToSchema = generateEnhancedHowToSchema({
     name: "How to Add Password Protection to PDF Files",
     description: "Secure your PDF documents with password encryption and permission controls",
     totalTime: "PT1M",
-    estimatedCost: {
-      currency: "USD",
-      value: "0"
-    },
-    supply: [
-      "Web Browser - Any modern web browser (Chrome, Firefox, Safari, Edge)",
-      "PDF File - The PDF file you want to protect"
-    ],
-    tool: [
-      "AltafToolsHub PDF Protector - Free online PDF password protection tool"
-    ],
     steps: [
       { 
         name: "Upload PDF", 
         text: "Select or drag your PDF file to the upload area",
-        image: "https://altaftoolshub.app/images/protect-step1-upload.png"
+        image: "/images/protect-step1-upload.png"
       },
       { 
         name: "Set Password", 
         text: "Enter a strong password and confirm it",
-        image: "https://altaftoolshub.app/images/protect-step2-password.png"
+        image: "/images/protect-step2-password.png"
       },
       { 
         name: "Configure Security", 
         text: "Choose encryption level and set permissions",
-        image: "https://altaftoolshub.app/images/protect-step3-configure.png"
+        image: "/images/protect-step3-configure.png"
       },
       { 
         name: "Download Protected PDF", 
         text: "Download your password-protected PDF instantly",
-        image: "https://altaftoolshub.app/images/protect-step4-download.png"
+        image: "/images/protect-step4-download.png"
       }
     ]
   });
 
-  const softwareSchema = generateSoftwareApplicationSchema({
-    name: "PDF Protector - AltafToolsHub",
-    description: "Free online PDF password protection tool with 256-bit AES encryption. Add passwords and set permissions for your PDF documents. 100% client-side processing for complete privacy.",
-    applicationCategory: "SecurityApplication",
-    url: "https://www.altaftoolshub.app/protect-pdf",
-    aggregateRating: { ratingValue: 4.9, ratingCount: 2156, bestRating: 5 },
-    featureList: [
+  const softwareSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "PDF Protector - AltafToolsHub",
+    "description": "Free online PDF password protection tool with 256-bit AES encryption. Add passwords and set permissions for your PDF documents. 100% client-side processing for complete privacy.",
+    "applicationCategory": "SecurityApplication",
+    "url": "https://www.altaftoolshub.app/protect-pdf",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": 4.9,
+      "ratingCount": 2156,
+      "bestRating": 5
+    },
+    "featureList": [
       "256-bit AES encryption",
       "User and owner passwords",
       "Custom permission settings",
@@ -131,11 +127,16 @@ export default function ProtectPDF() {
       "No file upload to servers",
       "Instant password protection"
     ],
-    datePublished: "2024-01-01",
-    dateModified: "2025-01-20"
-  });
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "datePublished": "2024-01-01",
+    "dateModified": "2025-01-20"
+  };
 
-  const breadcrumbSchema = generateBreadcrumbSchema([
+  const breadcrumbSchema = generateEnhancedBreadcrumbSchema([
     { name: "Security Tools", url: "/all-tools?category=security" },
     { name: "Protect PDF", url: "/protect-pdf" }
   ]);
