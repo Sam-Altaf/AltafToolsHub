@@ -197,12 +197,14 @@ export const allTools: Tool[] = [
   {
     id: "pdf-to-images",
     title: "PDF to Images",
-    description: "Export PDF pages as PNG, JPG, or other image formats",
+    description: "Export PDF pages as PNG, JPG, or WEBP image formats",
     icon: FileImage,
     href: "/pdf-to-images",
     color: "from-emerald-500 to-cyan-500",
-    available: false,
+    available: true,
     category: "image-conversion",
+    popular: true,
+    new: true,
     features: ["Multiple formats", "Quality settings", "Page selection", "Batch export"],
     extendedDescription: "Convert PDF pages into high-quality images. Choose from PNG, JPG, WEBP formats with customizable resolution. Ideal for presentations, thumbnails, or web graphics."
   },
