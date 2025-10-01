@@ -213,9 +213,10 @@ export const allTools: Tool[] = [
     icon: Image,
     href: "/pdf-to-jpg",
     color: "from-teal-500 to-green-500",
-    available: false,
+    available: true,
     category: "image-conversion",
     popular: true,
+    new: true,
     features: ["High resolution", "Compression control", "Page range selection", "Bulk export"],
     extendedDescription: "Transform PDF pages into JPG images with adjustable quality. Perfect for creating image galleries, social media posts, or web-ready graphics from PDFs."
   },
