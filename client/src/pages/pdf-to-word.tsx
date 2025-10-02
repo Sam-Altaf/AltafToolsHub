@@ -22,7 +22,7 @@ import {
 } from "docx";
 
 // Configure PDF.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 
 interface ExtractedImage {
   data: Uint8Array;
@@ -616,7 +616,7 @@ export default function PdfToWord() {
         <Breadcrumbs items={breadcrumbItems} />
 
         <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-600 bg-clip-text text-transparent">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-primary">
             PDF to Word Converter
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -628,16 +628,18 @@ export default function PdfToWord() {
           message="Your PDFs are processed entirely in your browser. Files never leave your device."
         />
 
-        <Card className="p-6 md:p-8 mb-8 border-2">
-          {!file ? (
-            <FileUpload
-              accept=".pdf"
-              onFileSelect={handleFileSelect}
-              maxSize={100 * 1024 * 1024}
-              title="Upload PDF File"
-              description="Drag and drop your PDF here, or click to browse"
-            />
-          ) : (
+        {!file ? (
+          <FileUpload
+            accept=".pdf"
+            onFileSelect={handleFileSelect}
+            maxSize={100 * 1024 * 1024}
+            title="Upload PDF File"
+            description="Drag and drop your PDF here, or click to browse"
+            className="mb-8"
+          />
+        ) : (
+          <Card className="p-6 mb-8 border-2">
+
             <div className="space-y-6">
               <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg border-2 border-primary/20">
                 <div className="flex items-center gap-3">
@@ -735,8 +737,8 @@ export default function PdfToWord() {
                 </Button>
               )}
             </div>
-          )}
-        </Card>
+          </Card>
+        )}
 
         <HowItWorksSection
           toolName="PDF to Word Converter"
