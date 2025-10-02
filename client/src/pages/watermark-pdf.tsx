@@ -1304,64 +1304,87 @@ export default function WatermarkPDF() {
         toolName="PDF Watermark"
         comparisons={[
           { 
+            feature: "Privacy & Security", 
+            ourTool: "100% Browser-Based - Files NEVER uploaded", 
+            others: "Server Upload Required - Privacy Risk",
+            highlight: true
+          },
+          { 
             feature: "Text Watermarks", 
-            ourTool: "Yes - with 3 fonts & styling", 
-            others: "Basic text only" 
+            ourTool: "3 Professional Fonts + Bold/Italic/Underline", 
+            others: "Plain text only, no formatting" 
           },
           { 
             feature: "Image Watermarks", 
-            ourTool: "PNG/JPG supported", 
-            others: "PNG/JPG supported" 
+            ourTool: "PNG/JPG with transparency support", 
+            others: "Limited formats, no transparency" 
           },
           { 
             feature: "Position Options", 
-            ourTool: "9 positions with visual grid", 
-            others: "4-6 basic positions" 
+            ourTool: "9 Precise Positions with Visual Grid Selector", 
+            others: "4-6 basic positions, text-based" 
           },
           { 
             feature: "Rotation Control", 
-            ourTool: "0° to 270° + custom angles", 
-            others: "Fixed or no rotation" 
+            ourTool: "Full 360° Control + Custom Angles", 
+            others: "Fixed rotation or none at all" 
           },
           { 
-            feature: "Layer Selection", 
-            ourTool: "Above or below content", 
-            others: "Above only" 
+            feature: "Layer Placement", 
+            ourTool: "Above OR Below Content - Your Choice", 
+            others: "Above content only - No flexibility" 
           },
           { 
-            feature: "Mosaic Pattern", 
-            ourTool: "Yes with spacing control", 
-            others: "Not available" 
+            feature: "Mosaic/Repeat Pattern", 
+            ourTool: "Yes - with adjustable spacing (50-300px)", 
+            others: "Not Available" 
           },
           { 
-            feature: "Text Formatting", 
-            ourTool: "Bold, Italic, Underline", 
-            others: "Basic text only" 
+            feature: "Page Range Selection", 
+            ourTool: "Precise From/To Page Controls", 
+            others: "All pages only - No control" 
           },
           { 
-            feature: "Page Range", 
-            ourTool: "From/To page inputs", 
-            others: "All pages only" 
+            feature: "Real-time Preview", 
+            ourTool: "Live PDF Thumbnails (First 6 Pages)", 
+            others: "No preview - Work blindly" 
           },
           { 
-            feature: "PDF Preview", 
-            ourTool: "Real-time thumbnails", 
-            others: "No preview" 
-          },
-          { 
-            feature: "Privacy", 
-            ourTool: "100% client-side", 
-            others: "Server upload required" 
+            feature: "Transparency Control", 
+            ourTool: "0-100% with Slider + Quick Presets", 
+            others: "Limited or no opacity options" 
           },
           { 
             feature: "File Size Limit", 
-            ourTool: "100MB", 
-            others: "5-10MB limit" 
+            ourTool: "Up to 100MB - Handle Large Files", 
+            others: "5-10MB max - Very restrictive",
+            highlight: true
           },
           { 
-            feature: "Cost", 
-            ourTool: "Completely Free", 
-            others: "Free trial then paid" 
+            feature: "Processing Speed", 
+            ourTool: "Instant - No Server Delays", 
+            others: "Slow - Upload/Download queue times" 
+          },
+          { 
+            feature: "Watermark Quality", 
+            ourTool: "Original Quality Preserved Perfectly", 
+            others: "Often compressed/degraded" 
+          },
+          { 
+            feature: "Pricing", 
+            ourTool: "100% FREE Forever - No Limits!", 
+            others: "Free trial, then $10-30/month",
+            highlight: true
+          },
+          { 
+            feature: "Watermarks on Output", 
+            ourTool: "NONE - Clean Professional Results", 
+            others: "Tool watermarks on free tier" 
+          },
+          { 
+            feature: "Registration Required", 
+            ourTool: "NO - Use Immediately", 
+            others: "Email signup required" 
           }
         ]}
       />
