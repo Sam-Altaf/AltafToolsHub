@@ -84,43 +84,43 @@ export default function CookieConsent() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ type: "spring", stiffness: 100, damping: 15 }}
-            className="fixed bottom-4 left-4 right-4 sm:left-4 sm:right-auto z-50 max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl"
+            className="fixed bottom-4 left-4 right-4 md:left-1/2 md:-translate-x-1/2 md:right-auto z-50 max-w-full md:max-w-2xl lg:max-w-3xl"
             data-testid="cookie-consent-banner"
           >
-            <Card className="glass p-5 shadow-2xl border-2">
+            <Card className="glass p-4 md:p-6 shadow-2xl border-2">
               <button
                 onClick={() => setShowBanner(false)}
-                className="absolute top-2 right-2 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                className="absolute top-2 right-2 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors z-10"
                 aria-label="Close cookie banner"
                 data-testid="button-close-banner"
               >
                 <X className="w-4 h-4" />
               </button>
               
-              <div className="pr-6">
-                <div className="flex items-center gap-2 mb-2">
-                  <Cookie className="w-5 h-5 text-primary" />
-                  <h3 className="text-base font-semibold">Cookie Settings</h3>
+              <div className="grid md:grid-cols-[1fr,auto] gap-4 md:gap-6 items-center pr-8 md:pr-0">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Cookie className="w-5 h-5 text-primary flex-shrink-0" />
+                    <h3 className="text-base font-semibold">Cookie Settings</h3>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    We use cookies to enhance your experience and analyze traffic. All files stay in your browser.{" "}
+                    <Link href="/privacy-policy" className="text-primary hover:underline font-medium">
+                      Privacy
+                    </Link>
+                    {" · "}
+                    <Link href="/terms-conditions" className="text-primary hover:underline font-medium">
+                      Terms
+                    </Link>
+                  </p>
                 </div>
-                <p className="text-sm text-muted-foreground mb-3 leading-relaxed">
-                  We use cookies to enhance your browsing experience, analyze site traffic, and personalize content. 
-                  All file processing stays 100% in your browser - your files never leave your device. 
-                  By clicking "Accept All", you consent to our use of cookies. 
-                  Learn more in our{" "}
-                  <Link href="/privacy-policy" className="text-primary hover:underline font-medium">
-                    Privacy Policy
-                  </Link>
-                  {" "}and{" "}
-                  <Link href="/terms-conditions" className="text-primary hover:underline font-medium">
-                    Terms & Conditions
-                  </Link>.
-                </p>
                 
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap md:flex-nowrap gap-2 md:gap-3">
                   <Button
                     onClick={handleManagePreferences}
                     variant="outline"
                     size="sm"
+                    className="flex-1 md:flex-initial whitespace-nowrap"
                     data-testid="button-manage-cookies"
                   >
                     <Settings className="w-3 h-3 mr-1" />
@@ -130,13 +130,14 @@ export default function CookieConsent() {
                     onClick={handleRejectAll}
                     variant="outline"
                     size="sm"
+                    className="flex-1 md:flex-initial whitespace-nowrap"
                     data-testid="button-reject-cookies"
                   >
                     Reject All
                   </Button>
                   <Button
                     onClick={handleAcceptAll}
-                    className="btn-gradient text-white"
+                    className="btn-gradient text-white flex-1 md:flex-initial whitespace-nowrap"
                     size="sm"
                     data-testid="button-accept-cookies"
                   >
