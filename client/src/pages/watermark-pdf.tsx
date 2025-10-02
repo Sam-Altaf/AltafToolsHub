@@ -14,7 +14,7 @@ import {
   Droplets, Shield, Check, AlertCircle, Download, ArrowLeft, 
   FileText, Type, Image as ImageIcon, Sparkles, Zap, Settings,
   Upload, Lock, ChevronRight, Layers, Bold, Italic, Underline,
-  Target, Gauge, Book, FileDown, CheckCircle2, Grid3x3
+  Target, Gauge, Book, FileDown, CheckCircle2, Grid3x3, XCircle
 } from "lucide-react";
 import { Link } from "wouter";
 import FileUpload from "@/components/ui/file-upload";
@@ -34,8 +34,8 @@ import { generateSmartFileName } from "@/lib/smart-file-namer";
 import { useToast } from "@/hooks/use-toast";
 import * as pdfjsLib from 'pdfjs-dist';
 import ToolSEO, { toolFAQs } from "@/components/seo/tool-seo";
-import { WhyUseSection, UseCasesSection, ComparisonSection, HowItWorksSection } from "@/components/seo/tool-features";
-import { ToolFAQ, generatePDFCompressFAQs } from "@/components/seo/tool-faq";
+import { WhyUseSection, UseCasesSection, HowItWorksSection } from "@/components/seo/tool-features";
+import { ToolFAQ } from "@/components/seo/tool-faq";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 
@@ -1299,95 +1299,128 @@ export default function WatermarkPDF() {
         ]}
       />
 
-      {/* Comparison Section */}
-      <ComparisonSection
-        toolName="PDF Watermark"
-        comparisons={[
-          { 
-            feature: "Privacy & Security", 
-            ourTool: "100% Browser-Based - Files NEVER uploaded", 
-            others: "Server Upload Required - Privacy Risk",
-            highlight: true
-          },
-          { 
-            feature: "Text Watermarks", 
-            ourTool: "3 Professional Fonts + Bold/Italic/Underline", 
-            others: "Plain text only, no formatting" 
-          },
-          { 
-            feature: "Image Watermarks", 
-            ourTool: "PNG/JPG with transparency support", 
-            others: "Limited formats, no transparency" 
-          },
-          { 
-            feature: "Position Options", 
-            ourTool: "9 Precise Positions with Visual Grid Selector", 
-            others: "4-6 basic positions, text-based" 
-          },
-          { 
-            feature: "Rotation Control", 
-            ourTool: "Full 360° Control + Custom Angles", 
-            others: "Fixed rotation or none at all" 
-          },
-          { 
-            feature: "Layer Placement", 
-            ourTool: "Above OR Below Content - Your Choice", 
-            others: "Above content only - No flexibility" 
-          },
-          { 
-            feature: "Mosaic/Repeat Pattern", 
-            ourTool: "Yes - with adjustable spacing (50-300px)", 
-            others: "Not Available" 
-          },
-          { 
-            feature: "Page Range Selection", 
-            ourTool: "Precise From/To Page Controls", 
-            others: "All pages only - No control" 
-          },
-          { 
-            feature: "Real-time Preview", 
-            ourTool: "Live PDF Thumbnails (First 6 Pages)", 
-            others: "No preview - Work blindly" 
-          },
-          { 
-            feature: "Transparency Control", 
-            ourTool: "0-100% with Slider + Quick Presets", 
-            others: "Limited or no opacity options" 
-          },
-          { 
-            feature: "File Size Limit", 
-            ourTool: "Up to 100MB - Handle Large Files", 
-            others: "5-10MB max - Very restrictive",
-            highlight: true
-          },
-          { 
-            feature: "Processing Speed", 
-            ourTool: "Instant - No Server Delays", 
-            others: "Slow - Upload/Download queue times" 
-          },
-          { 
-            feature: "Watermark Quality", 
-            ourTool: "Original Quality Preserved Perfectly", 
-            others: "Often compressed/degraded" 
-          },
-          { 
-            feature: "Pricing", 
-            ourTool: "100% FREE Forever - No Limits!", 
-            others: "Free trial, then $10-30/month",
-            highlight: true
-          },
-          { 
-            feature: "Watermarks on Output", 
-            ourTool: "NONE - Clean Professional Results", 
-            others: "Tool watermarks on free tier" 
-          },
-          { 
-            feature: "Registration Required", 
-            ourTool: "NO - Use Immediately", 
-            others: "Email signup required" 
-          }
-        ]}
-      />
+      {/* Comparison Table */}
+      <div className="bg-gray-50 dark:bg-gray-900 py-16">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-3xl font-bold text-center mb-4">Compare PDF Watermark Tools</h2>
+            <p className="text-center text-muted-foreground mb-12">
+              See why AltafToolsHub delivers superior watermarking with privacy-first technology
+            </p>
+            
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-lg">
+                <thead>
+                  <tr className="bg-gradient-to-r from-purple-500 to-blue-500 text-white">
+                    <th className="text-left p-4 font-semibold">Feature</th>
+                    <th className="text-center p-4 font-semibold">AltafToolsHub</th>
+                    <th className="text-center p-4 font-semibold">iLovePDF</th>
+                    <th className="text-center p-4 font-semibold">SmallPDF</th>
+                    <th className="text-center p-4 font-semibold">Adobe Acrobat</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b dark:border-gray-700">
+                    <td className="p-4 font-medium">Price</td>
+                    <td className="text-center p-4">
+                      <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100">Free</Badge>
+                    </td>
+                    <td className="text-center p-4">$6/mo</td>
+                    <td className="text-center p-4">$12/mo</td>
+                    <td className="text-center p-4">$19.99/mo</td>
+                  </tr>
+                  <tr className="border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+                    <td className="p-4 font-medium">Client-Side Processing</td>
+                    <td className="text-center p-4"><CheckCircle2 className="h-5 w-5 text-green-500 mx-auto" /></td>
+                    <td className="text-center p-4"><XCircle className="h-5 w-5 text-red-500 mx-auto" /></td>
+                    <td className="text-center p-4"><XCircle className="h-5 w-5 text-red-500 mx-auto" /></td>
+                    <td className="text-center p-4"><XCircle className="h-5 w-5 text-red-500 mx-auto" /></td>
+                  </tr>
+                  <tr className="border-b dark:border-gray-700">
+                    <td className="p-4 font-medium">No File Size Limit</td>
+                    <td className="text-center p-4"><CheckCircle2 className="h-5 w-5 text-green-500 mx-auto" /></td>
+                    <td className="text-center p-4">15MB free</td>
+                    <td className="text-center p-4">5MB free</td>
+                    <td className="text-center p-4"><CheckCircle2 className="h-5 w-5 text-green-500 mx-auto" /></td>
+                  </tr>
+                  <tr className="border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+                    <td className="p-4 font-medium">Text Formatting Options</td>
+                    <td className="text-center p-4">3 Fonts + Bold/Italic/Underline</td>
+                    <td className="text-center p-4">Basic text only</td>
+                    <td className="text-center p-4">Basic text only</td>
+                    <td className="text-center p-4"><CheckCircle2 className="h-5 w-5 text-green-500 mx-auto" /></td>
+                  </tr>
+                  <tr className="border-b dark:border-gray-700">
+                    <td className="p-4 font-medium">Position Control</td>
+                    <td className="text-center p-4">9 positions + Visual Grid</td>
+                    <td className="text-center p-4">4-6 positions</td>
+                    <td className="text-center p-4">4 positions</td>
+                    <td className="text-center p-4">Custom placement</td>
+                  </tr>
+                  <tr className="border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+                    <td className="p-4 font-medium">Rotation Control</td>
+                    <td className="text-center p-4"><CheckCircle2 className="h-5 w-5 text-green-500 mx-auto" /></td>
+                    <td className="text-center p-4"><XCircle className="h-5 w-5 text-red-500 mx-auto" /></td>
+                    <td className="text-center p-4"><XCircle className="h-5 w-5 text-red-500 mx-auto" /></td>
+                    <td className="text-center p-4"><CheckCircle2 className="h-5 w-5 text-green-500 mx-auto" /></td>
+                  </tr>
+                  <tr className="border-b dark:border-gray-700">
+                    <td className="p-4 font-medium">Layer Placement (Above/Below)</td>
+                    <td className="text-center p-4"><CheckCircle2 className="h-5 w-5 text-green-500 mx-auto" /></td>
+                    <td className="text-center p-4"><XCircle className="h-5 w-5 text-red-500 mx-auto" /></td>
+                    <td className="text-center p-4"><XCircle className="h-5 w-5 text-red-500 mx-auto" /></td>
+                    <td className="text-center p-4"><CheckCircle2 className="h-5 w-5 text-green-500 mx-auto" /></td>
+                  </tr>
+                  <tr className="border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+                    <td className="p-4 font-medium">Mosaic Pattern Mode</td>
+                    <td className="text-center p-4"><CheckCircle2 className="h-5 w-5 text-green-500 mx-auto" /></td>
+                    <td className="text-center p-4"><XCircle className="h-5 w-5 text-red-500 mx-auto" /></td>
+                    <td className="text-center p-4"><XCircle className="h-5 w-5 text-red-500 mx-auto" /></td>
+                    <td className="text-center p-4"><XCircle className="h-5 w-5 text-red-500 mx-auto" /></td>
+                  </tr>
+                  <tr className="border-b dark:border-gray-700">
+                    <td className="p-4 font-medium">Page Range Selection</td>
+                    <td className="text-center p-4"><CheckCircle2 className="h-5 w-5 text-green-500 mx-auto" /></td>
+                    <td className="text-center p-4"><CheckCircle2 className="h-5 w-5 text-green-500 mx-auto" /></td>
+                    <td className="text-center p-4"><XCircle className="h-5 w-5 text-red-500 mx-auto" /></td>
+                    <td className="text-center p-4"><CheckCircle2 className="h-5 w-5 text-green-500 mx-auto" /></td>
+                  </tr>
+                  <tr className="border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+                    <td className="p-4 font-medium">Real-time PDF Preview</td>
+                    <td className="text-center p-4"><CheckCircle2 className="h-5 w-5 text-green-500 mx-auto" /></td>
+                    <td className="text-center p-4"><XCircle className="h-5 w-5 text-red-500 mx-auto" /></td>
+                    <td className="text-center p-4"><XCircle className="h-5 w-5 text-red-500 mx-auto" /></td>
+                    <td className="text-center p-4"><XCircle className="h-5 w-5 text-red-500 mx-auto" /></td>
+                  </tr>
+                  <tr className="border-b dark:border-gray-700">
+                    <td className="p-4 font-medium">Transparency Control</td>
+                    <td className="text-center p-4">0-100% + Slider</td>
+                    <td className="text-center p-4">Limited presets</td>
+                    <td className="text-center p-4">Limited presets</td>
+                    <td className="text-center p-4"><CheckCircle2 className="h-5 w-5 text-green-500 mx-auto" /></td>
+                  </tr>
+                  <tr className="border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+                    <td className="p-4 font-medium">No Registration Required</td>
+                    <td className="text-center p-4"><CheckCircle2 className="h-5 w-5 text-green-500 mx-auto" /></td>
+                    <td className="text-center p-4"><XCircle className="h-5 w-5 text-red-500 mx-auto" /></td>
+                    <td className="text-center p-4"><CheckCircle2 className="h-5 w-5 text-green-500 mx-auto" /></td>
+                    <td className="text-center p-4"><XCircle className="h-5 w-5 text-red-500 mx-auto" /></td>
+                  </tr>
+                  <tr className="bg-gray-50 dark:bg-gray-900">
+                    <td className="p-4 font-medium">Privacy Guarantee</td>
+                    <td className="text-center p-4">
+                      <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100">100% Private</Badge>
+                    </td>
+                    <td className="text-center p-4">Cloud-based</td>
+                    <td className="text-center p-4">Cloud-based</td>
+                    <td className="text-center p-4">Cloud-based</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* FAQ Section */}
       <ToolFAQ 
