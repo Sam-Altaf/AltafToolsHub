@@ -23,7 +23,7 @@ export default function FileUpload({
   onFileSelect,
   onFilesSelect,
   accept = "*",
-  maxSize = 50 * 1024 * 1024, // 50MB default
+  maxSize = 100 * 1024 * 1024, // 100MB default
   title,
   description,
   className = "",

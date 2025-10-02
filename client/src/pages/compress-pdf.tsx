@@ -742,6 +742,7 @@ export default function CompressPDF() {
         <FileUpload
           onFileSelect={handleFileSelect}
           accept=".pdf,application/pdf"
+          maxSize={100 * 1024 * 1024} // 100MB max file size
           title="Upload your PDF file"
           description="Drag & drop or click to select"
           className="mb-8"

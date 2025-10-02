@@ -810,8 +810,49 @@ export async function compressToTargetSize(
     console.log('High Quality Mode: 10MB target');
   }
   
-  // For highest mode, increase minimum quality across all sizes
-  if (mode === 'highest' || mode === 'hd') {
+  // Special handling for very small targets (< 100KB) - Allow more aggressive compression
+  if (targetSize < 100 * 1024) {
+    console.log(`Small target size detected: ${formatFileSize(targetSize)} - Using aggressive compression settings`);
+    
+    // Override ranges for very small targets
+    if (targetSize < 10 * 1024) {
+      // < 10KB: Ultra-extreme compression
+      minQuality = 0.01;  // Allow VERY low quality
+      maxQuality = 0.15;  // Start with very low quality
+      minScale = 0.1;     // Allow extreme downscaling
+      maxScale = 0.3;     // Start with small scale
+      maxAttempts = 30;   // More attempts for difficult targets
+      console.log('Ultra-extreme compression for <10KB target');
+    } else if (targetSize < 20 * 1024) {
+      // 10-20KB: Extreme compression  
+      minQuality = 0.01;
+      maxQuality = 0.2;
+      minScale = 0.15;
+      maxScale = 0.35;
+      maxAttempts = 28;
+      console.log('Extreme compression for 10-20KB target');
+    } else if (targetSize < 50 * 1024) {
+      // 20-50KB: Very aggressive compression
+      minQuality = 0.02;
+      maxQuality = 0.25;
+      minScale = 0.2;
+      maxScale = 0.4;
+      maxAttempts = 25;
+      console.log('Very aggressive compression for 20-50KB target');
+    } else {
+      // 50-100KB: Aggressive compression
+      minQuality = 0.03;
+      maxQuality = 0.3;
+      minScale = 0.25;
+      maxScale = 0.5;
+      maxAttempts = 25;
+      console.log('Aggressive compression for 50-100KB target');
+    }
+    
+    // For small targets, ignore mode preferences and use most aggressive settings
+    console.log(`Small target overrides: quality range [${minQuality}-${maxQuality}], scale range [${minScale}-${maxScale}]`);
+  } else if (mode === 'highest' || mode === 'hd') {
+    // For highest mode on normal sizes, increase minimum quality across all sizes
     // Boost minimum quality by 10% for all ranges
     minQuality = Math.min(0.99, minQuality + 0.1);
     minScale = Math.min(1.0, minScale + 0.02);
@@ -937,7 +978,10 @@ export async function compressToTargetSize(
     let lastSize = 0;
     let stableCount = 0;
     
-    while (attempts < maxAttempts && searchMaxQ - searchMinQ > 0.005) { // Finer precision for 99% accuracy
+    // For small targets, use even finer precision in binary search
+    const precision = targetSize < 100 * 1024 ? 0.002 : 0.005;
+    
+    while (attempts < maxAttempts && searchMaxQ - searchMinQ > precision) { // Finer precision for small targets
       attempts++;
       const testQuality = (searchMinQ + searchMaxQ) / 2;
       
@@ -1362,7 +1406,22 @@ export async function compressToTargetSize(
       };
     }
     
-    console.warn(`Target size too ambitious. Returning smallest possible: ${bestOverTarget.size} bytes (${(bestOverTarget.size/targetSize*100).toFixed(1)}% of target)`);
+    // Enhanced logging for small targets that couldn't be achieved
+    if (targetSize < 100 * 1024) {
+      console.warn(`
+⚠️ Small Target Size Warning:
+Target: ${formatFileSize(targetSize)}
+Smallest Achieved: ${formatFileSize(bestOverTarget.size)} (${(bestOverTarget.size/targetSize*100).toFixed(1)}% of target)
+Settings Used: Quality=${bestOverTarget.quality.toFixed(3)}, Scale=${bestOverTarget.scale.toFixed(2)}
+
+This target size is extremely small and may not be achievable while maintaining any readable content.
+The PDF has been compressed to the smallest possible size with these settings.
+Consider using a larger target size for better quality.
+      `);
+    } else {
+      console.warn(`Target size too ambitious. Returning smallest possible: ${bestOverTarget.size} bytes (${(bestOverTarget.size/targetSize*100).toFixed(1)}% of target)`);
+    }
+    
     const endTime = performance.now();
     console.log(`Compression completed in ${((endTime - compressionStartTime) / 1000).toFixed(2)} seconds`);
     return { 
