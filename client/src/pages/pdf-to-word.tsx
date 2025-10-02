@@ -485,11 +485,12 @@ export default function PdfToWord() {
               
               // Create ImageRun and add to document
               const imageRun = new ImageRun({
-                data: img.data,
+                data: Buffer.from(img.data),
                 transformation: {
                   width: Math.round(img.width * scale),
                   height: Math.round(img.height * scale)
-                }
+                },
+                type: 'png' as const
               });
               
               allParagraphs.push(new Paragraph({
