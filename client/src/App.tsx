@@ -33,6 +33,7 @@ const UnlockPDF = lazy(() => import("@/pages/unlock-pdf"));
 const ProtectPDF = lazy(() => import("@/pages/protect-pdf"));
 const SignPDF = lazy(() => import("@/pages/sign-pdf"));
 const WordToPDF = lazy(() => import("@/pages/word-to-pdf"));
+const PdfToWord = lazy(() => import("@/pages/pdf-to-word"));
 const JpgToPDF = lazy(() => import("@/pages/jpg-to-pdf"));
 const PngToPDF = lazy(() => import("@/pages/png-to-pdf"));
 const QRGenerator = lazy(() => import("@/pages/qr-generator"));
@@ -231,6 +232,11 @@ function Router() {
           <Route path="/word-to-pdf">
             <Suspense fallback={<PageLoader />}>
               <WordToPDF />
+            </Suspense>
+          </Route>
+          <Route path="/pdf-to-word">
+            <Suspense fallback={<PageLoader />}>
+              <PdfToWord />
             </Suspense>
           </Route>
           <Route path="/jpg-to-pdf">

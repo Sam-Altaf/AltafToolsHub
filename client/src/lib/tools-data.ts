@@ -347,9 +347,11 @@ export const allTools: Tool[] = [
     icon: FileText,
     href: "/pdf-to-word",
     color: "from-blue-500 to-cyan-500",
-    available: false,
+    available: true,
     category: "document-conversion",
-    popular: true
+    popular: true,
+    features: ["Text extraction", "Image preservation", "Table detection", "Format retention"],
+    extendedDescription: "Convert PDF documents to editable Word files (DOCX) with intelligent layout analysis. Extracts text with formatting, embeds images, and reconstructs tables while preserving document structure."
   },
   {
     id: "excel-to-pdf",

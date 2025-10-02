@@ -177,6 +177,14 @@ export const seoMetadata: Record<string, PageMetadata> = {
     ogDescription: 'Convert Word documents to PDF instantly. Browser-based conversion, basic formatting support, no uploads required.'
   },
 
+  '/pdf-to-word': {
+    title: 'PDF to Word Converter - Convert PDF to Editable DOCX Online | AltafToolsHub',
+    description: 'Convert PDF to Word documents online for free. Advanced conversion with text extraction, image preservation, and table detection. 100% browser-based, secure, no uploads. Get editable DOCX instantly.',
+    keywords: 'pdf to word, pdf to docx, convert pdf to word, pdf converter, pdf to word online, free pdf to word converter, pdf to editable word, extract pdf to word, pdf word converter, pdf to doc',
+    ogTitle: 'PDF to Word - Convert PDF to Editable DOCX Free',
+    ogDescription: 'Convert PDFs to editable Word documents with advanced formatting, images, and table preservation. Completely private browser-based processing.'
+  },
+
   '/unlock-pdf': {
     title: 'Unlock PDF Free - Remove Password Protection & Restrictions',
     description: 'Remove password protection and restrictions from PDF files you own. Unlock printing, copying, and editing permissions. All processing happens securely in your browser.',
