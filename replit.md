@@ -4,6 +4,34 @@
 
 AltafToolsHub is a production-ready web application providing privacy-first file processing and utility tools. All file processing occurs client-side, ensuring user privacy as files never leave the browser. Key features include comprehensive PDF tools (compression, size reduction, password unlocking, signing, JPG to PDF conversion, PDF to JPG/PNG/Images conversion with format choice, merging, combining, splitting, rotating, organizing, watermarking, page manipulation, image extraction, ZIP bundling, and PDF extraction from ZIP), document conversion tools (Word to PDF with text-focused basic formatting, PDF to Word with advanced conversion features), and utility tools (QR code generator, password generator, OCR text extraction). Built with React 18 and Express, it offers a modern, responsive interface with dark/light mode, animations, and SEO optimization. The platform currently has 28 functional tools with plans for over 50 more.
 
+## Replit Environment Setup
+
+### Configuration (Oct 2, 2025)
+Successfully configured the GitHub import to run in Replit environment:
+
+**Workflow Setup:**
+- Configured "Start application" workflow running `npm run dev` on port 5000
+- Server binds to `0.0.0.0:5000` for Replit proxy compatibility
+- Vite dev server configured with `allowedHosts: true` for iframe proxy support
+- WebView output type enabled for proper frontend preview
+
+**Deployment Configuration:**
+- Target: `autoscale` (stateless web application)
+- Build: `npm run build` (Vite + esbuild)
+- Run: `npm run start` (production Express server)
+
+**Environment:**
+- Node.js 20.x with npm
+- All dependencies installed and working
+- In-memory storage (MemStorage) configured
+- Database optional (Drizzle + PostgreSQL ready if needed)
+
+**Status:**
+✅ Application running successfully at http://0.0.0.0:5000
+✅ Frontend loading correctly with all tools operational
+✅ Vite HMR disabled in Replit to prevent WebSocket errors
+✅ Ready for deployment via Replit's publish feature
+
 ## Recent Changes
 
 ### PDF to Word Converter Implementation (Oct 2, 2025)
