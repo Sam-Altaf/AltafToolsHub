@@ -21,8 +21,8 @@ import {
   WidthType, BorderStyle
 } from "docx";
 
-// Configure PDF.js worker - use CDN for development
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+// Configure PDF.js worker
+pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 
 interface ExtractedImage {
   data: Uint8Array;
@@ -175,113 +175,85 @@ export default function PdfToWord() {
     setExtractionStats(null);
   }, []);
 
-  // Extract images from PDF page using direct object extraction
+  // Extract images from PDF page with proper cropping
   const extractImages = async (page: any): Promise<ExtractedImage[]> => {
     const images: ExtractedImage[] = [];
     
     try {
       const ops = await page.getOperatorList();
-      const viewport = page.getViewport({ scale: 1.5 });
+      const viewport = page.getViewport({ scale: 2.0 });
       
-      // Find all image objects
-      const imageOps: Array<{ name: string; transform: number[] }> = [];
+      // Track image positions and dimensions
+      const imageInfos: Array<{ x: number; y: number; width: number; height: number }> = [];
       
       for (let i = 0; i < ops.fnArray.length; i++) {
-        // OPS.paintImageXObject = 85, OPS.paintInlineImageXObject = 86
-        if (ops.fnArray[i] === 85 || ops.fnArray[i] === 86) {
+        // OPS.paintImageXObject = 85
+        if (ops.fnArray[i] === 85) {
           const args = ops.argsArray[i];
-          if (args && args.length > 0) {
-            const imageName = args[0];
-            // Get transform from previous operation or default
-            let transform = [1, 0, 0, 1, 0, 0];
+          // args typically contains transform matrix [a, b, c, d, e, f]
+          if (args && args.length >= 2) {
+            const transform = args[1] || [1, 0, 0, 1, 0, 0];
+            const width = Math.abs(transform[0]);
+            const height = Math.abs(transform[3]);
+            const x = transform[4];
+            const y = viewport.height - transform[5] - height;
             
-            // Look for transform in previous operations
-            for (let j = Math.max(0, i - 5); j < i; j++) {
-              if (ops.fnArray[j] === 34 || ops.fnArray[j] === 35) { // transform or save
-                const tArgs = ops.argsArray[j];
-                if (tArgs && tArgs.length >= 6) {
-                  transform = tArgs.slice(0, 6);
-                }
-              }
-            }
-            
-            imageOps.push({ name: imageName, transform });
+            imageInfos.push({ x, y, width, height });
           }
         }
       }
       
-      // If we found images, extract them
-      if (imageOps.length > 0) {
+      // If images exist, render and crop them
+      if (imageInfos.length > 0) {
         const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d', { alpha: true });
+        const context = canvas.getContext('2d');
         
         if (context) {
           canvas.width = viewport.width;
           canvas.height = viewport.height;
           
-          // Render the page
           await page.render({
             canvasContext: context,
             viewport: viewport,
-            background: 'transparent'
+            intent: 'display'
           } as any).promise;
           
-          // Extract each image
-          for (const imgOp of imageOps) {
-            try {
-              const transform = imgOp.transform;
-              const scaleX = Math.abs(transform[0]) * viewport.scale;
-              const scaleY = Math.abs(transform[3]) * viewport.scale;
-              const x = transform[4] * viewport.scale;
-              const y = viewport.height - (transform[5] * viewport.scale) - scaleY;
+          // Extract each image region
+          for (const info of imageInfos) {
+            const cropCanvas = document.createElement('canvas');
+            const cropContext = cropCanvas.getContext('2d');
+            
+            if (cropContext && info.width > 0 && info.height > 0) {
+              cropCanvas.width = info.width;
+              cropCanvas.height = info.height;
               
-              // Ensure valid dimensions
-              const width = Math.max(10, Math.min(scaleX, viewport.width));
-              const height = Math.max(10, Math.min(scaleY, viewport.height));
+              // Copy the image region from main canvas
+              cropContext.drawImage(
+                canvas,
+                info.x, info.y, info.width, info.height,
+                0, 0, info.width, info.height
+              );
               
-              if (width > 20 && height > 20) {
-                const cropCanvas = document.createElement('canvas');
-                const cropCtx = cropCanvas.getContext('2d');
-                
-                if (cropCtx) {
-                  cropCanvas.width = width;
-                  cropCanvas.height = height;
-                  
-                  // Draw the cropped region
-                  cropCtx.drawImage(
-                    canvas,
-                    Math.max(0, x), Math.max(0, y), 
-                    Math.min(width, viewport.width - x), Math.min(height, viewport.height - y),
-                    0, 0, width, height
-                  );
-                  
-                  // Convert to blob
-                  const blob = await new Promise<Blob>((resolve, reject) => {
-                    cropCanvas.toBlob((b) => {
-                      if (b) resolve(b);
-                      else reject(new Error('Failed to create blob'));
-                    }, 'image/png', 0.95);
-                  });
-                  
-                  const arrayBuffer = await blob.arrayBuffer();
-                  const uint8Array = new Uint8Array(arrayBuffer);
-                  
-                  images.push({
-                    data: uint8Array,
-                    width: Math.round(width),
-                    height: Math.round(height),
-                    y: y
-                  });
-                }
-              }
-            } catch (imgErr) {
-              console.warn('Individual image extraction failed:', imgErr);
+              // Convert to PNG blob
+              const blob = await new Promise<Blob>((resolve) => {
+                cropCanvas.toBlob((b) => resolve(b!), 'image/png');
+              });
+              
+              const arrayBuffer = await blob.arrayBuffer();
+              const uint8Array = new Uint8Array(arrayBuffer);
+              
+              images.push({
+                data: uint8Array,
+                width: info.width,
+                height: info.height,
+                y: info.y
+              });
             }
           }
         }
       }
     } catch (error) {
-      console.error('Image extraction error:', error);
+      console.warn('Image extraction error:', error);
     }
     
     return images;
@@ -506,15 +478,14 @@ export default function PdfToWord() {
 
         // Add images to document
         if (images.length > 0) {
-          for (const img of images) {
+          images.forEach(img => {
             try {
               const maxWidth = 600;
               const scale = img.width > maxWidth ? maxWidth / img.width : 1;
               
-              // Create ImageRun with proper type
+              // Create ImageRun and add to document
               const imageRun = new ImageRun({
                 data: img.data,
-                type: 'png',
                 transformation: {
                   width: Math.round(img.width * scale),
                   height: Math.round(img.height * scale)
@@ -528,7 +499,7 @@ export default function PdfToWord() {
             } catch (imgError) {
               console.warn('Could not add image to document:', imgError);
             }
-          }
+          });
         }
 
         // Add tables to document
@@ -701,18 +672,18 @@ export default function PdfToWord() {
         />
 
         {/* Features */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mb-6 md:mb-8">
-          <Card className="glass p-3 md:p-4 text-center">
-            <Shield className="w-6 h-6 md:w-8 md:h-8 text-primary mx-auto mb-2" />
-            <p className="text-xs md:text-sm font-medium">100% Private</p>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 max-w-3xl mx-auto">
+          <Card className="glass p-4 text-center">
+            <Shield className="w-8 h-8 text-primary mx-auto mb-2" />
+            <p className="text-sm font-medium">100% Private</p>
           </Card>
-          <Card className="glass p-3 md:p-4 text-center">
-            <Zap className="w-6 h-6 md:w-8 md:h-8 text-primary mx-auto mb-2" />
-            <p className="text-xs md:text-sm font-medium">Instant Results</p>
+          <Card className="glass p-4 text-center">
+            <Zap className="w-8 h-8 text-primary mx-auto mb-2" />
+            <p className="text-sm font-medium">Instant Results</p>
           </Card>
-          <Card className="glass p-3 md:p-4 text-center">
-            <CheckCircle2 className="w-6 h-6 md:w-8 md:h-8 text-primary mx-auto mb-2" />
-            <p className="text-xs md:text-sm font-medium">Target Precision</p>
+          <Card className="glass p-4 text-center">
+            <CheckCircle2 className="w-8 h-8 text-primary mx-auto mb-2" />
+            <p className="text-sm font-medium">Target Precision</p>
           </Card>
         </div>
 
@@ -723,18 +694,18 @@ export default function PdfToWord() {
             maxSize={100 * 1024 * 1024}
             title="Upload your PDF file"
             description="Drag & drop or click to select"
-            className="mb-6 md:mb-8"
+            className="mb-8"
           />
         ) : (
-          <Card className="p-4 md:p-6 mb-6 md:mb-8 border-2">
+          <Card className="p-6 mb-8 border-2">
 
-            <div className="space-y-4 md:space-y-6">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3 md:p-4 bg-muted/50 rounded-lg border-2 border-primary/20">
-                <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
-                  <FileText className="w-6 h-6 md:w-8 md:h-8 text-primary flex-shrink-0" />
-                  <div className="min-w-0 flex-1">
-                    <p className="font-medium text-sm md:text-base truncate" data-testid="text-filename">{file.name}</p>
-                    <p className="text-xs md:text-sm text-muted-foreground">
+            <div className="space-y-6">
+              <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg border-2 border-primary/20">
+                <div className="flex items-center gap-3">
+                  <FileText className="w-8 h-8 text-primary" />
+                  <div>
+                    <p className="font-medium" data-testid="text-filename">{file.name}</p>
+                    <p className="text-sm text-muted-foreground">
                       {(file.size / 1024 / 1024).toFixed(2)} MB
                     </p>
                   </div>
@@ -749,7 +720,6 @@ export default function PdfToWord() {
                     setProgressMessage("");
                     setExtractionStats(null);
                   }}
-                  className="w-full sm:w-auto"
                   data-testid="button-remove-file"
                 >
                   Remove
@@ -778,24 +748,24 @@ export default function PdfToWord() {
                         <h3 className="font-semibold text-emerald-900 dark:text-emerald-100 mb-2">
                           Conversion Successful!
                         </h3>
-                        <div className="grid grid-cols-3 gap-2 md:gap-4 text-sm">
+                        <div className="grid grid-cols-3 gap-4 text-sm">
                           <div>
-                            <p className="text-emerald-700 dark:text-emerald-300 font-medium text-base md:text-lg">
+                            <p className="text-emerald-700 dark:text-emerald-300 font-medium">
                               {extractionStats.textBlocks}
                             </p>
-                            <p className="text-emerald-600 dark:text-emerald-400 text-xs md:text-sm">Text Blocks</p>
+                            <p className="text-emerald-600 dark:text-emerald-400">Text Blocks</p>
                           </div>
                           <div>
-                            <p className="text-emerald-700 dark:text-emerald-300 font-medium text-base md:text-lg">
+                            <p className="text-emerald-700 dark:text-emerald-300 font-medium">
                               {extractionStats.images}
                             </p>
-                            <p className="text-emerald-600 dark:text-emerald-400 text-xs md:text-sm">Images</p>
+                            <p className="text-emerald-600 dark:text-emerald-400">Images</p>
                           </div>
                           <div>
-                            <p className="text-emerald-700 dark:text-emerald-300 font-medium text-base md:text-lg">
+                            <p className="text-emerald-700 dark:text-emerald-300 font-medium">
                               {extractionStats.tables}
                             </p>
-                            <p className="text-emerald-600 dark:text-emerald-400 text-xs md:text-sm">Tables</p>
+                            <p className="text-emerald-600 dark:text-emerald-400">Tables</p>
                           </div>
                         </div>
                       </div>
@@ -804,11 +774,11 @@ export default function PdfToWord() {
 
                   <Button
                     onClick={downloadWord}
-                    className="w-full h-10 md:h-12 text-sm md:text-lg mb-3"
+                    className="w-full h-12 text-lg mb-3"
                     size="lg"
                     data-testid="button-download"
                   >
-                    <Download className="w-4 h-4 md:w-5 md:h-5 mr-2" />
+                    <Download className="w-5 h-5 mr-2" />
                     Download Word Document (.docx)
                   </Button>
 
@@ -821,7 +791,7 @@ export default function PdfToWord() {
                       setExtractionStats(null);
                     }}
                     variant="outline"
-                    className="w-full h-10 md:h-12 text-sm md:text-lg"
+                    className="w-full h-12 text-lg"
                     size="lg"
                     data-testid="button-convert-another"
                   >
@@ -833,11 +803,11 @@ export default function PdfToWord() {
               {!convertedDocx && !isProcessing && (
                 <Button
                   onClick={convertPdfToWord}
-                  className="w-full h-10 md:h-12 text-sm md:text-lg"
+                  className="w-full h-12 text-lg"
                   size="lg"
                   data-testid="button-convert"
                 >
-                  <FileCheck className="w-4 h-4 md:w-5 md:h-5 mr-2" />
+                  <FileCheck className="w-5 h-5 mr-2" />
                   Convert to Word
                 </Button>
               )}
