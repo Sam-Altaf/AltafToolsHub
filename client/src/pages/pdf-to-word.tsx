@@ -11,7 +11,7 @@ import {
 import FileUpload from "@/components/ui/file-upload";
 import PrivacyNotice from "@/components/privacy-notice";
 import Breadcrumbs from "@/components/seo/breadcrumbs";
-import { HowItWorksSection, WhyUseSection, UseCasesSection } from "@/components/seo/tool-features";
+import { HowItWorksSection, WhyUseSection, UseCasesSection, ComparisonSection } from "@/components/seo/tool-features";
 import { ToolFAQ } from "@/components/seo/tool-faq";
 import { ContactSupportSection } from "@/components/contact-support";
 import * as pdfjsLib from "pdfjs-dist";
@@ -146,6 +146,18 @@ export default function PdfToWord() {
   const breadcrumbItems = [
     { name: "Document Conversion", url: "/all-tools?category=document-conversion" },
     { name: "PDF to Word", url: "/pdf-to-word" }
+  ];
+
+  const comparisons = [
+    { feature: "Price", ourTool: "Free Forever", others: "$6-20/month", highlight: true },
+    { feature: "Client-Side Processing", ourTool: true, others: false, highlight: true },
+    { feature: "File Size Limit", ourTool: "100MB", others: "5-15MB (free tier)" },
+    { feature: "Daily Conversions", ourTool: "Unlimited", others: "2 conversions/day (free)" },
+    { feature: "Privacy Guarantee", ourTool: "100% Private", others: "Cloud upload required" },
+    { feature: "Image Extraction", ourTool: true, others: true },
+    { feature: "Table Detection", ourTool: true, others: true },
+    { feature: "Format Preservation", ourTool: "Good (80-90%)", others: "Excellent (95%+)" },
+    { feature: "No Registration", ourTool: true, others: true }
   ];
 
   useSEO({
@@ -374,6 +386,7 @@ export default function PdfToWord() {
               const paragraphText = currentParagraph.map(t => t.text).join(' ');
               const avgFontSize = currentParagraph.reduce((sum, t) => sum + t.fontSize, 0) / currentParagraph.length;
               const isBold = currentParagraph.some(t => t.fontName.toLowerCase().includes('bold'));
+              const isItalic = currentParagraph.some(t => t.fontName.toLowerCase().includes('italic') || t.fontName.toLowerCase().includes('oblique'));
               
               let headingLevel: typeof HeadingLevel[keyof typeof HeadingLevel] | undefined;
               if (avgFontSize > 18) headingLevel = HeadingLevel.HEADING_1;
@@ -383,6 +396,7 @@ export default function PdfToWord() {
               const runs = [new TextRun({
                 text: paragraphText,
                 bold: isBold || headingLevel !== undefined,
+                italics: isItalic,
                 size: Math.round(avgFontSize * 2) // Convert to half-points
               })];
 
@@ -405,11 +419,13 @@ export default function PdfToWord() {
           const paragraphText = currentParagraph.map(t => t.text).join(' ');
           const avgFontSize = currentParagraph.reduce((sum, t) => sum + t.fontSize, 0) / currentParagraph.length;
           const isBold = currentParagraph.some(t => t.fontName.toLowerCase().includes('bold'));
+          const isItalic = currentParagraph.some(t => t.fontName.toLowerCase().includes('italic') || t.fontName.toLowerCase().includes('oblique'));
 
           allParagraphs.push(new Paragraph({
             children: [new TextRun({
               text: paragraphText,
               bold: isBold,
+              italics: isItalic,
               size: Math.round(avgFontSize * 2)
             })],
             spacing: { after: 200 }
@@ -424,9 +440,19 @@ export default function PdfToWord() {
               const maxWidth = 600;
               const scale = img.width > maxWidth ? maxWidth / img.width : 1;
               
-              // Note: Image embedding disabled for now due to library constraints
-              // Images are extracted but not embedded in Word output
-              // This will be enhanced in future updates with proper image support
+              // Create ImageRun and add to document
+              const imageRun = new ImageRun({
+                data: img.data,
+                transformation: {
+                  width: Math.round(img.width * scale),
+                  height: Math.round(img.height * scale)
+                }
+              });
+              
+              allParagraphs.push(new Paragraph({
+                children: [imageRun],
+                spacing: { after: 200, before: 200 }
+              }));
             } catch (imgError) {
               console.warn('Could not add image to document:', imgError);
             }
@@ -739,134 +765,10 @@ export default function PdfToWord() {
           useCases={useCases}
         />
 
-        {/* Comparison Table */}
-        <section className="mb-16">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold mb-3">Compare PDF to Word Tools</h2>
-            <p className="text-muted-foreground">
-              See how AltafToolsHub compares to other PDF to Word converters
-            </p>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse bg-card rounded-lg overflow-hidden">
-              <thead>
-                <tr className="bg-gradient-to-r from-blue-600 to-cyan-500">
-                  <th className="text-left p-4 text-white font-semibold">Feature</th>
-                  <th className="text-center p-4 text-white font-semibold">AltafToolsHub</th>
-                  <th className="text-center p-4 text-white font-semibold">iLovePDF</th>
-                  <th className="text-center p-4 text-white font-semibold">SmallPDF</th>
-                  <th className="text-center p-4 text-white font-semibold">Adobe Acrobat</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                <tr className="hover:bg-muted/50 transition-colors">
-                  <td className="p-4 font-medium">Price</td>
-                  <td className="p-4 text-center">
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">
-                      Free
-                    </span>
-                  </td>
-                  <td className="p-4 text-center text-muted-foreground">$6/mo</td>
-                  <td className="p-4 text-center text-muted-foreground">$9/mo</td>
-                  <td className="p-4 text-center text-muted-foreground">$19.99/mo</td>
-                </tr>
-                <tr className="hover:bg-muted/50 transition-colors">
-                  <td className="p-4 font-medium">Client-Side Processing</td>
-                  <td className="p-4 text-center">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500 mx-auto" />
-                  </td>
-                  <td className="p-4 text-center">
-                    <XCircle className="w-5 h-5 text-red-500 mx-auto" />
-                  </td>
-                  <td className="p-4 text-center">
-                    <XCircle className="w-5 h-5 text-red-500 mx-auto" />
-                  </td>
-                  <td className="p-4 text-center">
-                    <XCircle className="w-5 h-5 text-red-500 mx-auto" />
-                  </td>
-                </tr>
-                <tr className="hover:bg-muted/50 transition-colors">
-                  <td className="p-4 font-medium">Image Extraction</td>
-                  <td className="p-4 text-center">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500 mx-auto" />
-                  </td>
-                  <td className="p-4 text-center">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500 mx-auto" />
-                  </td>
-                  <td className="p-4 text-center">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500 mx-auto" />
-                  </td>
-                  <td className="p-4 text-center">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500 mx-auto" />
-                  </td>
-                </tr>
-                <tr className="hover:bg-muted/50 transition-colors">
-                  <td className="p-4 font-medium">Table Detection</td>
-                  <td className="p-4 text-center">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500 mx-auto" />
-                  </td>
-                  <td className="p-4 text-center">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500 mx-auto" />
-                  </td>
-                  <td className="p-4 text-center">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500 mx-auto" />
-                  </td>
-                  <td className="p-4 text-center">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500 mx-auto" />
-                  </td>
-                </tr>
-                <tr className="hover:bg-muted/50 transition-colors">
-                  <td className="p-4 font-medium">File Size Limit</td>
-                  <td className="p-4 text-center font-medium">100MB</td>
-                  <td className="p-4 text-center text-muted-foreground">15MB free</td>
-                  <td className="p-4 text-center text-muted-foreground">5MB free</td>
-                  <td className="p-4 text-center text-muted-foreground">100MB</td>
-                </tr>
-                <tr className="hover:bg-muted/50 transition-colors">
-                  <td className="p-4 font-medium">Conversions Per Day</td>
-                  <td className="p-4 text-center font-medium">Unlimited</td>
-                  <td className="p-4 text-center text-muted-foreground">2 free</td>
-                  <td className="p-4 text-center text-muted-foreground">2 free</td>
-                  <td className="p-4 text-center text-muted-foreground">Unlimited</td>
-                </tr>
-                <tr className="hover:bg-muted/50 transition-colors">
-                  <td className="p-4 font-medium">Privacy Guarantee</td>
-                  <td className="p-4 text-center">
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300">
-                      100% Private
-                    </span>
-                  </td>
-                  <td className="p-4 text-center text-muted-foreground">Cloud-based</td>
-                  <td className="p-4 text-center text-muted-foreground">Cloud-based</td>
-                  <td className="p-4 text-center text-muted-foreground">Cloud-based</td>
-                </tr>
-                <tr className="hover:bg-muted/50 transition-colors">
-                  <td className="p-4 font-medium">Format Preservation</td>
-                  <td className="p-4 text-center text-muted-foreground">Good</td>
-                  <td className="p-4 text-center text-muted-foreground">Excellent</td>
-                  <td className="p-4 text-center text-muted-foreground">Very Good</td>
-                  <td className="p-4 text-center text-muted-foreground">Excellent</td>
-                </tr>
-                <tr className="hover:bg-muted/50 transition-colors">
-                  <td className="p-4 font-medium">No Registration Required</td>
-                  <td className="p-4 text-center">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500 mx-auto" />
-                  </td>
-                  <td className="p-4 text-center">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500 mx-auto" />
-                  </td>
-                  <td className="p-4 text-center">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500 mx-auto" />
-                  </td>
-                  <td className="p-4 text-center">
-                    <XCircle className="w-5 h-5 text-red-500 mx-auto" />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
+        <ComparisonSection
+          toolName="PDF to Word Converter"
+          comparisons={comparisons}
+        />
 
         <ToolFAQ 
           faqs={faqItems}
