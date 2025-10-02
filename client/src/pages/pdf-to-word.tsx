@@ -259,13 +259,15 @@ export default function PdfToWord() {
     return images;
   };
 
-  // Detect tables from text positioning
+  // Improved table detection with better alignment
   const detectTables = (textItems: TextItem[]): PDFTableCell[][] => {
     const tables: PDFTableCell[][] = [];
     
-    // Group text items by approximate Y position (rows)
+    if (textItems.length < 4) return tables;
+    
+    // Group text items by Y position (rows) with tighter threshold
     const rowGroups = new Map<number, TextItem[]>();
-    const VERTICAL_THRESHOLD = 5;
+    const VERTICAL_THRESHOLD = 3;
     
     textItems.forEach(item => {
       const roundedY = Math.round(item.y / VERTICAL_THRESHOLD) * VERTICAL_THRESHOLD;
@@ -275,31 +277,42 @@ export default function PdfToWord() {
       rowGroups.get(roundedY)!.push(item);
     });
     
-    // Check if rows form a table (multiple items aligned vertically)
     const sortedRows = Array.from(rowGroups.entries())
-      .sort((a, b) => b[0] - a[0]) // Top to bottom
-      .filter(([_, items]) => items.length >= 2); // At least 2 columns
+      .sort((a, b) => b[0] - a[0])
+      .filter(([_, items]) => items.length >= 2);
     
-    if (sortedRows.length >= 2) { // At least 2 rows
-      // Detect column positions
-      const columnPositions = new Set<number>();
+    if (sortedRows.length >= 2) {
+      // Find consistent column positions
+      const columnCounts = new Map<number, number>();
+      const HORIZONTAL_THRESHOLD = 12;
+      
       sortedRows.forEach(([_, items]) => {
         items.forEach(item => {
-          const roundedX = Math.round(item.x / 10) * 10;
-          columnPositions.add(roundedX);
+          const roundedX = Math.round(item.x / HORIZONTAL_THRESHOLD) * HORIZONTAL_THRESHOLD;
+          columnCounts.set(roundedX, (columnCounts.get(roundedX) || 0) + 1);
         });
       });
       
-      if (columnPositions.size >= 2 && columnPositions.size <= 10) {
-        const sortedCols = Array.from(columnPositions).sort((a, b) => a - b);
-        
+      // Keep columns that appear in at least 2 rows
+      const validColumns = Array.from(columnCounts.entries())
+        .filter(([_, count]) => count >= 2)
+        .map(([pos]) => pos)
+        .sort((a, b) => a - b);
+      
+      if (validColumns.length >= 2 && validColumns.length <= 10) {
         const tableCells: PDFTableCell[] = [];
-        sortedRows.forEach(([_, items], rowIndex) => {
-          items.sort((a, b) => a.x - b.x);
+        
+        sortedRows.forEach(([y], rowIndex) => {
+          const rowItems = rowGroups.get(y)!;
           
-          items.forEach((item, colIndex) => {
+          validColumns.forEach((colX, colIndex) => {
+            const cellItem = rowItems.find(item => {
+              const itemX = Math.round(item.x / HORIZONTAL_THRESHOLD) * HORIZONTAL_THRESHOLD;
+              return itemX === colX;
+            });
+            
             tableCells.push({
-              text: item.text,
+              text: cellItem?.text.trim() || '',
               rowIndex,
               colIndex
             });
@@ -377,21 +390,33 @@ export default function PdfToWord() {
           return a.y - b.y;
         });
 
-        // Group into paragraphs
+        // Group into paragraphs with better spacing detection
         let currentParagraph: TextItem[] = [];
         let lastY = -1;
-        const PARAGRAPH_THRESHOLD = 15;
+        let lastX = -1;
+        const LINE_THRESHOLD = 8; // Same line if within 8 units
+        const PARAGRAPH_THRESHOLD = 20; // New paragraph if gap > 20 units
 
         sortedItems.forEach((item, idx) => {
           if (item.text.trim().length === 0) return;
 
-          if (lastY === -1 || Math.abs(item.y - lastY) < PARAGRAPH_THRESHOLD) {
-            currentParagraph.push(item);
+          const yDiff = lastY === -1 ? 0 : Math.abs(item.y - lastY);
+          const sameLine = yDiff < LINE_THRESHOLD;
+          const newParagraph = yDiff > PARAGRAPH_THRESHOLD;
+
+          if (lastY === -1 || sameLine) {
+            // Same line - add with appropriate spacing
+            if (currentParagraph.length > 0 && !sameLine && yDiff > LINE_THRESHOLD) {
+              currentParagraph.push({ ...item, text: ' ' + item.text });
+            } else {
+              currentParagraph.push(item);
+            }
             lastY = item.y;
-          } else {
+            lastX = item.x + item.width;
+          } else if (newParagraph) {
+            // Create paragraph from accumulated items
             if (currentParagraph.length > 0) {
-              // Create paragraph from accumulated items
-              const paragraphText = currentParagraph.map(t => t.text).join(' ');
+              const paragraphText = currentParagraph.map(t => t.text).join('').trim();
               const avgFontSize = currentParagraph.reduce((sum, t) => sum + t.fontSize, 0) / currentParagraph.length;
               const isBold = currentParagraph.some(t => t.fontName.toLowerCase().includes('bold'));
               const isItalic = currentParagraph.some(t => t.fontName.toLowerCase().includes('italic') || t.fontName.toLowerCase().includes('oblique'));
@@ -401,17 +426,15 @@ export default function PdfToWord() {
               else if (avgFontSize > 16) headingLevel = HeadingLevel.HEADING_2;
               else if (avgFontSize > 14) headingLevel = HeadingLevel.HEADING_3;
 
-              const runs = [new TextRun({
-                text: paragraphText,
-                bold: isBold || headingLevel !== undefined,
-                italics: isItalic,
-                size: Math.round(avgFontSize * 2) // Convert to half-points
-              })];
-
               allParagraphs.push(new Paragraph({
-                children: runs,
+                children: [new TextRun({
+                  text: paragraphText,
+                  bold: isBold || headingLevel !== undefined,
+                  italics: isItalic,
+                  size: Math.round(avgFontSize * 2)
+                })],
                 heading: headingLevel,
-                spacing: { after: 200 }
+                spacing: { after: headingLevel ? 300 : 200, before: headingLevel ? 200 : 0 }
               }));
               
               totalTextBlocks++;
@@ -419,24 +442,36 @@ export default function PdfToWord() {
 
             currentParagraph = [item];
             lastY = item.y;
+            lastX = item.x + item.width;
+          } else {
+            // Continuing paragraph on new line
+            currentParagraph.push({ ...item, text: ' ' + item.text });
+            lastY = item.y;
+            lastX = item.x + item.width;
           }
         });
 
         // Add last paragraph
         if (currentParagraph.length > 0) {
-          const paragraphText = currentParagraph.map(t => t.text).join(' ');
+          const paragraphText = currentParagraph.map(t => t.text).join('').trim();
           const avgFontSize = currentParagraph.reduce((sum, t) => sum + t.fontSize, 0) / currentParagraph.length;
           const isBold = currentParagraph.some(t => t.fontName.toLowerCase().includes('bold'));
           const isItalic = currentParagraph.some(t => t.fontName.toLowerCase().includes('italic') || t.fontName.toLowerCase().includes('oblique'));
 
+          let headingLevel: typeof HeadingLevel[keyof typeof HeadingLevel] | undefined;
+          if (avgFontSize > 18) headingLevel = HeadingLevel.HEADING_1;
+          else if (avgFontSize > 16) headingLevel = HeadingLevel.HEADING_2;
+          else if (avgFontSize > 14) headingLevel = HeadingLevel.HEADING_3;
+
           allParagraphs.push(new Paragraph({
             children: [new TextRun({
               text: paragraphText,
-              bold: isBold,
+              bold: isBold || headingLevel !== undefined,
               italics: isItalic,
               size: Math.round(avgFontSize * 2)
             })],
-            spacing: { after: 200 }
+            heading: headingLevel,
+            spacing: { after: headingLevel ? 300 : 200, before: headingLevel ? 200 : 0 }
           }));
           totalTextBlocks++;
         }
