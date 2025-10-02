@@ -16,6 +16,7 @@ import NavigationMemory from "@/components/navigation-memory";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import CookieConsent from "@/components/cookie-consent";
+import { SkipLink } from "@/components/skip-link";
 import BlogRouter from "@/components/blog-router";
 import { Loader2 } from "lucide-react";
 import RedirectLanding from "@/components/redirect-landing";
@@ -103,8 +104,9 @@ function Router() {
     <div className="min-h-screen flex flex-col">
       <NavigationMemory />
       <ScrollToTop />
+      <SkipLink />
       <Header />
-      <div className="flex-1">
+      <main id="main-content" tabIndex={-1} className="flex-1" role="main" aria-label="Main content">
         <Switch>
           {/* Blog routes - workaround for wouter v3 parameterized route issue */}
           <Route path="/blog/:slug">
@@ -466,7 +468,7 @@ function Router() {
             </Suspense>
           </Route>
         </Switch>
-      </div>
+      </main>
       <Footer />
     </div>
   );
