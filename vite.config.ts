@@ -142,7 +142,7 @@ export default defineConfig({
           ],
           'animations': ['framer-motion'],
           'pdf-processing': ['pdfjs-dist', 'pdf-lib', 'pdf-lib-with-encrypt'],
-          'image-processing': ['sharp', 'canvas', 'tesseract.js'],
+          'ocr': ['tesseract.js'],
           'charts': ['recharts'],
           'utilities': ['qrcode', 'react-markdown']
         },
