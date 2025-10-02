@@ -1,0 +1,93 @@
+Building
+Failed
+9:59:07 PM: Netlify Build                                                 
+9:59:07 PM: ────────────────────────────────────────────────────────────────
+9:59:07 PM: ​
+9:59:07 PM: ❯ Version
+9:59:07 PM:   @netlify/build 35.1.8
+9:59:07 PM: ​
+9:59:07 PM: ❯ Flags
+9:59:07 PM:   accountId: 68de5eb9085b37dfee821f9d
+9:59:07 PM:   baseRelDir: true
+9:59:07 PM:   buildId: 68dea82dbfe68af139782f31
+9:59:07 PM:   deployId: 68dea82dbfe68af139782f33
+9:59:07 PM: ​
+9:59:07 PM: ❯ Current directory
+9:59:07 PM:   /opt/build/repo
+9:59:07 PM: ​
+9:59:07 PM: ❯ Config file
+9:59:07 PM:   /opt/build/repo/netlify.toml
+9:59:07 PM: ​
+9:59:07 PM: ❯ Context
+9:59:07 PM:   production
+9:59:07 PM: ​
+9:59:07 PM: build.command from netlify.toml                               
+9:59:07 PM: ────────────────────────────────────────────────────────────────
+9:59:07 PM: ​
+9:59:07 PM: $ npm ci && npm run build:client
+9:59:08 PM: npm warn EBADENGINE Unsupported engine {
+9:59:08 PM: npm warn EBADENGINE   package: 'cross-env@10.1.0',
+9:59:08 PM: npm warn EBADENGINE   required: { node: '>=20' },
+9:59:08 PM: npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+9:59:08 PM: npm warn EBADENGINE }
+9:59:08 PM: npm warn EBADENGINE Unsupported engine {
+9:59:08 PM: npm warn EBADENGINE   package: 'pdfjs-dist@5.4.149',
+9:59:08 PM: npm warn EBADENGINE   required: { node: '>=20.16.0 || >=22.3.0' },
+9:59:08 PM: npm warn EBADENGINE   current: { node: 'v18.20.8', npm: '10.8.2' }
+9:59:08 PM: npm warn EBADENGINE }
+9:59:13 PM: npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+9:59:13 PM: npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+9:59:14 PM: npm warn deprecated sourcemap-codec@1.4.8: Please use @jridgewell/sourcemap-codec instead
+9:59:21 PM: npm warn deprecated source-map@0.8.0-beta.0: The work that was done in this beta branch won't be included in future versions
+9:59:21 PM: added 825 packages, and audited 826 packages in 13s
+9:59:21 PM: 187 packages are looking for funding
+9:59:21 PM:   run `npm fund` for details
+9:59:21 PM: found 0 vulnerabilities
+9:59:21 PM: > rest-express@1.0.0 build:client
+9:59:21 PM: > vite build
+9:59:21 PM: sh: 1: vite: not found
+9:59:21 PM: ​
+9:59:21 PM: "build.command" failed                                        
+9:59:21 PM: ────────────────────────────────────────────────────────────────
+9:59:21 PM: ​
+9:59:21 PM:   Error message
+9:59:21 PM:   Command failed with exit code 127: npm ci && npm run build:client (https://ntl.fyi/exit-code-127)
+9:59:21 PM: ​
+9:59:21 PM:   Error location
+9:59:21 PM:   In build.command from netlify.toml:
+9:59:21 PM:   npm ci && npm run build:client
+9:59:21 PM: ​
+9:59:21 PM:   Resolved config
+9:59:21 PM:   build:
+9:59:21 PM:     command: npm ci && npm run build:client
+9:59:21 PM:     commandOrigin: config
+9:59:21 PM:     environment:
+9:59:21 PM:       - CI
+9:59:21 PM:       - NODE_VERSION
+9:59:21 PM:       - NODE_ENV
+9:59:21 PM:       - NPM_FLAGS
+9:59:21 PM:     publish: /opt/build/repo/dist/public
+9:59:21 PM:     publishOrigin: config
+9:59:21 PM:   headers:
+9:59:21 PM:     - for: /assets/*
+      values:
+        Cache-Control: public, max-age=31536000, immutable
+    - for: "*.js"
+      values:
+        Cache-Control: public, max-age=31536000, immutable
+    - for: "*.css"
+      values:
+        Cache-Control: public, max-age=31536000, immutable
+    - for: /sw.js
+      values:
+        Cache-Control: no-cache
+  headersOrigin: config
+  redirects:
+    - from: /*
+      status: 200
+      to: /index.html
+  redirectsOrigin: config
+9:59:21 PM: Build failed due to a user error: Build script returned non-zero exit code: 2
+9:59:21 PM: Failing build: Failed to build site
+9:59:22 PM: Finished processing build request in 43.283s
+9:59:21 PM: Failed during stage 'building site': Build script returned non-zero exit code: 2 (https://ntl.fyi/exit-code-2)
