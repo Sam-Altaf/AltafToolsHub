@@ -49,13 +49,9 @@ export default function CookieConsent() {
   };
 
   const handleRejectAll = () => {
-    const minimalPreferences = {
-      necessary: true,
-      analytics: false,
-      functional: false,
-    };
-    localStorage.setItem("cookieConsent", JSON.stringify(minimalPreferences));
-    localStorage.setItem("cookieConsentDate", new Date().toISOString());
+    // Clear any existing consent so banner shows again on next visit
+    localStorage.removeItem("cookieConsent");
+    localStorage.removeItem("cookieConsentDate");
     setShowBanner(false);
   };
 
