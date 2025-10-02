@@ -83,7 +83,7 @@ export default function CookieConsent() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ type: "spring", stiffness: 100, damping: 15 }}
-            className="fixed bottom-4 left-4 z-50 max-w-sm sm:max-w-md"
+            className="fixed bottom-4 left-4 z-50 max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl"
             data-testid="cookie-consent-banner"
           >
             <Card className="glass p-4 shadow-2xl border-2">
