@@ -144,7 +144,6 @@ export default function PdfToWord() {
   ];
 
   const breadcrumbItems = [
-    { name: "Home", url: "/" },
     { name: "Document Conversion", url: "/all-tools?category=document-conversion" },
     { name: "PDF to Word", url: "/pdf-to-word" }
   ];
