@@ -84,43 +84,47 @@ export default function CookieConsent() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ type: "spring", stiffness: 100, damping: 15 }}
-            className="fixed bottom-6 left-6 right-6 sm:left-8 sm:right-8 md:left-0 md:right-0 md:bottom-0 z-50 md:max-w-none"
+            className="fixed bottom-0 left-0 right-0 z-50 p-4 sm:p-6"
             data-testid="cookie-consent-banner"
           >
-            <div className="bg-[#0a1628]/95 backdrop-blur-xl border border-blue-900/50 rounded-lg md:rounded-none shadow-2xl p-6 md:py-6 md:px-8">
+            <Card className="glass max-w-7xl mx-auto p-6 sm:p-8 shadow-2xl border-2">
               <button
                 onClick={() => setShowBanner(false)}
-                className="absolute top-3 right-3 p-1 rounded-lg hover:bg-white/10 transition-colors text-white/70 hover:text-white"
+                className="absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 aria-label="Close cookie banner"
                 data-testid="button-close-banner"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
               
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 md:gap-6 max-w-7xl md:mx-auto pr-8 md:pr-0">
+              <div className="flex flex-col lg:flex-row items-start lg:items-center gap-6">
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-3">
-                    <Shield className="w-5 h-5 text-blue-400" />
-                    <h3 className="text-lg font-semibold text-white">We value your privacy</h3>
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="p-2 rounded-lg bg-primary/10">
+                      <Cookie className="w-6 h-6 text-primary" />
+                    </div>
+                    <h3 className="text-lg font-semibold">We value your privacy</h3>
                   </div>
-                  <p className="text-sm text-gray-300 leading-relaxed">
-                    We use cookies to enhance your browsing experience and analyze our traffic. All file processing happens entirely in your browser - your files never leave your device. By clicking "Accept All", you consent to our use of cookies. You can manage your preferences or learn more in our{" "}
-                    <Link href="/privacy-policy" className="text-blue-400 hover:text-blue-300 underline font-medium">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    We use cookies to enhance your browsing experience and analyze our traffic. 
+                    All file processing happens entirely in your browser - <span className="font-medium">your files never leave your device</span>. 
+                    By clicking "Accept All", you consent to our use of cookies. 
+                    You can manage your preferences or learn more in our{" "}
+                    <Link href="/privacy-policy" className="text-primary hover:underline font-medium">
                       privacy policy
                     </Link>
                     {" "}and{" "}
-                    <Link href="/terms-conditions" className="text-blue-400 hover:text-blue-300 underline font-medium">
+                    <Link href="/terms-conditions" className="text-primary hover:underline font-medium">
                       terms & conditions
                     </Link>.
                   </p>
                 </div>
                 
-                <div className="flex flex-col sm:flex-row gap-3 md:flex-shrink-0">
+                <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
                   <Button
                     onClick={handleManagePreferences}
                     variant="outline"
-                    size="default"
-                    className="border-gray-600 bg-transparent text-white hover:bg-white/10 hover:text-white"
+                    className="w-full sm:w-auto"
                     data-testid="button-manage-cookies"
                   >
                     <Settings className="w-4 h-4 mr-2" />
@@ -129,23 +133,21 @@ export default function CookieConsent() {
                   <Button
                     onClick={handleRejectAll}
                     variant="outline"
-                    size="default"
-                    className="border-gray-600 bg-transparent text-white hover:bg-white/10 hover:text-white"
+                    className="w-full sm:w-auto"
                     data-testid="button-reject-cookies"
                   >
                     Reject All
                   </Button>
                   <Button
                     onClick={handleAcceptAll}
-                    className="btn-gradient text-white"
-                    size="default"
+                    className="btn-gradient text-white w-full sm:w-auto"
                     data-testid="button-accept-cookies"
                   >
                     Accept All
                   </Button>
                 </div>
               </div>
-            </div>
+            </Card>
           </motion.div>
         )}
       </AnimatePresence>
