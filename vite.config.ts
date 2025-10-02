@@ -200,7 +200,12 @@ export default defineConfig({
             '@radix-ui/react-progress'
           ],
           'animations': ['framer-motion'],
-          'pdf-processing': ['pdfjs-dist', 'pdf-lib', 'pdf-lib-with-encrypt'],
+          // Split PDF processing into smaller, logical chunks
+          'pdf-viewer': ['pdfjs-dist'],
+          'pdf-editor': ['pdf-lib'], 
+          'pdf-security': ['pdf-lib-with-encrypt'],
+          'compression': ['jszip', 'pako'],
+          'document-processing': ['docx', 'mammoth'],
           'ocr': ['tesseract.js'],
           'charts': ['recharts'],
           'utilities': ['qrcode', 'react-markdown']
