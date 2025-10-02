@@ -175,73 +175,52 @@ export default function PdfToWord() {
     setExtractionStats(null);
   }, []);
 
-  // Extract images from PDF page
+  // Extract images from PDF page - simplified method
   const extractImages = async (page: any): Promise<ExtractedImage[]> => {
     const images: ExtractedImage[] = [];
     
     try {
       const ops = await page.getOperatorList();
-      const viewport = page.getViewport({ scale: 1.0 });
       
+      // Count images on page
+      let imageCount = 0;
       for (let i = 0; i < ops.fnArray.length; i++) {
-        // OPS.paintImageXObject = 85, OPS.paintInlineImageXObject = 86
-        if (ops.fnArray[i] === 85 || ops.fnArray[i] === 86) {
-          const imageName = ops.argsArray[i][0];
+        // OPS.paintImageXObject = 85
+        if (ops.fnArray[i] === 85) {
+          imageCount++;
+        }
+      }
+      
+      // If images exist, render whole page to canvas as image
+      if (imageCount > 0) {
+        const viewport = page.getViewport({ scale: 2.0 });
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        
+        if (context) {
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
           
-          try {
-            const image = await page.objs.get(imageName);
-            
-            if (image && image.width && image.height) {
-              // Get canvas representation
-              const canvas = document.createElement('canvas');
-              canvas.width = image.width;
-              canvas.height = image.height;
-              const ctx = canvas.getContext('2d');
-              
-              if (ctx && image.data) {
-                const imageData = ctx.createImageData(image.width, image.height);
-                
-                // Handle different image types
-                if (image.kind === 1) { // Grayscale
-                  for (let j = 0; j < image.data.length; j++) {
-                    const idx = j * 4;
-                    imageData.data[idx] = image.data[j];
-                    imageData.data[idx + 1] = image.data[j];
-                    imageData.data[idx + 2] = image.data[j];
-                    imageData.data[idx + 3] = 255;
-                  }
-                } else if (image.kind === 2) { // RGB
-                  for (let j = 0, k = 0; j < image.data.length; j += 3, k += 4) {
-                    imageData.data[k] = image.data[j];
-                    imageData.data[k + 1] = image.data[j + 1];
-                    imageData.data[k + 2] = image.data[j + 2];
-                    imageData.data[k + 3] = 255;
-                  }
-                } else if (image.kind === 3) { // RGBA
-                  imageData.data.set(image.data);
-                }
-                
-                ctx.putImageData(imageData, 0, 0);
-                
-                // Convert to PNG blob
-                const blob = await new Promise<Blob>((resolve) => {
-                  canvas.toBlob((b) => resolve(b!), 'image/png');
-                });
-                
-                const arrayBuffer = await blob.arrayBuffer();
-                const uint8Array = new Uint8Array(arrayBuffer);
-                
-                images.push({
-                  data: uint8Array,
-                  width: image.width,
-                  height: image.height,
-                  y: viewport.height - (ops.argsArray[i][2] || 0) // Y position for ordering
-                });
-              }
-            }
-          } catch (imgError) {
-            console.warn('Could not extract image:', imgError);
-          }
+          await page.render({
+            canvasContext: context,
+            viewport: viewport,
+            intent: 'display'
+          } as any).promise;
+          
+          // Convert canvas to PNG
+          const blob = await new Promise<Blob>((resolve) => {
+            canvas.toBlob((b) => resolve(b!), 'image/png');
+          });
+          
+          const arrayBuffer = await blob.arrayBuffer();
+          const uint8Array = new Uint8Array(arrayBuffer);
+          
+          images.push({
+            data: uint8Array,
+            width: viewport.width,
+            height: viewport.height,
+            y: 0
+          });
         }
       }
     } catch (error) {
@@ -628,13 +607,29 @@ export default function PdfToWord() {
           message="Your PDFs are processed entirely in your browser. Files never leave your device."
         />
 
+        {/* Features */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 max-w-3xl mx-auto">
+          <Card className="glass p-4 text-center">
+            <Shield className="w-8 h-8 text-primary mx-auto mb-2" />
+            <p className="text-sm font-medium">100% Private</p>
+          </Card>
+          <Card className="glass p-4 text-center">
+            <Zap className="w-8 h-8 text-primary mx-auto mb-2" />
+            <p className="text-sm font-medium">Instant Results</p>
+          </Card>
+          <Card className="glass p-4 text-center">
+            <CheckCircle2 className="w-8 h-8 text-primary mx-auto mb-2" />
+            <p className="text-sm font-medium">Target Precision</p>
+          </Card>
+        </div>
+
         {!file ? (
           <FileUpload
             accept=".pdf"
             onFileSelect={handleFileSelect}
             maxSize={100 * 1024 * 1024}
-            title="Upload PDF File"
-            description="Drag and drop your PDF here, or click to browse"
+            title="Upload your PDF file"
+            description="Drag & drop or click to select"
             className="mb-8"
           />
         ) : (
