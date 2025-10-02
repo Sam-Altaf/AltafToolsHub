@@ -59,7 +59,7 @@ export default function CompressPDF() {
       const unit = match[2].toUpperCase();
       const targetString = `${size}${unit}` as TargetSize;
       // Validate it's a valid target size
-      const validSizes: TargetSize[] = ["10KB", "20KB", "50KB", "100KB", "150KB", "200KB", "300KB", "500KB", "1MB", "2MB", "5MB"];
+      const validSizes: TargetSize[] = ["10KB", "20KB", "50KB", "100KB", "150KB", "200KB", "300KB", "500KB", "1MB", "2MB", "5MB", "10MB", "15MB", "20MB"];
       if (validSizes.includes(targetString)) {
         return targetString;
       }

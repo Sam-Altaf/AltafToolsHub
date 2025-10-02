@@ -60,9 +60,9 @@ async function upscalePDFToTarget(pdfBytes: Uint8Array, currentSize: number, tar
     return pdfBytes;
   }
   
-  // Guardrail: Cap maximum target at 10MB to prevent resource exhaustion
-  if (targetSize > 10 * 1024 * 1024) {
-    console.warn(`Target size ${targetSize} exceeds 10MB cap. Limiting to 10MB.`);
+  // Guardrail: Cap maximum target at 20MB to support new size options
+  if (targetSize > 20 * 1024 * 1024) {
+    console.warn(`Target size ${targetSize} exceeds 20MB cap. Limiting to 20MB.`);
     return pdfBytes;
   }
   
