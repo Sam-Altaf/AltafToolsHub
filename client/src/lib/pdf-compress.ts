@@ -497,6 +497,8 @@ export async function compressToTargetSize(
   onProgress?: (progress: number, message: string) => void,
   mode: 'highest' | 'balanced' | 'fast' | 'hd' = 'balanced'
 ): Promise<{ blob: Blob; quality: number; scale: number; attempts: number; mode: string }> {
+  const startTime = performance.now();
+  
   // Create a copy to avoid ArrayBuffer detachment issues
   const pdfBytesCopy = pdfBytes.slice(0);
   // Clear previous render cache
@@ -518,6 +520,10 @@ export async function compressToTargetSize(
       mode
     };
   }
+  
+  // Smart initial estimates based on target/original ratio
+  const initialQuality = Math.min(0.99, Math.max(0.3, 0.3 + compressionRatio * 0.6));
+  const initialScale = Math.min(1.0, Math.max(0.7, 0.7 + compressionRatio * 0.25));
   
   // HD Quality ranges with mode-specific adjustments
   let minQuality: number;
@@ -666,8 +672,35 @@ export async function compressToTargetSize(
   }
   
   let attempts = 0;
-  const maxAttempts = 24; // Increased from 20 to allow refinement steps (adjacent scales + fine-tuning)
+  let maxAttempts = 24; // Default - Increased from 20 to allow refinement steps (adjacent scales + fine-tuning)
   const tolerance = 0.05; // 5% tolerance - we'll aim for 95-100% accuracy in practice
+  
+  // Optimize quality ranges for large files (10MB+) 
+  if (targetSize >= 20 * 1024 * 1024) {
+    // 20MB: Ultra premium quality
+    minQuality = 0.95;
+    maxQuality = 0.99;
+    minScale = 0.99;
+    maxScale = 1.0;
+    maxAttempts = 10; // Fewer attempts needed
+    console.log('Optimizing for 20MB+ target: Ultra premium quality mode');
+  } else if (targetSize >= 15 * 1024 * 1024) {
+    // 15MB: Premium quality
+    minQuality = 0.93;
+    maxQuality = 0.99;
+    minScale = 0.98;
+    maxScale = 1.0;
+    maxAttempts = 12;
+    console.log('Optimizing for 15MB+ target: Premium quality mode');
+  } else if (targetSize >= 10 * 1024 * 1024) {
+    // 10MB: High quality
+    minQuality = 0.90;
+    maxQuality = 0.99;
+    minScale = 0.97;
+    maxScale = 1.0;
+    maxAttempts = 15;
+    console.log('Optimizing for 10MB+ target: High quality mode');
+  }
   
   // Track last progress to ensure monotonic progress bar
   let lastReportedProgress = 0;
@@ -855,10 +888,10 @@ export async function compressToTargetSize(
         searchMaxQ = testQuality; // Must decrease quality
       }
       
-      // ACCURACY OPTIMIZATION: Early exit only if we're within 2% of target (97-100%)
+      // ACCURACY OPTIMIZATION: Early exit if we're within 5% of target (95-100%)
       const difference = Math.abs(currentSize - targetSize);
-      if (currentSize <= targetSize && currentSize >= targetSize * 0.97) {
-        console.log(`Target achieved! Target: ${targetSize}, Achieved: ${currentSize}, Difference: ${difference} bytes (${(difference/targetSize*100).toFixed(1)}%)`);
+      if (currentSize <= targetSize && currentSize >= targetSize * 0.95) {
+        console.log(`Early exit: Target achieved within 5% tolerance! Target: ${targetSize}, Achieved: ${currentSize}, Difference: ${difference} bytes (${(difference/targetSize*100).toFixed(1)}%)`);
         
         // CRITICAL SAFEGUARD: Never return a file larger than the original
         if (currentSize >= originalSize) {
@@ -1172,6 +1205,8 @@ export async function compressToTargetSize(
     }
     
     // Already close enough (≥95%), no upscaling needed
+    const endTime = performance.now();
+    console.log(`Compression completed in ${((endTime - startTime) / 1000).toFixed(2)} seconds`);
     return { 
       blob: bestUnderTarget!.blob, 
       quality: bestUnderTarget!.quality, 
@@ -1196,6 +1231,8 @@ export async function compressToTargetSize(
     }
     
     console.warn(`Target size too ambitious. Returning smallest possible: ${bestOverTarget.size} bytes (${(bestOverTarget.size/targetSize*100).toFixed(1)}% of target)`);
+    const endTime = performance.now();
+    console.log(`Compression completed in ${((endTime - startTime) / 1000).toFixed(2)} seconds`);
     return { 
       blob: bestOverTarget.blob, 
       quality: bestOverTarget.quality, 
@@ -1228,6 +1265,8 @@ export async function compressToTargetSize(
     };
   }
   
+  const endTime = performance.now();
+  console.log(`Compression completed in ${((endTime - startTime) / 1000).toFixed(2)} seconds`);
   return { 
     blob: fallbackResult.blob, 
     quality: fallbackParams.jpegQuality, 

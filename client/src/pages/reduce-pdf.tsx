@@ -23,7 +23,7 @@ import { generateSmartFileName, enhanceDownloadName } from "@/lib/smart-file-nam
 import { ContactSupportSection } from "@/components/contact-support";
 import { scrollToProcessing } from "@/lib/scroll-utils";
 
-type TargetSize = "10KB" | "20KB" | "50KB" | "100KB" | "150KB" | "200KB" | "300KB" | "500KB" | "1MB" | "2MB" | "5MB" | "max";
+type TargetSize = "10KB" | "20KB" | "50KB" | "100KB" | "150KB" | "200KB" | "300KB" | "500KB" | "1MB" | "2MB" | "5MB" | "10MB" | "15MB" | "20MB" | "max";
 
 interface CompressionResult {
   originalSize: number;
@@ -228,6 +228,9 @@ export default function ReducePDF() {
       '1MB': 1024 * 1024,
       '2MB': 2 * 1024 * 1024,
       '5MB': 5 * 1024 * 1024,
+      '10MB': 10 * 1024 * 1024,
+      '15MB': 15 * 1024 * 1024,
+      '20MB': 20 * 1024 * 1024,
       'max': null
     };
     return sizeMap[target];
@@ -245,6 +248,9 @@ export default function ReducePDF() {
     { value: '1MB', label: '1 MB', description: 'Minimal loss', color: 'from-cyan-500 to-teal-500' },
     { value: '2MB', label: '2 MB', description: 'Near original', color: 'from-blue-500 to-cyan-500' },
     { value: '5MB', label: '5 MB', description: 'Very light', color: 'from-indigo-500 to-blue-500' },
+    { value: '10MB', label: '10 MB', description: 'Standard quality', color: 'from-violet-500 to-purple-500' },
+    { value: '15MB', label: '15 MB', description: 'High quality', color: 'from-pink-500 to-violet-500' },
+    { value: '20MB', label: '20 MB', description: 'Premium quality', color: 'from-rose-500 to-pink-500' },
     { value: 'max', label: 'Maximum', description: 'Most compression', color: 'from-purple-500 to-indigo-500' }
   ];
 
