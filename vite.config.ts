@@ -109,6 +109,18 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+        pure_funcs: ['console.log', 'console.info', 'console.debug']
+      },
+      format: {
+        comments: false
+      }
+    },
+    cssMinify: 'lightningcss',
     rollupOptions: {
       output: {
         manualChunks: {
@@ -133,9 +145,14 @@ export default defineConfig({
           'image-processing': ['sharp', 'canvas', 'tesseract.js'],
           'charts': ['recharts'],
           'utilities': ['qrcode', 'react-markdown']
-        }
+        },
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]'
       }
-    }
+    },
+    reportCompressedSize: true,
+    chunkSizeWarningLimit: 1000
   },
   server: {
     fs: {
