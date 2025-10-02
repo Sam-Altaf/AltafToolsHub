@@ -175,25 +175,36 @@ export default function PdfToWord() {
     setExtractionStats(null);
   }, []);
 
-  // Extract images from PDF page - simplified method
+  // Extract images from PDF page with proper cropping
   const extractImages = async (page: any): Promise<ExtractedImage[]> => {
     const images: ExtractedImage[] = [];
     
     try {
       const ops = await page.getOperatorList();
+      const viewport = page.getViewport({ scale: 2.0 });
       
-      // Count images on page
-      let imageCount = 0;
+      // Track image positions and dimensions
+      const imageInfos: Array<{ x: number; y: number; width: number; height: number }> = [];
+      
       for (let i = 0; i < ops.fnArray.length; i++) {
         // OPS.paintImageXObject = 85
         if (ops.fnArray[i] === 85) {
-          imageCount++;
+          const args = ops.argsArray[i];
+          // args typically contains transform matrix [a, b, c, d, e, f]
+          if (args && args.length >= 2) {
+            const transform = args[1] || [1, 0, 0, 1, 0, 0];
+            const width = Math.abs(transform[0]);
+            const height = Math.abs(transform[3]);
+            const x = transform[4];
+            const y = viewport.height - transform[5] - height;
+            
+            imageInfos.push({ x, y, width, height });
+          }
         }
       }
       
-      // If images exist, render whole page to canvas as image
-      if (imageCount > 0) {
-        const viewport = page.getViewport({ scale: 2.0 });
+      // If images exist, render and crop them
+      if (imageInfos.length > 0) {
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d');
         
@@ -207,20 +218,38 @@ export default function PdfToWord() {
             intent: 'display'
           } as any).promise;
           
-          // Convert canvas to PNG
-          const blob = await new Promise<Blob>((resolve) => {
-            canvas.toBlob((b) => resolve(b!), 'image/png');
-          });
-          
-          const arrayBuffer = await blob.arrayBuffer();
-          const uint8Array = new Uint8Array(arrayBuffer);
-          
-          images.push({
-            data: uint8Array,
-            width: viewport.width,
-            height: viewport.height,
-            y: 0
-          });
+          // Extract each image region
+          for (const info of imageInfos) {
+            const cropCanvas = document.createElement('canvas');
+            const cropContext = cropCanvas.getContext('2d');
+            
+            if (cropContext && info.width > 0 && info.height > 0) {
+              cropCanvas.width = info.width;
+              cropCanvas.height = info.height;
+              
+              // Copy the image region from main canvas
+              cropContext.drawImage(
+                canvas,
+                info.x, info.y, info.width, info.height,
+                0, 0, info.width, info.height
+              );
+              
+              // Convert to PNG blob
+              const blob = await new Promise<Blob>((resolve) => {
+                cropCanvas.toBlob((b) => resolve(b!), 'image/png');
+              });
+              
+              const arrayBuffer = await blob.arrayBuffer();
+              const uint8Array = new Uint8Array(arrayBuffer);
+              
+              images.push({
+                data: uint8Array,
+                width: info.width,
+                height: info.height,
+                y: info.y
+              });
+            }
+          }
         }
       }
     } catch (error) {
@@ -710,12 +739,28 @@ export default function PdfToWord() {
 
                   <Button
                     onClick={downloadWord}
-                    className="w-full h-12 text-lg"
+                    className="w-full h-12 text-lg mb-3"
                     size="lg"
                     data-testid="button-download"
                   >
                     <Download className="w-5 h-5 mr-2" />
                     Download Word Document (.docx)
+                  </Button>
+
+                  <Button
+                    onClick={() => {
+                      setFile(null);
+                      setConvertedDocx(null);
+                      setProgress(0);
+                      setProgressMessage("");
+                      setExtractionStats(null);
+                    }}
+                    variant="outline"
+                    className="w-full h-12 text-lg"
+                    size="lg"
+                    data-testid="button-convert-another"
+                  >
+                    Convert Another PDF
                   </Button>
                 </div>
               )}
