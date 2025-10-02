@@ -506,14 +506,15 @@ export default function PdfToWord() {
 
         // Add images to document
         if (images.length > 0) {
-          images.forEach(img => {
+          for (const img of images) {
             try {
               const maxWidth = 600;
               const scale = img.width > maxWidth ? maxWidth / img.width : 1;
               
-              // Create ImageRun and add to document
+              // Create ImageRun with proper type
               const imageRun = new ImageRun({
                 data: img.data,
+                type: 'png',
                 transformation: {
                   width: Math.round(img.width * scale),
                   height: Math.round(img.height * scale)
@@ -527,7 +528,7 @@ export default function PdfToWord() {
             } catch (imgError) {
               console.warn('Could not add image to document:', imgError);
             }
-          });
+          }
         }
 
         // Add tables to document
@@ -832,11 +833,11 @@ export default function PdfToWord() {
               {!convertedDocx && !isProcessing && (
                 <Button
                   onClick={convertPdfToWord}
-                  className="w-full h-12 text-lg"
+                  className="w-full h-10 md:h-12 text-sm md:text-lg"
                   size="lg"
                   data-testid="button-convert"
                 >
-                  <FileCheck className="w-5 h-5 mr-2" />
+                  <FileCheck className="w-4 h-4 md:w-5 md:h-5 mr-2" />
                   Convert to Word
                 </Button>
               )}
