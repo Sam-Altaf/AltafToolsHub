@@ -34,6 +34,8 @@ import { generateSmartFileName } from "@/lib/smart-file-namer";
 import { useToast } from "@/hooks/use-toast";
 import * as pdfjsLib from 'pdfjs-dist';
 import ToolSEO, { toolFAQs } from "@/components/seo/tool-seo";
+import { WhyUseSection, UseCasesSection, ComparisonSection, HowItWorksSection } from "@/components/seo/tool-features";
+import { ToolFAQ, generatePDFCompressFAQs } from "@/components/seo/tool-faq";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 
@@ -994,25 +996,35 @@ export default function WatermarkPDF() {
 
                 {/* Visual Position Grid */}
                 <div className="mb-4">
-                  <Label className="mb-3 block flex items-center gap-2">
+                  <Label className="mb-2 block flex items-center gap-2 text-sm">
                     <Grid3x3 className="w-4 h-4" />
                     Position
                   </Label>
-                  <div className="grid grid-cols-3 gap-2 p-4 border rounded" data-testid="grid-position">
+                  <div className="grid grid-cols-3 gap-1.5 p-2 border rounded-md max-w-[180px] mx-auto sm:mx-0" data-testid="grid-position">
                     {positions.map((pos) => (
                       <button
                         key={pos}
                         onClick={() => setPosition(pos)}
                         className={cn(
-                          "aspect-square border-2 rounded flex items-center justify-center transition-all hover:bg-muted/50",
-                          position === pos ? "border-primary bg-primary/10" : "border-muted"
+                          "aspect-square border-2 rounded flex items-center justify-center transition-all hover:scale-105 relative",
+                          position === pos 
+                            ? "border-primary bg-gradient-to-br from-primary/30 to-primary/10 shadow-md" 
+                            : "border-muted hover:border-primary/50"
                         )}
                         data-testid={`button-position-${pos}`}
                       >
-                        {position === pos && <div className="w-3 h-3 bg-primary rounded-full" />}
+                        {position === pos && (
+                          <>
+                            <div className="w-2.5 h-2.5 bg-primary rounded-full animate-pulse" />
+                            <Droplets className="absolute w-3 h-3 text-primary/40" />
+                          </>
+                        )}
                       </button>
                     ))}
                   </div>
+                  <p className="text-xs text-muted-foreground mt-2 text-center sm:text-left">
+                    Selected: {position.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                  </p>
                 </div>
 
                 {/* Transparency Controls */}
@@ -1176,7 +1188,233 @@ export default function WatermarkPDF() {
         )}
       </div>
 
-      {/* SEO Sections */}
+      {/* Privacy Notice */}
+      {!selectedFile && (
+        <PrivacyNotice message="Your PDFs are watermarked entirely in your browser. Files never leave your device." />
+      )}
+
+      {/* How It Works Section */}
+      <HowItWorksSection
+        toolName="PDF Watermark"
+        steps={[
+          {
+            number: 1,
+            title: "Upload PDF",
+            description: "Select your PDF file or drag and drop it into the upload area. Files up to 100MB are supported."
+          },
+          {
+            number: 2,
+            title: "Configure Watermark",
+            description: "Choose text or image watermark, set position, transparency, rotation, and styling options to match your needs."
+          },
+          {
+            number: 3,
+            title: "Apply Watermark",
+            description: "Click 'Add Watermark' and watch as your watermark is applied entirely in your browser with real-time progress."
+          },
+          {
+            number: 4,
+            title: "Download Result",
+            description: "Download your watermarked PDF instantly. The file is processed and ready for immediate use."
+          }
+        ]}
+      />
+
+      {/* Why Use Section */}
+      <WhyUseSection
+        toolName="PDF Watermark"
+        benefits={[
+          "Add text or image watermarks to protect your PDF documents",
+          "9 position options for perfect watermark placement",
+          "Advanced rotation control (0° to 270°) for angled watermarks",
+          "Layer selection to place watermarks above or below content",
+          "Mosaic mode to repeat watermarks across entire pages",
+          "100% browser-based processing - files never leave your device",
+          "Professional text formatting with multiple fonts and styles",
+          "Completely free with no registration or watermarks"
+        ]}
+        features={[
+          {
+            icon: Shield,
+            title: "100% Privacy Guaranteed",
+            description: "All watermarking happens in your browser. Your PDFs never leave your device, ensuring complete privacy and security."
+          },
+          {
+            icon: Zap,
+            title: "Professional Features",
+            description: "Advanced options including text/image watermarks, 9 positions, transparency control, rotation, layer selection, and mosaic patterns."
+          },
+          {
+            icon: Settings,
+            title: "Full Customization",
+            description: "Choose font families (Helvetica, Times, Courier), apply bold/italic/underline, adjust colors, sizes, and transparency levels."
+          },
+          {
+            icon: Target,
+            title: "Precise Control",
+            description: "Apply watermarks to specific page ranges, place them above or below content, and create repeating patterns across pages."
+          }
+        ]}
+      />
+
+      {/* Use Cases Section */}
+      <UseCasesSection
+        useCases={[
+          {
+            icon: Lock,
+            title: "Document Protection",
+            description: "Add 'CONFIDENTIAL' or 'DRAFT' watermarks to protect sensitive business documents and prevent unauthorized sharing.",
+            example: "Mark internal reports with 'CONFIDENTIAL' watermark"
+          },
+          {
+            icon: Shield,
+            title: "Copyright Protection",
+            description: "Protect your creative work by adding copyright notices, logos, or attribution watermarks to PDFs.",
+            example: "Add © 2025 Company Name to all portfolio PDFs"
+          },
+          {
+            icon: FileText,
+            title: "Branding",
+            description: "Add company logos, slogans, or contact information to PDFs for professional branding and marketing.",
+            example: "Watermark proposals with company logo in footer"
+          },
+          {
+            icon: CheckCircle2,
+            title: "Status Marking",
+            description: "Mark documents as 'APPROVED', 'VOID', 'SAMPLE', or 'COPY' to indicate document status at a glance.",
+            example: "Add 'APPROVED' stamp to finalized contracts"
+          },
+          {
+            icon: Gauge,
+            title: "Quality Control",
+            description: "Add revision numbers, dates, or quality stamps to track document versions and approval stages.",
+            example: "Mark each revision with 'V2.1' watermark"
+          },
+          {
+            icon: Book,
+            title: "Educational Materials",
+            description: "Watermark course materials, assignments, or study guides with institution names or student identification.",
+            example: "Add university name to all course handouts"
+          }
+        ]}
+      />
+
+      {/* Comparison Section */}
+      <ComparisonSection
+        toolName="PDF Watermark"
+        comparisons={[
+          { 
+            feature: "Text Watermarks", 
+            ourTool: "Yes - with 3 fonts & styling", 
+            others: "Basic text only" 
+          },
+          { 
+            feature: "Image Watermarks", 
+            ourTool: "PNG/JPG supported", 
+            others: "PNG/JPG supported" 
+          },
+          { 
+            feature: "Position Options", 
+            ourTool: "9 positions with visual grid", 
+            others: "4-6 basic positions" 
+          },
+          { 
+            feature: "Rotation Control", 
+            ourTool: "0° to 270° + custom angles", 
+            others: "Fixed or no rotation" 
+          },
+          { 
+            feature: "Layer Selection", 
+            ourTool: "Above or below content", 
+            others: "Above only" 
+          },
+          { 
+            feature: "Mosaic Pattern", 
+            ourTool: "Yes with spacing control", 
+            others: "Not available" 
+          },
+          { 
+            feature: "Text Formatting", 
+            ourTool: "Bold, Italic, Underline", 
+            others: "Basic text only" 
+          },
+          { 
+            feature: "Page Range", 
+            ourTool: "From/To page inputs", 
+            others: "All pages only" 
+          },
+          { 
+            feature: "PDF Preview", 
+            ourTool: "Real-time thumbnails", 
+            others: "No preview" 
+          },
+          { 
+            feature: "Privacy", 
+            ourTool: "100% client-side", 
+            others: "Server upload required" 
+          },
+          { 
+            feature: "File Size Limit", 
+            ourTool: "100MB", 
+            others: "5-10MB limit" 
+          },
+          { 
+            feature: "Cost", 
+            ourTool: "Completely Free", 
+            others: "Free trial then paid" 
+          }
+        ]}
+      />
+
+      {/* FAQ Section */}
+      <ToolFAQ 
+        toolName="Watermark PDF"
+        toolPath="/watermark-pdf"
+        faqs={[
+          {
+            question: "How do I add a watermark to my PDF?",
+            answer: "Simply upload your PDF, choose text or image watermark, customize the appearance (position, color, size, transparency), and click 'Add Watermark'. Your watermarked PDF will be ready to download in seconds."
+          },
+          {
+            question: "Can I add watermarks to specific pages only?",
+            answer: "Yes! You can apply watermarks to all pages or specify a page range using the 'From Page' and 'To Page' inputs. For example, watermark only pages 5-10 of your document."
+          },
+          {
+            question: "What's the difference between 'Over' and 'Below' layer options?",
+            answer: "'Over content' places the watermark on top of your PDF content, making it more visible. 'Below content' places it behind the text, creating a subtle background watermark effect."
+          },
+          {
+            question: "How does mosaic mode work?",
+            answer: "Mosaic mode repeats your watermark across the entire page in a grid pattern. You can adjust the spacing between repetitions using the pattern spacing slider (50-300px)."
+          },
+          {
+            question: "Can I rotate the watermark?",
+            answer: "Absolutely! Choose from preset angles (0°, 45°, 90°, 180°, 270°) or enter a custom rotation angle. The watermark will be rotated accordingly on your PDF."
+          },
+          {
+            question: "Is my PDF safe? Does it get uploaded to a server?",
+            answer: "Your PDF never leaves your browser. All watermarking happens client-side using your device's processing power. We never see, store, or have access to your files."
+          },
+          {
+            question: "What image formats can I use for watermarks?",
+            answer: "You can upload PNG or JPG/JPEG images as watermarks. PNG is recommended for logos with transparency. The tool automatically handles image embedding."
+          },
+          {
+            question: "Can I use custom fonts?",
+            answer: "The tool supports three professional font families: Helvetica (modern sans-serif), Times (classic serif), and Courier (monospace). Each can be styled with bold, italic, and underline."
+          },
+          {
+            question: "Is there a file size limit?",
+            answer: "The upload limit is set to 100MB to ensure optimal performance. This accommodates most PDFs while maintaining smooth browser-based processing."
+          },
+          {
+            question: "Will the watermark affect PDF quality?",
+            answer: "No! The watermark is added as a layer to your PDF without recompressing the original content. Your document quality remains unchanged, only the watermark is added."
+          }
+        ]}
+      />
+
+      {/* Contact Support Section */}
       <ContactSupportSection />
     </div>
   );
