@@ -84,73 +84,67 @@ export default function CookieConsent() {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             transition={{ type: "spring", stiffness: 100, damping: 15 }}
-            className="fixed bottom-0 left-0 right-0 z-50 w-full"
+            className="fixed bottom-4 left-4 right-4 sm:left-4 sm:right-auto z-50 max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl"
             data-testid="cookie-consent-banner"
           >
-            <div className="glass border-t-2 backdrop-blur-xl bg-background/95 shadow-2xl">
-              <div className="container mx-auto px-4 py-4 sm:py-6">
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                  <div className="flex-1 pr-8 lg:pr-0">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Cookie className="w-5 h-5 text-primary flex-shrink-0" />
-                      <h3 className="text-base font-semibold">Cookie Settings</h3>
-                    </div>
-                    <p className="text-sm text-muted-foreground mb-3 lg:mb-0">
-                      We use cookies to enhance your browsing experience, analyze site traffic, and personalize content. 
-                      All file processing stays 100% in your browser - your files never leave your device. 
-                      By clicking "Accept All", you consent to our use of cookies. 
-                      Learn more in our{" "}
-                      <Link href="/privacy-policy" className="text-primary hover:underline font-medium">
-                        Privacy Policy
-                      </Link>
-                      {" "}and{" "}
-                      <Link href="/terms-conditions" className="text-primary hover:underline font-medium">
-                        Terms & Conditions
-                      </Link>.
-                    </p>
-                  </div>
-                  
-                  <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 lg:gap-3">
-                    <Button
-                      onClick={handleManagePreferences}
-                      variant="outline"
-                      size="sm"
-                      className="flex-1 sm:flex-initial"
-                      data-testid="button-manage-cookies"
-                    >
-                      <Settings className="w-4 h-4 mr-2" />
-                      Manage Preferences
-                    </Button>
-                    <Button
-                      onClick={handleRejectAll}
-                      variant="outline"
-                      size="sm"
-                      className="flex-1 sm:flex-initial"
-                      data-testid="button-reject-cookies"
-                    >
-                      Reject All
-                    </Button>
-                    <Button
-                      onClick={handleAcceptAll}
-                      className="btn-gradient text-white flex-1 sm:flex-initial"
-                      size="sm"
-                      data-testid="button-accept-cookies"
-                    >
-                      Accept All
-                    </Button>
-                  </div>
-                </div>
-              </div>
-              
+            <Card className="glass p-5 shadow-2xl border-2">
               <button
                 onClick={() => setShowBanner(false)}
-                className="absolute top-2 right-2 p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                className="absolute top-2 right-2 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 aria-label="Close cookie banner"
                 data-testid="button-close-banner"
               >
                 <X className="w-4 h-4" />
               </button>
-            </div>
+              
+              <div className="pr-6">
+                <div className="flex items-center gap-2 mb-2">
+                  <Cookie className="w-5 h-5 text-primary" />
+                  <h3 className="text-base font-semibold">Cookie Settings</h3>
+                </div>
+                <p className="text-sm text-muted-foreground mb-3 leading-relaxed">
+                  We use cookies to enhance your browsing experience, analyze site traffic, and personalize content. 
+                  All file processing stays 100% in your browser - your files never leave your device. 
+                  By clicking "Accept All", you consent to our use of cookies. 
+                  Learn more in our{" "}
+                  <Link href="/privacy-policy" className="text-primary hover:underline font-medium">
+                    Privacy Policy
+                  </Link>
+                  {" "}and{" "}
+                  <Link href="/terms-conditions" className="text-primary hover:underline font-medium">
+                    Terms & Conditions
+                  </Link>.
+                </p>
+                
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    onClick={handleManagePreferences}
+                    variant="outline"
+                    size="sm"
+                    data-testid="button-manage-cookies"
+                  >
+                    <Settings className="w-3 h-3 mr-1" />
+                    Manage
+                  </Button>
+                  <Button
+                    onClick={handleRejectAll}
+                    variant="outline"
+                    size="sm"
+                    data-testid="button-reject-cookies"
+                  >
+                    Reject All
+                  </Button>
+                  <Button
+                    onClick={handleAcceptAll}
+                    className="btn-gradient text-white"
+                    size="sm"
+                    data-testid="button-accept-cookies"
+                  >
+                    Accept All
+                  </Button>
+                </div>
+              </div>
+            </Card>
           </motion.div>
         )}
       </AnimatePresence>
