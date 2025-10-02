@@ -204,12 +204,12 @@ const guides = [
   {
     id: "watermark-pdf",
     title: "How to Add Watermark to PDF",
-    description: "Protect your documents with custom text or image watermarks",
+    description: "Protect your documents with custom text or image watermarks - complete step-by-step guide",
     icon: Droplets,
-    href: "/blog/how-to-watermark-pdf",
+    href: "/guides/how-to-add-watermark-pdf",
     category: "PDF Tools",
-    readTime: "6 min read",
-    difficulty: "Advanced",
+    readTime: "4 min read",
+    difficulty: "Easy",
     popular: false
   },
   {
