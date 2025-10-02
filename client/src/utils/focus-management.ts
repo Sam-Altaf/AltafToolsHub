@@ -11,12 +11,15 @@ export function getFocusableElements(container: HTMLElement = document.body): HT
   return Array.from(
     container.querySelectorAll<HTMLElement>(focusableSelectors.join(','))
   ).filter(el => {
-    // Check if element is visible and not hidden
+    // Check if element is visible using bounding rect (works with fixed/absolute positioning)
     const style = window.getComputedStyle(el);
+    const rect = el.getBoundingClientRect();
+    
     return (
       style.display !== 'none' &&
       style.visibility !== 'hidden' &&
-      el.offsetParent !== null
+      rect.width > 0 &&
+      rect.height > 0
     );
   });
 }
