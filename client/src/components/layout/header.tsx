@@ -48,6 +48,8 @@ export default function Header() {
 
   return (
     <motion.header 
+      role="banner"
+      aria-label="Site header"
       className={cn(
         "sticky top-0 w-full max-w-full transition-all duration-300",
         isScrolled 
@@ -87,7 +89,7 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation - Centered with proper spacing */}
-          <div className="hidden lg:flex items-center justify-center flex-1 max-w-2xl mx-4">
+          <nav aria-label="Main navigation" className="hidden lg:flex items-center justify-center flex-1 max-w-2xl mx-4">
             <div className="flex items-center space-x-1">
               <Button 
                 variant="ghost" 
@@ -115,7 +117,7 @@ export default function Header() {
                 </Link>
               </Button>
             </div>
-          </div>
+          </nav>
 
           {/* Desktop Right Section - Fixed width to prevent overlap */}
           <div className="hidden lg:flex items-center space-x-3 flex-shrink-0">

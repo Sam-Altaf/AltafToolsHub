@@ -119,7 +119,7 @@ export default function Footer() {
     }
   }, [blogPreloaded]);
   return (
-    <footer className="bg-muted/50 dark:bg-gray-900 border-t border-border transition-colors duration-300">
+    <footer role="contentinfo" aria-label="Site footer" className="bg-muted/50 dark:bg-gray-900 border-t border-border transition-colors duration-300">
       <div className="container-section py-12 lg:py-16">
         {/* Trust/Privacy Messaging */}
         <motion.div 
