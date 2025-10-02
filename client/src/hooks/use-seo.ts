@@ -1,8 +1,9 @@
 import { useEffect } from "react";
+import { getPageMetadata, generateToolMetaTags } from "@/lib/seo-metadata";
 
 interface SEOProps {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   path: string;
   ogImage?: string;
   keywords?: string;
@@ -14,14 +15,15 @@ interface SEOProps {
   articleModifiedTime?: string;
   twitterHandle?: string;
   additionalMetaTags?: { name?: string; property?: string; content: string }[];
+  targetSize?: string; // For dynamic tool pages
 }
 
 export function useSEO({ 
-  title, 
-  description, 
+  title: customTitle, 
+  description: customDescription, 
   path, 
   ogImage = "https://altaftoolshub.app/og-image.png",
-  keywords,
+  keywords: customKeywords,
   author = "AltafToolsHub",
   robots = "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
   structuredData,
@@ -29,13 +31,30 @@ export function useSEO({
   articlePublishedTime,
   articleModifiedTime,
   twitterHandle = "@altaftoolshub",
-  additionalMetaTags = []
+  additionalMetaTags = [],
+  targetSize
 }: SEOProps) {
   useEffect(() => {
-    // Format title with consistent template
+    // Get metadata from centralized configuration
+    const pageMetadata = targetSize && path.includes('compress-pdf') 
+      ? generateToolMetaTags('compress-pdf', targetSize)
+      : getPageMetadata(path);
+
+    // Use custom values if provided, otherwise fall back to page metadata
+    const title = customTitle || pageMetadata?.title || 'AltafToolsHub - Free PDF & File Tools';
+    const description = customDescription || pageMetadata?.description || 'Professional PDF and file processing tools with complete privacy. All processing happens in your browser.';
+    const keywords = customKeywords || pageMetadata?.keywords || 'pdf tools, pdf converter, file tools, browser-based tools';
+    
+    // Use pageMetadata for additional OG and Twitter tags if available
+    const ogTitle = pageMetadata?.ogTitle || title;
+    const ogDescription = pageMetadata?.ogDescription || description;
+    const twitterTitle = pageMetadata?.twitterTitle || ogTitle;
+    const twitterDescription = pageMetadata?.twitterDescription || ogDescription;
+    
+    // Format title - don't add suffix if it already includes AltafToolsHub
     const formattedTitle = title.includes("AltafToolsHub") 
       ? title 
-      : `${title} | AltafToolsHub - Free PDF Tools`;
+      : `${title} | AltafToolsHub`;
     
     // Set document title
     document.title = formattedTitle;
@@ -58,7 +77,7 @@ export function useSEO({
       element.setAttribute(attribute, value);
     };
 
-    // Basic meta tags
+    // Basic meta tags with enhanced descriptions
     updateMetaTag('meta[name="description"]', 'content', description);
     
     if (keywords) {
@@ -86,10 +105,10 @@ export function useSEO({
     // Application name
     updateMetaTag('meta[name="application-name"]', 'content', 'AltafToolsHub');
 
-    // Open Graph tags
+    // Open Graph tags with enhanced metadata
     const ogTags = [
-      { property: 'og:title', content: formattedTitle },
-      { property: 'og:description', content: description },
+      { property: 'og:title', content: ogTitle },
+      { property: 'og:description', content: ogDescription },
       { property: 'og:url', content: `https://altaftoolshub.app${path}` },
       { property: 'og:type', content: articlePublishedTime ? 'article' : 'website' },
       { property: 'og:site_name', content: 'AltafToolsHub' },
@@ -99,7 +118,7 @@ export function useSEO({
     // Always include og:image with default if not provided
     ogTags.push(
       { property: 'og:image', content: ogImage },
-      { property: 'og:image:alt', content: formattedTitle },
+      { property: 'og:image:alt', content: ogTitle },
       { property: 'og:image:width', content: '1200' },
       { property: 'og:image:height', content: '630' },
       { property: 'og:image:type', content: 'image/png' }
@@ -123,15 +142,15 @@ export function useSEO({
       ogTag.setAttribute('content', content);
     });
 
-    // Twitter Card tags (always include image)
+    // Twitter Card tags with enhanced metadata
     const twitterTags = [
       { name: 'twitter:card', content: 'summary_large_image' },
-      { name: 'twitter:title', content: formattedTitle },
-      { name: 'twitter:description', content: description },
+      { name: 'twitter:title', content: twitterTitle },
+      { name: 'twitter:description', content: twitterDescription },
       { name: 'twitter:site', content: twitterHandle },
       { name: 'twitter:creator', content: twitterHandle },
       { name: 'twitter:image', content: ogImage },
-      { name: 'twitter:image:alt', content: formattedTitle },
+      { name: 'twitter:image:alt', content: twitterTitle },
       { name: 'twitter:url', content: `https://altaftoolshub.app${path}` }
     ];
 
@@ -172,7 +191,7 @@ export function useSEO({
       });
     }
 
-    // Structured Data (JSON-LD)
+    // Structured Data (JSON-LD) - Ensure it's properly injected
     if (structuredData) {
       // Remove existing structured data scripts
       const existingScripts = document.querySelectorAll('script[type="application/ld+json"]');
@@ -181,13 +200,18 @@ export function useSEO({
       // Handle array of structured data or single object
       const schemas = Array.isArray(structuredData) ? structuredData : [structuredData];
       
-      // Add new structured data
+      // Add new structured data with proper formatting
       schemas.forEach((schema, index) => {
         const script = document.createElement('script');
         script.type = 'application/ld+json';
         script.setAttribute('data-schema-index', index.toString());
-        script.textContent = JSON.stringify(schema);
-        document.head.appendChild(script);
+        // Ensure valid JSON
+        try {
+          script.textContent = JSON.stringify(schema, null, 2);
+          document.head.appendChild(script);
+        } catch (error) {
+          console.error('Failed to serialize structured data:', error);
+        }
       });
     }
 
@@ -203,18 +227,16 @@ export function useSEO({
 
     // Cleanup function to remove dynamically added elements when component unmounts
     return () => {
-      // Only remove structured data script on unmount
-      const structuredDataScript = document.querySelector('script[type="application/ld+json"]');
-      if (structuredDataScript) {
-        structuredDataScript.remove();
-      }
+      // Only remove structured data scripts on unmount
+      const structuredDataScripts = document.querySelectorAll('script[type="application/ld+json"]');
+      structuredDataScripts.forEach(script => script.remove());
     };
   }, [
-    title, 
-    description, 
+    customTitle, 
+    customDescription, 
     path, 
     ogImage, 
-    keywords, 
+    customKeywords, 
     author,
     robots, 
     structuredData,
@@ -222,7 +244,8 @@ export function useSEO({
     articlePublishedTime,
     articleModifiedTime,
     twitterHandle,
-    additionalMetaTags
+    additionalMetaTags,
+    targetSize
   ]);
 }
 
@@ -704,104 +727,13 @@ export function generateCollectionPageSchema(data: {
       "itemListElement": data.tools.map((tool, index) => ({
         "@type": "ListItem",
         "position": index + 1,
-        "url": `https://www.altaftoolshub.app${tool.url}`,
-        "name": tool.name,
-        "description": tool.description
+        "item": {
+          "@type": "SoftwareApplication",
+          "name": tool.name,
+          "url": tool.url,
+          "description": tool.description
+        }
       }))
-    }
-  };
-}
-
-// Helper function to generate SearchAction schema
-export function generateSearchActionSchema() {
-  return {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "@id": "https://www.altaftoolshub.app/#website",
-    "url": "https://www.altaftoolshub.app",
-    "name": "AltafToolsHub",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": {
-        "@type": "EntryPoint",
-        "urlTemplate": "https://www.altaftoolshub.app/search?q={search_term_string}"
-      },
-      "query-input": "required name=search_term_string"
-    }
-  };
-}
-
-// Helper function to generate Product schema for tools
-export function generateProductSchema(product: {
-  name: string;
-  description: string;
-  url: string;
-  image?: string;
-  brand?: string;
-  aggregateRating?: {
-    ratingValue: number;
-    ratingCount: number;
-  };
-  offers?: {
-    price: string;
-    priceCurrency: string;
-    availability?: string;
-  };
-}) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    "@id": `${product.url}#product`,
-    "name": product.name,
-    "description": product.description,
-    "url": product.url,
-    "image": product.image || "https://www.altaftoolshub.app/og-image.png",
-    "brand": {
-      "@type": "Brand",
-      "name": product.brand || "AltafToolsHub"
-    },
-    "aggregateRating": product.aggregateRating ? {
-      "@type": "AggregateRating",
-      "ratingValue": product.aggregateRating.ratingValue,
-      "ratingCount": product.aggregateRating.ratingCount,
-      "bestRating": 5,
-      "worstRating": 1
-    } : undefined,
-    "offers": {
-      "@type": "Offer",
-      "price": product.offers?.price || "0",
-      "priceCurrency": product.offers?.priceCurrency || "USD",
-      "availability": product.offers?.availability || "https://schema.org/InStock",
-      "priceValidUntil": "2030-12-31"
-    }
-  };
-}
-
-// Helper function to generate VideoObject schema for tutorials
-export function generateVideoSchema(video: {
-  name: string;
-  description: string;
-  thumbnailUrl: string;
-  uploadDate: string;
-  duration: string;
-  embedUrl: string;
-}) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "VideoObject",
-    "name": video.name,
-    "description": video.description,
-    "thumbnailUrl": video.thumbnailUrl,
-    "uploadDate": video.uploadDate,
-    "duration": video.duration,
-    "embedUrl": video.embedUrl,
-    "publisher": {
-      "@type": "Organization",
-      "name": "AltafToolsHub",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://www.altaftoolshub.app/logo.png"
-      }
     }
   };
 }

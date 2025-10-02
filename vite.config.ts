@@ -81,7 +81,66 @@ export default defineConfig({
           }
         ]
       },
-      manifest: false,
+      manifest: {
+        name: 'AltafToolsHub - Free PDF & File Tools',
+        short_name: 'AltafToolsHub',
+        description: 'Professional PDF and file processing tools with complete privacy. All processing happens in your browser.',
+        theme_color: '#0080ff',
+        background_color: '#ffffff',
+        display: 'standalone',
+        orientation: 'any',
+        scope: '/',
+        start_url: '/',
+        icons: [
+          {
+            src: '/pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'any'
+          },
+          {
+            src: '/pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable'
+          }
+        ],
+        categories: ['productivity', 'utilities', 'business'],
+        screenshots: [
+          {
+            src: '/screenshot-desktop.png',
+            sizes: '1280x720',
+            type: 'image/png',
+            form_factor: 'wide'
+          },
+          {
+            src: '/screenshot-mobile.png',
+            sizes: '360x640',
+            type: 'image/png',
+            form_factor: 'narrow'
+          }
+        ],
+        shortcuts: [
+          {
+            name: 'Compress PDF',
+            short_name: 'Compress',
+            url: '/compress-pdf',
+            icons: [{ src: '/icon-compress.png', sizes: '96x96' }]
+          },
+          {
+            name: 'Merge PDF',
+            short_name: 'Merge',
+            url: '/merge-pdf',
+            icons: [{ src: '/icon-merge.png', sizes: '96x96' }]
+          },
+          {
+            name: 'JPG to PDF',
+            short_name: 'Convert',
+            url: '/jpg-to-pdf',
+            icons: [{ src: '/icon-convert.png', sizes: '96x96' }]
+          }
+        ]
+      },
       devOptions: {
         enabled: false
       }

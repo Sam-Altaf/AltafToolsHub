@@ -1,20 +1,32 @@
-# robots.txt for AltafToolsHub
-# All robots are welcome to crawl our site
+# Robots.txt for AltafToolsHub
+# https://altaftoolshub.app/
 
+# Allow all crawlers
 User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /tmp/
+Disallow: /.git/
+
+# Specific crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
 Allow: /
 
 # Sitemap location
 Sitemap: https://altaftoolshub.app/sitemap.xml
 
-# Crawl delay (be nice to our servers)
-Crawl-delay: 1
-
-# Specific directories
-Allow: /blog/
-Allow: /guides/
-Allow: /tools/
-
-# Disallow admin or test pages (if any exist in future)
-# Disallow: /admin/
-# Disallow: /test/
+# Crawl delay (in seconds)
+Crawl-delay: 0

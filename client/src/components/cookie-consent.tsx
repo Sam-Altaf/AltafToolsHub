@@ -49,9 +49,14 @@ export default function CookieConsent() {
   };
 
   const handleRejectAll = () => {
-    // Clear any existing consent so banner shows again on next visit
-    localStorage.removeItem("cookieConsent");
-    localStorage.removeItem("cookieConsentDate");
+    // Save rejection state to prevent banner from showing again
+    const rejectionPreferences = {
+      necessary: true,
+      analytics: false,
+      functional: false,
+    };
+    localStorage.setItem("cookieConsent", JSON.stringify(rejectionPreferences));
+    localStorage.setItem("cookieConsentDate", new Date().toISOString());
     setShowBanner(false);
   };
 

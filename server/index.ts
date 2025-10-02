@@ -6,6 +6,47 @@ import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
 
+// Domain redirect middleware - handle alternative domains with 301 redirect
+// Must be the first middleware to catch all requests
+app.use((req, res, next) => {
+  const host = req.get('host') || '';
+  const protocol = req.secure ? 'https' : 'http';
+  
+  // List of alternative domains that should redirect to canonical
+  const alternativeDomains = [
+    'www.altaftoolshub.app',
+    'altaftoolshub.com',
+    'www.altaftoolshub.com',
+    'altaftoolshub.net',
+    'www.altaftoolshub.net'
+  ];
+  
+  // Check if current host is an alternative domain
+  if (alternativeDomains.some(domain => host.includes(domain))) {
+    // Redirect to canonical domain preserving the path and query string
+    const canonicalUrl = `https://altaftoolshub.app${req.originalUrl}`;
+    return res.redirect(301, canonicalUrl);
+  }
+  
+  // For development/Replit environments, don't redirect
+  if (host.includes('replit') || host.includes('localhost') || host.includes('127.0.0.1')) {
+    return next();
+  }
+  
+  // If already on canonical domain or secure protocol, continue
+  if (host === 'altaftoolshub.app' && protocol === 'https') {
+    return next();
+  }
+  
+  // Force HTTPS on canonical domain
+  if (host === 'altaftoolshub.app' && protocol === 'http') {
+    const secureUrl = `https://altaftoolshub.app${req.originalUrl}`;
+    return res.redirect(301, secureUrl);
+  }
+  
+  next();
+});
+
 // Enable gzip/Brotli compression for all responses
 app.use(compression({
   threshold: 0, // Compress all responses
