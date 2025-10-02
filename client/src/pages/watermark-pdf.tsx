@@ -361,9 +361,10 @@ export default function WatermarkPDF() {
       if (watermarkType === 'text' && font) {
         const textWidth = font.widthOfTextAtSize(watermarkText, fontSize[0]);
         const centerPosition = position.includes('center') || position.includes('middle');
+        const textX = centerPosition ? xPos - (textWidth / 2) : xPos;
         
         page.drawText(watermarkText, {
-          x: centerPosition ? xPos - (textWidth / 2) : xPos,
+          x: textX,
           y: yPos,
           size: fontSize[0],
           font: font,
@@ -371,6 +372,31 @@ export default function WatermarkPDF() {
           opacity: opacity[0] / 100,
           rotate: degrees(rotation)
         });
+
+        // Draw underline if enabled
+        if (isUnderline) {
+          const underlineOffset = fontSize[0] * 0.15; // Distance below text baseline
+          const underlineThickness = Math.max(1, fontSize[0] * 0.05);
+          
+          // Calculate underline position with rotation-aware offsets
+          const rotationRad = (rotation * Math.PI) / 180;
+          const deltaX = Math.sin(rotationRad) * underlineOffset;
+          const deltaY = -Math.cos(rotationRad) * underlineOffset; // Negative because PDF y-axis goes up
+          
+          const underlineX = textX + deltaX;
+          const underlineY = yPos + deltaY;
+          
+          // Draw underline as a rectangle that rotates with the text
+          page.drawRectangle({
+            x: underlineX,
+            y: underlineY,
+            width: textWidth,
+            height: underlineThickness,
+            color: rgb(rgbColor.r, rgbColor.g, rgbColor.b),
+            opacity: opacity[0] / 100,
+            rotate: degrees(rotation) // Apply same rotation as text
+          });
+        }
       } else if (watermarkType === 'image' && image) {
         const imgWidth = (width * imageSize[0]) / 100;
         const imgHeight = (image.height / image.width) * imgWidth;
@@ -448,35 +474,48 @@ export default function WatermarkPDF() {
           : await pdfDoc.embedJpg(imageBytes);
       }
 
-      // If layer is 'below', we need to create a new PDF with watermarks drawn first
+      // For 'below' layer, create a copy of the original PDF once (not in loop)
+      let originalPdfCopy: PDFDocument | null = null;
       if (layer === 'below') {
-        setProgressMessage("Applying watermarks below content...");
+        const originalBytes = await pdfDoc.save();
+        originalPdfCopy = await PDFDocument.load(originalBytes);
+      }
+
+      // Apply watermarks to pages
+      for (let i = 0; i < pagesToWatermark.length; i++) {
+        const pageIndex = pagesToWatermark[i] - 1;
+        setProgress(Math.round(((i + 0.5) / pagesToWatermark.length) * 100));
+        setProgressMessage(`Watermarking page ${pagesToWatermark[i]} of ${totalPages}...`);
         
-        for (let i = 0; i < pagesToWatermark.length; i++) {
-          const pageIndex = pagesToWatermark[i] - 1;
-          setProgress(Math.round(((i + 0.5) / pagesToWatermark.length) * 100));
-          setProgressMessage(`Watermarking page ${pagesToWatermark[i]} of ${totalPages}...`);
+        const page = pdfDoc.getPage(pageIndex);
+        
+        if (layer === 'below' && originalPdfCopy) {
+          // For 'below' layer: embed original page as a form XObject, draw watermark first, then draw page on top
+          setProgressMessage(`Applying watermark below content on page ${pagesToWatermark[i]}...`);
           
-          const page = pdfDoc.getPage(pageIndex);
+          // Embed the original page from the copy we made earlier
+          const [embeddedPage] = await pdfDoc.embedPages([originalPdfCopy.getPage(pageIndex)]);
           
-          // For 'below' layer, we'd need to use advanced PDF manipulation
-          // For now, we'll still draw on top but with lower opacity
+          // Clear the current page content (remove existing Contents)
+          page.node.set(page.node.context.obj('Contents'), page.node.context.obj([]));
+          
+          // Draw watermark first (on empty page)
           await drawWatermarkOnPage(page, pdfDoc, font, image);
           
-          setProgress(Math.round(((i + 1) / pagesToWatermark.length) * 100));
-        }
-      } else {
-        // 'over' layer - standard watermarking
-        for (let i = 0; i < pagesToWatermark.length; i++) {
-          const pageIndex = pagesToWatermark[i] - 1;
-          setProgress(Math.round(((i + 0.5) / pagesToWatermark.length) * 100));
-          setProgressMessage(`Watermarking page ${pagesToWatermark[i]} of ${totalPages}...`);
-          
-          const page = pdfDoc.getPage(pageIndex);
+          // Draw the original page content on top
+          const { width, height } = page.getSize();
+          page.drawPage(embeddedPage, {
+            x: 0,
+            y: 0,
+            width: width,
+            height: height
+          });
+        } else {
+          // 'over' layer - standard watermarking (draw on top of existing content)
           await drawWatermarkOnPage(page, pdfDoc, font, image);
-          
-          setProgress(Math.round(((i + 1) / pagesToWatermark.length) * 100));
         }
+        
+        setProgress(Math.round(((i + 1) / pagesToWatermark.length) * 100));
       }
 
       setProgressMessage("Saving watermarked PDF...");
