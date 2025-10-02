@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Card } from "@/components/ui/card";
-import { Loader2, FileText, CheckCircle2 } from "lucide-react";
+import { Loader2, FileText, CheckCircle2, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ProcessingLoaderProps {
