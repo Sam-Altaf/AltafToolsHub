@@ -22,6 +22,7 @@ import {
 import { cn } from "@/lib/utils";
 import { HowItWorksSection } from "@/components/seo/tool-features";
 import { ToolFAQ } from "@/components/seo/tool-faq";
+import { useSEO } from "@/hooks/use-seo";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Select,
@@ -226,6 +227,14 @@ const ToolCard = ({ tool, view }: { tool: any; view: 'grid' | 'list' }) => {
 };
 
 export default function AllToolsPage() {
+  useSEO({
+    title: "All Tools - 50+ Free PDF & File Processing Tools | AltafToolsHub",
+    description: "Browse our complete collection of 50+ free privacy-first tools. PDF compression, merging, conversion, security tools, QR generator, password generator & more. All browser-based, no uploads.",
+    path: "/all-tools",
+    keywords: "all pdf tools, free file tools, pdf tool collection, online pdf tools, browser-based tools, privacy-first tools, pdf compressor, pdf merger, image converter, qr generator, password generator",
+    ogImage: "https://altaftoolshub.app/og-all-tools.png"
+  });
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');

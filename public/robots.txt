@@ -1,0 +1,20 @@
+# robots.txt for AltafToolsHub
+# All robots are welcome to crawl our site
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://altaftoolshub.app/sitemap.xml
+
+# Crawl delay (be nice to our servers)
+Crawl-delay: 1
+
+# Specific directories
+Allow: /blog/
+Allow: /guides/
+Allow: /tools/
+
+# Disallow admin or test pages (if any exist in future)
+# Disallow: /admin/
+# Disallow: /test/
