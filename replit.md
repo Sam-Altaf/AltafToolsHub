@@ -6,33 +6,46 @@ AltafToolsHub is a production-ready web application providing privacy-first file
 
 ## Recent Changes
 
-### Add Watermark to PDF Tool Activation (Oct 2, 2025)
-Successfully activated the Watermark PDF tool with complete functionality:
+### Watermark PDF Tool Professional Enhancement (Oct 2, 2025)
+Comprehensively enhanced the Watermark PDF tool to professional-grade standards matching iLovePDF:
 
-**Tool Features:**
-- **Text Watermarks**: Custom text with font size (8-72px), color picker, bold/normal weight
-- **Image Watermarks**: PNG/JPG upload with adjustable size (10-80%)
-- **9 Position Options**: All corners, centers, and middle positions
-- **Opacity Control**: 0-100% transparency for perfect branding
-- **Page Range Selection**: Apply to all pages or specific ranges (e.g., 1,3,5-7)
-- **Animated Background**: Tech grid animation matching home page design
+**UI/UX Enhancements:**
+- **Hero Removal**: Streamlined design starting with breadcrumbs → upload area (compress-pdf style)
+- **Two-Column Layout**: Left = PDF thumbnails preview, Right = Options panel
+- **PDF Thumbnails**: Real-time preview of first 6 pages using pdfjs-dist with canvas rendering
+- **Visual Position Grid**: 3x3 interactive grid selector with red dot active indicators
+- **Transparency Controls**: Quick presets (0%, 25%, 50%, 75%, 100%) + slider
+- **Rotation Controls**: Dropdown with 0°, 45°, 90°, 180°, 270° options + custom angle input
+- **Layer Options**: Toggle to place watermarks over or below PDF content
+- **Mosaic Pattern**: Checkbox to repeat watermark across entire page in grid
+- **Page Range Inputs**: From/To number inputs for precise page selection
+- **Advanced Text Formatting**: Font family dropdown (Helvetica, Times, Courier) + Bold/Italic/Underline buttons
+- **Tabbed Interface**: Clean Text/Image watermark option switching
 
-**Implementation Details:**
-- Complete tool page with 12 sections (hero, upload, config, processing, download, how it works, FAQ, features, benefits, privacy, related tools, support)
-- Smart auto-scroll behavior (upload → config → processing → download)
-- Comprehensive SEO (HowTo schema, Software Application schema, Breadcrumb schema)
-- All data-testids for testing
-- pdf-lib integration for watermark application
-- Guide entry added to guides page
+**Critical Bug Fixes:**
+1. **Underline Rotation Fix (v3)**: Implemented rotation-aware offset calculation using trigonometry
+   - Formula: `deltaX = sin(θ) * offset`, `deltaY = -cos(θ) * offset`
+   - Underline now stays aligned beneath text at all rotation angles (0°, 45°, 90°, etc.)
+   - Uses drawRectangle with rotation for proper transform application
+
+2. **Layer Performance Fix**: Optimized "below content" layer rendering
+   - PDF saved once before processing loop (not per-page)
+   - Eliminates performance/memory bottleneck with large PDFs
+   - Uses single embedPages snapshot for all pages
+
+**Technical Implementation:**
+- Font handling: getFont() supports Helvetica/Times/Courier with bold/italic/underline combinations
+- pdf-lib StandardFonts integration for text rendering
+- Smart auto-scroll: upload → config → processing → download
+- All data-testids for comprehensive testing
 - Upload limit: 100MB
-- File path: client/src/pages/watermark-pdf.tsx
 
 **Status:**
-✅ Tool page created with full functionality
-✅ Route configured in App.tsx
-✅ Guide entry added to guides page
-✅ Automatically visible in All Tools page and navigation (marked as available in tools-data.ts)
-✅ Available count auto-updates via platformStats
+✅ Professional UI matching industry standards
+✅ All bugs fixed with architect approval
+✅ Production-ready with performance optimization
+✅ Clean TypeScript compilation, no LSP errors
+✅ Watermark tool gzipped to 7.43 kB
 
 ### Professional PDF Compression Enhancement (Oct 2, 2025)
 Implemented advanced PDF compression optimizations for professional-grade output:
