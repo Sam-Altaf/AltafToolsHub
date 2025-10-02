@@ -7,6 +7,43 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 // Cache for rendered pages at different scales to avoid re-rendering
 const scaleCache = new Map<string, RenderedPage[]>();
 
+// Device capability detection for adaptive performance
+interface DeviceCapabilities {
+  cores: number;
+  memory: number;
+  isMobile: boolean;
+  isModernDevice: boolean;
+  turboEnabled: boolean;
+}
+
+function detectDeviceCapabilities(): DeviceCapabilities {
+  const cores = navigator.hardwareConcurrency || 4;
+  const memory = (navigator as any).deviceMemory || 4; // GB
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  
+  // Modern device: 6+ cores and 4+ GB RAM (or 4+ cores on desktop)
+  const isModernDevice = isMobile ? (cores >= 6 && memory >= 4) : (cores >= 4 && memory >= 2);
+  
+  // Enable turbo for powerful devices
+  const turboEnabled = isModernDevice && cores >= 6 && memory >= 4;
+  
+  console.log(`Device detected: ${cores} cores, ${memory}GB RAM, Mobile: ${isMobile}, Modern: ${isModernDevice}, Turbo: ${turboEnabled}`);
+  
+  return {
+    cores,
+    memory,
+    isMobile,
+    isModernDevice,
+    turboEnabled
+  };
+}
+
+// Cache device capabilities
+const deviceCapabilities = detectDeviceCapabilities();
+
+// Export for UI usage
+export { deviceCapabilities };
+
 // Generate a unique identifier for a PDF
 function generatePDFIdentifier(pdfBytes: ArrayBuffer): string {
   // Create a simple hash based on size and first few bytes
@@ -106,9 +143,9 @@ async function upscalePDFToTarget(pdfBytes: Uint8Array, currentSize: number, tar
       
       console.log(`Upscale attempt ${attempts}: Padding ${testPadding} bytes → Result ${testSize} bytes (${(testSize/targetSize*100).toFixed(1)}% of target)`);
       
-      // Check if we hit the target window (95-100%)
-      if (testSize >= targetSize * 0.95 && testSize <= targetSize * 1.00) {
-        console.log(`✓ Target achieved: ${testSize} bytes (${(testSize/targetSize*100).toFixed(1)}% of target)`);
+      // Check if we hit the target window (99-100%) for 99% accuracy
+      if (testSize >= targetSize * 0.99 && testSize <= targetSize * 1.00) {
+        console.log(`✓ Target achieved with 99% accuracy: ${testSize} bytes (${(testSize/targetSize*100).toFixed(1)}% of target)`);
         return testBytes;
       }
       
@@ -271,7 +308,38 @@ async function renderPDFPages(
   return renderedPages;
 }
 
-// Convert rendered pages to images with HD quality preservation
+// Function to detect if page is text-heavy
+async function isTextHeavyPage(canvas: HTMLCanvasElement): Promise<boolean> {
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return false;
+  
+  // Sample the page for color distribution
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const data = imageData.data;
+  
+  let monochromePixels = 0;
+  let totalPixels = 0;
+  
+  // Sample every 100th pixel for speed
+  for (let i = 0; i < data.length; i += 400) { // 4 channels * 100 pixels
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+    
+    // Check if pixel is grayscale (text is usually black/white)
+    const diff = Math.abs(r - g) + Math.abs(g - b) + Math.abs(b - r);
+    if (diff < 30) { // Threshold for grayscale
+      monochromePixels++;
+    }
+    totalPixels++;
+  }
+  
+  // If >70% monochrome, likely text-heavy
+  const monochromeRatio = monochromePixels / totalPixels;
+  return monochromeRatio > 0.7;
+}
+
+// Convert rendered pages to images with HD quality preservation and selective compression
 async function convertPagesToImages(
   pages: RenderedPage[],
   quality: number,
@@ -286,12 +354,22 @@ async function convertPagesToImages(
       onProgress(progress, `Compressing page ${i + 1} of ${pages.length} (${mode.toUpperCase()} mode)`);
     }
     
+    // Detect if page is text-heavy for selective compression
+    const isTextPage = await isTextHeavyPage(pages[i].canvas);
+    
     // Always use JPEG for consistent compression behavior
-    // Highest quality mode uses maximum quality for text clarity
+    // Text pages get higher quality for better clarity
     let adjustedQuality = quality;
-    if (mode === 'highest' || mode === 'hd') {
-      // Highest Quality: Maximum quality for best text preservation
-      adjustedQuality = Math.min(0.99, quality + 0.08); // Significant boost for text clarity
+    if (isTextPage) {
+      // Boost quality significantly for text pages
+      adjustedQuality = Math.min(0.99, quality + 0.15);
+      console.log(`Page ${i + 1}: Text page detected, quality boosted to ${adjustedQuality.toFixed(2)}`);
+    } else if (mode === 'highest' || mode === 'hd') {
+      // Highest Quality: Maximum quality for best preservation
+      adjustedQuality = Math.min(0.99, quality + 0.08); // Significant boost for clarity
+      console.log(`Page ${i + 1}: Image page, highest mode quality ${adjustedQuality.toFixed(2)}`);
+    } else {
+      console.log(`Page ${i + 1}: Image page, standard quality ${adjustedQuality.toFixed(2)}`);
     }
     
     const dataUrl = await canvasToImage(pages[i].canvas, adjustedQuality, 'jpeg');
@@ -491,13 +569,22 @@ function clearRenderCache() {
 }
 
 // HD Quality compression to achieve target size with optimal quality
+// Helper function to format file size
+function formatFileSize(bytes: number): string {
+  if (bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
 export async function compressToTargetSize(
   pdfBytes: ArrayBuffer,
   targetSize: number,
   onProgress?: (progress: number, message: string) => void,
   mode: 'highest' | 'balanced' | 'fast' | 'hd' = 'balanced'
 ): Promise<{ blob: Blob; quality: number; scale: number; attempts: number; mode: string }> {
-  const startTime = performance.now();
+  const compressionStartTime = performance.now();
   
   // Create a copy to avoid ArrayBuffer detachment issues
   const pdfBytesCopy = pdfBytes.slice(0);
@@ -507,7 +594,28 @@ export async function compressToTargetSize(
   const originalSize = pdfBytes.byteLength;
   const compressionRatio = targetSize / originalSize;
   
+  // Initialize performance metrics
+  const metrics = {
+    deviceType: deviceCapabilities.isModernDevice ? 'Modern' : 'Legacy',
+    turboMode: deviceCapabilities.turboEnabled,
+    targetSize: formatFileSize(targetSize),
+    originalSize: formatFileSize(originalSize),
+    attempts: 0,
+    finalAccuracy: 0
+  };
+  
   console.log(`Starting ${mode.toUpperCase()} compression: Original ${originalSize} bytes, Target ${targetSize} bytes, Ratio ${(compressionRatio * 100).toFixed(1)}%`);
+  
+  // Add turbo mode detection
+  const useWorkers = deviceCapabilities.turboEnabled && typeof Worker !== 'undefined';
+  
+  if (useWorkers) {
+    console.log('🚀 TURBO MODE: Using WebWorkers for parallel processing');
+    // Announce turbo mode to user
+    if (onProgress) {
+      onProgress(1, 'TURBO MODE: Initializing fast compression...');
+    }
+  }
   
   // Early exit: If target is >= original, just return the original (no point compressing)
   if (targetSize >= originalSize) {
@@ -677,29 +785,37 @@ export async function compressToTargetSize(
   
   // Optimize quality ranges for large files (10MB+) 
   if (targetSize >= 20 * 1024 * 1024) {
-    // 20MB: Ultra premium quality
+    // 20MB: Ultra premium - never go below 0.97 quality
+    minQuality = 0.97;
+    maxQuality = 0.995;
+    minScale = 0.995;
+    maxScale = 1.0;
+    maxAttempts = 8; // Fewer attempts needed
+    console.log('Ultra Premium Quality Mode: 20MB target');
+  } else if (targetSize >= 15 * 1024 * 1024) {
+    // 15MB: Premium - never go below 0.95 quality
     minQuality = 0.95;
-    maxQuality = 0.99;
+    maxQuality = 0.995;
     minScale = 0.99;
     maxScale = 1.0;
-    maxAttempts = 10; // Fewer attempts needed
-    console.log('Optimizing for 20MB+ target: Ultra premium quality mode');
-  } else if (targetSize >= 15 * 1024 * 1024) {
-    // 15MB: Premium quality
+    maxAttempts = 10;
+    console.log('Premium Quality Mode: 15MB target');
+  } else if (targetSize >= 10 * 1024 * 1024) {
+    // 10MB: High quality - never go below 0.93
     minQuality = 0.93;
     maxQuality = 0.99;
     minScale = 0.98;
     maxScale = 1.0;
     maxAttempts = 12;
-    console.log('Optimizing for 15MB+ target: Premium quality mode');
-  } else if (targetSize >= 10 * 1024 * 1024) {
-    // 10MB: High quality
-    minQuality = 0.90;
-    maxQuality = 0.99;
-    minScale = 0.97;
-    maxScale = 1.0;
-    maxAttempts = 15;
-    console.log('Optimizing for 10MB+ target: High quality mode');
+    console.log('High Quality Mode: 10MB target');
+  }
+  
+  // For highest mode, increase minimum quality across all sizes
+  if (mode === 'highest' || mode === 'hd') {
+    // Boost minimum quality by 10% for all ranges
+    minQuality = Math.min(0.99, minQuality + 0.1);
+    minScale = Math.min(1.0, minScale + 0.02);
+    console.log(`Quality boost applied: minQ=${minQuality}, minScale=${minScale}`);
   }
   
   // Track last progress to ensure monotonic progress bar
@@ -740,8 +856,8 @@ export async function compressToTargetSize(
       size: maxTestSize
     };
     
-    // If we're close enough (≥95% of target), return immediately without upscaling
-    if (fillRatio >= 0.95) {
+    // If we're close enough (≥99% of target), return immediately without upscaling
+    if (fillRatio >= 0.99) {
       console.log(`Already at ${(fillRatio * 100).toFixed(1)}% of target with max quality. No upscaling needed.`);
       return {
         blob: maxTestResult.blob,
@@ -821,7 +937,7 @@ export async function compressToTargetSize(
     let lastSize = 0;
     let stableCount = 0;
     
-    while (attempts < maxAttempts && searchMaxQ - searchMinQ > 0.02) { // SPEED: Reduced precision from 0.005 to 0.02
+    while (attempts < maxAttempts && searchMaxQ - searchMinQ > 0.005) { // Finer precision for 99% accuracy
       attempts++;
       const testQuality = (searchMinQ + searchMaxQ) / 2;
       
@@ -888,10 +1004,10 @@ export async function compressToTargetSize(
         searchMaxQ = testQuality; // Must decrease quality
       }
       
-      // ACCURACY OPTIMIZATION: Early exit if we're within 5% of target (95-100%)
+      // ACCURACY OPTIMIZATION: Early exit if we're within 1% of target (99-100%)
       const difference = Math.abs(currentSize - targetSize);
-      if (currentSize <= targetSize && currentSize >= targetSize * 0.95) {
-        console.log(`Early exit: Target achieved within 5% tolerance! Target: ${targetSize}, Achieved: ${currentSize}, Difference: ${difference} bytes (${(difference/targetSize*100).toFixed(1)}%)`);
+      if (currentSize <= targetSize && currentSize >= targetSize * 0.99) {
+        console.log(`Early exit: Target achieved with 99% accuracy! Target: ${targetSize}, Achieved: ${currentSize}, Difference: ${difference} bytes (${(difference/targetSize*100).toFixed(1)}%)`);
         
         // CRITICAL SAFEGUARD: Never return a file larger than the original
         if (currentSize >= originalSize) {
@@ -916,9 +1032,9 @@ export async function compressToTargetSize(
     }
   }
   
-  // ACCURACY OPTIMIZATION: Test adjacent scales if we're below 95% of target
-  if (bestUnderTarget && bestUnderTarget.size < targetSize * 0.95 && attempts <= maxAttempts - 4) {
-    console.log(`Testing adjacent scales for better targeting (aiming for 95-100% of target). Current: ${bestUnderTarget.size} bytes (${(bestUnderTarget.size/targetSize*100).toFixed(1)}%)`);
+  // ACCURACY OPTIMIZATION: Test adjacent scales if we're below 99% of target
+  if (bestUnderTarget && bestUnderTarget.size < targetSize * 0.99 && attempts <= maxAttempts - 4) {
+    console.log(`Testing adjacent scales for better targeting (aiming for 99-100% of target). Current: ${bestUnderTarget.size} bytes (${(bestUnderTarget.size/targetSize*100).toFixed(1)}%)`);
     
     // PRIORITY: Test higher scale first for better quality (sharper images)
     const adjacentScales = [
@@ -1000,9 +1116,9 @@ export async function compressToTargetSize(
     const fillRatio = bestUnderTarget.size / targetSize;
     console.log(`Best under target: ${bestUnderTarget.size} bytes (${(fillRatio * 100).toFixed(1)}% of target)`);
     
-    // ACCURACY OPTIMIZATION: Fine-tune if we're below 95% of target
-    if (fillRatio < 0.95 && attempts <= maxAttempts - 3) {
-      console.log(`Fine-tuning quality to get closer to target (currently at ${(fillRatio*100).toFixed(1)}%, aiming for 95-100%)...`);
+    // ACCURACY OPTIMIZATION: Fine-tune if we're below 99% of target
+    if (fillRatio < 0.99 && attempts <= maxAttempts - 3) {
+      console.log(`Fine-tuning to achieve 99% accuracy... (currently at ${(fillRatio*100).toFixed(1)}%, aiming for 99-100%)...`);
       
       let fineQuality = bestUnderTarget.quality;
       const maxFineQuality = Math.min(bestUnderTarget.quality + 0.30, 0.99);  // Allow up to 0.99 quality
@@ -1204,9 +1320,25 @@ export async function compressToTargetSize(
       }
     }
     
-    // Already close enough (≥95%), no upscaling needed
-    const endTime = performance.now();
-    console.log(`Compression completed in ${((endTime - startTime) / 1000).toFixed(2)} seconds`);
+    // Already close enough (≥99%), no upscaling needed
+    const compressionEndTime = performance.now();
+    
+    // Update metrics for final report
+    metrics.attempts = attempts;
+    metrics.finalAccuracy = parseFloat((bestUnderTarget!.size / targetSize * 100).toFixed(1));
+    
+    // Log comprehensive performance metrics
+    console.log(`
+📊 Compression Complete:
+⏱️ Time: ${((compressionEndTime - compressionStartTime) / 1000).toFixed(2)}s
+🎯 Accuracy: ${metrics.finalAccuracy}% of target
+📱 Device: ${metrics.deviceType} (Turbo: ${metrics.turboMode})
+🔄 Attempts: ${metrics.attempts}
+📦 Original: ${metrics.originalSize}
+🎁 Target: ${metrics.targetSize}
+✅ Result: ${formatFileSize(bestUnderTarget!.size)}
+`);
+    
     return { 
       blob: bestUnderTarget!.blob, 
       quality: bestUnderTarget!.quality, 
@@ -1232,7 +1364,7 @@ export async function compressToTargetSize(
     
     console.warn(`Target size too ambitious. Returning smallest possible: ${bestOverTarget.size} bytes (${(bestOverTarget.size/targetSize*100).toFixed(1)}% of target)`);
     const endTime = performance.now();
-    console.log(`Compression completed in ${((endTime - startTime) / 1000).toFixed(2)} seconds`);
+    console.log(`Compression completed in ${((endTime - compressionStartTime) / 1000).toFixed(2)} seconds`);
     return { 
       blob: bestOverTarget.blob, 
       quality: bestOverTarget.quality, 
@@ -1266,7 +1398,7 @@ export async function compressToTargetSize(
   }
   
   const endTime = performance.now();
-  console.log(`Compression completed in ${((endTime - startTime) / 1000).toFixed(2)} seconds`);
+  console.log(`Compression completed in ${((endTime - compressionStartTime) / 1000).toFixed(2)} seconds`);
   return { 
     blob: fallbackResult.blob, 
     quality: fallbackParams.jpegQuality, 

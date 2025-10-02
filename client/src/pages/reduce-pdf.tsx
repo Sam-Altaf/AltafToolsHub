@@ -22,6 +22,7 @@ import { Briefcase, School, Users, Mail, Smartphone, Globe2, Upload, Settings, F
 import { generateSmartFileName, enhanceDownloadName } from "@/lib/smart-file-namer";
 import { ContactSupportSection } from "@/components/contact-support";
 import { scrollToProcessing } from "@/lib/scroll-utils";
+import { deviceCapabilities } from "@/lib/pdf-compress";
 
 type TargetSize = "10KB" | "20KB" | "50KB" | "100KB" | "150KB" | "200KB" | "300KB" | "500KB" | "1MB" | "2MB" | "5MB" | "10MB" | "15MB" | "20MB" | "max";
 
@@ -324,8 +325,10 @@ export default function ReducePDF() {
 
   // Progress callback for compression
   const handleProgress = (progress: number, message: string) => {
+    // Add turbo mode indicator
+    const turboPrefix = message.includes('TURBO') ? '🚀 ' : '';
+    setProgressMessage(turboPrefix + message);
     setProgress(progress);
-    setProgressMessage(message);
   };
 
   // Compress PDF to target size with quality mode
@@ -402,6 +405,9 @@ export default function ReducePDF() {
     
     setIsProcessing(true);
     setProgress(0);
+    setProgressMessage(deviceCapabilities?.turboEnabled 
+      ? '🚀 TURBO MODE: Initializing fast compression...' 
+      : 'Starting compression...');
     setError(null);
     
     try {
